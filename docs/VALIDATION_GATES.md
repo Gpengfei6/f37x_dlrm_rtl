@@ -14,7 +14,9 @@ Required evidence:
   width errors;
 - logs identify the matching Git revision and source manifest.
 
-Current evidence is Python-only, so phase 2 is forbidden.
+Retry0 real evidence now proves Python PASS and `xvlog` PASS, but all eight
+testbenches failed at `xelab`; no functional RTL simulation result exists.
+Therefore phase 2 is forbidden.
 The ordered validation flow and credential-free payload are ready under
 `handoff/stage1_validation/`; readiness of scripts is not gate evidence.
 

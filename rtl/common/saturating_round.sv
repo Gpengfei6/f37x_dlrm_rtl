@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module saturating_round #(
   parameter integer IN_WIDTH  = 32,
   parameter integer OUT_WIDTH = 16,
@@ -61,4 +63,3 @@ module saturating_round #(
       $error("saturating_round SHIFT is out of range");
   end
 endmodule
-

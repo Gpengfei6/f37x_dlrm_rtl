@@ -163,6 +163,31 @@ def run_tests():
         for path in testbench_paths
     )
     assert testbench_guards_ok
+    timescale = "`timescale 1ns/1ps"
+    rtl_module_paths = sorted(
+        path for path in (PROJECT_ROOT / "rtl").rglob("*.sv")
+        if path.name != "dlrm_config_pkg.sv"
+    )
+    timescale_contract_ok = (
+        len(rtl_module_paths) == 8 and
+        all(path.read_text(encoding="utf-8").splitlines()[0] == timescale
+            for path in rtl_module_paths) and
+        all(path.read_text(encoding="utf-8").splitlines()[0] == timescale
+            for path in testbench_paths) and
+        not (PROJECT_ROOT / "rtl" / "include" / "dlrm_config_pkg.sv")
+        .read_text(encoding="utf-8").startswith("`timescale")
+    )
+    assert timescale_contract_ok
+    dense_source = (
+        PROJECT_ROOT / "rtl" / "compute" / "dense_layer_core.sv"
+    ).read_text(encoding="utf-8")
+    dense_loop_scope_ok = (
+        "integer index;" not in dense_source and
+        "integer init_index;" in dense_source and
+        "integer pack_index;" in dense_source and
+        "integer reset_index;" in dense_source
+    )
+    assert dense_loop_scope_ok
     return {
         "status": "PASS",
         "case_count": len(cases),
@@ -177,6 +202,8 @@ def run_tests():
         "packed_lane_zero_is_lsb": True,
         "hex_twos_complement_roundtrip": True,
         "testbench_timeout_guards": testbench_guards_ok,
+        "timescale_contract": timescale_contract_ok,
+        "dense_process_local_loop_indices": dense_loop_scope_ok,
     }
 
 

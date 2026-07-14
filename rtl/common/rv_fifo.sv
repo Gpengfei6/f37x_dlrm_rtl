@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module rv_fifo #(
   parameter integer DATA_WIDTH = 8,
   parameter integer DEPTH      = 4
@@ -63,4 +65,3 @@ module rv_fifo #(
     if (DEPTH <= 0) $error("rv_fifo DEPTH must be positive");
   end
 endmodule
-

@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module dlrm_minimal_top #(
   parameter integer NUM_EMBED_ROWS = dlrm_config_pkg::NUM_EMBED_ROWS,
   parameter integer EMBED_DIM      = dlrm_config_pkg::EMBED_DIM,
@@ -52,4 +54,3 @@ module dlrm_minimal_top #(
     .out_data(out_data)
   );
 endmodule
-

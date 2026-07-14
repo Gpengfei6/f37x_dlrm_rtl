@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module dot_product_core #(
   parameter integer VEC_LEN      = 8,
   parameter integer IN_WIDTH     = 10,
@@ -66,4 +68,3 @@ module dot_product_core #(
       $error("dot_product_core ACC_WIDTH is smaller than PRODUCT_WIDTH");
   end
 endmodule
-

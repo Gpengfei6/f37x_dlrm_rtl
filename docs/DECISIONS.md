@@ -76,3 +76,32 @@
   as explicit artifacts tied to exact file hashes.
 - **Impact:** baseline logs remain in the initial commit; later runs regenerate
   them locally and include them in the handoff log bundle.
+
+## D-008 — Declare a uniform source timescale
+
+- **Problem:** retry0 `xelab` reported `XSIM 43-4099` because testbenches had a
+  timescale while instantiated module files did not.
+- **Adopted:** place `` `timescale 1ns/1ps `` first in every independently
+  compiled module file and retain the identical declaration in all testbenches;
+  the package remains timescale-independent.  Add `xelab --timescale 1ns/1ps` as
+  secondary protection.
+- **Not adopted:** delete testbench delays, add timescale only to reported files,
+  or rely only on an elaborator option.
+- **Reason:** source-level consistency is explicit and Vivado 2020.2-compatible;
+  the option protects future units without masking the primary contract.
+- **Impact:** simulation units are defined consistently; synthesizable logic,
+  interfaces, timing cycles, and fixed-point values are unchanged.
+
+## D-009 — Scope Dense loop indices to their procedural owners
+
+- **Problem:** retry0 `xelab` reported `VRFC 10-3818` because module-level
+  `integer index` was assigned by both `initial` and `always_ff` processes.
+- **Adopted:** use block-local `init_index`, `pack_index`, and `reset_index` in
+  memory initialization, parameter selection, and reset respectively; retain the
+  existing generate `genvar`.
+- **Not adopted:** remove initialization/reset loops, change memories, or alter
+  the Dense state machine.
+- **Reason:** Vivado's single-driver rule is satisfied without behavioral change.
+- **Impact:** no interface, calculation order, latency, storage contents, or
+  resource intent changes.  Other RTL loop variables were reviewed and each is
+  confined to one process.

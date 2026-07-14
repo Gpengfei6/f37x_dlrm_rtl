@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module embedding_mem_model #(
   parameter integer NUM_ROWS   = 32,
   parameter integer EMBED_DIM  = 8,
@@ -47,4 +49,3 @@ module embedding_mem_model #(
     end
   end
 endmodule
-

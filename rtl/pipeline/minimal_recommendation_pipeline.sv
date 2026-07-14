@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module minimal_recommendation_pipeline #(
   parameter integer NUM_EMBED_ROWS = 32,
   parameter integer EMBED_DIM      = 8,
@@ -168,4 +170,3 @@ module minimal_recommendation_pipeline #(
       $error("minimal_recommendation_pipeline AGG_WIDTH is too small");
   end
 endmodule
-

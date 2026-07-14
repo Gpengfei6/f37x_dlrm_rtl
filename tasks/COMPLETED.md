@@ -14,3 +14,7 @@
   to all eight testbenches.
 - Added tool detection, unified PASS/FAIL/SKIPPED reporting, ordered XSim flow,
   SHA-256 manifests, and a credential-free stage-1 validation payload.
+- Analyzed retry0 Vivado 2020.2 logs and verified both earliest elaboration root
+  causes against an exact 17-file SHA-256 source match.
+- Applied uniform module/testbench timescale and process-local Dense loop-index
+  fixes without changing RTL interfaces, arithmetic, or cycle behavior.

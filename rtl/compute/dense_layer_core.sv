@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module dense_layer_core #(
   parameter integer IN_DIM       = 8,
   parameter integer OUT_DIM      = 4,
@@ -42,15 +44,14 @@ module dense_layer_core #(
   logic signed [ACC_WIDTH-1:0] dot_result;
   logic signed [OUTPUT_WIDTH-1:0] activated_result;
 
-  integer index;
-  integer pack_index;
   genvar output_lane;
 
-  initial begin
-    for (index = 0; index < OUT_DIM*IN_DIM; index = index + 1)
-      weight_memory[index] = '0;
-    for (index = 0; index < OUT_DIM; index = index + 1)
-      bias_memory[index] = '0;
+  initial begin : initialize_memories
+    integer init_index;
+    for (init_index = 0; init_index < OUT_DIM*IN_DIM; init_index = init_index + 1)
+      weight_memory[init_index] = '0;
+    for (init_index = 0; init_index < OUT_DIM; init_index = init_index + 1)
+      bias_memory[init_index] = '0;
     if (WEIGHT_INIT_FILE != "")
       $readmemh(WEIGHT_INIT_FILE, weight_memory);
     if (BIAS_INIT_FILE != "")
@@ -59,7 +60,8 @@ module dense_layer_core #(
       $error("dense_layer_core dimensions must be positive");
   end
 
-  always_comb begin
+  always_comb begin : select_neuron_parameters
+    integer pack_index;
     dot_weights = '0;
     for (pack_index = 0; pack_index < IN_DIM; pack_index = pack_index + 1)
       dot_weights[pack_index*WEIGHT_WIDTH +: WEIGHT_WIDTH] =
@@ -106,13 +108,14 @@ module dense_layer_core #(
           output_buffer[output_lane];
   endgenerate
 
-  always_ff @(posedge clk) begin
+  always_ff @(posedge clk) begin : state_registers
+    integer reset_index;
     if (rst) begin
       state <= STATE_IDLE;
       output_index <= '0;
       input_buffer <= '0;
-      for (index = 0; index < OUT_DIM; index = index + 1)
-        output_buffer[index] <= '0;
+      for (reset_index = 0; reset_index < OUT_DIM; reset_index = reset_index + 1)
+        output_buffer[reset_index] <= '0;
     end else begin
       case (state)
         STATE_IDLE: begin
@@ -146,4 +149,3 @@ module dense_layer_core #(
     end
   end
 endmodule
-

@@ -17,12 +17,12 @@ constructs supported by the intended flow but still awaiting real compilation.
 
 | File | Reviewed properties | Finding/action |
 |---|---|---|
-| `dlrm_config_pkg.sv` | localparam types, `$clog2`, compile order | Positive integer constants; package is first in top builds. |
+| `dlrm_config_pkg.sv` | localparam types, `$clog2`, compile order | Positive integer constants; package is first in top builds and intentionally has no timescale dependency. |
 | `rv_fifo.sv` | count/pointers, full/empty, simultaneous pop/push, loop, reset | No combinational loop; full replacement transfer preserves count.  Test now forces pointer wraps and protocol-correct random backpressure. |
 | `saturating_round.sv` | sign extension, `INT_MIN`, shift/round constants, saturation, generate completeness | Magnitude-domain rounding is intentional and fully assigned; directed positive/negative ties and limits exist. |
 | `relu_quant.sv` | operation order, signed comparison, multiple drivers | Quantization/saturation precedes signed negative clamp; one combinational driver. |
 | `dot_product_core.sv` | signed slices/products, sign extension, wrap, elastic handshake | Signed internal arrays make multiplication explicit.  ACC-width assignment gives two's-complement wrap after each addition.  Same-edge output retirement/input replacement is tested. |
-| `dense_layer_core.sv` | local memories, dynamic address, FSM, reset, hold behavior | One dot core is reused.  Output buffer is stable in output state; blocked output also blocks the next input and is now tested. |
+| `dense_layer_core.sv` | local memories, dynamic address, FSM, reset, hold behavior | Retry0 exposed shared module-level `index`; initialization, combinational packing, and reset now use separate block-local indices. One dot core is still reused and behavior is unchanged. |
 | `embedding_mem_model.sv` | `$readmemh`, one-cycle response, invalid ID, elastic replacement | Flat internal array avoids unpacked port/file ambiguity.  Response retirement plus next request on one edge is tested. |
 | `minimal_recommendation_pipeline.sv` | ID slice order, response sequencing, signed aggregate, FSM, backpressure | Lane 0 is LSB; each row is consumed once; addition is modulo `AGG_WIDTH`.  Source hold while sink is blocked is tested. |
 | `dlrm_minimal_top.sv` | package references, public ports, wrapper-only behavior | No public-interface change; package-qualified defaults require package-first compile. |
@@ -56,4 +56,6 @@ The FIFO random source now seeds once and calls `$urandom()` thereafter; it also
 holds valid/data while stalled, avoiding simulator-dependent reseeding and an
 invalid producer model.  Delay statements exist only in testbenches.
 
-Remaining confirmation requires real `xvlog`, `xelab`, and `xsim` logs.
+Retry0 real logs prove all source parses with `xvlog`.  They also exposed uniform
+timescale and Dense process-driver defects before simulation.  Both have minimal
+retry1 fixes; confirmation still requires fresh `xelab` and `xsim` logs.

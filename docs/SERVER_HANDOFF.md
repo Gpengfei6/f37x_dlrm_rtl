@@ -17,9 +17,10 @@ Codex does not access or create that directory.
 ## Manual commands
 
 ```bash
-mkdir -p /home/chaosuan/gpf_f37x_dlrm
-cd /home/chaosuan/gpf_f37x_dlrm
-unzip -o stage1_validation_payload.zip
+cd <existing-stage1-validation-parent>
+mkdir retry1
+cd retry1
+unzip ../stage1_validation_payload.zip
 cd f37x_dlrm_rtl
 
 python3 scripts/run_python_tests.py

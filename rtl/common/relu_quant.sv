@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module relu_quant #(
   parameter integer IN_WIDTH  = 32,
   parameter integer OUT_WIDTH = 16,
@@ -24,4 +26,3 @@ module relu_quant #(
       out_data = quantized;
   end
 endmodule
-

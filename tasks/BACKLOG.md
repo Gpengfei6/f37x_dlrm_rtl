@@ -2,6 +2,7 @@
 
 ## P0 — phase 1 / GATE-1
 
+- Run retry1 XSim validation for the uniform-timescale and Dense-index fixes.
 - Run ordered XSim 2020.2 compilation, elaboration, and all eight testbenches on
   the user-controlled server.
 - Review returned logs against the Git revision and SHA-256 source manifest.

@@ -76,7 +76,8 @@ set overall_fail 0
 set status_lines "xvlog COMPILE PASS 0\n"
 foreach testbench $testbenches {
   set snapshot "${testbench}_snapshot"
-  lassign [run_logged [list xelab -debug typical $testbench -s $snapshot] \
+  lassign [run_logged [list xelab -debug typical --timescale 1ns/1ps \
+      $testbench -s $snapshot] \
       "logs/xelab_${testbench}.log"] elaborate_rc elaborate_output
   if {$elaborate_rc != 0} {
     append status_lines "$testbench ELAB FAIL $elaborate_rc\n"
