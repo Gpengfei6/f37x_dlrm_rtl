@@ -1,0 +1,19 @@
+{
+  "case_count": 24,
+  "categories": [
+    "all_zero",
+    "maximum_negative",
+    "maximum_positive",
+    "output_saturation",
+    "positive_negative_mix",
+    "random",
+    "repeated_id"
+  ],
+  "directed_saturation_observed": true,
+  "narrow_accumulator_full_precision": 516128,
+  "narrow_accumulator_wrapped_int16": -8160,
+  "relu_zero_observed": true,
+  "seed": 3701,
+  "self_compare_count": 24,
+  "status": "PASS"
+}

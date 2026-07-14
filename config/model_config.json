@@ -1,0 +1,26 @@
+{
+  "num_embed_rows": 32,
+  "embed_dim": 8,
+  "num_lookups": 4,
+  "dense_in_dim": 8,
+  "dense_out_dim": 4,
+  "data_width": 8,
+  "weight_width": 8,
+  "bias_width": 24,
+  "acc_width": 32,
+  "output_width": 16,
+  "fractional_bits": {
+    "embedding": 4,
+    "weight": 4,
+    "bias": 8,
+    "accumulator": 8,
+    "output": 4
+  },
+  "output_shift": 4,
+  "rounding": "nearest_ties_away_from_zero",
+  "accumulator_overflow": "twos_complement_wrap",
+  "relu": true,
+  "random_seed": 3701,
+  "num_test_cases": 24
+}
+

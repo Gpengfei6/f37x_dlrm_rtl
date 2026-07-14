@@ -1,0 +1,242 @@
+[
+  {
+    "category": "all_zero",
+    "ids": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "name": "all_zero"
+  },
+  {
+    "category": "maximum_positive",
+    "ids": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "name": "maximum_positive"
+  },
+  {
+    "category": "maximum_negative",
+    "ids": [
+      2,
+      2,
+      2,
+      2
+    ],
+    "name": "maximum_negative"
+  },
+  {
+    "category": "positive_negative_mix",
+    "ids": [
+      1,
+      2,
+      1,
+      2
+    ],
+    "name": "positive_negative_mix"
+  },
+  {
+    "category": "positive_negative_mix",
+    "ids": [
+      3,
+      4,
+      3,
+      4
+    ],
+    "name": "alternating_mix"
+  },
+  {
+    "category": "repeated_id",
+    "ids": [
+      7,
+      7,
+      7,
+      7
+    ],
+    "name": "repeated_id"
+  },
+  {
+    "category": "repeated_id",
+    "ids": [
+      5,
+      5,
+      9,
+      9
+    ],
+    "name": "repeated_pairs"
+  },
+  {
+    "category": "output_saturation",
+    "ids": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "name": "positive_saturation"
+  },
+  {
+    "category": "output_saturation",
+    "ids": [
+      2,
+      2,
+      2,
+      2
+    ],
+    "name": "negative_path_relu"
+  },
+  {
+    "category": "random",
+    "ids": [
+      8,
+      15,
+      10,
+      12
+    ],
+    "name": "random_09"
+  },
+  {
+    "category": "random",
+    "ids": [
+      7,
+      16,
+      28,
+      8
+    ],
+    "name": "random_10"
+  },
+  {
+    "category": "random",
+    "ids": [
+      24,
+      8,
+      7,
+      14
+    ],
+    "name": "random_11"
+  },
+  {
+    "category": "random",
+    "ids": [
+      11,
+      15,
+      31,
+      14
+    ],
+    "name": "random_12"
+  },
+  {
+    "category": "random",
+    "ids": [
+      8,
+      6,
+      15,
+      26
+    ],
+    "name": "random_13"
+  },
+  {
+    "category": "random",
+    "ids": [
+      14,
+      30,
+      2,
+      10
+    ],
+    "name": "random_14"
+  },
+  {
+    "category": "random",
+    "ids": [
+      30,
+      18,
+      1,
+      5
+    ],
+    "name": "random_15"
+  },
+  {
+    "category": "random",
+    "ids": [
+      20,
+      10,
+      13,
+      3
+    ],
+    "name": "random_16"
+  },
+  {
+    "category": "random",
+    "ids": [
+      28,
+      21,
+      31,
+      18
+    ],
+    "name": "random_17"
+  },
+  {
+    "category": "random",
+    "ids": [
+      7,
+      22,
+      15,
+      12
+    ],
+    "name": "random_18"
+  },
+  {
+    "category": "random",
+    "ids": [
+      29,
+      0,
+      24,
+      1
+    ],
+    "name": "random_19"
+  },
+  {
+    "category": "random",
+    "ids": [
+      11,
+      10,
+      13,
+      8
+    ],
+    "name": "random_20"
+  },
+  {
+    "category": "random",
+    "ids": [
+      22,
+      9,
+      7,
+      16
+    ],
+    "name": "random_21"
+  },
+  {
+    "category": "random",
+    "ids": [
+      12,
+      30,
+      11,
+      25
+    ],
+    "name": "random_22"
+  },
+  {
+    "category": "random",
+    "ids": [
+      26,
+      13,
+      17,
+      10
+    ],
+    "name": "random_23"
+  }
+]
