@@ -56,8 +56,7 @@ The FIFO random source now seeds once and calls `$urandom()` thereafter; it also
 holds valid/data while stalled, avoiding simulator-dependent reseeding and an
 invalid producer model.  Delay statements exist only in testbenches.
 
-Retry1 real logs prove `xvlog` and all eight `xelab` runs pass.  Five independent
-simulations and the top-level 24-vector result pass; the three remaining tests
-stopped on active-region sampling races before a replacement edge.  The affected
-RTL already has elastic ready logic, so retry2 changes test scheduling/coverage
-only and still requires fresh XSim PASS logs.
+Retry2 real logs prove `xvlog`, all eight `xelab` runs, and all eight XSim tests
+pass under Vivado 2020.2 with explicit PASS markers.  The top-level 24 emitted
+outputs match the expected packed values bit for bit.  All 17 RTL/testbench
+hashes match validated commit `44a1b25`; GATE-1 is approved.

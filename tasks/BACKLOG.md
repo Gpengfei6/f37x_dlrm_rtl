@@ -1,15 +1,12 @@
 # Backlog
 
-## P0 — phase 1 / GATE-1
+## Architecture review required after GATE-1
 
-- Run retry2 XSim validation for the delta-safe same-edge replacement tests.
-- Run ordered XSim 2020.2 compilation, elaboration, and all eight testbenches on
-  the user-controlled server.
-- Review returned logs against the Git revision and SHA-256 source manifest.
-- Repair the earliest RTL/tool portability root cause, at most three loops.
-- Confirm top-level 24-vector bit comparison and randomized FIFO backpressure.
+- Review the proposed parameterized PE-array dataflow, cycle model, resource
+  bounds, and preservation of the validated fixed-point/ready-valid contract.
+- Do not begin implementation until that review explicitly authorizes phase 2.
 
-## Blocked by GATE-1
+## Blocked pending PE-architecture review
 
 - Design a bounded parameterized PE array and multicycle dot product.
 - Add two layer-size configurations and parameterized multilayer MLP.

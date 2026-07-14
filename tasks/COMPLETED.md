@@ -23,3 +23,8 @@
   RTL/testbench hashes matched commit `66c9307`.
 - Identified three `Iteration: 0` testbench sampling races, retained their exact
   ready assertions, and added consecutive replacement and depth-one FIFO checks.
+- Audited retry2 Vivado 2020.2 evidence against commit `44a1b25`: 64/64 manifest
+  hashes match, Python and `xvlog` pass, 8/8 elaborations and simulations have
+  explicit PASS evidence, and all 24 top-level outputs match bit for bit.
+- Formally approved GATE-1 with 18 PASS, 0 FAIL, and 0 SKIPPED; stopped before
+  parameterized PE-array architecture or any phase-2 implementation.

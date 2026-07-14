@@ -81,17 +81,18 @@ This section records only commands actually run in the current local workspace.
   inspection.
 - F37X compile, `.xclbin`, and board run: not run and intentionally out of scope.
 
-Server retry1 under Vivado 2020.2 produced real `xvlog` PASS, 8/8 `xelab` PASS,
-5/8 simulation PASS, and a top-level 24-vector bit-for-bit PASS.  The remaining
-three tests exposed same-time-slot testbench sampling races around combinational
-ready signals; retry2 preserves the assertions and transfer edges while adding
-settling time, consecutive replacements, and depth-one FIFO coverage.
+Server retry2 under Vivado 2020.2 produced Python PASS, `xvlog` PASS, 8/8
+`xelab` PASS, 8/8 explicit XSim PASS markers, and top-level 24-vector bit-for-bit
+agreement.  All 64 manifest hashes match source commit `44a1b25`; GATE-1 is
+approved.  Work remains stopped before parameterized PE-array architecture and
+phase-2 implementation.
 
 The phase-1 hardening run of `scripts/run_all_local.ps1` reported 4 PASS, 0 FAIL,
 and 4 SKIPPED: Python regression/reference/packed comparison and bundle creation
 passed; Icarus, Verilator, Verible, and XSim suites were skipped because those
 tools are absent.  PowerShell parsing and payload/hash structural checks also
-passed outside that summary.  GATE-1 remains not met.
+passed outside that summary.  Those local skips did not provide GATE evidence;
+the later retry2 server run now provides the required RTL evidence.
 
 The exact Python regression summary is saved in `logs/python_tests.log`.
 Tool-availability evidence is saved in `logs/tool_availability.log`.

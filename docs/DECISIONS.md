@@ -136,3 +136,23 @@
   contract and belongs after GATE-1.
 - **Impact:** integration backpressure evidence is real but bounded; no phase-2
   architecture or performance claim is introduced.
+
+## D-012 — Approve GATE-1 from retry2 Vivado/XSim evidence
+
+- **Problem:** phase 1 may close only when real compiler, elaborator, simulator,
+  bit-comparison, and source-traceability evidence all agree.
+- **Adopted:** approve GATE-1 for source commit
+  `44a1b256f0e50cef0a54dbe88d23fb4be353e911`.  Retry2 provides Python PASS,
+  `xvlog` PASS, 8/8 `xelab` PASS, 8/8 explicit XSim PASS markers, and 24/24
+  top-level packed-output matches, with 18 PASS and no failed/skipped tests.
+- **Source identity:** the server manifest's `UNKNOWN` Git revision reflects the
+  deliberate absence of `.git` from the validation payload.  All 64 manifest
+  byte counts and SHA-256 hashes match tracked files in the named commit,
+  including all 17 RTL/testbench files.
+- **Not adopted:** infer approval from exit codes alone, ignore missing PASS
+  markers, treat `UNKNOWN` as sufficient without hash verification, or begin
+  phase 2 automatically.
+- **Reason:** the complete evidence chain is internally consistent and contains
+  no timeout, fatal, error, warning, output mismatch, or source mismatch.
+- **Impact:** phase 1 is formally validated.  Parameterized PE-array work remains
+  paused until its architecture is reviewed and explicitly authorized.
