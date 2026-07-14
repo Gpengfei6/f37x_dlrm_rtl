@@ -18,8 +18,8 @@ Codex does not access or create that directory.
 
 ```bash
 cd <existing-stage1-validation-parent>
-mkdir retry1
-cd retry1
+mkdir retry2
+cd retry2
 unzip ../stage1_validation_payload.zip
 cd f37x_dlrm_rtl
 

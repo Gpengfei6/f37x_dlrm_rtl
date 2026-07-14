@@ -56,6 +56,8 @@ The FIFO random source now seeds once and calls `$urandom()` thereafter; it also
 holds valid/data while stalled, avoiding simulator-dependent reseeding and an
 invalid producer model.  Delay statements exist only in testbenches.
 
-Retry0 real logs prove all source parses with `xvlog`.  They also exposed uniform
-timescale and Dense process-driver defects before simulation.  Both have minimal
-retry1 fixes; confirmation still requires fresh `xelab` and `xsim` logs.
+Retry1 real logs prove `xvlog` and all eight `xelab` runs pass.  Five independent
+simulations and the top-level 24-vector result pass; the three remaining tests
+stopped on active-region sampling races before a replacement edge.  The affected
+RTL already has elastic ready logic, so retry2 changes test scheduling/coverage
+only and still requires fresh XSim PASS logs.

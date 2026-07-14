@@ -18,3 +18,8 @@
   causes against an exact 17-file SHA-256 source match.
 - Applied uniform module/testbench timescale and process-local Dense loop-index
   fixes without changing RTL interfaces, arithmetic, or cycle behavior.
+- Analyzed retry1 Vivado 2020.2 evidence: `xvlog` and 8/8 elaborations passed,
+  5/8 simulations and the top-level 24-vector comparison passed, and all 17
+  RTL/testbench hashes matched commit `66c9307`.
+- Identified three `Iteration: 0` testbench sampling races, retained their exact
+  ready assertions, and added consecutive replacement and depth-one FIFO checks.

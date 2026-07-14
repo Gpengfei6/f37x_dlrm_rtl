@@ -68,7 +68,9 @@ module tb_embedding_mem_model;
     input logic [ID_WIDTH-1:0] first_id,
     input logic signed [DIM*WIDTH-1:0] first_expected,
     input logic [ID_WIDTH-1:0] second_id,
-    input logic signed [DIM*WIDTH-1:0] second_expected
+    input logic signed [DIM*WIDTH-1:0] second_expected,
+    input logic [ID_WIDTH-1:0] third_id,
+    input logic signed [DIM*WIDTH-1:0] third_expected
   );
     begin
       @(negedge clk);
@@ -87,13 +89,24 @@ module tb_embedding_mem_model;
       req_id = second_id;
       req_valid = 1'b1;
       rsp_ready = 1'b1;
+      #1;
       if (!req_ready) $fatal(1, "embedding memory blocked replacement request");
+      @(posedge clk);
+      @(negedge clk);
+      if (!rsp_valid || rsp_data !== second_expected)
+        $fatal(1, "replacement second embedding mismatch");
+
+      // Keep valid/ready asserted for a second consecutive replacement edge.
+      req_id = third_id;
+      #1;
+      if (!req_ready)
+        $fatal(1, "embedding memory blocked consecutive replacement request");
       @(posedge clk);
       @(negedge clk);
       req_valid = 1'b0;
       rsp_ready = 1'b0;
-      if (!rsp_valid || rsp_data !== second_expected)
-        $fatal(1, "replacement second embedding mismatch");
+      if (!rsp_valid || rsp_data !== third_expected)
+        $fatal(1, "replacement third embedding mismatch");
       rsp_ready = 1'b1;
       @(posedge clk);
       @(negedge clk);
@@ -124,7 +137,10 @@ module tb_embedding_mem_model;
           (lane % 2 == 0) ? 8'sd127 : 8'sh80;
     request_and_check(5'd3, expected_row, 0);
 
-    replacement_request(5'd0, {DIM{8'h00}}, 5'd1, {DIM{8'h7f}});
+    replacement_request(
+        5'd0, {DIM{8'h00}},
+        5'd1, {DIM{8'h7f}},
+        5'd2, {DIM{8'h80}});
 
     $display("tb_embedding_mem_model: PASS");
     $finish;

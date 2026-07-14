@@ -188,6 +188,43 @@ def run_tests():
         "integer reset_index;" in dense_source
     )
     assert dense_loop_scope_ok
+    fifo_tb = (PROJECT_ROOT / "tb" / "tb_rv_fifo.sv").read_text(
+        encoding="utf-8"
+    )
+    dot_tb = (PROJECT_ROOT / "tb" / "tb_dot_product_core.sv").read_text(
+        encoding="utf-8"
+    )
+    embedding_tb = (
+        PROJECT_ROOT / "tb" / "tb_embedding_mem_model.sv"
+    ).read_text(encoding="utf-8")
+    elastic_replacement_guards_ok = (
+        "depth1_dut" in fifo_tb and
+        "cycle < DEPTH*2" in fifo_tb and
+        "depth-one FIFO blocked replacement" in fifo_tb and
+        "third_inputs" in dot_tb and
+        "blocked consecutive same-edge replacement" in dot_tb and
+        "third_id" in embedding_tb and
+        "blocked consecutive replacement request" in embedding_tb
+    )
+    assert elastic_replacement_guards_ok
+    fifo_source = (PROJECT_ROOT / "rtl" / "common" / "rv_fifo.sv").read_text(
+        encoding="utf-8"
+    )
+    dot_source = (
+        PROJECT_ROOT / "rtl" / "compute" / "dot_product_core.sv"
+    ).read_text(encoding="utf-8")
+    embedding_source = (
+        PROJECT_ROOT / "rtl" / "memory" / "embedding_mem_model.sv"
+    ).read_text(encoding="utf-8")
+    elastic_rtl_contract_ok = (
+        "assign in_ready = !full || pop;" in fifo_source and
+        "case ({push, pop})" in fifo_source and
+        "assign in_ready = !out_valid || out_ready;" in dot_source and
+        "else if (in_ready) begin" in dot_source and
+        "assign req_ready = !rsp_valid || rsp_ready;" in embedding_source and
+        "else if (req_ready) begin" in embedding_source
+    )
+    assert elastic_rtl_contract_ok
     return {
         "status": "PASS",
         "case_count": len(cases),
@@ -204,6 +241,8 @@ def run_tests():
         "testbench_timeout_guards": testbench_guards_ok,
         "timescale_contract": timescale_contract_ok,
         "dense_process_local_loop_indices": dense_loop_scope_ok,
+        "elastic_replacement_guards": elastic_replacement_guards_ok,
+        "elastic_rtl_contract": elastic_rtl_contract_ok,
     }
 
 

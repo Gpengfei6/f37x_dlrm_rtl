@@ -14,9 +14,10 @@ Required evidence:
   width errors;
 - logs identify the matching Git revision and source manifest.
 
-Retry0 real evidence now proves Python PASS and `xvlog` PASS, but all eight
-testbenches failed at `xelab`; no functional RTL simulation result exists.
-Therefore phase 2 is forbidden.
+Retry1 real evidence proves Python PASS, `xvlog` PASS, 8/8 `xelab` PASS, 5/8
+independent simulation PASS, and top-level 24-vector bit agreement.  The FIFO,
+dot-product, and embedding-memory same-edge tests still lack PASS results.
+Therefore GATE-1 remains false and phase 2 is forbidden.
 The ordered validation flow and credential-free payload are ready under
 `handoff/stage1_validation/`; readiness of scripts is not gate evidence.
 

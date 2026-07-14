@@ -105,3 +105,34 @@
 - **Impact:** no interface, calculation order, latency, storage contents, or
   resource intent changes.  Other RTL loop variables were reviewed and each is
   confined to one process.
+
+## D-010 — Sample combinational ready after it settles
+
+- **Problem:** retry1 XSim failed three same-edge replacement tests at
+  `Iteration: 0`; each test changed downstream ready and immediately read the
+  combinational upstream ready in the same active-region process.
+- **Adopted:** keep the original ready assertion and the same following rising
+  edge, but insert `#1` after the negative-edge stimulus.  Extend the directed
+  tests to consecutive replacement cycles and add a depth-one FIFO instance.
+- **Not adopted:** remove or weaken an assertion, delay the transfer to a later
+  clock, or change already-correct RTL merely to influence simulator scheduling.
+- **Reason:** `rv_fifo`, `dot_product_core`, and `embedding_mem_model` already
+  implement elastic acceptance and preserve occupied output registers under
+  backpressure.  Combinational propagation requires a delta cycle before a
+  deterministic observation.
+- **Impact:** test scheduling becomes portable while the checked handshake edge,
+  RTL interfaces, state updates, latency, and arithmetic remain unchanged.
+
+## D-011 — Retain the phase-1 single-transaction integration contract
+
+- **Problem:** passing integration tests must not be mistaken for sustained
+  top-level one-request-per-cycle throughput evidence.
+- **Adopted:** retain the documented one-active-request controller.  Its tests
+  hold the next input valid for multiple cycles while the old output is blocked,
+  verify output stability, and vary output stalls across the 24 vectors.
+- **Not adopted:** add top-level elastic replacement or pipeline concurrency as
+  part of this retry2 repair.
+- **Reason:** such a throughput change would alter the published phase-1 cycle
+  contract and belongs after GATE-1.
+- **Impact:** integration backpressure evidence is real but bounded; no phase-2
+  architecture or performance claim is introduced.

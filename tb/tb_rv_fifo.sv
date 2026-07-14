@@ -15,6 +15,17 @@ module tb_rv_fifo;
   logic empty;
   logic [$clog2(DEPTH+1)-1:0] count;
 
+  logic depth1_in_valid;
+  logic depth1_in_ready;
+  logic [DATA_WIDTH-1:0] depth1_in_data;
+  logic depth1_out_valid;
+  logic depth1_out_ready;
+  logic [DATA_WIDTH-1:0] depth1_out_data;
+  logic depth1_full;
+  logic depth1_empty;
+  logic depth1_count;
+  logic [DATA_WIDTH-1:0] depth1_expected;
+
   logic [DATA_WIDTH-1:0] expected [0:511];
   integer expected_write;
   integer expected_read;
@@ -34,6 +45,15 @@ module tb_rv_fifo;
     .in_valid(in_valid), .in_ready(in_ready), .in_data(in_data),
     .out_valid(out_valid), .out_ready(out_ready), .out_data(out_data),
     .full(full), .empty(empty), .count(count)
+  );
+
+  rv_fifo #(.DATA_WIDTH(DATA_WIDTH), .DEPTH(1)) depth1_dut (
+    .clk(clk), .rst(rst),
+    .in_valid(depth1_in_valid), .in_ready(depth1_in_ready),
+    .in_data(depth1_in_data),
+    .out_valid(depth1_out_valid), .out_ready(depth1_out_ready),
+    .out_data(depth1_out_data),
+    .full(depth1_full), .empty(depth1_empty), .count(depth1_count)
   );
 
   always @(posedge clk) begin
@@ -83,6 +103,10 @@ module tb_rv_fifo;
     in_valid = 1'b0;
     in_data = '0;
     out_ready = 1'b0;
+    depth1_in_valid = 1'b0;
+    depth1_in_data = '0;
+    depth1_out_ready = 1'b0;
+    depth1_expected = '0;
     expected_write = 0;
     expected_read = 0;
     seed = 32'h37f1f0;
@@ -98,15 +122,25 @@ module tb_rv_fifo;
     push_word(8'h44);
     #1;
     if (!full || count != DEPTH) $fatal(1, "FIFO did not become full");
+    repeat (3) begin
+      @(negedge clk);
+      if (!out_valid || out_data !== 8'h11)
+        $fatal(1, "FIFO output changed under backpressure");
+    end
 
-    // Full FIFO accepts a replacement word when pop and push coincide.
+    // Keep a full FIFO replacing one word per cycle through pointer wraps.
     @(negedge clk);
     in_valid = 1'b1;
-    in_data = 8'h55;
     out_ready = 1'b1;
-    if (!in_ready) $fatal(1, "FIFO blocked simultaneous full pop/push");
-    @(posedge clk);
-    @(negedge clk);
+    for (cycle = 0; cycle < DEPTH*2; cycle = cycle + 1) begin
+      in_data = 8'h55 + cycle;
+      #1;
+      if (!in_ready) $fatal(1, "FIFO blocked simultaneous full pop/push");
+      if (!full || count != DEPTH)
+        $fatal(1, "FIFO left full state before simultaneous transfer");
+      @(posedge clk);
+      @(negedge clk);
+    end
     in_valid = 1'b0;
     out_ready = 1'b0;
     #1;
@@ -115,6 +149,47 @@ module tb_rv_fifo;
     repeat (DEPTH) pop_word();
     #1;
     if (!empty || count != 0) $fatal(1, "FIFO did not become empty");
+
+    // DEPTH=1 must preserve the old output while replacing it every cycle.
+    @(negedge clk);
+    depth1_in_valid = 1'b1;
+    depth1_in_data = 8'ha0;
+    #1;
+    if (!depth1_in_ready) $fatal(1, "depth-one FIFO rejected initial word");
+    @(posedge clk);
+    @(negedge clk);
+    depth1_in_valid = 1'b0;
+    depth1_expected = 8'ha0;
+    #1;
+    if (!depth1_full || !depth1_out_valid ||
+        depth1_out_data !== depth1_expected)
+      $fatal(1, "depth-one FIFO initial state mismatch");
+
+    for (cycle = 0; cycle < 6; cycle = cycle + 1) begin
+      depth1_in_valid = 1'b1;
+      depth1_in_data = 8'hb0 + cycle;
+      depth1_out_ready = 1'b1;
+      #1;
+      if (!depth1_in_ready)
+        $fatal(1, "depth-one FIFO blocked replacement cycle=%0d", cycle);
+      if (!depth1_out_valid || depth1_out_data !== depth1_expected)
+        $fatal(1, "depth-one FIFO changed old output cycle=%0d", cycle);
+      @(posedge clk);
+      depth1_expected = 8'hb0 + cycle;
+      @(negedge clk);
+      #1;
+      if (!depth1_full || depth1_count != 1'b1 ||
+          depth1_out_data !== depth1_expected)
+        $fatal(1, "depth-one FIFO replacement mismatch cycle=%0d", cycle);
+    end
+    depth1_in_valid = 1'b0;
+    depth1_out_ready = 1'b1;
+    @(posedge clk);
+    @(negedge clk);
+    depth1_out_ready = 1'b0;
+    #1;
+    if (!depth1_empty || depth1_count != 1'b0)
+      $fatal(1, "depth-one FIFO did not drain");
 
     // Force multiple explicit pointer wraps before randomized traffic.
     for (cycle = 0; cycle < DEPTH*3; cycle = cycle + 1) begin

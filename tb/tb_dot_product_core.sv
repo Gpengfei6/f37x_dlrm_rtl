@@ -99,13 +99,18 @@ module tb_dot_product_core;
     input logic signed [ACC_WIDTH-1:0] first_bias,
     input logic signed [VEC_LEN*WIDTH-1:0] second_inputs,
     input logic signed [VEC_LEN*WIDTH-1:0] second_weights,
-    input logic signed [ACC_WIDTH-1:0] second_bias
+    input logic signed [ACC_WIDTH-1:0] second_bias,
+    input logic signed [VEC_LEN*WIDTH-1:0] third_inputs,
+    input logic signed [VEC_LEN*WIDTH-1:0] third_weights,
+    input logic signed [ACC_WIDTH-1:0] third_bias
   );
     logic signed [ACC_WIDTH-1:0] first_expected;
     logic signed [ACC_WIDTH-1:0] second_expected;
+    logic signed [ACC_WIDTH-1:0] third_expected;
     begin
       first_expected = expected_dot(first_inputs, first_weights, first_bias);
       second_expected = expected_dot(second_inputs, second_weights, second_bias);
+      third_expected = expected_dot(third_inputs, third_weights, third_bias);
       @(negedge clk);
       in_data = first_inputs;
       weight_data = first_weights;
@@ -127,13 +132,26 @@ module tb_dot_product_core;
       bias_data = second_bias;
       in_valid = 1'b1;
       out_ready = 1'b1;
+      #1;
       if (!in_ready) $fatal(1, "dot core did not allow same-edge replacement");
+      @(posedge clk);
+      @(negedge clk);
+      if (!out_valid || out_data !== second_expected)
+        $fatal(1, "replacement second result mismatch");
+
+      // Keep valid/ready asserted for a second consecutive replacement edge.
+      in_data = third_inputs;
+      weight_data = third_weights;
+      bias_data = third_bias;
+      #1;
+      if (!in_ready)
+        $fatal(1, "dot core blocked consecutive same-edge replacement");
       @(posedge clk);
       @(negedge clk);
       in_valid = 1'b0;
       out_ready = 1'b0;
-      if (!out_valid || out_data !== second_expected)
-        $fatal(1, "replacement second result mismatch");
+      if (!out_valid || out_data !== third_expected)
+        $fatal(1, "replacement third result mismatch");
       out_ready = 1'b1;
       @(posedge clk);
       @(negedge clk);
@@ -173,7 +191,8 @@ module tb_dot_product_core;
 
     replacement_transfer(
         {4{8'sd2}}, {4{8'sd3}}, 16'sd4,
-        {4{8'shfe}}, {4{8'sd5}}, -16'sd6);
+        {4{8'shfe}}, {4{8'sd5}}, -16'sd6,
+        {4{8'sd7}}, {4{8'sd2}}, 16'sd9);
 
     $display("tb_dot_product_core: PASS");
     $finish;

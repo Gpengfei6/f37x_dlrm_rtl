@@ -81,11 +81,11 @@ This section records only commands actually run in the current local workspace.
   inspection.
 - F37X compile, `.xclbin`, and board run: not run and intentionally out of scope.
 
-Server retry0 under Vivado 2020.2 produced real `xvlog` PASS, followed by eight
-`xelab` failures.  Five benches exposed missing module timescales and three
-Dense-containing benches exposed a shared procedural loop variable.  The retry1
-patch declares `1ns/1ps` consistently and makes Dense loop variables
-process-local; post-fix server elaboration/simulation is still pending.
+Server retry1 under Vivado 2020.2 produced real `xvlog` PASS, 8/8 `xelab` PASS,
+5/8 simulation PASS, and a top-level 24-vector bit-for-bit PASS.  The remaining
+three tests exposed same-time-slot testbench sampling races around combinational
+ready signals; retry2 preserves the assertions and transfer edges while adding
+settling time, consecutive replacements, and depth-one FIFO coverage.
 
 The phase-1 hardening run of `scripts/run_all_local.ps1` reported 4 PASS, 0 FAIL,
 and 4 SKIPPED: Python regression/reference/packed comparison and bundle creation
