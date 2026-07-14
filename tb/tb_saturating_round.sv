@@ -7,6 +7,12 @@ module tb_saturating_round;
     .in_data(in_data), .out_data(out_data)
   );
 
+  initial begin : timeout_guard
+    #1000;
+    $display("tb_saturating_round: FAIL - timeout");
+    $fatal(1, "tb_saturating_round timeout");
+  end
+
   task automatic check_value(
     input logic signed [31:0] value,
     input logic signed [15:0] expected
@@ -40,4 +46,3 @@ module tb_saturating_round;
     $finish;
   end
 endmodule
-

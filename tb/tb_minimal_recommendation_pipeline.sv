@@ -23,6 +23,12 @@ module tb_minimal_recommendation_pipeline;
 
   always #5 clk = ~clk;
 
+  initial begin : timeout_guard
+    #500000;
+    $display("tb_minimal_recommendation_pipeline: FAIL - timeout");
+    $fatal(1, "tb_minimal_recommendation_pipeline timeout");
+  end
+
   minimal_recommendation_pipeline #(
     .NUM_EMBED_ROWS(NUM_ROWS), .EMBED_DIM(DIM), .NUM_LOOKUPS(LOOKUPS),
     .DENSE_OUT_DIM(OUT_DIM), .DATA_WIDTH(8), .WEIGHT_WIDTH(8),
@@ -36,6 +42,51 @@ module tb_minimal_recommendation_pipeline;
     .in_valid(in_valid), .in_ready(in_ready), .in_ids(in_ids),
     .out_valid(out_valid), .out_ready(out_ready), .out_data(out_data)
   );
+
+  task automatic stalled_next_input(
+    input integer first_index,
+    input integer second_index
+  );
+    integer hold_cycle;
+    begin
+      @(negedge clk);
+      in_ids = id_vectors[first_index];
+      in_valid = 1'b1;
+      while (!in_ready) @(negedge clk);
+      @(posedge clk);
+      @(negedge clk);
+      in_valid = 1'b0;
+      while (!out_valid) @(negedge clk);
+      if (out_data !== expected_vectors[first_index])
+        $fatal(1, "pipeline overlap first result mismatch");
+
+      in_ids = id_vectors[second_index];
+      in_valid = 1'b1;
+      out_ready = 1'b0;
+      for (hold_cycle = 0; hold_cycle < 3; hold_cycle = hold_cycle + 1) begin
+        @(negedge clk);
+        if (in_ready) $fatal(1, "pipeline accepted input while output was blocked");
+        if (!out_valid || out_data !== expected_vectors[first_index])
+          $fatal(1, "pipeline overlap output changed under backpressure");
+      end
+
+      out_ready = 1'b1;
+      @(posedge clk);
+      @(negedge clk);
+      out_ready = 1'b0;
+      if (!in_ready) $fatal(1, "pipeline did not return input ready");
+      @(posedge clk);
+      @(negedge clk);
+      in_valid = 1'b0;
+      while (!out_valid) @(negedge clk);
+      if (out_data !== expected_vectors[second_index])
+        $fatal(1, "pipeline overlap second result mismatch");
+      out_ready = 1'b1;
+      @(posedge clk);
+      @(negedge clk);
+      out_ready = 1'b0;
+    end
+  endtask
 
   initial begin
     $readmemh("tests/vectors/top_case_ids.hex", id_vectors);
@@ -70,8 +121,8 @@ module tb_minimal_recommendation_pipeline;
       @(negedge clk);
       out_ready = 1'b0;
     end
+    stalled_next_input(5, 6);
     $display("tb_minimal_recommendation_pipeline: PASS cases=%0d", CASE_COUNT);
     $finish;
   end
 endmodule
-

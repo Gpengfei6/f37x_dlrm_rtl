@@ -21,6 +21,12 @@ module tb_dot_product_core;
 
   always #5 clk = ~clk;
 
+  initial begin : timeout_guard
+    #200000;
+    $display("tb_dot_product_core: FAIL - timeout");
+    $fatal(1, "tb_dot_product_core timeout");
+  end
+
   dot_product_core #(
     .VEC_LEN(VEC_LEN), .IN_WIDTH(WIDTH), .WEIGHT_WIDTH(WIDTH),
     .BIAS_WIDTH(ACC_WIDTH), .ACC_WIDTH(ACC_WIDTH)
@@ -87,6 +93,54 @@ module tb_dot_product_core;
     end
   endtask
 
+  task automatic replacement_transfer(
+    input logic signed [VEC_LEN*WIDTH-1:0] first_inputs,
+    input logic signed [VEC_LEN*WIDTH-1:0] first_weights,
+    input logic signed [ACC_WIDTH-1:0] first_bias,
+    input logic signed [VEC_LEN*WIDTH-1:0] second_inputs,
+    input logic signed [VEC_LEN*WIDTH-1:0] second_weights,
+    input logic signed [ACC_WIDTH-1:0] second_bias
+  );
+    logic signed [ACC_WIDTH-1:0] first_expected;
+    logic signed [ACC_WIDTH-1:0] second_expected;
+    begin
+      first_expected = expected_dot(first_inputs, first_weights, first_bias);
+      second_expected = expected_dot(second_inputs, second_weights, second_bias);
+      @(negedge clk);
+      in_data = first_inputs;
+      weight_data = first_weights;
+      bias_data = first_bias;
+      in_valid = 1'b1;
+      out_ready = 1'b0;
+      while (!in_ready) @(negedge clk);
+      @(posedge clk);
+      @(negedge clk);
+      in_valid = 1'b0;
+      while (!out_valid) @(negedge clk);
+      if (out_data !== first_expected)
+        $fatal(1, "replacement first result mismatch");
+
+      // Consume result one while accepting result two's input on the same edge.
+      @(negedge clk);
+      in_data = second_inputs;
+      weight_data = second_weights;
+      bias_data = second_bias;
+      in_valid = 1'b1;
+      out_ready = 1'b1;
+      if (!in_ready) $fatal(1, "dot core did not allow same-edge replacement");
+      @(posedge clk);
+      @(negedge clk);
+      in_valid = 1'b0;
+      out_ready = 1'b0;
+      if (!out_valid || out_data !== second_expected)
+        $fatal(1, "replacement second result mismatch");
+      out_ready = 1'b1;
+      @(posedge clk);
+      @(negedge clk);
+      out_ready = 1'b0;
+    end
+  endtask
+
   initial begin
     rst = 1'b1;
     in_valid = 1'b0;
@@ -117,8 +171,11 @@ module tb_dot_product_core;
     vector_b[3*WIDTH +: WIDTH] = -8'sd10;
     transact(vector_a, vector_b, 16'sd123, 0);
 
+    replacement_transfer(
+        {4{8'sd2}}, {4{8'sd3}}, 16'sd4,
+        {4{8'shfe}}, {4{8'sd5}}, -16'sd6);
+
     $display("tb_dot_product_core: PASS");
     $finish;
   end
 endmodule
-

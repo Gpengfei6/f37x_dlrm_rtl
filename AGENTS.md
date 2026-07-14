@@ -3,12 +3,16 @@
 ## Scope
 
 - Work locally in this repository only.
-- Never use SSH, SCP, SFTP, rsync, remote execution, or access `172.17.8.254`.
+- Never use network access, SSH, SCP, SFTP, rsync, remote desktop, remote shells,
+  remote execution, or access `172.17.8.254`.
 - Never access or modify `/home/chaosuan`, `/opt/Xilinx`, or `/opt/xilinx`.
 - Never request credentials or install/upgrade server software, drivers,
   firmware, FPGA platforms, or tools.
 - The user alone performs future F37X compile, `.xclbin` generation, and board
   execution.  Do not claim F37X success without user-supplied logs.
+- Server commands and validation packages may be generated locally, but Codex
+  never executes them.  The target remains one F37X card; do not add multi-card
+  behavior.
 
 ## Design constraints
 
@@ -33,4 +37,16 @@ scheduling, or multi-card support without explicit approval.
 - A tool being invokable is not a passing test.
 - If a simulator/linter is missing, report the test as not run; never install it.
 - Report created/modified files, key diff, commands run, passes, skips, and risk.
+
+## Autonomous workflow and gates
+
+- At the start of work, read this file, `README.md`, the architecture and
+  fixed-point specifications, and `docs/CURRENT_STATE.md` when present.
+- Select the highest-priority unblocked stage-1 task, make a small change, run
+  every locally available test, review the diff, and update state/risk records.
+- Record material design decisions in `docs/DECISIONS.md`.
+- Do not enter phase 2 until `docs/VALIDATION_GATES.md` records real compiler and
+  simulation logs satisfying GATE-1.  Python-only checks never satisfy GATE-1.
+- Stop before changing the fixed-point contract, public top-level interface,
+  model direction, real HBM mapping, or paper/patent innovation.
 

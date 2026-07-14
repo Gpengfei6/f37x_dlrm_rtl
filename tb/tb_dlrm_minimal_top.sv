@@ -22,6 +22,12 @@ module tb_dlrm_minimal_top;
 
   always #5 clk = ~clk;
 
+  initial begin : timeout_guard
+    #1000000;
+    $display("tb_dlrm_minimal_top: FAIL - timeout");
+    $fatal(1, "tb_dlrm_minimal_top timeout");
+  end
+
   dlrm_minimal_top #(
     .EMBED_INIT_FILE("tests/vectors/embedding.hex"),
     .WEIGHT_INIT_FILE("tests/vectors/weights.hex"),
@@ -31,6 +37,51 @@ module tb_dlrm_minimal_top;
     .in_valid(in_valid), .in_ready(in_ready), .in_ids(in_ids),
     .out_valid(out_valid), .out_ready(out_ready), .out_data(out_data)
   );
+
+  task automatic stalled_next_input(
+    input integer first_index,
+    input integer second_index
+  );
+    integer hold_cycle;
+    begin
+      @(negedge clk);
+      in_ids = id_vectors[first_index];
+      in_valid = 1'b1;
+      while (!in_ready) @(negedge clk);
+      @(posedge clk);
+      @(negedge clk);
+      in_valid = 1'b0;
+      while (!out_valid) @(negedge clk);
+      if (out_data !== expected_vectors[first_index])
+        $fatal(1, "top overlap first result mismatch");
+
+      in_ids = id_vectors[second_index];
+      in_valid = 1'b1;
+      out_ready = 1'b0;
+      for (hold_cycle = 0; hold_cycle < 3; hold_cycle = hold_cycle + 1) begin
+        @(negedge clk);
+        if (in_ready) $fatal(1, "top accepted input while output was blocked");
+        if (!out_valid || out_data !== expected_vectors[first_index])
+          $fatal(1, "top overlap output changed under backpressure");
+      end
+
+      out_ready = 1'b1;
+      @(posedge clk);
+      @(negedge clk);
+      out_ready = 1'b0;
+      if (!in_ready) $fatal(1, "top did not return input ready");
+      @(posedge clk);
+      @(negedge clk);
+      in_valid = 1'b0;
+      while (!out_valid) @(negedge clk);
+      if (out_data !== expected_vectors[second_index])
+        $fatal(1, "top overlap second result mismatch");
+      out_ready = 1'b1;
+      @(posedge clk);
+      @(negedge clk);
+      out_ready = 1'b0;
+    end
+  endtask
 
   initial begin
     $readmemh("tests/vectors/top_case_ids.hex", id_vectors);
@@ -68,9 +119,10 @@ module tb_dlrm_minimal_top;
       @(negedge clk);
       out_ready = 1'b0;
     end
+    // This directed pair holds the next request while both ends are stalled.
+    stalled_next_input(5, 6);
     $fclose(result_file);
     $display("tb_dlrm_minimal_top: PASS cases=%0d", CASE_COUNT);
     $finish;
   end
 endmodule
-

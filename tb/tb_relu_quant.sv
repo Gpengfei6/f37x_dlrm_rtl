@@ -7,6 +7,12 @@ module tb_relu_quant;
     .in_data(in_data), .out_data(out_data)
   );
 
+  initial begin : timeout_guard
+    #1000;
+    $display("tb_relu_quant: FAIL - timeout");
+    $fatal(1, "tb_relu_quant timeout");
+  end
+
   task automatic check_value(
     input logic signed [31:0] value,
     input logic signed [15:0] expected
@@ -32,4 +38,3 @@ module tb_relu_quant;
     $finish;
   end
 endmodule
-

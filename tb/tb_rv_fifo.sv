@@ -23,6 +23,12 @@ module tb_rv_fifo;
 
   always #5 clk = ~clk;
 
+  initial begin : timeout_guard
+    #200000;
+    $display("tb_rv_fifo: FAIL - timeout");
+    $fatal(1, "tb_rv_fifo timeout");
+  end
+
   rv_fifo #(.DATA_WIDTH(DATA_WIDTH), .DEPTH(DEPTH)) dut (
     .clk(clk), .rst(rst),
     .in_valid(in_valid), .in_ready(in_ready), .in_data(in_data),
@@ -80,6 +86,7 @@ module tb_rv_fifo;
     expected_write = 0;
     expected_read = 0;
     seed = 32'h37f1f0;
+    seed = $urandom(seed);
     repeat (3) @(posedge clk);
     @(negedge clk);
     rst = 1'b0;
@@ -109,12 +116,21 @@ module tb_rv_fifo;
     #1;
     if (!empty || count != 0) $fatal(1, "FIFO did not become empty");
 
+    // Force multiple explicit pointer wraps before randomized traffic.
+    for (cycle = 0; cycle < DEPTH*3; cycle = cycle + 1) begin
+      push_word(cycle[DATA_WIDTH-1:0]);
+      pop_word();
+    end
+
     // Random source and random backpressure.  The scoreboard checks ordering.
     for (cycle = 0; cycle < 250; cycle = cycle + 1) begin
       @(negedge clk);
-      in_valid = $urandom(seed) & 1;
-      out_ready = $urandom(seed) & 1;
-      in_data = $urandom(seed);
+      // A stalled producer must hold valid and payload stable.
+      if (!in_valid || in_ready) begin
+        in_valid = $urandom() & 1;
+        in_data = $urandom();
+      end
+      out_ready = $urandom() & 1;
     end
     @(negedge clk);
     in_valid = 1'b0;
@@ -133,4 +149,3 @@ module tb_rv_fifo;
     $finish;
   end
 endmodule
-

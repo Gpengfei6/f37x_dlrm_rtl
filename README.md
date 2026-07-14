@@ -29,6 +29,15 @@ See `docs/fixed_point_spec_v0.md` for exact overflow and bit-level rules.
 
 ## Local workflow
 
+Run the unified Windows-local validation entry.  It probes every tool, records
+exit codes, and emits `results/validation_summary.json` without installing
+anything:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass `
+  -File scripts/run_all_local.ps1 [-PythonExe <python.exe>]
+```
+
 Generate deterministic data and run Python checks (no third-party package is
 required):
 
@@ -52,6 +61,12 @@ Scripts detect missing commands and never install software.  Run them from the
 repository root.  Generated vectors are deterministic and checked in so an RTL
 simulation does not depend on invoking Python first.
 
+When Vivado/XSim is locally configured, the ordered standalone entry is:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run_xsim_stage1.ps1
+```
+
 ## Verification status
 
 This section records only commands actually run in the current local workspace.
@@ -65,6 +80,12 @@ This section records only commands actually run in the current local workspace.
 - RTL lint: not run; local Verible/Verilator was not found during initial
   inspection.
 - F37X compile, `.xclbin`, and board run: not run and intentionally out of scope.
+
+The phase-1 hardening run of `scripts/run_all_local.ps1` reported 4 PASS, 0 FAIL,
+and 4 SKIPPED: Python regression/reference/packed comparison and bundle creation
+passed; Icarus, Verilator, Verible, and XSim suites were skipped because those
+tools are absent.  PowerShell parsing and payload/hash structural checks also
+passed outside that summary.  GATE-1 remains not met.
 
 The exact Python regression summary is saved in `logs/python_tests.log`.
 Tool-availability evidence is saved in `logs/tool_availability.log`.
@@ -81,9 +102,14 @@ python3 python/compare_results.py \
 ## Directory map
 
 - `docs/`: architecture, interfaces, fixed-point contract, and staged plan.
+- `tasks/`: prioritized backlog and completed work.
 - `python/`: bit-accurate and floating reference code plus vector tooling.
 - `rtl/`: parameterized synthesizable SystemVerilog cores and minimal pipeline.
 - `tb/`: independent self-checking testbench for every RTL module.
 - `tests/`: deterministic model images, inputs, and expected results.
 - `scripts/`: tool-detecting Python, simulation, and lint entry points.
+- `handoff/stage1_validation/`: credential-free manual server validation package.
 - `host/`: future C++11/XRT boundary description only.
+
+Generated logs/results are retained locally and in validation bundles but are
+ignored by Git; exact source correspondence is provided by SHA-256 manifests.

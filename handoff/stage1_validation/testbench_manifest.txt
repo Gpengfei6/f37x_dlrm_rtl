@@ -1,0 +1,8 @@
+tb/tb_rv_fifo.sv
+tb/tb_saturating_round.sv
+tb/tb_relu_quant.sv
+tb/tb_dot_product_core.sv
+tb/tb_dense_layer_core.sv
+tb/tb_embedding_mem_model.sv
+tb/tb_minimal_recommendation_pipeline.sv
+tb/tb_dlrm_minimal_top.sv

@@ -18,6 +18,12 @@ module tb_embedding_mem_model;
 
   always #5 clk = ~clk;
 
+  initial begin : timeout_guard
+    #200000;
+    $display("tb_embedding_mem_model: FAIL - timeout");
+    $fatal(1, "tb_embedding_mem_model timeout");
+  end
+
   embedding_mem_model #(
     .NUM_ROWS(NUM_ROWS), .EMBED_DIM(DIM), .DATA_WIDTH(WIDTH),
     .ID_WIDTH(ID_WIDTH), .INIT_FILE("tests/vectors/embedding.hex")
@@ -58,6 +64,43 @@ module tb_embedding_mem_model;
     end
   endtask
 
+  task automatic replacement_request(
+    input logic [ID_WIDTH-1:0] first_id,
+    input logic signed [DIM*WIDTH-1:0] first_expected,
+    input logic [ID_WIDTH-1:0] second_id,
+    input logic signed [DIM*WIDTH-1:0] second_expected
+  );
+    begin
+      @(negedge clk);
+      req_id = first_id;
+      req_valid = 1'b1;
+      rsp_ready = 1'b0;
+      while (!req_ready) @(negedge clk);
+      @(posedge clk);
+      @(negedge clk);
+      req_valid = 1'b0;
+      if (!rsp_valid || rsp_data !== first_expected)
+        $fatal(1, "replacement first embedding mismatch");
+
+      // Retire the first response and accept the second request together.
+      @(negedge clk);
+      req_id = second_id;
+      req_valid = 1'b1;
+      rsp_ready = 1'b1;
+      if (!req_ready) $fatal(1, "embedding memory blocked replacement request");
+      @(posedge clk);
+      @(negedge clk);
+      req_valid = 1'b0;
+      rsp_ready = 1'b0;
+      if (!rsp_valid || rsp_data !== second_expected)
+        $fatal(1, "replacement second embedding mismatch");
+      rsp_ready = 1'b1;
+      @(posedge clk);
+      @(negedge clk);
+      rsp_ready = 1'b0;
+    end
+  endtask
+
   initial begin
     rst = 1'b1;
     req_valid = 1'b0;
@@ -80,6 +123,8 @@ module tb_embedding_mem_model;
       expected_row[lane*WIDTH +: WIDTH] =
           (lane % 2 == 0) ? 8'sd127 : 8'sh80;
     request_and_check(5'd3, expected_row, 0);
+
+    replacement_request(5'd0, {DIM{8'h00}}, 5'd1, {DIM{8'h7f}});
 
     $display("tb_embedding_mem_model: PASS");
     $finish;

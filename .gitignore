@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+work/
+.Xil/
+xsim.dir/
+*.jou
+*.pb
+webtalk*.xml
+webtalk*.html
+results/validation_bundle/
+logs/*
+!logs/.gitkeep
+results/*
+!results/.gitkeep
+handoff/stage1_validation/*.zip

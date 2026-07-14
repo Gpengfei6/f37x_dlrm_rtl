@@ -63,3 +63,11 @@ the executable contract used to produce expected RTL values.
 - An ID outside `NUM_EMBED_ROWS` returns a zero row in the phase-1 memory model;
   generated tests use only valid IDs.
 
+## 6. Packed lanes and hex files
+
+Packed vectors place lane zero in the least-significant slice.  For width `W`,
+lane `i` occupies `[i*W +: W]`; a printed packed hex word therefore shows the
+highest-numbered lane on the left.  Scalar `embedding.hex`, `weights.hex`, and
+`biases.hex` entries are row-major, one raw two's-complement value per line at
+the configured scalar width.  Python regression decodes these files independently
+and round-trips every packed ID and expected output lane.

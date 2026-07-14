@@ -13,6 +13,7 @@ sys.path.insert(0, str(PYTHON_DIR))
 
 from compare_results import compare  # noqa: E402
 from fixed_point import (  # noqa: E402
+    decode_twos_complement,
     dot_product,
     round_shift_nearest_away,
     saturating_round,
@@ -24,6 +25,25 @@ from reference_model import ReferenceModel, load_json  # noqa: E402
 
 def run_tests():
     config = load_json(PROJECT_ROOT / "config" / "model_config.json")
+    assert config["fractional_bits"]["embedding"] == 4
+    assert config["fractional_bits"]["weight"] == 4
+    assert config["fractional_bits"]["bias"] == 8
+    assert config["fractional_bits"]["accumulator"] == 8
+    assert config["fractional_bits"]["output"] == 4
+    assert config["output_shift"] == 4
+    # Four INT8 values span [-512, 508]: ten signed bits are necessary and enough.
+    assert -(1 << 9) <= 4 * -128
+    assert 4 * 127 <= (1 << 9) - 1
+    assert 4 * -128 < -(1 << 8)
+
+    # Re-derive ties-away rounding without calling the implementation under test.
+    for value in range(-4096, 4097):
+        magnitude = abs(value)
+        quotient, remainder = divmod(magnitude, 16)
+        if remainder >= 8:
+            quotient += 1
+        independent = -quotient if value < 0 else quotient
+        assert round_shift_nearest_away(value, 4) == independent
     assert round_shift_nearest_away(7, 4) == 0
     assert round_shift_nearest_away(8, 4) == 1
     assert round_shift_nearest_away(23, 4) == 1
@@ -60,12 +80,66 @@ def run_tests():
         assert actual["accumulators"] == expected_record["accumulators"]
         assert actual["output"] == expected_record["output"]
 
+    # Re-read every checked-in hex image as two's complement and compare it with
+    # the JSON model.  This independently checks file interpretation and order.
+    def read_signed_hex(path, width):
+        return [
+            decode_twos_complement(int(line.strip(), 16), width)
+            for line in path.read_text(encoding="ascii").splitlines()
+            if line.strip()
+        ]
+
+    assert read_signed_hex(
+        PROJECT_ROOT / "tests" / "vectors" / "embedding.hex",
+        config["data_width"],
+    ) == [value for row in model_data["embeddings"] for value in row]
+    assert read_signed_hex(
+        PROJECT_ROOT / "tests" / "vectors" / "weights.hex",
+        config["weight_width"],
+    ) == [value for row in model_data["weights"] for value in row]
+    assert read_signed_hex(
+        PROJECT_ROOT / "tests" / "vectors" / "biases.hex",
+        config["bias_width"],
+    ) == model_data["biases"]
+
+    id_width = max(1, (config["num_embed_rows"] - 1).bit_length())
+    packed_ids = [
+        int(line, 16)
+        for line in (PROJECT_ROOT / "tests" / "vectors" / "top_case_ids.hex")
+        .read_text(encoding="ascii").splitlines() if line
+    ]
+    for packed, case in zip(packed_ids, cases):
+        unpacked = [
+            (packed >> (lane * id_width)) & ((1 << id_width) - 1)
+            for lane in range(config["num_lookups"])
+        ]
+        assert unpacked == case["ids"]
+
+    packed_outputs = [
+        int(line, 16)
+        for line in (PROJECT_ROOT / "tests" / "expected" / "top_outputs.hex")
+        .read_text(encoding="ascii").splitlines() if line
+    ]
+    for packed, record in zip(packed_outputs, expected):
+        unpacked = [
+            decode_twos_complement(
+                (packed >> (lane * config["output_width"])) &
+                ((1 << config["output_width"]) - 1),
+                config["output_width"],
+            )
+            for lane in range(config["dense_out_dim"])
+        ]
+        assert unpacked == record["output"]
+
     narrow_inputs = [508] * config["dense_in_dim"]
     narrow_weights = [127] * config["dense_in_dim"]
     full_precision = sum(a * b for a, b in zip(narrow_inputs, narrow_weights))
     wrapped = dot_product(narrow_inputs, narrow_weights, 0, 16)
     assert wrapped == wrap_signed(full_precision, 16)
     assert wrapped != full_precision
+    int32_full = (1 << 31) - 1 + sum([131071 * 127] * 8)
+    int32_wrapped = dot_product([131071] * 8, [127] * 8, (1 << 31) - 1, 32)
+    assert int32_wrapped == wrap_signed(int32_full, 32)
 
     selfcheck_path = PROJECT_ROOT / "results" / "python_selfcheck.hex"
     write_lines(
@@ -82,6 +156,13 @@ def run_tests():
         config["dense_out_dim"],
     )
     assert report["passed"]
+    testbench_paths = sorted((PROJECT_ROOT / "tb").glob("tb_*.sv"))
+    testbench_guards_ok = len(testbench_paths) == 8 and all(
+        "timeout_guard" in path.read_text(encoding="utf-8") and
+        (path.stem + ": PASS") in path.read_text(encoding="utf-8")
+        for path in testbench_paths
+    )
+    assert testbench_guards_ok
     return {
         "status": "PASS",
         "case_count": len(cases),
@@ -89,9 +170,13 @@ def run_tests():
         "categories": sorted(categories),
         "narrow_accumulator_full_precision": full_precision,
         "narrow_accumulator_wrapped_int16": wrapped,
+        "int32_wrap_rederived": int32_wrapped,
         "self_compare_count": report["rtl_count"],
         "directed_saturation_observed": True,
         "relu_zero_observed": True,
+        "packed_lane_zero_is_lsb": True,
+        "hex_twos_complement_roundtrip": True,
+        "testbench_timeout_guards": testbench_guards_ok,
     }
 
 
