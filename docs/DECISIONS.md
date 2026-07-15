@@ -288,3 +288,24 @@
   stage timing to JSON/CSV, separating end-to-end from forward-only time.
 - **Claim boundary:** synthetic random weights/data do not establish meaningful
   AUC, performance baselines, or thesis novelty.
+
+## D-022 — Accept software feasibility tooling without approving trace gates
+
+- **Status:** implemented and locally validated.
+- **Model path:** retain the standard configurable PyTorch DLRM as the intended
+  software reference.  Because the current runtime has no PyTorch, record both
+  CPU and CUDA as SKIPPED and use a deterministic NumPy implementation only as
+  an independent structure/tool oracle.
+- **Trace path:** use a common logical lookup record for JSONL/CSV/NPY, scan
+  1/2/4/8/16/32/64-request windows and wait limits, and compare bounded
+  none/count/time/dual/adaptive policies.  Every policy has explicit request,
+  wait, unique-tag, fan-out and state bounds.
+- **Channel path:** compare simple mapping/FIFO policies with lightweight
+  queue/age-aware choices, but label the two-candidate placement and fixed
+  service time as abstract feasibility assumptions rather than F37X facts.
+- **Evidence:** 12 tests pass and two PyTorch-dependent tests skip.  Synthetic
+  balanced/low-duplicate cases show small negative scheduler results, while
+  deliberately duplicated/skewed cases show larger modeled value.
+- **Decision:** accept the tools and reproducibility evidence; do not approve
+  GATE-T1/T2/T3, coalescing RTL, scheduler RTL, or HBM RTL without real local
+  Criteo traces, reviewed physical mapping, and a separate human decision.

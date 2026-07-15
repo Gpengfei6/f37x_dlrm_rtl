@@ -105,8 +105,8 @@ This section records only commands actually run in the current local workspace.
 Server retry2 under Vivado 2020.2 produced Python PASS, `xvlog` PASS, 8/8
 `xelab` PASS, 8/8 explicit XSim PASS markers, and top-level 24-vector bit-for-bit
 agreement.  All 64 manifest hashes match source commit `44a1b25`; GATE-1 is
-approved.  Work remains stopped before parameterized PE-array architecture and
-phase-2 implementation.
+approved.  The later reviewed Stage-2 architecture and frozen Stage-2A baseline
+are present, but Stage-2A still awaits its own returned Vivado/XSim evidence.
 
 The phase-1 hardening run of `scripts/run_all_local.ps1` reported 4 PASS, 0 FAIL,
 and 4 SKIPPED: Python regression/reference/packed comparison and bundle creation
@@ -128,6 +128,19 @@ abstract channel-mapping/scheduling analysis.  Criteo data is never downloaded;
 the loader accepts only a path manually supplied by the user.  Synthetic data
 validates the tools but cannot approve hardware innovation.
 
+Run the completed software and trace suites with:
+
+```powershell
+python scripts/run_software_feasibility_tests.py
+python -m model.inference.run_inference --backend numpy-oracle
+python -m analysis.run_trace_feasibility
+```
+
+The software suite currently reports 12 PASS, 0 FAIL, and 2 SKIPPED. PyTorch
+CPU and CUDA are SKIPPED because this runtime has no `torch`; the NumPy oracle
+PASS is not a PyTorch or formal performance baseline. GATE-T1/T2/T3 remain
+INCONCLUSIVE until local Criteo data is supplied.
+
 After running tests, detailed logs are written under `logs/`.  RTL output can be
 checked independently with:
 
@@ -142,8 +155,8 @@ python3 python/compare_results.py \
 - `docs/`: architecture, interfaces, fixed-point contract, and staged plan.
 - `tasks/`: prioritized backlog and completed work.
 - `python/`: bit-accurate and floating reference code plus vector tooling.
-- `model/`: configurable software DLRM, local datasets, training, inference,
-  quantization/export boundaries.
+- `model/`: configurable software DLRM, local datasets, training, and inference;
+  quantization/export remain later explicitly reviewed work.
 - `analysis/`: embedding traces, coalescing, channel mapping, and feasibility
   reports; no RTL is generated here.
 - `rtl/`: parameterized synthesizable SystemVerilog cores and minimal pipeline.
@@ -153,5 +166,6 @@ python3 python/compare_results.py \
 - `handoff/stage1_validation/`: credential-free manual server validation package.
 - `host/`: future C++11/XRT boundary description only.
 
-Generated logs/results are retained locally and in validation bundles but are
-ignored by Git; exact source correspondence is provided by SHA-256 manifests.
+Generated logs/results are generally ignored by Git. The small named software
+and trace feasibility summaries are tracked as reproducible evidence; bulk
+traces remain local. Exact RTL source correspondence uses SHA-256 manifests.

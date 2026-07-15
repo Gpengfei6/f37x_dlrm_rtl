@@ -46,10 +46,20 @@ RTL and HBM remain outside this gate.
 
 ## GATE-T1/T2/T3 — Trace feasibility
 
-Not started on real data.  GATE-T1 measures coalescing read reduction versus
-added mean/P99 wait; GATE-T2 measures channel imbalance and lightweight
-scheduler improvement; GATE-T3 compares their combined predicted end-to-end
-value.  Synthetic traces validate tools only and cannot pass these gates.
+Status: **TOOLING PASS; REAL-DATA EVIDENCE INCONCLUSIVE**.
+
+GATE-T1 measures coalescing read reduction versus added mean/P99 wait across a
+request-window and wait-limit grid.  GATE-T2 measures channel imbalance and
+lightweight scheduler improvement.  GATE-T3 compares no optimization,
+coalescing only, scheduling only, and their combined abstract completion model.
+
+The deterministic synthetic suite passes trace serialization/statistics and all
+simulator grids.  Its balanced/low-duplicate cases show no benefit and a small
+queue-aware degradation, while deliberately duplicated/skewed cases show larger
+modeled reductions.  These are tool-behavior checks, not thesis evidence.  No
+user-supplied Criteo trace exists, so all three `passed` fields remain false.
+The 10%-15% read-reduction range is an internal engineering review line, not a
+universal academic threshold or an automatic gate.
 
 ## GATE-3 — Complete simplified-DLRM architecture
 

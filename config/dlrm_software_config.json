@@ -1,0 +1,11 @@
+{
+  "seed": 3701,
+  "num_dense_features": 8,
+  "table_sizes": [64, 80, 96, 128],
+  "embedding_dim": 8,
+  "bottom_mlp": [16, 8],
+  "top_mlp": [32, 16, 1],
+  "synthetic_samples": 256,
+  "batch_size": 16,
+  "dtype": "float32"
+}

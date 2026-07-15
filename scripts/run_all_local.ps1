@@ -110,6 +110,8 @@ if ($Python.available) {
   $PythonCommands = @(
     [pscustomobject]@{ name="python_regression"; args=@("-B","scripts/run_python_tests.py"); log="logs/python_regression_console.log" },
     [pscustomobject]@{ name="python_stage2a_regression"; args=@("-B","scripts/run_stage2a_python_tests.py"); log="logs/python_stage2a_console.log" },
+    [pscustomobject]@{ name="python_software_feasibility"; args=@("-B","scripts/run_software_feasibility_tests.py"); log="logs/python_software_feasibility.log" },
+    [pscustomobject]@{ name="python_trace_feasibility"; args=@("-B","-m","analysis.run_trace_feasibility"); log="logs/python_trace_feasibility.log" },
     [pscustomobject]@{ name="python_pe_estimator"; args=@("-B","python/estimate_pe_architecture.py","--self-check"); log="logs/python_pe_estimator.log" },
     [pscustomobject]@{ name="python_reference"; args=@("-B","python/reference_model.py"); log="logs/python_reference_console.log" },
     [pscustomobject]@{ name="python_packed_compare"; args=@("-B","python/compare_results.py","--rtl","results/python_selfcheck.hex","--expected","tests/expected/top_expected.json","--report","results/python_compare_report.json"); log="logs/python_compare_console.log" }

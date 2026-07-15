@@ -12,6 +12,14 @@ logs/*
 !logs/.gitkeep
 results/*
 !results/.gitkeep
+!results/software_feasibility_summary.json
+!results/trace_feasibility_summary.json
+!results/dlrm_numpy_inference_summary.json
+!results/dlrm_numpy_inference_summary.csv
+!results/dlrm_torch_cpu_summary.json
+!results/dlrm_torch_cuda_summary.json
+!results/dlrm_torch_cpu_summary.csv
+!results/dlrm_torch_cuda_summary.csv
 handoff/stage1_validation/*.zip
 handoff/stage2a_validation/*.zip
 server_logs/

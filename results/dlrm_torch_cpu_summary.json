@@ -1,0 +1,11 @@
+{
+  "status": "SKIPPED",
+  "backend": "torch",
+  "device": "cpu",
+  "reason": {
+    "torch": "SKIPPED",
+    "reason": "PyTorch is not installed",
+    "cuda": "SKIPPED",
+    "cuda_reason": "PyTorch is not installed"
+  }
+}

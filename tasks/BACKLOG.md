@@ -1,25 +1,25 @@
 # Backlog
 
-## Active local software work
+## Completed local software milestone
 
-1. Implement a configuration-driven PyTorch DLRM with Bottom MLP, multiple
-   embedding tables, DLRM dot-product interaction, Top MLP, intermediates,
-   save/reload, parameter counts, and CPU/optional CUDA execution.
-2. Add deterministic synthetic datasets and a strict user-path-only Criteo
-   loader with no download behavior.
-3. Add training, inference, and benchmark CLIs with AUC/LogLoss, warmup,
-   end-to-end versus forward-only latency, percentiles, throughput, device and
-   per-stage timing in JSON/CSV.
-4. Export logical embedding accesses as JSONL, CSV, and NPY; compute frequency,
-   hotspot, duplicate, window, distance, and table statistics.
-5. Simulate no/count/time/dual/adaptive bounded coalescing and report read
-   reduction, added latency, occupancy, fan-out and state requirements.
-6. Simulate modulo/static-table mapping and FIFO/round-robin/queue-aware/age-
-   assisted scheduling for 4/8/16/32 channels.
-7. Generate deterministic high/low-duplicate, balanced/skewed and hotspot-shift
-   validation traces plus `trace_feasibility_summary.json` and the report.
-8. Run all locally possible tests; mark missing PyTorch/CUDA separately as
-   SKIPPED and never infer a model PASS from NumPy-only evidence.
+The configurable PyTorch path, independent NumPy oracle, synthetic/local-Criteo
+data adapters, inference/training interfaces, metrics, trace formats/statistics,
+five bounded coalescers, and five abstract channel policies are implemented.
+The software suite is 12 PASS/0 FAIL/2 SKIPPED; PyTorch CPU/CUDA are the skips.
+Synthetic GATE-T tooling is complete, but no trace gate is approved.
+
+## Next evidence work
+
+1. On a machine already containing PyTorch, run the CPU path and, if present,
+   the explicitly synchronized CUDA path; preserve JSON/CSV outputs.
+2. With user-supplied classic Criteo TSV files, validate loader cardinalities
+   and generate the real trace statistics.
+3. Review the GATE-T1 request/wait sweep against latency constraints and the
+   internal 10%-15% engineering line.
+4. Replace the two-candidate abstract channel-placement assumption with an
+   explicitly reviewed HBM table/address mapping before GATE-T2/T3 conclusions.
+5. Decide manually whether the real coalescing and scheduling benefits justify
+   corresponding RTL; a small or negative benefit stops that hardware path.
 
 ## External/manual gates
 

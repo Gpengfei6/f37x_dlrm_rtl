@@ -1,0 +1,59 @@
+{
+  "backend": "numpy-oracle",
+  "batch_count": 16,
+  "batch_size": 16,
+  "claim_boundary": "software feasibility only; not an FPGA or production baseline",
+  "classification": {
+    "auc": 0.588714599609375,
+    "log_loss": 0.6931448555340701
+  },
+  "dataset": {
+    "claim_boundary": "tooling validation only; not real Criteo evidence",
+    "mode": "deterministic",
+    "sample_count": 256,
+    "seed": 3701,
+    "source": "synthetic"
+  },
+  "device": "cpu",
+  "end_to_end_latency": {
+    "average_ms": 0.06486875190603314,
+    "p50_ms": 0.06040000153006986,
+    "p95_ms": 0.08095000885077752,
+    "p99_ms": 0.10219000469078308
+  },
+  "forward_latency": {
+    "average_ms": 0.06364374894474167,
+    "p50_ms": 0.05945000157225877,
+    "p95_ms": 0.0793250001152046,
+    "p99_ms": 0.10002500057453288
+  },
+  "latency_observation_unit": "one batch",
+  "parameter_summary": {
+    "dense_parameters": 1433,
+    "embedding_capacity_bytes": 11776,
+    "embedding_capacity_values": 2944,
+    "embedding_parameters": 2944,
+    "total_parameters": 4377
+  },
+  "sample_count": 256,
+  "stage_time_average_per_batch_ms": {
+    "bottom_mlp": 0.00841874771140283,
+    "embedding_lookup": 0.006931251846253872,
+    "feature_interaction": 0.02851249973900849,
+    "top_mlp": 0.01847499697760213
+  },
+  "stage_time_total_ms": {
+    "bottom_mlp": 0.13469996338244528,
+    "embedding_lookup": 0.11090002954006195,
+    "feature_interaction": 0.45619999582413584,
+    "top_mlp": 0.2955999516416341
+  },
+  "status": "PASS",
+  "throughput_samples_per_second": 246651.8859986254,
+  "timing_scope": {
+    "end_to_end": "preloaded batch slicing/tensor preparation through probabilities returned to host",
+    "forward_only": "model stages after host/device tensor preparation",
+    "gpu_synchronization": false
+  },
+  "warmup_batches": 4
+}

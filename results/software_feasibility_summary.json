@@ -1,0 +1,218 @@
+{
+  "counts": {
+    "fail": 0,
+    "pass": 12,
+    "skipped": 2
+  },
+  "evidence_boundary": {
+    "numpy_oracle": "structural/tool validation, not a PyTorch PASS or formal baseline",
+    "real_criteo": "not present; no download attempted",
+    "synthetic_traces": "tool validation only; GATE-T1/T2/T3 remain INCONCLUSIVE"
+  },
+  "numpy_benchmark": {
+    "backend": "numpy-oracle",
+    "batch_count": 8,
+    "batch_size": 16,
+    "claim_boundary": "software feasibility only; not an FPGA or production baseline",
+    "classification": {
+      "auc": 0.571044921875,
+      "log_loss": 0.6931452290096027
+    },
+    "dataset": {
+      "claim_boundary": "tooling validation only; not real Criteo evidence",
+      "mode": "deterministic",
+      "sample_count": 128,
+      "seed": 3701,
+      "source": "synthetic"
+    },
+    "device": "cpu",
+    "end_to_end_latency": {
+      "average_ms": 0.06223749915079679,
+      "p50_ms": 0.05920000694459304,
+      "p95_ms": 0.07711500074947253,
+      "p99_ms": 0.07798299920978025
+    },
+    "forward_latency": {
+      "average_ms": 0.060937500165891834,
+      "p50_ms": 0.05769999552285299,
+      "p95_ms": 0.07565500418422744,
+      "p99_ms": 0.07697100605582818
+    },
+    "latency_observation_unit": "one batch",
+    "sample_count": 128,
+    "stage_time_average_per_batch_ms": {
+      "bottom_mlp": 0.007125003321561962,
+      "embedding_lookup": 0.0061374958022497594,
+      "feature_interaction": 0.027300004148855805,
+      "top_mlp": 0.019075001546298154
+    },
+    "stage_time_total_ms": {
+      "bottom_mlp": 0.0570000265724957,
+      "embedding_lookup": 0.049099966417998075,
+      "feature_interaction": 0.21840003319084644,
+      "top_mlp": 0.15260001237038523
+    },
+    "status": "PASS",
+    "throughput_samples_per_second": 257079.7383942629,
+    "timing_scope": {
+      "end_to_end": "preloaded batch slicing/tensor preparation through probabilities returned to host",
+      "forward_only": "model stages after host/device tensor preparation",
+      "gpu_synchronization": false
+    },
+    "warmup_batches": 2
+  },
+  "overall_status": "PASS",
+  "runtime": {
+    "cuda": "SKIPPED",
+    "cuda_reason": "PyTorch is not installed",
+    "reason": "PyTorch is not installed",
+    "torch": "SKIPPED"
+  },
+  "tests": [
+    {
+      "detail": {
+        "embedding_capacity_values": 2944,
+        "interaction_output_dim": 18
+      },
+      "name": "config_roundtrip_and_dimensions",
+      "status": "PASS"
+    },
+    {
+      "detail": {
+        "modes": [
+          "deterministic",
+          "high_duplicate",
+          "low_duplicate",
+          "balanced_channels",
+          "skewed_channels",
+          "hotspot_shift"
+        ],
+        "samples_per_mode": 64
+      },
+      "name": "synthetic_trace_classes_reproducible",
+      "status": "PASS"
+    },
+    {
+      "detail": {
+        "dense_parameters": 1433,
+        "embedding_capacity_bytes": 11776,
+        "embedding_capacity_values": 2944,
+        "embedding_parameters": 2944,
+        "total_parameters": 4377
+      },
+      "name": "numpy_oracle_forward_and_intermediates",
+      "status": "PASS"
+    },
+    {
+      "detail": {
+        "checkpoint_bytes": 19568
+      },
+      "name": "numpy_oracle_save_reload_exact",
+      "status": "PASS"
+    },
+    {
+      "detail": {},
+      "name": "dot_interaction_known_vector",
+      "status": "PASS"
+    },
+    {
+      "detail": {
+        "local_path_guard": "PASS",
+        "rows": 5,
+        "url_guard": "PASS"
+      },
+      "name": "local_criteo_loader_and_no_download_guard",
+      "status": "PASS"
+    },
+    {
+      "detail": {
+        "auc_known_vector": 0.75,
+        "log_loss_known_vector": 0.2876820724517809
+      },
+      "name": "classification_metrics_known_vectors",
+      "status": "PASS"
+    },
+    {
+      "detail": {
+        "forward_latency": {
+          "average_ms": 0.060937500165891834,
+          "p50_ms": 0.05769999552285299,
+          "p95_ms": 0.07565500418422744,
+          "p99_ms": 0.07697100605582818
+        },
+        "throughput_samples_per_second": 257079.7383942629
+      },
+      "name": "numpy_benchmark_json_csv_and_timing_scopes",
+      "status": "PASS"
+    },
+    {
+      "detail": {
+        "formats": [
+          "JSONL",
+          "CSV",
+          "NPY"
+        ],
+        "records_per_trace": 256
+      },
+      "name": "trace_export_all_formats_roundtrip",
+      "status": "PASS"
+    },
+    {
+      "detail": {
+        "high_duplicate_w8": 0.5390625,
+        "low_duplicate_w8": 0.0
+      },
+      "name": "trace_window_locality_and_skew_statistics",
+      "status": "PASS"
+    },
+    {
+      "detail": {
+        "adaptive": {
+          "average_wait": 2.1875,
+          "read_reduction_ratio": 0.38671875
+        },
+        "dual": {
+          "average_wait": 3.5,
+          "read_reduction_ratio": 0.5390625
+        },
+        "fixed_count": {
+          "average_wait": 3.5,
+          "read_reduction_ratio": 0.5390625
+        },
+        "fixed_time": {
+          "average_wait": 3.5,
+          "read_reduction_ratio": 0.5390625
+        },
+        "none": {
+          "average_wait": 0.0,
+          "read_reduction_ratio": 0.0
+        }
+      },
+      "name": "five_bounded_coalescing_policies",
+      "status": "PASS"
+    },
+    {
+      "detail": {
+        "channel_counts": [
+          4,
+          8,
+          16,
+          32
+        ],
+        "configurations": 20
+      },
+      "name": "channel_mapping_and_scheduler_grid",
+      "status": "PASS"
+    },
+    {
+      "name": "pytorch_cpu_forward",
+      "reason": "PyTorch is not installed in the local runtime",
+      "status": "SKIPPED"
+    },
+    {
+      "name": "pytorch_cuda_forward",
+      "reason": "PyTorch is not installed",
+      "status": "SKIPPED"
+    }
+  ]
+}

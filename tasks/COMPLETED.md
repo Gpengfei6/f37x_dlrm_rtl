@@ -39,3 +39,14 @@
   remained explicitly SKIPPED.
 - Prepared a credential-free Stage-2A server validation handoff and stopped
   before Stage 2B, full MLP, HBM, AXI, or Vitis Kernel work.
+- Aligned the repository with the final thesis scope in design commit `70ff279`:
+  bounded embedding-request coalescing/broadcast is primary, lightweight
+  post-coalescing channel scheduling is secondary, and Stage 2A is foundational.
+- Implemented the configurable PyTorch DLRM path plus a deterministic NumPy
+  oracle, strict local-only Criteo loader, synthetic data, training/inference,
+  intermediate outputs, save/reload, metrics, and JSON/CSV benchmark reporting.
+- Implemented JSONL/CSV/NPY embedding traces, 1/2/4/8/16/32/64-request
+  statistics, five bounded coalescing policies, and 4/8/16/32-channel abstract
+  mapping/scheduling comparisons including the GATE-T3 four-way model.
+- Passed 12 software feasibility checks with 0 failures; kept PyTorch CPU/CUDA
+  as two explicit SKIPPED results and all real-data trace gates INCONCLUSIVE.
