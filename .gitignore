@@ -13,4 +13,5 @@ logs/*
 results/*
 !results/.gitkeep
 handoff/stage1_validation/*.zip
+handoff/stage2a_validation/*.zip
 server_logs/

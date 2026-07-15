@@ -1,4 +1,4 @@
-# F37X DLRM RTL accelerator — phase 0/1
+# F37X DLRM RTL accelerator — GATE-1 plus Stage-2A baseline
 
 This repository is a local, simulation-first prototype for a recommendation
 inference accelerator.  The implemented scope is deliberately small:
@@ -12,6 +12,8 @@ NUM_LOOKUPS embedding IDs
   -> output vector
 ```
 
+Stage 2A adds an independent parameterized, multi-cycle vector-PE dense engine
+with P-banked ping-pong activations and an abstract local weight/bias provider.
 It is **not** a complete DLRM and does not contain AXI, HBM, an XRT host,
 duplicate-ID merging, dynamic micro-batching, an RTL-kernel shell, or an
 `.xclbin`.  No claim is made that the design has been compiled or run on F37X.
@@ -67,6 +69,18 @@ When Vivado/XSim is locally configured, the ordered standalone entry is:
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run_xsim_stage1.ps1
 ```
 
+The separate Stage-2A server entry is:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run_xsim_stage2a.ps1
+```
+
+Its dependency-free Python oracle is:
+
+```bash
+python3 scripts/run_stage2a_python_tests.py
+```
+
 ## Verification status
 
 This section records only commands actually run in the current local workspace.
@@ -96,6 +110,10 @@ the later retry2 server run now provides the required RTL evidence.
 
 The exact Python regression summary is saved in `logs/python_tests.log`.
 Tool-availability evidence is saved in `logs/tool_availability.log`.
+
+The Stage-2A local workflow currently records RTL compile/simulation/lint as
+SKIPPED because Vivado, Icarus, Verilator, and Verible are absent.  It does not
+claim Stage-2A RTL PASS; use the generated server payload and return real logs.
 
 After running tests, detailed logs are written under `logs/`.  RTL output can be
 checked independently with:

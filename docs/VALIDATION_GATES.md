@@ -30,11 +30,18 @@ implementation.  The parameterized PE-array architecture must be reviewed first.
 
 ## GATE-2 — Parameterized compute architecture
 
-Not started.  Its GATE-1 prerequisite is satisfied, but the parameterized
-PE-array architecture requires explicit review before implementation.  GATE-2
-will cover a bounded PE array, configurable parallelism, multicycle dot products,
-multilayer MLP, per-layer Python agreement, resource estimates, and at least two
-layer sizes.  Completion stops before HBM.
+Status: **IN PROGRESS; not approved**.
+
+The architecture review conditionally approved Scheme B and Stage 2A.  The
+non-overlapped Stage-2A baseline is locally implemented with P=4/8/16/32,
+ACC32/48, runtime dimensions, banked ping-pong activation buffers, an abstract
+local provider, runtime quantization metadata, and ready/valid boundaries.
+Python tests pass, but all local RTL tools are absent, so RTL evidence is
+SKIPPED and Stage 2A awaits real Vivado 2020.2/XSim logs.
+
+Even a successful Stage-2A server run does not complete GATE-2.  Stage 2B must
+separately implement and really validate double-partial-sum output-neuron
+MAC/reduction overlap.  Full MLP and HBM remain outside this gate.
 
 ## GATE-3 — Complete simplified-DLRM architecture
 

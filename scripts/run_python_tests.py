@@ -157,10 +157,25 @@ def run_tests():
     )
     assert report["passed"]
     testbench_paths = sorted((PROJECT_ROOT / "tb").glob("tb_*.sv"))
-    testbench_guards_ok = len(testbench_paths) == 8 and all(
-        "timeout_guard" in path.read_text(encoding="utf-8") and
-        (path.stem + ": PASS") in path.read_text(encoding="utf-8")
-        for path in testbench_paths
+    required_stage1_testbenches = {
+        "tb_rv_fifo", "tb_saturating_round", "tb_relu_quant",
+        "tb_dot_product_core", "tb_dense_layer_core",
+        "tb_embedding_mem_model", "tb_minimal_recommendation_pipeline",
+        "tb_dlrm_minimal_top",
+    }
+    required_stage2a_testbenches = {
+        "tb_mac_lane", "tb_runtime_relu_quant",
+        "tb_banked_activation_buffer", "tb_local_weight_provider",
+        "tb_vector_dot_product_core", "tb_dense_layer_engine",
+    }
+    discovered_testbenches = {path.stem for path in testbench_paths}
+    testbench_guards_ok = (
+        required_stage1_testbenches.issubset(discovered_testbenches) and
+        required_stage2a_testbenches.issubset(discovered_testbenches) and all(
+            "timeout_guard" in path.read_text(encoding="utf-8") and
+            (path.stem + ": PASS") in path.read_text(encoding="utf-8")
+            for path in testbench_paths
+        )
     )
     assert testbench_guards_ok
     timescale = "`timescale 1ns/1ps"
@@ -168,8 +183,13 @@ def run_tests():
         path for path in (PROJECT_ROOT / "rtl").rglob("*.sv")
         if path.name != "dlrm_config_pkg.sv"
     )
+    required_stage2a_modules = {
+        "mac_lane.sv", "runtime_relu_quant.sv",
+        "banked_activation_buffer.sv", "local_weight_provider.sv",
+        "vector_dot_product_core.sv", "dense_layer_engine.sv",
+    }
     timescale_contract_ok = (
-        len(rtl_module_paths) == 8 and
+        required_stage2a_modules.issubset({path.name for path in rtl_module_paths}) and
         all(path.read_text(encoding="utf-8").splitlines()[0] == timescale
             for path in rtl_module_paths) and
         all(path.read_text(encoding="utf-8").splitlines()[0] == timescale
@@ -239,6 +259,8 @@ def run_tests():
         "packed_lane_zero_is_lsb": True,
         "hex_twos_complement_roundtrip": True,
         "testbench_timeout_guards": testbench_guards_ok,
+        "testbench_count": len(testbench_paths),
+        "rtl_module_count": len(rtl_module_paths),
         "timescale_contract": timescale_contract_ok,
         "dense_process_local_loop_indices": dense_loop_scope_ok,
         "elastic_replacement_guards": elastic_replacement_guards_ok,

@@ -28,3 +28,14 @@
   explicit PASS evidence, and all 24 top-level outputs match bit for bit.
 - Formally approved GATE-1 with 18 PASS, 0 FAIL, and 0 SKIPPED; stopped before
   parameterized PE-array architecture or any phase-2 implementation.
+- Conditionally approved Scheme B, P=16 development default, ACC32/ACC48 modes,
+  P-banked 1024/1024 ping-pong buffers, runtime descriptors, and the abstract
+  provider boundary in architecture commit `7480133`.
+- Implemented the independent Stage-2A baseline: six new SystemVerilog modules,
+  six explicit-marker testbenches, a bit-accurate Python oracle, P=4/8/16/32
+  estimator/coverage, and separate Vivado 2020.2/XSim scripts.
+- Ran the unified local workflow with 6 PASS, 0 FAIL, and 5 SKIPPED.  Python
+  Stage-1/Stage-2A/model/estimator/packing checks passed; all absent RTL tools
+  remained explicitly SKIPPED.
+- Prepared a credential-free Stage-2A server validation handoff and stopped
+  before Stage 2B, full MLP, HBM, AXI, or Vitis Kernel work.

@@ -241,3 +241,20 @@
   unsupported shift without producing partial results.
 - **Not adopted:** HBM addresses, AXI IDs/bursts/channels, or physical memory
   topology in the PE descriptor.
+
+## D-019 — Implement Stage 2A as an independent non-overlapped hierarchy
+
+- **Status:** locally implemented; real RTL validation pending.
+- **Adopted modules:** signed MAC lane, runtime round/saturate/ReLU, P-bank
+  activation buffer, abstract local weight/bias provider, multi-cycle vector dot
+  core, and dense-layer job engine.
+- **Control:** one output-neuron dot context at a time; elastic result FIFO may
+  hold completed indexed results, but there are no double-psum overlap banks.
+- **Compatibility:** phase-1 modules and top interface are unchanged.  ACC32
+  and shift-four/ReLU provide the compatibility configuration; ACC48 is the
+  Stage-2 default.
+- **Verification:** every new module has an explicit-marker self-checking
+  testbench; local Python passes while RTL compile/elaboration/simulation/lint
+  remain SKIPPED because tools are absent.
+- **Boundary:** stop for returned Vivado 2020.2/XSim evidence; do not begin
+  Stage 2B, full MLP, HBM, AXI, or Vitis Kernel work.

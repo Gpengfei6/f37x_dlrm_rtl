@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create a credential-free stage-1 payload and collect local validation logs."""
+"""Create credential-free Stage-1 or Stage-2A validation artifacts."""
 
 import argparse
 import hashlib
@@ -10,7 +10,8 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-HANDOFF_DIR = PROJECT_ROOT / "handoff" / "stage1_validation"
+STAGE1_HANDOFF_DIR = PROJECT_ROOT / "handoff" / "stage1_validation"
+STAGE2A_HANDOFF_DIR = PROJECT_ROOT / "handoff" / "stage2a_validation"
 RESULTS_DIR = PROJECT_ROOT / "results"
 
 PAYLOAD_ROOT_FILES = [
@@ -29,6 +30,7 @@ PAYLOAD_DIRECTORIES = [
     "tb",
     "tests",
     "handoff/stage1_validation",
+    "handoff/stage2a_validation",
 ]
 FORBIDDEN_SUFFIXES = {".pem", ".key", ".p12", ".pfx"}
 FORBIDDEN_NAMES = {".env", "id_rsa", "id_ed25519", "credentials"}
@@ -114,11 +116,16 @@ def add_file(archive, path, archive_name):
     archive.write(str(path), archive_name.as_posix())
 
 
-def prepare_handoff():
-    HANDOFF_DIR.mkdir(parents=True, exist_ok=True)
+def prepare_handoff(stage2a=False):
+    handoff_dir = STAGE2A_HANDOFF_DIR if stage2a else STAGE1_HANDOFF_DIR
+    payload_name = (
+        "stage2a_validation_payload.zip" if stage2a
+        else "stage1_validation_payload.zip"
+    )
+    handoff_dir.mkdir(parents=True, exist_ok=True)
     files = payload_files()
     manifest_path = write_source_manifest(files)
-    payload_path = HANDOFF_DIR / "stage1_validation_payload.zip"
+    payload_path = handoff_dir / payload_name
     with zipfile.ZipFile(payload_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for path in files:
             relative = path.relative_to(PROJECT_ROOT)
@@ -199,7 +206,7 @@ def ensure_validation_summary():
     return summary_path
 
 
-def collect_logs():
+def collect_logs(stage2a=False):
     files = payload_files()
     manifest_path = write_source_manifest(files)
     summary_path = ensure_validation_summary()
@@ -211,13 +218,19 @@ def collect_logs():
         "validation_summary.json",
         "xsim_stage1_summary.json",
         "xsim_stage1_status.txt",
+        "xsim_stage2a_summary.json",
+        "xsim_stage2a_status.txt",
+        "stage2a_python_summary.json",
         "rtl_top_outputs.hex",
         "python_compare_report.json",
     ):
         path = RESULTS_DIR / name
         if path.is_file():
             candidates.append(path)
-    output_path = RESULTS_DIR / "stage1_validation_logs.zip"
+    output_path = RESULTS_DIR / (
+        "stage2a_validation_logs.zip" if stage2a
+        else "stage1_validation_logs.zip"
+    )
     with zipfile.ZipFile(output_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for path in sorted(set(candidates), key=lambda item: item.as_posix()):
             add_file(archive, path, path.relative_to(PROJECT_ROOT))
@@ -231,13 +244,17 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prepare-handoff", action="store_true")
     parser.add_argument("--collect-logs", action="store_true")
+    parser.add_argument(
+        "--stage2a", action="store_true",
+        help="write Stage-2A-named payload/log archives",
+    )
     args = parser.parse_args()
     if not args.prepare_handoff and not args.collect_logs:
         parser.error("select --prepare-handoff and/or --collect-logs")
     if args.prepare_handoff:
-        prepare_handoff()
+        prepare_handoff(stage2a=args.stage2a)
     if args.collect_logs:
-        collect_logs()
+        collect_logs(stage2a=args.stage2a)
 
 
 if __name__ == "__main__":

@@ -48,6 +48,19 @@ run_tb tb_dlrm_minimal_top \
   rtl/memory/embedding_mem_model.sv \
   rtl/pipeline/minimal_recommendation_pipeline.sv rtl/top/dlrm_minimal_top.sv
 
+run_tb tb_mac_lane rtl/compute/mac_lane.sv
+run_tb tb_runtime_relu_quant rtl/common/runtime_relu_quant.sv
+run_tb tb_banked_activation_buffer rtl/memory/banked_activation_buffer.sv
+run_tb tb_local_weight_provider rtl/memory/local_weight_provider.sv
+run_tb tb_vector_dot_product_core \
+  rtl/compute/mac_lane.sv rtl/compute/vector_dot_product_core.sv
+run_tb tb_dense_layer_engine \
+  rtl/common/rv_fifo.sv rtl/common/runtime_relu_quant.sv \
+  rtl/compute/mac_lane.sv rtl/memory/banked_activation_buffer.sv \
+  rtl/memory/local_weight_provider.sv \
+  rtl/compute/vector_dot_product_core.sv \
+  rtl/compute/dense_layer_engine.sv
+
 python_cmd=""
 if command -v python3 >/dev/null 2>&1; then
   python_cmd="python3"

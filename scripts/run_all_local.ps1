@@ -60,7 +60,13 @@ function Get-TestDefinitions {
     [pscustomobject]@{ name="tb_dense_layer_core"; sources=@("rtl/common/saturating_round.sv","rtl/common/relu_quant.sv","rtl/compute/dot_product_core.sv","rtl/compute/dense_layer_core.sv") },
     [pscustomobject]@{ name="tb_embedding_mem_model"; sources=@("rtl/memory/embedding_mem_model.sv") },
     [pscustomobject]@{ name="tb_minimal_recommendation_pipeline"; sources=@("rtl/common/saturating_round.sv","rtl/common/relu_quant.sv","rtl/compute/dot_product_core.sv","rtl/compute/dense_layer_core.sv","rtl/memory/embedding_mem_model.sv","rtl/pipeline/minimal_recommendation_pipeline.sv") },
-    [pscustomobject]@{ name="tb_dlrm_minimal_top"; sources=@("rtl/include/dlrm_config_pkg.sv","rtl/common/saturating_round.sv","rtl/common/relu_quant.sv","rtl/compute/dot_product_core.sv","rtl/compute/dense_layer_core.sv","rtl/memory/embedding_mem_model.sv","rtl/pipeline/minimal_recommendation_pipeline.sv","rtl/top/dlrm_minimal_top.sv") }
+    [pscustomobject]@{ name="tb_dlrm_minimal_top"; sources=@("rtl/include/dlrm_config_pkg.sv","rtl/common/saturating_round.sv","rtl/common/relu_quant.sv","rtl/compute/dot_product_core.sv","rtl/compute/dense_layer_core.sv","rtl/memory/embedding_mem_model.sv","rtl/pipeline/minimal_recommendation_pipeline.sv","rtl/top/dlrm_minimal_top.sv") },
+    [pscustomobject]@{ name="tb_mac_lane"; sources=@("rtl/compute/mac_lane.sv") },
+    [pscustomobject]@{ name="tb_runtime_relu_quant"; sources=@("rtl/common/runtime_relu_quant.sv") },
+    [pscustomobject]@{ name="tb_banked_activation_buffer"; sources=@("rtl/memory/banked_activation_buffer.sv") },
+    [pscustomobject]@{ name="tb_local_weight_provider"; sources=@("rtl/memory/local_weight_provider.sv") },
+    [pscustomobject]@{ name="tb_vector_dot_product_core"; sources=@("rtl/compute/mac_lane.sv","rtl/compute/vector_dot_product_core.sv") },
+    [pscustomobject]@{ name="tb_dense_layer_engine"; sources=@("rtl/common/rv_fifo.sv","rtl/common/runtime_relu_quant.sv","rtl/compute/mac_lane.sv","rtl/memory/banked_activation_buffer.sv","rtl/memory/local_weight_provider.sv","rtl/compute/vector_dot_product_core.sv","rtl/compute/dense_layer_engine.sv") }
   )
 }
 
@@ -103,6 +109,8 @@ $Python = Get-Tool "python"
 if ($Python.available) {
   $PythonCommands = @(
     [pscustomobject]@{ name="python_regression"; args=@("-B","scripts/run_python_tests.py"); log="logs/python_regression_console.log" },
+    [pscustomobject]@{ name="python_stage2a_regression"; args=@("-B","scripts/run_stage2a_python_tests.py"); log="logs/python_stage2a_console.log" },
+    [pscustomobject]@{ name="python_pe_estimator"; args=@("-B","python/estimate_pe_architecture.py","--self-check"); log="logs/python_pe_estimator.log" },
     [pscustomobject]@{ name="python_reference"; args=@("-B","python/reference_model.py"); log="logs/python_reference_console.log" },
     [pscustomobject]@{ name="python_packed_compare"; args=@("-B","python/compare_results.py","--rtl","results/python_selfcheck.hex","--expected","tests/expected/top_expected.json","--report","results/python_compare_report.json"); log="logs/python_compare_console.log" }
   )
@@ -184,8 +192,11 @@ $Verible = Get-Tool "verible-verilog-lint"
 $AllRtl = @(
   "rtl/include/dlrm_config_pkg.sv", "rtl/common/rv_fifo.sv",
   "rtl/common/saturating_round.sv", "rtl/common/relu_quant.sv",
+  "rtl/common/runtime_relu_quant.sv", "rtl/compute/mac_lane.sv",
   "rtl/compute/dot_product_core.sv", "rtl/compute/dense_layer_core.sv",
+  "rtl/compute/vector_dot_product_core.sv", "rtl/compute/dense_layer_engine.sv",
   "rtl/memory/embedding_mem_model.sv",
+  "rtl/memory/banked_activation_buffer.sv", "rtl/memory/local_weight_provider.sv",
   "rtl/pipeline/minimal_recommendation_pipeline.sv",
   "rtl/top/dlrm_minimal_top.sv"
 )
@@ -230,8 +241,36 @@ if ($Vivado.available -and $Xvlog.available -and $Xelab.available -and $Xsim.ava
     }
   }
   Invoke-RtlPackedCompare "xsim"
+
+  $Stage2Args = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+    (Join-Path $PSScriptRoot "run_xsim_stage2a.ps1"),
+    "-VivadoExe", $Vivado.path)
+  $Stage2Run = Invoke-Logged $PowerShellPath $Stage2Args `
+    "logs/xsim_stage2a_console.log"
+  $Stage2Status = if ($Stage2Run.exit_code -eq 0) { "PASS" } else { "FAIL" }
+  Add-Result "xsim_stage2a_suite" "rtl_simulation" $Stage2Status `
+    $Stage2Run.exit_code ($PowerShellPath + " " + ($Stage2Args -join " ")) `
+    "logs/xsim_stage2a_console.log"
+  if (Test-Path -LiteralPath "results/xsim_stage2a_summary.json") {
+    $Stage2Detail = Get-Content -LiteralPath "results/xsim_stage2a_summary.json" `
+      -Raw -Encoding UTF8 | ConvertFrom-Json
+    foreach ($Test in $Stage2Detail.tests) {
+      $Category = if ($Test.stage -eq "COMPILE" -or $Test.stage -eq "ELAB") {
+        "rtl_compile"
+      } else {
+        "rtl_simulation"
+      }
+      Add-Result ("xsim_stage2a_{0}_{1}" -f $Test.name, $Test.stage.ToLower()) `
+        $Category $Test.status $Test.exit_code "See Stage-2A XSim Tcl log" `
+        $(if ($Test.stage -eq "COMPILE") { "logs/xvlog_stage2a.log" } `
+          elseif ($Test.stage -eq "ELAB") { "logs/xelab_stage2a_$($Test.name).log" } `
+          else { "logs/xsim_stage2a_$($Test.name).log" })
+    }
+  }
 } else {
   Add-Result "xsim_stage1_suite" "rtl_simulation" "SKIPPED" $null "" `
+    "logs/toolchain.json" "vivado/xvlog/xelab/xsim toolchain incomplete"
+  Add-Result "xsim_stage2a_suite" "rtl_simulation" "SKIPPED" $null "" `
     "logs/toolchain.json" "vivado/xvlog/xelab/xsim toolchain incomplete"
 }
 
@@ -251,8 +290,10 @@ function Write-Summary {
     git_revision = $GitRevision
     overall_status = $Overall
     counts = [ordered]@{ pass = $PassCount; fail = $FailCount; skipped = $SkipCount }
-    gate1_satisfied = $false
-    gate1_note = "Requires review of real compiler/elaboration/simulation logs; Python PASS is insufficient."
+    gate1_satisfied = $true
+    gate1_note = "Approved from the audited Vivado 2020.2/XSim retry2 evidence at commit 37c3990c0973b52910debac35a854e0c2bc875a1."
+    stage2a_rtl_satisfied = $false
+    stage2a_note = "Requires returned real Vivado 2020.2 compile/elaboration/simulation logs; local Python PASS is insufficient."
     toolchain = $Toolchain.tools
     tests = $script:TestResults
   }
@@ -266,7 +307,7 @@ function Write-Summary {
 $null = Write-Summary
 if ($Python.available) {
   $CollectorArgs = @("-B", "scripts/collect_validation_bundle.py",
-    "--prepare-handoff", "--collect-logs")
+    "--prepare-handoff", "--collect-logs", "--stage2a")
   $Collector = Invoke-Logged $Python.path $CollectorArgs "logs/collect_validation_bundle.log"
   $CollectorStatus = if ($Collector.exit_code -eq 0) { "PASS" } else { "FAIL" }
   Add-Result "collect_validation_bundle" "packaging" $CollectorStatus `

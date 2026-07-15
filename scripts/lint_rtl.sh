@@ -5,9 +5,15 @@ sources="rtl/include/dlrm_config_pkg.sv
 rtl/common/rv_fifo.sv
 rtl/common/saturating_round.sv
 rtl/common/relu_quant.sv
+rtl/common/runtime_relu_quant.sv
+rtl/compute/mac_lane.sv
 rtl/compute/dot_product_core.sv
 rtl/compute/dense_layer_core.sv
+rtl/compute/vector_dot_product_core.sv
+rtl/compute/dense_layer_engine.sv
 rtl/memory/embedding_mem_model.sv
+rtl/memory/banked_activation_buffer.sv
+rtl/memory/local_weight_provider.sv
 rtl/pipeline/minimal_recommendation_pipeline.sv
 rtl/top/dlrm_minimal_top.sv"
 
@@ -25,4 +31,3 @@ else
   echo "lint_rtl: SKIP - neither Verible nor Verilator was found; nothing was installed." >&2
   exit 2
 fi
-
