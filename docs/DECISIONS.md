@@ -156,3 +156,88 @@
   no timeout, fatal, error, warning, output mismatch, or source mismatch.
 - **Impact:** phase 1 is formally validated.  Parameterized PE-array work remains
   paused until its architecture is reviewed and explicitly authorized.
+
+## D-013 — Approve Scheme B for the first reusable PE engine
+
+- **Status:** conditionally approved for the independent Stage-2A baseline.
+- **Problem:** large dense layers cannot fully expand every input multiplier, but
+  a serial-only engine gives poor scaling and a two-dimensional array creates an
+  immediate weight-bandwidth/routing problem.
+- **Adopted:** one output-neuron lane with parameterized input parallelism P,
+  P lane-local partial sums, a registered reduction tree, and one existing
+  quantize/saturate/ReLU path.  Runtime dimensions reuse the same compile-time
+  bounded array for different layers.
+- **Not recommended first:** Scheme A as the only performance engine, or Scheme C
+  with multiple output-neuron lanes.
+- **Reason:** Scheme B has bounded multiplier count, explicit tail handling,
+  moderate local-memory width, and a verification hierarchy that scales from
+  P=4 to P=32.
+- **Impact:** Scheme A remains a configuration/golden baseline;
+  Scheme C becomes a later, separately gated enhancement.
+
+## D-014 — Adopt P=16 as the development default
+
+- **Status:** approved for Stage 2A; final paper configuration remains open.
+- **Adopted:** default `NUM_PE=16`; mandatory verification at P=4/8/16/32.
+  Use P=4 or P=8 for the phase-1 8→4 compatibility configuration.
+- **Reason:** P=16 uses 16 logical multipliers, a 128-bit INT8 weight word, and a
+  256-bit INT16 activation read.  The model gives 2,688 cycles for 256→128 and
+  9,472 for 512→256.  P=32 doubles arithmetic/bandwidth but gives less than 2×
+  modeled speedup after registered reduction overhead.
+- **Impact:** 250 MHz, DSP mapping, BRAM banking, and F37X percentages remain
+  unproven until the four configurations are synthesized on the exact target.
+
+## D-015 — Keep the PE core behind an abstract local weight provider
+
+- **Status:** approved for Stage 2A.
+- **Adopted:** the PE requests logical weight chunks and biases over ready/valid
+  channels.  Stage 2A uses a test-loadable abstract local provider, not a
+  committed whole-layer on-chip cache.  Two complete, `NUM_PE`-banked activation
+  buffers use `bank=i%NUM_PE`, `address=i/NUM_PE`; default dimension maxima are
+  1024/1024.
+- **Not recommended:** expose AXI/HBM addresses, bursts, IDs, or channels inside
+  the arithmetic core; use only a FIFO without a reusable layer-result buffer.
+- **Reason:** local provider stalls can be verified independently, and a future
+  HBM adapter can replace the provider without changing PE arithmetic/control.
+- **Impact:** real HBM remains outside the current stage and GATE-4.
+
+## D-016 — Parameterize ACC32 compatibility and ACC48 safe accumulation
+
+- **Status:** approved as a Stage-2 candidate contract; v0 remains unchanged.
+- **Evidence:** exact signed endpoint analysis requires 25/30/31/32/33 bits for
+  the reviewed 8→4, 64→32, 128→64, 256→128, and 512→256 layers respectively.
+  Therefore full-range 512-input INT16×INT8 accumulation can overflow INT32.
+- **Adopted capability:** `ACC_WIDTH` defaults to 48 in Stage 2 and is 32 for
+  phase-1 compatibility.  Both retain the same eight fractional bits and
+  unchanged bias/round/saturate/ReLU order.  Python must model both modes.
+- **Not adopted:** modifying `fixed_point_spec_v0.md`, silently replacing INT32
+  wrap, or choosing per-layer shifts without trained-model evidence.
+- **Reason:** wider internal arithmetic changes outputs only in overflow cases,
+  which is still a model-level contract decision.
+- **Impact:** RTL must support explicit `compat_int32_wrap` and `wide_int48`
+  tests.  ACC48 coverage is a mathematical statement, not a DSP mapping claim;
+  trained-model adoption and synthesis remain human decisions.
+
+## D-017 — Separate Stage 2A baseline from Stage 2B neuron overlap
+
+- **Status:** approved boundary.
+- **Adopted:** Stage 2A implements one non-overlapped output context with
+  `C_layer=O*(K+R+Q)`.  Stage 2B must add two lane-partial-sum banks so MAC work
+  for output `o+1` overlaps reduction of output `o`, targeting
+  `C_layer~=O*K+R+Q`.
+- **Not adopted in Stage 2A:** double-psum banks, multilayer scheduling, or any
+  throughput claim based on the overlap formula.
+- **Reason:** the baseline provides a bounded verification target; overlap adds
+  tagging, capacity, ordering, and control hazards needing separate evidence.
+- **Impact:** GATE-2 cannot be approved until Stage 2B passes real RTL validation.
+
+## D-018 — Capture runtime layer metadata in an immutable descriptor
+
+- **Status:** approved for Stage 2A.
+- **Adopted fields:** `in_dim`, `out_dim`, input/output buffer selectors,
+  weight/bias offsets, `output_shift`, and `relu_enable`.
+- **Validation:** the engine copies a descriptor on handshake and explicitly
+  errors on zero/oversize dimensions, conflicting buffer selection, or an
+  unsupported shift without producing partial results.
+- **Not adopted:** HBM addresses, AXI IDs/bursts/channels, or physical memory
+  topology in the PE descriptor.
