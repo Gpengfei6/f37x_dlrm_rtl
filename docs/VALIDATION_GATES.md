@@ -39,9 +39,17 @@ local provider, runtime quantization metadata, and ready/valid boundaries.
 Python tests pass, but all local RTL tools are absent, so RTL evidence is
 SKIPPED and Stage 2A awaits real Vivado 2020.2/XSim logs.
 
-Even a successful Stage-2A server run does not complete GATE-2.  Stage 2B must
-separately implement and really validate double-partial-sum output-neuron
-MAC/reduction overlap.  Full MLP and HBM remain outside this gate.
+A successful Stage-2A server run can close the bounded parameterized-compute
+baseline after log review.  Stage 2B double-partial-sum overlap is now an
+optional later performance optimization, not a GATE-2 prerequisite.  Full MLP
+RTL and HBM remain outside this gate.
+
+## GATE-T1/T2/T3 — Trace feasibility
+
+Not started on real data.  GATE-T1 measures coalescing read reduction versus
+added mean/P99 wait; GATE-T2 measures channel imbalance and lightweight
+scheduler improvement; GATE-T3 compares their combined predicted end-to-end
+value.  Synthetic traces validate tools only and cannot pass these gates.
 
 ## GATE-3 — Complete simplified-DLRM architecture
 

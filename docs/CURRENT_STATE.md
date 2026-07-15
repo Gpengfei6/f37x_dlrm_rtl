@@ -9,6 +9,10 @@ PE baseline is implemented locally and has reached the server RTL-validation
 stop point.  Stage-2A RTL is **not yet passed** because this machine has no RTL
 compiler, simulator, or linter.
 
+The final thesis scope is now frozen.  Stage 2A remains the compute foundation.
+The active local work is software-only DLRM and embedding-access feasibility
+analysis for bounded coalescing/broadcast and lightweight channel scheduling.
+
 ## GATE-1 evidence
 
 - Python fixed-point regression: 24 deterministic vectors PASS.
@@ -49,7 +53,14 @@ SKIPPED by policy and cannot satisfy a real RTL gate.
 
 ## Next action
 
-Run the generated Stage-2A payload under server Vivado 2020.2/XSim, return the
-exact manifest/status/log archive, and audit every explicit PASS marker.  Stop
-there.  Stage 2B output-neuron MAC/reduction overlap, full MLP, HBM, AXI, and
-Vitis work remain prohibited.
+Two independent tracks are allowed:
+
+1. wait for the user to run the frozen Stage-2A payload under Vivado 2020.2;
+2. locally build and validate the configurable software DLRM, trace extraction,
+   bounded-coalescing simulator, and abstract channel scheduler without network
+   or server access.
+
+No Stage-2A RTL may change without returned logs.  Stage 2B is optional and
+deferred.  Coalescing/scheduling RTL, complete DLRM RTL, feature interaction RTL,
+HBM, AXI, and Vitis remain blocked until real traces pass GATE-T1/T2/T3 and a
+later architecture review authorizes hardware.

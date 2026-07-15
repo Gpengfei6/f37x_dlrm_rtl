@@ -1,106 +1,101 @@
-# Architecture v0
+# Final single-F37X DLRM architecture scope
 
-## Goal and current boundary
+## 1. End-to-end target
 
-The long-term goal is a single-card F37X/VU37P RTL accelerator for a large
-recommendation network.  Phase 1 establishes only a bit-accurate, backpressure-
-safe calculation loop.  It is a functional scaffold, not a performance result.
-
-## Current minimum dataflow
+The target system is a complete inference-only DLRM on one F37X/VU37P.  FPGA
+compute remains SystemVerilog RTL.  The final logical flow is:
 
 ```text
-ready/valid IDs
-      |
-      v
-[sequential lookup controller] --> [synchronous embedding memory]
-      ^                                      |
-      |                                      v
-      +------------------------------- [element-wise sum]
-                                               |
-                                               v
-                                  [one dot core, reused per output]
-                                               |
-                                               v
-                                    [round/saturate + ReLU]
-                                               |
-                                               v
-                                      ready/valid vector
+continuous features -> Bottom MLP ------------------------------+
+                                                               |
+categorical IDs -> bounded duplicate coalescer -> HBM scheduler |
+                     |                         |                 |
+                     + fan-out metadata       + embedding reads |
+                                               -> result broadcast
+                                               -> table pooling -+
+                                                                 v
+                                                    dot interaction
+                                                                 |
+                                                                 v
+                                                             Top MLP
+                                                                 |
+                                                                 v
+                                                    fixed-point score
 ```
 
-One request is active at a time.  Every response and final result is retained
-while downstream `ready` is low.
+Embedding reads and compute may later use ping-pong buffers so request service
+for one context overlaps MLP work for another.  Double buffering is a system
+optimization, not the core novelty.
 
-## Eventual simplified DLRM dataflow
+## 2. Contribution boundaries
+
+### Primary: bounded request coalescing and broadcast
+
+The proposed block observes a finite request-count and/or wait-cycle window,
+merges identical `(table_id, embedding_id)` keys, performs one physical read,
+and stores bounded fan-out metadata so the response can be replayed/broadcast to
+all logical consumers in order.  Capacity limits and fallback behavior must be
+explicit; no unbounded associative structure is permitted.
+
+### Secondary: post-coalescing channel-aware scheduling
+
+After merging, a lightweight scheduler may consider channel queue length and
+request age while preserving bounded fairness.  It does not use reinforcement
+learning, integer programming, global graph optimization, or complex prediction.
+Software analysis must first show imbalance and measurable improvement over
+static mapping.
+
+### Foundation: Stage-2A vector PE
+
+The P=4/8/16/32 multi-cycle vector PE, ACC32/ACC48 modes, runtime dimensions,
+banked ping-pong activation storage, abstract weight provider, and per-layer
+shift/ReLU are retained unchanged.  This reusable engine is necessary for Bottom
+and Top MLPs but is not presented as the thesis's primary innovation.  It is
+frozen until real Vivado 2020.2 logs are returned.
+
+## 3. Software reference architecture
 
 ```text
-request parser
-  +-> categorical IDs -> duplicate merge -> HBM channel scheduler
-  |                                          -> multi-table embeddings
-  |                                          -> pooling ---------+
-  +-> continuous features -> bottom MLP --------------------------+
-                                                                    v
-                                                        feature interaction
-                                                                    |
-                                                                    v
-                                                               top MLP
-                                                                    |
-                                                                    v
-                                                               probability
+local configuration
+  -> deterministic synthetic dataset OR user-supplied local Criteo files
+  -> configurable DLRM reference
+       continuous -> Bottom MLP
+       categorical -> table embeddings
+       concat(bottom, embeddings) -> DLRM pairwise dot interaction
+       dense vector -> Top MLP -> one logit/probability
+  -> stage intermediates and evaluation metrics
+  -> embedding access trace
+  -> bounded coalescing simulator
+  -> channel mapping/scheduler simulator
+  -> GATE-T1/T2/T3 feasibility report
 ```
 
-A dynamic micro-batch scheduler will eventually coordinate the categorical
-memory path and compute path.  None of those future blocks is implemented here.
+The PyTorch model is the intended executable reference.  A deterministic NumPy
+oracle may validate structure when the local PyTorch package is unavailable,
+but it does not convert a PyTorch-only test into PASS.  CUDA is optional and is
+SKIPPED when unavailable.
 
-## Responsibilities
+## 4. Trace and HBM abstraction boundary
 
-- `rv_fifo`: ordered decoupling and backpressure primitive.
-- `embedding_mem_model`: deterministic one-cycle local substitute for HBM.
-- `minimal_recommendation_pipeline`: ID sequencing, response collection,
-  aggregation, and dense-layer orchestration.
-- `dot_product_core`: signed bias plus vector product accumulation.
-- `dense_layer_core`: reuses the dot core across output neurons, then quantizes
-  and applies ReLU.
-- `saturating_round`: signed, symmetric nearest rounding and width saturation.
-- `relu_quant`: quantizer plus activation wrapper.
-- `dlrm_minimal_top`: simulation-oriented external stream boundary.
-- Python reference: executable fixed-point contract, floating diagnostic,
-  deterministic data generation, and output comparison.
+Trace records contain logical table/row accesses only.  Channel mapping is a
+software abstraction parameterized by 4/8/16/32 channels; it is not a physical
+F37X HBM address-map claim.  No AXI ID, burst, pseudo-channel, platform shell, or
+board timing is introduced at this stage.
 
-## Replacement and insertion seams
+Future HBM integration replaces the storage-facing side of an embedding
+provider.  The coalescer operates on logical keys and fan-out tags; the PE engine
+continues to see the existing abstract activation/weight providers.
 
-1. Replace `embedding_mem_model` behind its request/response interface with an
-   AXI/HBM adapter.  Keep the aggregator independent of memory protocol.
-2. Insert duplicate-ID detection/merge between captured IDs and lookup requests;
-   add a fan-out/replay table before aggregation.
-3. Place request/context FIFOs around memory and compute, then insert the dynamic
-   micro-batch scheduler above those queues.
-4. Wrap `dlrm_minimal_top` with a separate Vitis RTL Kernel shell rather than
-   introducing AXI behavior into arithmetic modules.
+## 5. Evidence discipline
 
-## Ready/valid behavior and latency
+Synthetic high/low duplication, balanced/skewed channels, and hotspot-shift
+traces are required for tool validation and deterministic regression.  They are
+not evidence that production traces contain the same locality.  Real innovation
+claims and corresponding RTL authorization require user-supplied real data and
+completed GATE-T1/T2/T3 reports.
 
-Transfers occur only on `valid && ready`.  Producers hold payload stable during
-backpressure.  Embedding memory and dot-product responses each use a one-entry
-elastic register.  Dense computation is sequential across output neurons.  The
-exact contracts and no-stall latency formulae are in `interface_spec_v0.md`.
+## 6. Explicitly not implemented now
 
-## Explicitly not implemented
-
-Full DLRM, multilayer MLP, continuous-feature processing, feature interaction,
-multiple embedding tables, real HBM/AXI, XRT host, RTL-kernel packaging,
-duplicate merging, HBM balancing, dynamic micro-batches, multi-card operation,
-and server-memory cooperation are outside phase 0/1.
-
-## Risks
-
-- RTL has not yet been compiled by Vivado/Vitis 2020.2 or run on F37X.
-- Local simulator availability determines whether syntax/behavior can be tested
-  in the current workspace; Python agreement alone cannot validate RTL.
-- Packed-vector lane order must remain identical in host/kernel boundaries.
-- INT32 wrap is intentional but may be undesirable for trained production models;
-  range analysis may require a wider or saturating accumulator.
-- The local memory and one-request controller do not predict HBM timing,
-  outstanding-read behavior, routing pressure, or achievable clock frequency.
-- Parallel multipliers inside the simple dot core favor clarity, not a final VU37P
-  resource/performance trade-off.
-
+No Stage-2A RTL edits, Stage 2B, two-dimensional PE, P=64, complete DLRM RTL,
+feature-interaction RTL, multi-layer MLP RTL, HBM/AXI/Vitis RTL, coalescer RTL,
+or channel-scheduler RTL is authorized in the current software-analysis phase.

@@ -220,7 +220,8 @@
 
 ## D-017 — Separate Stage 2A baseline from Stage 2B neuron overlap
 
-- **Status:** approved boundary.
+- **Status:** cycle-model boundary retained; its former GATE-2 requirement is
+  superseded by D-020.
 - **Adopted:** Stage 2A implements one non-overlapped output context with
   `C_layer=O*(K+R+Q)`.  Stage 2B must add two lane-partial-sum banks so MAC work
   for output `o+1` overlaps reduction of output `o`, targeting
@@ -229,7 +230,9 @@
   throughput claim based on the overlap formula.
 - **Reason:** the baseline provides a bounded verification target; overlap adds
   tagging, capacity, ordering, and control hazards needing separate evidence.
-- **Impact:** GATE-2 cannot be approved until Stage 2B passes real RTL validation.
+- **Impact:** Stage 2B is an optional later performance optimization and is not
+  a prerequisite for the software trace-feasibility work or the final thesis
+  contribution path.
 
 ## D-018 — Capture runtime layer metadata in an immutable descriptor
 
@@ -258,3 +261,30 @@
   remain SKIPPED because tools are absent.
 - **Boundary:** stop for returned Vivado 2020.2/XSim evidence; do not begin
   Stage 2B, full MLP, HBM, AXI, or Vitis Kernel work.
+
+## D-020 — Align the project with the final master's thesis scope
+
+- **Status:** adopted.
+- **Primary contribution:** bounded-window duplicate embedding-request
+  coalescing and one-read/multi-consumer response broadcast.
+- **Secondary contribution:** lightweight post-coalescing HBM-channel-aware
+  scheduling, only if traces show imbalance and useful improvement.
+- **System optimization:** embedding/MLP double buffering.
+- **Foundation:** Stage-2A vector PE is retained but is not the thesis's main
+  contribution; Stage 2B is downgraded to an optional later optimization.
+- **Evidence rule:** software trace analysis precedes innovation RTL.  Synthetic
+  traces validate tools only; real Criteo traces are required for GATE-T1/T2/T3.
+- **Boundary:** no Stage-2A edits, complete DLRM RTL, HBM RTL, coalescer RTL, or
+  scheduler RTL are authorized by this decision.
+
+## D-021 — Keep software datasets local and evaluation claims qualified
+
+- **Status:** adopted.
+- **Data:** deterministic synthetic data is generated locally.  The Criteo
+  loader accepts only a user-provided local file/directory and never downloads.
+- **Model:** configurable PyTorch DLRM is the intended reference; CPU is required,
+  CUDA is optional and explicitly SKIPPED when unavailable.
+- **Metrics:** export AUC, LogLoss, throughput, latency percentiles, device and
+  stage timing to JSON/CSV, separating end-to-end from forward-only time.
+- **Claim boundary:** synthetic random weights/data do not establish meaningful
+  AUC, performance baselines, or thesis novelty.

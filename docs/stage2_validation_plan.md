@@ -194,4 +194,5 @@ The Stage-2A validation package is accepted only when returned evidence shows:
 8. RTL tests are not inferred from exit code zero alone.
 
 Until those logs are returned and audited, Stage 2A RTL status is SKIPPED and
-GATE-2 is not approved.  Stage 2B, HBM, AXI, and full MLP work remain blocked.
+GATE-2 is not approved.  Optional Stage 2B, HBM, AXI, and full MLP RTL work
+remain blocked.

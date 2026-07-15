@@ -38,3 +38,7 @@ Generated summaries must retain the command exit code and log path.
   the global dataflow, fixed-point contract, or PE architecture.
 - **GATE-4:** stop before AXI/HBM, Vitis RTL Kernel, or real F37X integration and
   wait for the user's shell/interface information and hardware logs.
+- **GATE-T1/T2/T3:** software trace gates for coalescing value, channel-scheduler
+  value, and their combined end-to-end value.  Synthetic traces cannot satisfy
+  these gates.  Do not implement corresponding RTL until user-supplied real data
+  is analyzed and the result is explicitly approved.

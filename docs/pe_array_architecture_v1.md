@@ -5,9 +5,10 @@
 The Stage-2 architecture review is **conditionally approved** against GATE-1
 approval commit `37c3990c0973b52910debac35a854e0c2bc875a1`.  Scheme B, a
 parameterized multi-cycle vector PE, is the approved implementation direction.
-Stage 2A may implement the non-overlapped baseline described here.  Stage 2B is
-separately gated and must add and validate output-neuron MAC/reduction overlap
-before GATE-2 can be approved.
+Stage 2A may implement the non-overlapped baseline described here.  The later
+final-scope decision D-020 retains Stage 2B output-neuron MAC/reduction overlap
+only as an optional performance optimization; it is no longer a GATE-2
+prerequisite.
 
 The compute path remains synthesizable SystemVerilog-2012.  This approval does
 not authorize HLS, HBM, AXI, a Vitis RTL Kernel, full DLRM, embedding-table
@@ -230,7 +231,7 @@ depend on uninterrupted supply.
 2. Final adoption of ACC48 for a trained model, including trained range and
    accuracy evidence; ACC32 remains the compatibility mode.
 3. Per-layer `output_shift` and ReLU settings for the formal multilayer model.
-4. Stage 2B double-psum overlap microarchitecture and GATE-2 evidence.
+4. Optional Stage 2B double-psum overlap microarchitecture and its own evidence.
 5. Provider-side cache/tile policy and the later physical HBM/AXI boundary.
 
 None of these open decisions blocks the bounded Stage 2A baseline, but Stage 2A

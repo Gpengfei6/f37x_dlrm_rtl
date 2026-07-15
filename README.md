@@ -1,4 +1,4 @@
-# F37X DLRM RTL accelerator — GATE-1 plus Stage-2A baseline
+# Single-F37X all-RTL DLRM research project
 
 This repository is a local, simulation-first prototype for a recommendation
 inference accelerator.  The implemented scope is deliberately small:
@@ -14,6 +14,13 @@ NUM_LOOKUPS embedding IDs
 
 Stage 2A adds an independent parameterized, multi-cycle vector-PE dense engine
 with P-banked ping-pong activations and an abstract local weight/bias provider.
+It is the Bottom/Top MLP compute foundation, not the thesis's main contribution.
+
+The final research focus is bounded-window duplicate embedding-request
+coalescing plus one-read/multi-consumer result broadcast.  Lightweight
+post-coalescing HBM-channel-aware scheduling is secondary; embedding/MLP double
+buffering is a system optimization.  Software trace analysis must establish
+their value before any corresponding RTL is authorized.
 It is **not** a complete DLRM and does not contain AXI, HBM, an XRT host,
 duplicate-ID merging, dynamic micro-batching, an RTL-kernel shell, or an
 `.xclbin`.  No claim is made that the design has been compiled or run on F37X.
@@ -115,6 +122,12 @@ The Stage-2A local workflow currently records RTL compile/simulation/lint as
 SKIPPED because Vivado, Icarus, Verilator, and Verible are absent.  It does not
 claim Stage-2A RTL PASS; use the generated server payload and return real logs.
 
+While Stage-2A awaits those logs, the approved local-only work is a configurable
+software DLRM, embedding trace extraction, bounded coalescing simulation, and
+abstract channel-mapping/scheduling analysis.  Criteo data is never downloaded;
+the loader accepts only a path manually supplied by the user.  Synthetic data
+validates the tools but cannot approve hardware innovation.
+
 After running tests, detailed logs are written under `logs/`.  RTL output can be
 checked independently with:
 
@@ -129,6 +142,10 @@ python3 python/compare_results.py \
 - `docs/`: architecture, interfaces, fixed-point contract, and staged plan.
 - `tasks/`: prioritized backlog and completed work.
 - `python/`: bit-accurate and floating reference code plus vector tooling.
+- `model/`: configurable software DLRM, local datasets, training, inference,
+  quantization/export boundaries.
+- `analysis/`: embedding traces, coalescing, channel mapping, and feasibility
+  reports; no RTL is generated here.
 - `rtl/`: parameterized synthesizable SystemVerilog cores and minimal pipeline.
 - `tb/`: independent self-checking testbench for every RTL module.
 - `tests/`: deterministic model images, inputs, and expected results.

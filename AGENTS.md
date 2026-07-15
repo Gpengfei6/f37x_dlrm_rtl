@@ -27,10 +27,14 @@
 
 ## Current boundary
 
-Only phase 0/1 is implemented: local embedding lookup, aggregation, one dense
-layer, quantization, ReLU, and output.  Do not add full DLRM, multilayer MLP,
-feature interaction, AXI/HBM, XRT host, duplicate merging, dynamic micro-batch
-scheduling, or multi-card support without explicit approval.
+GATE-1 is approved and the Stage-2A vector-PE baseline exists but is frozen
+until user-provided Vivado 2020.2 logs arrive.  Local software work is authorized
+for a configurable DLRM reference, embedding trace extraction, bounded request-
+coalescing simulation, and abstract channel scheduling.  This authorization does
+not include Stage-2A edits, Stage 2B, multilayer/interaction/full-DLRM RTL,
+coalescer/scheduler RTL, AXI/HBM, XRT, or multi-card support.  Synthetic traces
+validate tools only; corresponding RTL requires user-supplied real traces and
+GATE-T1/T2/T3 review.
 
 ## Verification language
 
@@ -49,4 +53,3 @@ scheduling, or multi-card support without explicit approval.
   simulation logs satisfying GATE-1.  Python-only checks never satisfy GATE-1.
 - Stop before changing the fixed-point contract, public top-level interface,
   model direction, real HBM mapping, or paper/patent innovation.
-
