@@ -21,6 +21,14 @@ module dense_engine_checker #(
   localparam integer ACT_BANK_DEPTH = MAX_IN_DIM/NUM_PE;
   localparam integer ACT_CHUNK_ADDR_WIDTH = $clog2(ACT_BANK_DEPTH);
   localparam integer SHIFT_WIDTH = $clog2(ACC_WIDTH+1);
+  localparam integer PHASE1_CASE_COUNT = 24;
+  localparam integer PHASE1_IN_DIM = 8;
+  localparam integer PHASE1_OUT_DIM = 4;
+  localparam integer PHASE1_INPUT_WIDTH = 10;
+  localparam integer PHASE1_INPUT_ROW_WIDTH =
+      PHASE1_IN_DIM*PHASE1_INPUT_WIDTH;
+  localparam integer PHASE1_OUTPUT_ROW_WIDTH =
+      PHASE1_OUT_DIM*OUTPUT_WIDTH;
 
   logic job_valid;
   logic job_ready;
@@ -57,10 +65,13 @@ module dense_engine_checker #(
   logic error_valid;
   logic error_ready;
   logic [3:0] error_code;
-  logic signed [9:0] phase1_inputs [0:24*8-1];
-  logic signed [7:0] phase1_weights [0:4*8-1];
-  logic signed [23:0] phase1_biases [0:4-1];
-  logic signed [15:0] phase1_outputs [0:24*4-1];
+  logic [PHASE1_INPUT_ROW_WIDTH-1:0]
+      phase1_input_rows [0:PHASE1_CASE_COUNT-1];
+  logic [PHASE1_OUTPUT_ROW_WIDTH-1:0]
+      phase1_output_rows [0:PHASE1_CASE_COUNT-1];
+  logic signed [WEIGHT_WIDTH-1:0]
+      phase1_weights [0:PHASE1_OUT_DIM*PHASE1_IN_DIM-1];
+  logic signed [BIAS_WIDTH-1:0] phase1_biases [0:PHASE1_OUT_DIM-1];
 
   dense_layer_engine #(
     .MAX_IN_DIM(MAX_IN_DIM), .MAX_OUT_DIM(MAX_OUT_DIM),
@@ -103,6 +114,24 @@ module dense_engine_checker #(
         input_value = (element_index % 5) - 2;
       else
         input_value = (element_index % 17) - 8;
+    end
+  endfunction
+
+  function automatic logic signed [PHASE1_INPUT_WIDTH-1:0]
+      phase1_input_lane(input integer case_index, input integer lane_index);
+    begin
+      phase1_input_lane = $signed(
+          phase1_input_rows[case_index]
+              [lane_index*PHASE1_INPUT_WIDTH +: PHASE1_INPUT_WIDTH]);
+    end
+  endfunction
+
+  function automatic logic signed [OUTPUT_WIDTH-1:0]
+      phase1_output_lane(input integer case_index, input integer lane_index);
+    begin
+      phase1_output_lane = $signed(
+          phase1_output_rows[case_index]
+              [lane_index*OUTPUT_WIDTH +: OUTPUT_WIDTH]);
     end
   endfunction
 
@@ -426,8 +455,11 @@ module dense_engine_checker #(
     integer received;
     integer cycles;
     logic saw_done;
+    logic signed [PHASE1_INPUT_WIDTH-1:0] phase1_input_element;
+    logic signed [OUTPUT_WIDTH-1:0] phase1_expected_output;
     begin
-      for (chunk_number = 0; chunk_number < (8+NUM_PE-1)/NUM_PE;
+      for (chunk_number = 0;
+           chunk_number < (PHASE1_IN_DIM+NUM_PE-1)/NUM_PE;
            chunk_number = chunk_number + 1) begin
         @(negedge clk);
         act_load_data = '0;
@@ -435,11 +467,11 @@ module dense_engine_checker #(
         act_load_chunk_index = chunk_number;
         for (lane = 0; lane < NUM_PE; lane = lane + 1) begin
           element_index = chunk_number*NUM_PE + lane;
-          if (element_index < 8) begin
+          if (element_index < PHASE1_IN_DIM) begin
             act_load_lane_mask[lane] = 1'b1;
+            phase1_input_element = phase1_input_lane(case_index, element_index);
             act_load_data[lane*INPUT_WIDTH +: INPUT_WIDTH] =
-                {{6{phase1_inputs[case_index*8+element_index][9]}},
-                 phase1_inputs[case_index*8+element_index]};
+                INPUT_WIDTH'(phase1_input_element);
           end
         end
         act_load_valid = 1'b1;
@@ -449,8 +481,8 @@ module dense_engine_checker #(
       @(negedge clk);
       act_load_valid = 1'b0;
 
-      job_in_dim = 8;
-      job_out_dim = 4;
+      job_in_dim = PHASE1_IN_DIM;
+      job_out_dim = PHASE1_OUT_DIM;
       job_input_buffer_select = 1'b0;
       job_output_buffer_select = 1'b1;
       job_weight_offset = '0;
@@ -466,18 +498,20 @@ module dense_engine_checker #(
       received = 0;
       cycles = 0;
       saw_done = 1'b0;
-      while (received < 4) begin
+      while (received < PHASE1_OUT_DIM) begin
         @(negedge clk);
         result_ready = ((case_index + cycles) % 4) != 1;
         if (job_done)
           saw_done = 1'b1;
         if (result_valid && result_ready) begin
+          phase1_expected_output = phase1_output_lane(case_index, received);
           if (result_index !== received ||
-              result_data !== phase1_outputs[case_index*4+received] ||
-              result_tag !== case_index || result_last !== (received == 3))
+              result_data !== phase1_expected_output ||
+              result_tag !== case_index ||
+              result_last !== (received == PHASE1_OUT_DIM-1))
             $fatal(1, "phase1 case=%0d output=%0d mismatch expected=%0d actual=%0d",
                    case_index, received,
-                   phase1_outputs[case_index*4+received], result_data);
+                   phase1_expected_output, result_data);
           received = received + 1;
         end
         cycles = cycles + 1;
@@ -522,15 +556,18 @@ module dense_engine_checker #(
     result_ready = 1'b0;
     error_ready = 1'b0;
     done = 1'b0;
-    $readmemh("tests/vectors/dense_inputs.hex", phase1_inputs);
+    if (RUN_COMPAT && INPUT_WIDTH < PHASE1_INPUT_WIDTH)
+      $fatal(1, "Phase-1 compatibility requires INPUT_WIDTH >= %0d",
+             PHASE1_INPUT_WIDTH);
+    $readmemh("tests/vectors/dense_inputs.hex", phase1_input_rows);
     $readmemh("tests/vectors/weights.hex", phase1_weights);
     $readmemh("tests/vectors/biases.hex", phase1_biases);
-    $readmemh("tests/expected/dense_outputs.hex", phase1_outputs);
+    $readmemh("tests/expected/dense_outputs.hex", phase1_output_rows);
     wait (!rst);
 
     if (RUN_COMPAT) begin
       configure_phase1_model();
-      for (phase1_case = 0; phase1_case < 24;
+      for (phase1_case = 0; phase1_case < PHASE1_CASE_COUNT;
            phase1_case = phase1_case + 1)
         run_phase1_case(phase1_case);
       run_layer(13, 7, 1, 1, 1'b0, 8'h82);

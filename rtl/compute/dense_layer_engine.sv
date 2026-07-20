@@ -105,6 +105,7 @@ module dense_layer_engine #(
   logic [JOB_TAG_WIDTH-1:0] descriptor_tag;
 
   logic [OUT_INDEX_WIDTH-1:0] output_index_counter;
+  logic [ACT_INDEX_WIDTH-1:0] output_scalar_write_index;
   logic [IN_DIM_WIDTH-1:0] chunk_index_counter;
   logic [NUM_PE-1:0] current_lane_mask;
   logic current_chunk_last;
@@ -266,6 +267,8 @@ module dense_layer_engine #(
   assign buffer1_scalar_valid = (state == STATE_WAIT_DOT) &&
       dot_result_valid && fifo_in_ready && !quant_invalid_shift &&
       descriptor_output_buffer;
+  assign output_scalar_write_index =
+      ACT_INDEX_WIDTH'(output_index_counter);
 
   assign result_valid = fifo_out_valid;
   assign result_data = fifo_out_data[0 +: OUTPUT_WIDTH];
@@ -296,7 +299,7 @@ module dense_layer_engine #(
     .read_rsp_data(buffer0_read_rsp_data),
     .scalar_write_valid(buffer0_scalar_valid),
     .scalar_write_ready(buffer0_scalar_ready),
-    .scalar_write_index(output_index_counter),
+    .scalar_write_index(output_scalar_write_index),
     .scalar_write_data(quantized_result),
     .access_error(buffer0_access_error)
   );
@@ -323,7 +326,7 @@ module dense_layer_engine #(
     .read_rsp_data(buffer1_read_rsp_data),
     .scalar_write_valid(buffer1_scalar_valid),
     .scalar_write_ready(buffer1_scalar_ready),
-    .scalar_write_index(output_index_counter),
+    .scalar_write_index(output_scalar_write_index),
     .scalar_write_data(quantized_result),
     .access_error(buffer1_access_error)
   );
@@ -566,5 +569,9 @@ module dense_layer_engine #(
       $error("dense_layer_engine NUM_PE must be a power of two");
     if (OUTPUT_WIDTH != INPUT_WIDTH)
       $error("dense_layer_engine ping-pong buffers require OUTPUT_WIDTH=INPUT_WIDTH");
+    if (ACT_MAX_DIM < MAX_OUT_DIM)
+      $fatal(1, "dense_layer_engine output buffer is smaller than MAX_OUT_DIM");
+    if (ACT_INDEX_WIDTH < OUT_INDEX_WIDTH)
+      $fatal(1, "dense_layer_engine scalar output index would be truncated");
   end
 endmodule

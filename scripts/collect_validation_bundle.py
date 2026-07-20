@@ -13,6 +13,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 STAGE1_HANDOFF_DIR = PROJECT_ROOT / "handoff" / "stage1_validation"
 STAGE2A_HANDOFF_DIR = PROJECT_ROOT / "handoff" / "stage2a_validation"
 RESULTS_DIR = PROJECT_ROOT / "results"
+STAGE2A_TESTBENCHES = (
+    "tb_mac_lane",
+    "tb_runtime_relu_quant",
+    "tb_banked_activation_buffer",
+    "tb_local_weight_provider",
+    "tb_vector_dot_product_core",
+    "tb_dense_layer_engine",
+)
 
 PAYLOAD_ROOT_FILES = [
     ".gitattributes",
@@ -140,13 +148,183 @@ def prepare_handoff(stage2a=False):
     return payload_path
 
 
-def ensure_validation_summary():
+def xsim_status_log(suite, name, stage):
+    if stage == "COMPILE":
+        return "logs/xvlog_{}.log".format(suite)
+    tool = "xelab" if stage == "ELAB" else "xsim"
+    if suite == "stage2a":
+        return "logs/{}_stage2a_{}.log".format(tool, name)
+    return "logs/{}_{}.log".format(tool, name)
+
+
+def parse_xsim_status(status_path, suite):
+    records = []
+    for line_number, line in enumerate(
+            status_path.read_text(encoding="utf-8").splitlines(), 1):
+        if not line.strip():
+            continue
+        parts = line.split()
+        if len(parts) != 4:
+            records.append({
+                "name": "xsim_{}_status_line_{}".format(suite, line_number),
+                "category": "rtl_compile",
+                "status": "FAIL",
+                "exit_code": None,
+                "log": "results/xsim_{}_status.txt".format(suite),
+                "reason": "Malformed status line: {}".format(line),
+                "source_name": "status_line_{}".format(line_number),
+                "stage": "PARSE",
+            })
+            continue
+        name, stage, raw_status, raw_exit_code = parts
+        try:
+            exit_code = int(raw_exit_code)
+        except ValueError:
+            exit_code = None
+            raw_status = "FAIL"
+        status = (
+            "PASS" if raw_status == "PASS" and exit_code == 0 else "FAIL"
+        )
+        records.append({
+            "name": "xsim_{}_{}_{}".format(suite, name, stage.lower()),
+            "category": "rtl_simulation" if stage == "SIM" else "rtl_compile",
+            "status": status,
+            "exit_code": exit_code,
+            "log": xsim_status_log(suite, name, stage),
+            "reason": raw_status,
+            "source_name": name,
+            "stage": stage,
+        })
+    return records
+
+
+def remove_stale_xsim_records(tests):
+    def is_stale(item):
+        name = str(item.get("name", ""))
+        return (
+            name.startswith("xsim_stage1_") or
+            name.startswith("xsim_stage2a_") or
+            name == "xvlog_compile" or
+            (name.startswith("tb_") and
+             (name.endswith("_elab") or name.endswith("_sim")))
+        )
+
+    return [item for item in tests if not is_stale(item)]
+
+
+def update_validation_summary(
+        summary, stage1_status=None, stage2a_status=None,
+        require_stage2a=False):
+    updated = dict(summary)
+    tests = remove_stale_xsim_records(updated.get("tests", []))
+    stage2a_records = None
+    for suite, status_path in (
+        ("stage1", stage1_status),
+        ("stage2a", stage2a_status),
+    ):
+        if status_path is None or not status_path.is_file():
+            continue
+        records = parse_xsim_status(status_path, suite)
+        tests.extend(records)
+        if suite == "stage2a":
+            stage2a_records = records
+
+    if stage2a_records is not None:
+        expected = {("xvlog", "COMPILE")}
+        expected.update(
+            (testbench, stage)
+            for testbench in STAGE2A_TESTBENCHES
+            for stage in ("ELAB", "SIM")
+        )
+        observed = {
+            (item.get("source_name"), item.get("stage"))
+            for item in stage2a_records
+        }
+        complete = expected.issubset(observed)
+        all_pass = complete and all(
+            item["status"] == "PASS" for item in stage2a_records
+        )
+        if not complete:
+            missing = sorted(expected - observed)
+            tests.append({
+                "name": "xsim_stage2a_status_completeness",
+                "category": "rtl_compile",
+                "status": "FAIL",
+                "exit_code": None,
+                "log": "results/xsim_stage2a_status.txt",
+                "reason": "Missing Stage-2A status records: {}".format(missing),
+            })
+        updated["stage2a_rtl_satisfied"] = all_pass
+        if all_pass:
+            updated["stage2a_note"] = (
+                "Stage-2A status includes xvlog plus 6/6 elaboration and "
+                "6/6 simulation PASS records; independent log review is still required."
+            )
+        elif not complete:
+            updated["stage2a_note"] = (
+                "Stage-2A status is incomplete; missing compile/elaboration/simulation records."
+            )
+        else:
+            updated["stage2a_note"] = (
+                "Stage-2A status contains one or more FAIL records."
+            )
+    elif require_stage2a:
+        tests.append({
+            "name": "xsim_stage2a_status_missing",
+            "category": "rtl_compile",
+            "status": "FAIL",
+            "exit_code": None,
+            "log": "results/xsim_stage2a_status.txt",
+            "reason": "Required Stage-2A status file is missing",
+        })
+        updated["stage2a_rtl_satisfied"] = False
+        updated["stage2a_note"] = (
+            "Stage-2A status file results/xsim_stage2a_status.txt is missing."
+        )
+
+    if not tests:
+        tests.append({
+            "name": "validation",
+            "category": "environment",
+            "status": "SKIPPED",
+            "exit_code": None,
+            "log": None,
+            "reason": "No validation logs were found",
+        })
+
+    counts = {
+        status.lower(): sum(item["status"] == status for item in tests)
+        for status in ("PASS", "FAIL", "SKIPPED")
+    }
+    updated["tests"] = tests
+    updated["counts"] = counts
+    updated["overall_status"] = (
+        "FAIL" if counts["fail"] else ("PASS" if counts["pass"] else "SKIPPED")
+    )
+    return updated
+
+
+def ensure_validation_summary(require_stage2a=False):
     summary_path = RESULTS_DIR / "validation_summary.json"
     if summary_path.is_file():
-        return summary_path
-    tests = []
+        try:
+            summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        except ValueError:
+            summary = {
+                "tests": [{
+                    "name": "validation_summary_parse",
+                    "category": "packaging",
+                    "status": "FAIL",
+                    "exit_code": None,
+                    "log": "results/validation_summary.json",
+                    "reason": "Existing validation summary is invalid JSON",
+                }]
+            }
+    else:
+        summary = {"tests": []}
+    tests = list(summary.get("tests", []))
     python_log = PROJECT_ROOT / "logs" / "python_tests.log"
-    if python_log.is_file():
+    if python_log.is_file() and not tests:
         try:
             python_status = json.loads(python_log.read_text(encoding="utf-8"))["status"]
         except (ValueError, KeyError):
@@ -159,47 +337,19 @@ def ensure_validation_summary():
             "log": "logs/python_tests.log",
             "reason": "Reconstructed from standalone server log",
         })
-    status_path = RESULTS_DIR / "xsim_stage1_status.txt"
-    if status_path.is_file():
-        for line in status_path.read_text(encoding="utf-8").splitlines():
-            if not line.strip():
-                continue
-            name, stage, raw_status, exit_code = line.split(None, 3)
-            tests.append({
-                "name": "{}_{}".format(name, stage.lower()),
-                "category": "rtl_simulation" if stage == "SIM" else "rtl_compile",
-                "status": "PASS" if raw_status == "PASS" else "FAIL",
-                "exit_code": int(exit_code),
-                "log": (
-                    "logs/xvlog_stage1.log" if stage == "COMPILE" else
-                    "logs/xelab_{}.log".format(name) if stage == "ELAB" else
-                    "logs/xsim_{}.log".format(name)
-                ),
-                "reason": raw_status,
-            })
-    if not tests:
-        tests.append({
-            "name": "validation",
-            "category": "environment",
-            "status": "SKIPPED",
-            "exit_code": None,
-            "log": None,
-            "reason": "No validation logs were found",
-        })
-    counts = {
-        status.lower(): sum(item["status"] == status for item in tests)
-        for status in ("PASS", "FAIL", "SKIPPED")
-    }
-    overall = "FAIL" if counts["fail"] else ("PASS" if counts["pass"] else "SKIPPED")
+    summary["tests"] = tests
     revision, _ = repository_revision()
-    summary = {
-        "git_revision": revision,
-        "overall_status": overall,
-        "counts": counts,
-        "gate1_satisfied": False,
-        "gate1_note": "Standalone logs require Codex review before gate approval.",
-        "tests": tests,
-    }
+    summary["git_revision"] = revision
+    summary.setdefault("gate1_satisfied", False)
+    summary.setdefault(
+        "gate1_note", "Standalone logs require Codex review before gate approval."
+    )
+    summary = update_validation_summary(
+        summary,
+        RESULTS_DIR / "xsim_stage1_status.txt",
+        RESULTS_DIR / "xsim_stage2a_status.txt",
+        require_stage2a=require_stage2a,
+    )
     summary_path.write_text(
         json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
@@ -209,7 +359,7 @@ def ensure_validation_summary():
 def collect_logs(stage2a=False):
     files = payload_files()
     manifest_path = write_source_manifest(files)
-    summary_path = ensure_validation_summary()
+    summary_path = ensure_validation_summary(require_stage2a=stage2a)
     candidates = [manifest_path, summary_path]
     logs_dir = PROJECT_ROOT / "logs"
     if logs_dir.exists():
