@@ -92,12 +92,11 @@ python3 scripts/run_stage2a_python_tests.py
 
 This section records only commands actually run in the current local workspace.
 
-- Python reference/tests: **passed locally on 2026-07-14** using the bundled
-  Python 3.12 runtime.  `scripts/run_python_tests.py` passed 24 deterministic
-  cases and its packed-output self-comparison; `python/reference_model.py`
-  completed all 24 cases.  Python `compileall` also completed with exit code 0.
-- RTL simulation: not run; local Icarus/Verilator was not found during initial
-  inspection.
+- Python reference/tests: **passed locally on 2026-07-22** using Python 3.13.
+  The phase-1 24-vector suite and the Stage 2A/2B Python contracts all pass.
+- RTL simulation: local Vivado 2022.1/XSim passes all six Stage 2A benches and
+  the Stage 2B multilayer bench (`valid=11 invalid=9 total=20`) after the Stage
+  2C storage refactor.  This is not the required Vivado 2020.2 target evidence.
 - RTL lint: not run; local Verible/Verilator was not found during initial
   inspection.
 - F37X compile, `.xclbin`, and board run: not run and intentionally out of scope.
@@ -118,9 +117,11 @@ the later retry2 server run now provides the required RTL evidence.
 The exact Python regression summary is saved in `logs/python_tests.log`.
 Tool-availability evidence is saved in `logs/tool_availability.log`.
 
-The Stage-2A local workflow currently records RTL compile/simulation/lint as
-SKIPPED because Vivado, Icarus, Verilator, and Verible are absent.  It does not
-claim Stage-2A RTL PASS; use the generated server payload and return real logs.
+The local Stage 2C OOC synthesis under Vivado 2022.1 infers two 16-bank
+activation BRAM buffers, 16 weight-bank RAMB36 blocks, and one bias RAMB36.
+Synthesis completes without errors or latches, but the 100 MHz constraint fails
+with WNS `-2.460 ns`; see `docs/STAGE2C_SYNTHESIS_REVIEW.md`.  Vivado 2020.2 and
+F37X compile/implementation evidence are still required.
 
 While Stage-2A awaits those logs, the approved local-only work is a configurable
 software DLRM, embedding trace extraction, bounded coalescing simulation, and

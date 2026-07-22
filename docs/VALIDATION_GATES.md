@@ -36,8 +36,11 @@ The architecture review conditionally approved Scheme B and Stage 2A.  The
 non-overlapped Stage-2A baseline is locally implemented with P=4/8/16/32,
 ACC32/48, runtime dimensions, banked ping-pong activation buffers, an abstract
 local provider, runtime quantization metadata, and ready/valid boundaries.
-Python tests pass, but all local RTL tools are absent, so RTL evidence is
-SKIPPED and Stage 2A awaits real Vivado 2020.2/XSim logs.
+Python tests pass.  After the Stage 2C storage refactor, local Vivado 2022.1
+passes all six Stage 2A XSim benches and the Stage 2B multilayer bench, and an
+Artix-7 OOC synthesis completes with explicit BRAM inference.  Its 100 MHz
+timing fails, and neither the tool version nor part is the required target
+environment, so Stage 2A still awaits exact-source Vivado 2020.2/XSim logs.
 
 A successful Stage-2A server run can close the bounded parameterized-compute
 baseline after log review.  Stage 2B double-partial-sum overlap is now an

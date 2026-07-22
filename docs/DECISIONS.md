@@ -309,3 +309,26 @@
 - **Decision:** accept the tools and reproducibility evidence; do not approve
   GATE-T1/T2/T3, coalescing RTL, scheduler RTL, or HBM RTL without real local
   Criteo traces, reviewed physical mapping, and a separate human decision.
+
+## D-023 - Bank Stage 2C memories and defer quantization pipelining
+
+- **Status:** adopted for the local Stage 2C synthesis-review branch.
+- **Problem:** module-level multidimensional memories did not give reviewable
+  synthesis inference, and separate activation write expressions made the
+  requested block-RAM style infeasible.  The resulting runtime quantization
+  path also fails the initial 100 MHz OOC constraint.
+- **Adopted storage:** generate one activation memory per PE bank and select one
+  mutually exclusive write tuple before the RAM process.  Generate one weight
+  memory per PE with `bank=address%NUM_PE`, `row=address/NUM_PE`, and rotate
+  registered bank outputs for arbitrary request alignment.  Keep one-cycle
+  elastic responses and scalar-write priority unchanged.
+- **Evidence:** local Vivado 2022.1 infers 32 RAMB18 for the two activation
+  buffers, 16 RAMB36 for weights, and one RAMB36 for biases.  Six Stage 2A
+  benches and the 20-case Stage 2B bench pass.  Synthesis reports no errors,
+  critical warnings, or latches.
+- **Timing decision:** record, but do not repair, the 100 MHz failure in this
+  change.  WNS is -2.460 ns and the 32-level worst path is runtime quantization
+  into activation BRAM write data.  Adding a register would change latency and
+  coordinated controller behavior, so it requires a separate review.
+- **Boundary:** these Artix-7 OOC results are not F37X or Vivado 2020.2 evidence;
+  no target timing/resource/board claim is approved.
