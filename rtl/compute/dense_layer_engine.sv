@@ -175,7 +175,11 @@ module dense_layer_engine #(
 
   logic signed [OUTPUT_WIDTH-1:0] quantized_result;
   logic quant_invalid_shift;
+  logic quant_input_ready;
+  logic quant_output_valid;
+  logic quant_output_ready;
   logic commit_ready;
+  logic quant_commit_fire;
 
   logic fifo_in_valid;
   logic fifo_in_ready;
@@ -249,23 +253,28 @@ module dense_layer_engine #(
   assign dot_command_valid = (state == STATE_DOT_COMMAND);
   assign dot_chunk_valid = (state == STATE_FETCH_JOIN) &&
       joined_response_valid && !joined_response_error;
-  assign dot_result_ready = (state == STATE_WAIT_DOT) && commit_ready;
+  assign dot_result_ready = (state == STATE_WAIT_DOT) && quant_input_ready;
   assign core_reset = rst || (state == STATE_ERROR);
 
   assign selected_scalar_ready = descriptor_output_buffer ?
       buffer1_scalar_ready : buffer0_scalar_ready;
-  assign commit_ready = fifo_in_ready && selected_scalar_ready &&
-                        !quant_invalid_shift;
-  assign fifo_in_valid = (state == STATE_WAIT_DOT) && dot_result_valid &&
+  // A quantized value advances the output index only after the FIFO and the
+  // selected activation buffer can accept the same value atomically.
+  assign commit_ready = fifo_in_ready && selected_scalar_ready;
+  assign quant_output_ready = (state == STATE_WAIT_DOT) &&
+      (quant_invalid_shift || commit_ready);
+  assign quant_commit_fire = (state == STATE_WAIT_DOT) &&
+      quant_output_valid && !quant_invalid_shift && commit_ready;
+  assign fifo_in_valid = (state == STATE_WAIT_DOT) && quant_output_valid &&
                          selected_scalar_ready && !quant_invalid_shift;
   assign fifo_in_data = {descriptor_tag,
                          (output_index_counter == descriptor_out_dim-1'b1),
                          output_index_counter, quantized_result};
   assign buffer0_scalar_valid = (state == STATE_WAIT_DOT) &&
-      dot_result_valid && fifo_in_ready && !quant_invalid_shift &&
+      quant_output_valid && fifo_in_ready && !quant_invalid_shift &&
       !descriptor_output_buffer;
   assign buffer1_scalar_valid = (state == STATE_WAIT_DOT) &&
-      dot_result_valid && fifo_in_ready && !quant_invalid_shift &&
+      quant_output_valid && fifo_in_ready && !quant_invalid_shift &&
       descriptor_output_buffer;
   assign output_scalar_write_index =
       ACT_INDEX_WIDTH'(output_index_counter);
@@ -397,9 +406,15 @@ module dense_layer_engine #(
     .OUT_WIDTH(OUTPUT_WIDTH),
     .SHIFT_WIDTH(SHIFT_WIDTH)
   ) u_runtime_quant (
+    .clk(clk),
+    .rst(core_reset),
+    .in_valid((state == STATE_WAIT_DOT) && dot_result_valid),
+    .in_ready(quant_input_ready),
     .in_data(dot_result_data),
     .shift_amount(descriptor_output_shift),
     .relu_enable(descriptor_relu_enable),
+    .out_valid(quant_output_valid),
+    .out_ready(quant_output_ready),
     .out_data(quantized_result),
     .invalid_shift(quant_invalid_shift)
   );
@@ -528,7 +543,11 @@ module dense_layer_engine #(
             error_valid <= 1'b1;
             error_code <= ERROR_DOT_PROTOCOL;
             state <= STATE_ERROR;
-          end else if (dot_result_valid && dot_result_ready) begin
+          end else if (quant_output_valid && quant_invalid_shift) begin
+            error_valid <= 1'b1;
+            error_code <= ERROR_BAD_SHIFT;
+            state <= STATE_ERROR;
+          end else if (quant_commit_fire) begin
             if (output_index_counter == descriptor_out_dim-1'b1) begin
               job_done <= 1'b1;
               state <= STATE_DRAIN;
