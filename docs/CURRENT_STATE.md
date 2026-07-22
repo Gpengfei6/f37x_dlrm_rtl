@@ -63,6 +63,15 @@ quantization-to-activation path is split into two elastic stages; the final
 worst path is a met weight-request-address range-check path.  See
 `docs/STAGE2D_TIMING_REVIEW.md`.
 
+Stage 2E local detection found no Vivado 2020.2 executable.  The only Vivado
+found by the bounded probe is 2022.1, verified through its own version output.
+Repository policy prohibits using a remote/server installation, so exact
+target-version XSim and
+OOC synthesis remain NOT RUN.  A guarded local runner now requires an actual
+`Vivado v2020.2` before it can execute any regression or synthesis command, and
+a report parser extracts the required version/resource/timing/RAM/DRC evidence.
+See `docs/STAGE2E_VIVADO2020_REPRO.md`.
+
 The software feasibility regression is separately 12 PASS, 0 FAIL, and 2
 SKIPPED.  Config/model dimensions, deterministic NumPy oracle forward and exact
 save/reload, known dot interaction, guarded local Criteo loading, AUC/LogLoss,
@@ -81,10 +90,12 @@ real user-supplied Criteo data is present.
 
 ## Next action
 
-Two independent follow-up tracks remain:
+Three independent follow-up tracks remain:
 
-1. wait for the user to run the frozen Stage-2A payload under Vivado 2020.2;
-2. place classic Criteo TSV data in a user-chosen local file/directory and run
+1. run `scripts/run_stage2e_repro.ps1` in a local environment that already has
+   Vivado 2020.2, then review the generated version-comparison summary;
+2. wait for the user to run the frozen Stage-2A payload under Vivado 2020.2;
+3. place classic Criteo TSV data in a user-chosen local file/directory and run
    `python -m analysis.run_trace_feasibility --criteo-path <local-path>`.
 
 An environment that already contains PyTorch may also rerun CPU and optional

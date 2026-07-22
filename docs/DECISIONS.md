@@ -357,3 +357,25 @@
 - **Boundary:** this does not prove Vivado 2020.2, implemented F37X timing,
   `.xclbin` generation, or board execution. No false path, relaxed clock, RAM
   demotion, dimension reduction, or expected-output change is adopted.
+
+## D-025 - Require an authenticated local Vivado 2020.2 run for Stage 2E
+
+- **Status:** adopted; target-version execution remains NOT RUN locally.
+- **Tool identity:** query `vivado -version` before any regression and accept
+  only exact `Vivado v2020.2`. Never substitute or relabel the available
+  Vivado 2022.1 reports.
+- **Execution boundary:** repository policy forbids network, SSH, remote
+  execution, and server access. Do not install a tool or use a server path to
+  manufacture Stage 2E evidence.
+- **Source policy:** preserve the Stage 2D RTL, testbenches, expected values,
+  RAM capacities, and 10.000 ns constraint until a genuine 2020.2 failure
+  identifies a minimal compatibility issue.
+- **Evidence:** the local Python suites pass; the existing same-source 2022.1
+  reports parse to 4,550 LUT, 1,946 FF, 17 RAMB36, 32 RAMB18, 21 DSP, WNS
+  +0.758 ns, TNS 0, zero failing endpoints/latches, and the expected 16+1+32
+  RAM mapping. Every 2020.2 comparison field remains unknown.
+- **Reproduction:** keep one guarded runner and one version-aware report parser
+  so a workstation with an existing 2020.2 installation can regenerate all
+  Python, Stage 2A/2B XSim, and OOC evidence without an RTL edit.
+- **Boundary:** no Stage 2E pass, implementation, F37X board, or `.xclbin`
+  claim is made until the corresponding real artifacts exist.
