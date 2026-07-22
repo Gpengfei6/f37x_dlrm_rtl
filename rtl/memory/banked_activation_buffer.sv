@@ -31,57 +31,84 @@ module banked_activation_buffer #(
   input  logic signed [DATA_WIDTH-1:0]          scalar_write_data,
   output logic                                  access_error
 );
-  logic signed [DATA_WIDTH-1:0] bank_memory
-      [0:NUM_BANKS-1][0:BANK_DEPTH-1];
+  logic [NUM_BANKS*DATA_WIDTH-1:0] bank_read_data;
+  logic read_rsp_error;
 
   assign scalar_write_ready = 1'b1;
   assign load_ready = !scalar_write_valid;
   assign read_req_ready = !read_rsp_valid || read_rsp_ready;
 
-  always_ff @(posedge clk) begin : response_and_memory
-    integer read_lane;
-    integer write_lane;
+  always_ff @(posedge clk) begin : response_control
     if (rst) begin
       read_rsp_valid <= 1'b0;
-      read_rsp_data <= '0;
+      read_rsp_error <= 1'b0;
       access_error <= 1'b0;
     end else begin
       if (read_req_ready) begin
         read_rsp_valid <= read_req_valid;
-        if (read_req_valid) begin
-          if (read_req_chunk_index < BANK_DEPTH) begin
-            for (read_lane = 0; read_lane < NUM_BANKS;
-                 read_lane = read_lane + 1)
-              read_rsp_data[read_lane*DATA_WIDTH +: DATA_WIDTH] <=
-                  bank_memory[read_lane][read_req_chunk_index];
-          end else begin
-            read_rsp_data <= '0;
+        read_rsp_error <=
+            read_req_valid && (read_req_chunk_index >= BANK_DEPTH);
+        if (read_req_valid && (read_req_chunk_index >= BANK_DEPTH))
             access_error <= 1'b1;
-          end
-        end
       end
 
-      if (load_valid && load_ready) begin
-        if (load_chunk_index < BANK_DEPTH) begin
-          for (write_lane = 0; write_lane < NUM_BANKS;
-               write_lane = write_lane + 1)
-            if (load_lane_mask[write_lane])
-              bank_memory[write_lane][load_chunk_index] <=
-                  load_data[write_lane*DATA_WIDTH +: DATA_WIDTH];
-        end else begin
+      if (load_valid && load_ready && (load_chunk_index >= BANK_DEPTH))
           access_error <= 1'b1;
-        end
-      end
 
-      if (scalar_write_valid && scalar_write_ready) begin
-        if (scalar_write_index < MAX_DIM)
-          bank_memory[scalar_write_index % NUM_BANKS]
-                     [scalar_write_index / NUM_BANKS] <= scalar_write_data;
-        else
+      if (scalar_write_valid && scalar_write_ready &&
+          (scalar_write_index >= MAX_DIM))
           access_error <= 1'b1;
-      end
     end
   end
+
+  assign read_rsp_data = read_rsp_error ? '0 : bank_read_data;
+
+  genvar bank_index;
+  generate
+    for (bank_index = 0; bank_index < NUM_BANKS;
+         bank_index = bank_index + 1) begin : activation_bank
+      (* ram_style = "block" *)
+      logic signed [DATA_WIDTH-1:0] memory [0:BANK_DEPTH-1];
+      logic signed [DATA_WIDTH-1:0] read_data;
+      logic write_enable;
+      logic [CHUNK_ADDR_WIDTH-1:0] write_address;
+      logic signed [DATA_WIDTH-1:0] write_data;
+
+      always_comb begin : select_write_port
+        write_enable = 1'b0;
+        write_address = '0;
+        write_data = '0;
+
+        if (load_valid && load_ready &&
+            (load_chunk_index < BANK_DEPTH) &&
+            load_lane_mask[bank_index]) begin
+          write_enable = 1'b1;
+          write_address = load_chunk_index;
+          write_data = load_data[bank_index*DATA_WIDTH +: DATA_WIDTH];
+        end else if (scalar_write_valid && scalar_write_ready &&
+                     (scalar_write_index < MAX_DIM) &&
+                     ((scalar_write_index % NUM_BANKS) == bank_index)) begin
+          write_enable = 1'b1;
+          write_address = scalar_write_index / NUM_BANKS;
+          write_data = scalar_write_data;
+        end
+      end
+
+      always_ff @(posedge clk) begin : bank_ports
+        if (write_enable)
+          memory[write_address] <= write_data;
+
+        if (rst) begin
+          read_data <= '0;
+        end else if (read_req_valid && read_req_ready &&
+                     (read_req_chunk_index < BANK_DEPTH)) begin
+          read_data <= memory[read_req_chunk_index];
+        end
+      end
+
+      assign bank_read_data[bank_index*DATA_WIDTH +: DATA_WIDTH] = read_data;
+    end
+  endgenerate
 
   initial begin
     if (MAX_DIM <= 0 || NUM_BANKS <= 0 || DATA_WIDTH <= 0)

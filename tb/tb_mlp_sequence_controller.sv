@@ -222,6 +222,12 @@ module tb_mlp_sequence_controller;
 
   always #5 clk = ~clk;
 
+  initial begin : timeout_guard
+    #2000000;
+    $display("tb_mlp_sequence_controller: FAIL - global timeout");
+    $fatal(1, "tb_mlp_sequence_controller global timeout");
+  end
+
   function automatic integer case_layer_count(input integer index);
     begin
       case (index)

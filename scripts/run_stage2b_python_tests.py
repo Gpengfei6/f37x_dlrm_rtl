@@ -378,7 +378,9 @@ def run_tests():
         "descriptor_hex_chars": metadata["descriptor_row_hex_chars"],
         "lane_zero_is_lsb": True,
         "repeat_generation_identical": True,
-        "active_rtl_status": "UNCHANGED; Stage 2B RTL not implemented",
+        "active_rtl_status": (
+            "NOT_EVALUATED; inspect the independent Stage 2B XSim status/log"
+        ),
     }
 
 

@@ -479,7 +479,7 @@ def run_tests():
         "invalid_descriptor_checks": len(invalid) + 1,
         "phase1_vector_loader": vector_loader,
         "validation_summary": validation_summary,
-        "rtl_status": "SKIPPED locally; no simulator installed",
+        "rtl_status": "NOT_EVALUATED; inspect the independent XSim status/logs",
     }
 
 
