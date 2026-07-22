@@ -42,6 +42,10 @@ module tb_mac_lane;
       input_data = step_input;
       weight_data = step_weight;
       @(posedge clk);
+      @(negedge clk);
+      clear = 1'b0;
+      enable = 1'b0;
+      @(posedge clk);
       #1;
       if (accumulator !== expected)
         $fatal(1, "mac lane expected=%0d actual=%0d", expected, accumulator);

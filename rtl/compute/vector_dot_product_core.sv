@@ -32,12 +32,13 @@ module vector_dot_product_core #(
   output logic signed [ACC_WIDTH-1:0]               result_data,
   output logic                                      protocol_error
 );
-  localparam logic [1:0] STATE_IDLE   = 2'd0;
-  localparam logic [1:0] STATE_MAC    = 2'd1;
-  localparam logic [1:0] STATE_REDUCE = 2'd2;
-  localparam logic [1:0] STATE_OUTPUT = 2'd3;
+  localparam logic [2:0] STATE_IDLE      = 3'd0;
+  localparam logic [2:0] STATE_MAC       = 3'd1;
+  localparam logic [2:0] STATE_MAC_DRAIN = 3'd2;
+  localparam logic [2:0] STATE_REDUCE    = 3'd3;
+  localparam logic [2:0] STATE_OUTPUT    = 3'd4;
 
-  logic [1:0] state;
+  logic [2:0] state;
   logic [DIM_WIDTH-1:0] active_in_dim;
   logic [DIM_WIDTH-1:0] chunk_count;
   logic [DIM_WIDTH-1:0] chunk_index;
@@ -128,12 +129,18 @@ module vector_dot_product_core #(
                 chunk_last != expected_last)
               protocol_error <= 1'b1;
             if (expected_last) begin
-              reduction_level <= '0;
-              state <= STATE_REDUCE;
+              state <= STATE_MAC_DRAIN;
             end else begin
               chunk_index <= chunk_index + 1'b1;
             end
           end
+        end
+
+        // The MAC lanes register DSP products. This explicit drain cycle lets
+        // the final product reach each accumulator before reduction samples it.
+        STATE_MAC_DRAIN: begin
+          reduction_level <= '0;
+          state <= STATE_REDUCE;
         end
 
         STATE_REDUCE: begin

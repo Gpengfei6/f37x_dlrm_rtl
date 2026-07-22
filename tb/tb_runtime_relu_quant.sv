@@ -47,14 +47,15 @@ module tb_runtime_relu_quant;
       if (!in_ready)
         $fatal(1, "quant input unexpectedly stalled");
       @(posedge clk);
+      @(negedge clk);
+      in_valid = 1'b0;
+      @(posedge clk);
       #1;
       if (!out_valid || out_data !== expected ||
           invalid_shift !== expected_invalid)
         $fatal(1, "quant value=%0d shift=%0d relu=%0d expected=%0d actual=%0d valid=%0d invalid=%0d",
                value, shift, relu, expected, out_data, out_valid,
                invalid_shift);
-      @(negedge clk);
-      in_valid = 1'b0;
     end
   endtask
 
@@ -66,19 +67,25 @@ module tb_runtime_relu_quant;
       in_valid = 1'b1;
       shift_amount = 6'd4;
       relu_enable = 1'b0;
-      in_data = 48'sd8;
       for (item = 0; item < 8; item = item + 1) begin
+        in_data = 48'(16*item + 8);
         if (!in_ready)
           $fatal(1, "full-rate quant input stalled at item %0d", item);
         @(posedge clk);
         #1;
-        if (!out_valid || out_data !== item+1 || invalid_shift)
+        if (item == 0 && out_valid)
+          $fatal(1, "two-stage quant pipeline produced an early result");
+        if (item > 0 && (!out_valid || out_data !== item || invalid_shift))
           $fatal(1, "full-rate quant mismatch item=%0d data=%0d valid=%0d invalid=%0d",
                  item, out_data, out_valid, invalid_shift);
         @(negedge clk);
-        in_data = 48'(16*(item+1) + 8);
       end
       in_valid = 1'b0;
+      @(posedge clk);
+      #1;
+      if (!out_valid || out_data !== 16'sd8 || invalid_shift)
+        $fatal(1, "full-rate quant final pipeline result mismatch");
+      @(negedge clk);
       @(posedge clk);
       #1;
       if (out_valid)
@@ -98,12 +105,17 @@ module tb_runtime_relu_quant;
       if (!in_ready)
         $fatal(1, "empty quant pipeline was not ready");
       @(posedge clk);
-      #1;
-      if (!out_valid || out_data !== 16'sd2 || invalid_shift)
-        $fatal(1, "failed to load stalled quant output");
-
       @(negedge clk);
       in_data = -48'sd24;
+      if (!in_ready)
+        $fatal(1, "quant second stage did not accept while output was empty");
+      @(posedge clk);
+      #1;
+      if (!out_valid || out_data !== 16'sd2 || invalid_shift)
+        $fatal(1, "failed to fill stalled quant output");
+
+      @(negedge clk);
+      in_data = 48'sd40;
       for (stall_cycle = 0; stall_cycle < 3;
            stall_cycle = stall_cycle + 1) begin
         if (in_ready)
@@ -129,6 +141,11 @@ module tb_runtime_relu_quant;
       in_valid = 1'b0;
       @(posedge clk);
       #1;
+      if (!out_valid || out_data !== 16'sd3 || invalid_shift)
+        $fatal(1, "quant refill input did not advance behind drained output");
+      @(negedge clk);
+      @(posedge clk);
+      #1;
       if (out_valid)
         $fatal(1, "quant output did not drain after refill test");
     end
@@ -143,15 +160,18 @@ module tb_runtime_relu_quant;
       shift_amount = 6'd0;
       relu_enable = 1'b0;
       @(posedge clk);
+      @(negedge clk);
+      in_data = -48'sd24;
+      @(posedge clk);
       #1;
-      if (!out_valid)
-        $fatal(1, "reset test failed to fill quant pipeline");
+      if (!out_valid || !dut.stage1_valid)
+        $fatal(1, "reset test failed to fill both quant stages");
       @(negedge clk);
       in_valid = 1'b0;
       rst = 1'b1;
       @(posedge clk);
       #1;
-      if (out_valid || invalid_shift)
+      if (out_valid || dut.stage1_valid || invalid_shift)
         $fatal(1, "reset left a valid quant result behind");
       @(negedge clk);
       rst = 1'b0;

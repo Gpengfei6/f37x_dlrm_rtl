@@ -16,22 +16,44 @@ module mac_lane #(
 );
   localparam integer PRODUCT_WIDTH = INPUT_WIDTH + WEIGHT_WIDTH;
 
-  logic signed [PRODUCT_WIDTH-1:0] product;
+  logic signed [PRODUCT_WIDTH-1:0] product_pipeline;
+  logic clear_pipeline;
+  logic enable_pipeline;
+  logic signed [ACC_WIDTH-1:0] seed_pipeline;
   logic signed [ACC_WIDTH-1:0] product_extended;
   logic signed [ACC_WIDTH-1:0] selected_base;
+  (* use_dsp = "no" *)
+  logic signed [ACC_WIDTH-1:0] fabric_sum;
   logic signed [ACC_WIDTH-1:0] accumulator_next;
 
-  assign product = input_data * weight_data;
   assign product_extended =
-      {{(ACC_WIDTH-PRODUCT_WIDTH){product[PRODUCT_WIDTH-1]}}, product};
-  assign selected_base = clear ? seed_data : accumulator;
-  assign accumulator_next = enable ? selected_base + product_extended
-                                   : selected_base;
+      {{(ACC_WIDTH-PRODUCT_WIDTH){product_pipeline[PRODUCT_WIDTH-1]}},
+       product_pipeline};
+  assign selected_base = clear_pipeline ? seed_pipeline : accumulator;
+  assign fabric_sum = selected_base + product_extended;
+  assign accumulator_next = enable_pipeline ?
+      fabric_sum : selected_base;
 
-  always_ff @(posedge clk) begin
+  always_ff @(posedge clk) begin : product_and_control_pipeline
+    if (rst) begin
+      product_pipeline <= '0;
+      clear_pipeline <= 1'b0;
+      enable_pipeline <= 1'b0;
+      seed_pipeline <= '0;
+    end else begin
+      // Registering the product maps the DSP output register and separates
+      // BRAM/DSP delay from the fabric accumulator carry chain.
+      product_pipeline <= input_data * weight_data;
+      clear_pipeline <= clear;
+      enable_pipeline <= enable;
+      seed_pipeline <= seed_data;
+    end
+  end
+
+  always_ff @(posedge clk) begin : fabric_accumulator
     if (rst)
       accumulator <= '0;
-    else if (clear || enable)
+    else if (clear_pipeline || enable_pipeline)
       accumulator <= accumulator_next;
   end
 

@@ -49,6 +49,10 @@ module local_weight_provider #(
   logic [NUM_PE-1:0] weight_response_lane_mask;
   logic [WEIGHT_BANK_SELECT_WIDTH-1:0] weight_response_base_bank;
   logic weight_request_range_error;
+  logic weight_request_has_lane;
+  logic [WEIGHT_BANK_SELECT_WIDTH-1:0] highest_requested_lane;
+  logic [WEIGHT_ADDR_WIDTH:0] highest_requested_address;
+  logic [NUM_PE-1:0] weight_request_valid_lane_mask;
 
   (* ram_style = "block" *)
   logic signed [BIAS_WIDTH-1:0] bias_memory [0:MAX_BIAS_VALUES-1];
@@ -60,17 +64,27 @@ module local_weight_provider #(
 
   always_comb begin : detect_weight_range_error
     integer range_lane;
-    logic [WEIGHT_ADDR_WIDTH:0] range_address;
+    logic [WEIGHT_ADDR_WIDTH:0] range_lane_address;
 
-    weight_request_range_error = 1'b0;
-    range_address = '0;
+    weight_request_has_lane = 1'b0;
+    highest_requested_lane = '0;
+    weight_request_valid_lane_mask = '0;
+    range_lane_address = '0;
     for (range_lane = 0; range_lane < NUM_PE;
          range_lane = range_lane + 1) begin
-      range_address = {1'b0, weight_req_address} + range_lane;
-      if (weight_req_lane_mask[range_lane] &&
-          (range_address >= MAX_WEIGHT_VALUES))
-        weight_request_range_error = 1'b1;
+      range_lane_address = {1'b0, weight_req_address} + range_lane;
+      if (weight_req_lane_mask[range_lane]) begin
+        weight_request_has_lane = 1'b1;
+        highest_requested_lane =
+            range_lane[WEIGHT_BANK_SELECT_WIDTH-1:0];
+        if (range_lane_address < MAX_WEIGHT_VALUES)
+          weight_request_valid_lane_mask[range_lane] = 1'b1;
+      end
     end
+    highest_requested_address = {1'b0, weight_req_address} +
+        highest_requested_lane;
+    weight_request_range_error = weight_request_has_lane &&
+        (highest_requested_address >= MAX_WEIGHT_VALUES);
   end
 
   always_comb begin : rotate_weight_response
@@ -108,7 +122,9 @@ module local_weight_provider #(
         weight_rsp_valid <= weight_req_valid;
         if (weight_req_valid) begin
           weight_rsp_error <= weight_request_range_error;
-          weight_response_lane_mask <= weight_req_lane_mask;
+          // Invalid lanes may read a truncated physical row, but are removed
+          // from the registered response mask and can never reach rsp_data.
+          weight_response_lane_mask <= weight_request_valid_lane_mask;
           weight_response_base_bank <=
               weight_req_address[WEIGHT_BANK_SELECT_WIDTH-1:0];
         end else begin
@@ -165,8 +181,7 @@ module local_weight_provider #(
         if (rst) begin
           read_data <= '0;
         end else if (weight_req_valid && weight_req_ready) begin
-          if (weight_req_lane_mask[request_lane] &&
-              (request_global_address < MAX_WEIGHT_VALUES))
+          if (weight_req_lane_mask[request_lane])
             read_data <= memory[request_row];
           else
             read_data <= '0;
