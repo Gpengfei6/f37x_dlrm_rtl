@@ -332,3 +332,28 @@
   coordinated controller behavior, so it requires a separate review.
 - **Boundary:** these Artix-7 OOC results are not F37X or Vivado 2020.2 evidence;
   no target timing/resource/board claim is approved.
+
+## D-024 - Pipeline runtime quantization and preserve Stage 2C memories
+
+- **Status:** adopted for the local Stage 2D timing-review branch.
+- **Quantization:** use a two-entry elastic pipeline split after magnitude
+  rounding. Preserve signed shift, round-away-from-zero, saturation, ReLU,
+  result index/last/tag, and ping-pong ownership.
+- **Commit rule:** advance the dense output index and assert `job_done` only
+  when the quantized value is atomically accepted by both result FIFO and the
+  selected activation buffer. Permit same-edge consume/refill and clear all
+  pipeline valid state on reset.
+- **Additional timing:** register each MAC DSP product and add one explicit
+  vector-dot drain cycle before reduction. Keep the accumulator in fabric and
+  keep the default design at 21 DSP. Register per-lane provider validity so a
+  RAM read is not gated by the long range-comparison path.
+- **Latency:** add two clocks per output for quantization and one clock per
+  output for MAC drain; an unstalled serial dense layer therefore adds exactly
+  `3*out_dim` clocks relative to Stage 2C.
+- **Evidence:** local Vivado 2022.1 Stage 2A XSim passes 6/6; Stage 2B passes
+  `valid=11 invalid=9 total=20`; all three Python suites pass. Artix-7 OOC at
+  10.000 ns reports WNS +0.758 ns, TNS 0, 0 failing endpoints, 0 latches, and
+  4,550 LUT / 1,946 FF / 17 RAMB36 / 32 RAMB18 / 21 DSP.
+- **Boundary:** this does not prove Vivado 2020.2, implemented F37X timing,
+  `.xclbin` generation, or board execution. No false path, relaxed clock, RAM
+  demotion, dimension reduction, or expected-output change is adopted.
