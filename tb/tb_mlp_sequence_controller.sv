@@ -486,12 +486,15 @@ module tb_mlp_sequence_controller;
     integer expected_out_dim;
     integer received;
     integer local_cycles;
+    integer dense_done_count;
     logic selected_valid;
     logic selected_ready;
     logic selected_last;
     logic selected_done;
     logic selected_error_valid;
     logic selected_final_buffer;
+    logic selected_dense_done;
+    logic selected_final_layer;
     logic signed [OUTPUT_WIDTH-1:0] selected_data;
     logic signed [OUTPUT_WIDTH-1:0] expected_data;
     logic [OUT_INDEX_WIDTH-1:0] selected_index;
@@ -517,6 +520,7 @@ module tb_mlp_sequence_controller;
 
       received = 0;
       local_cycles = 0;
+      dense_done_count = 0;
       selected_done = 1'b0;
 
       while (!selected_done) begin
@@ -532,6 +536,8 @@ module tb_mlp_sequence_controller;
           selected_done = done_32;
           selected_error_valid = error_valid_32;
           selected_final_buffer = final_buffer_select_32;
+          selected_dense_done = dut_acc32.dense_job_done;
+          selected_final_layer = dut_acc32.final_layer_active;
         end else begin
           selected_valid = result_valid_48;
           selected_ready = result_ready_48;
@@ -542,6 +548,18 @@ module tb_mlp_sequence_controller;
           selected_done = done_48;
           selected_error_valid = error_valid_48;
           selected_final_buffer = final_buffer_select_48;
+          selected_dense_done = dut_acc48.dense_job_done;
+          selected_final_layer = dut_acc48.final_layer_active;
+        end
+
+        if (selected_dense_done) begin
+          if (selected_final_layer !== (dense_done_count == count-1))
+            $fatal(
+                1,
+                "case %0d dense completion %0d final-layer mismatch",
+                index,
+                dense_done_count);
+          dense_done_count = dense_done_count + 1;
         end
 
         if (selected_error_valid)
@@ -613,6 +631,14 @@ module tb_mlp_sequence_controller;
             index,
             expected_out_dim,
             received);
+
+      if (dense_done_count != count)
+        $fatal(
+            1,
+            "case %0d dense completion count mismatch: expected %0d got %0d",
+            index,
+            count,
+            dense_done_count);
 
       if (selected_final_buffer !== count[0])
         $fatal(

@@ -65,6 +65,7 @@ module dense_engine_checker #(
   logic error_valid;
   logic error_ready;
   logic [3:0] error_code;
+  logic final_quant_commit_d;
   logic [PHASE1_INPUT_ROW_WIDTH-1:0]
       phase1_input_rows [0:PHASE1_CASE_COUNT-1];
   logic [PHASE1_OUTPUT_ROW_WIDTH-1:0]
@@ -102,6 +103,37 @@ module dense_engine_checker #(
     .result_last(result_last), .result_tag(result_tag), .job_done(job_done),
     .error_valid(error_valid), .error_ready(error_ready), .error_code(error_code)
   );
+
+  // The completion pulse is intentionally aligned with the cycle after the
+  // final quantized result is atomically accepted by both internal sinks.
+  // Sampling at each clock edge checks the values produced by the prior edge.
+  always_ff @(posedge clk) begin : pipeline_protocol_checks
+    if (rst) begin
+      final_quant_commit_d <= 1'b0;
+    end else begin
+      if (job_done !== final_quant_commit_d)
+        $fatal(1, "P=%0d job_done was not aligned with final quant commit",
+               NUM_PE);
+      final_quant_commit_d <= dut.quant_commit_fire &&
+          (dut.output_index_counter == dut.descriptor_out_dim-1'b1);
+
+      if (dut.quant_commit_fire) begin
+        if (!dut.fifo_in_valid || !dut.fifo_in_ready)
+          $fatal(1, "P=%0d quant commit did not push the result FIFO", NUM_PE);
+        if (!(dut.buffer0_scalar_valid ^ dut.buffer1_scalar_valid) ||
+            !(dut.buffer0_scalar_ready && dut.buffer1_scalar_ready))
+          $fatal(1, "P=%0d quant commit was not one atomic activation write",
+                 NUM_PE);
+      end
+
+      if (dut.quant_output_valid && !dut.quant_output_ready &&
+          ((dut.fifo_in_valid && dut.fifo_in_ready) ||
+           dut.buffer0_scalar_valid ||
+           dut.buffer1_scalar_valid))
+        $fatal(1, "P=%0d stalled quant result reached a downstream sink",
+               NUM_PE);
+    end
+  end
 
   function automatic logic signed [INPUT_WIDTH-1:0] input_value(
     input integer pattern,
@@ -291,7 +323,8 @@ module dense_engine_checker #(
     input integer pattern,
     input integer shift_value,
     input logic relu_value,
-    input logic [7:0] tag_value
+    input logic [7:0] tag_value,
+    input integer initial_result_stall_cycles
   );
     integer received;
     integer cycles;
@@ -302,6 +335,7 @@ module dense_engine_checker #(
     logic [OUT_INDEX_WIDTH-1:0] held_index;
     logic held_last;
     logic [7:0] held_tag;
+    logic saw_quant_stall;
     begin
       configure_layer(input_dim, output_dim, pattern);
       @(negedge clk);
@@ -330,9 +364,13 @@ module dense_engine_checker #(
       cycles = 0;
       saw_done = 1'b0;
       held_valid = 1'b0;
+      saw_quant_stall = 1'b0;
       while (received < output_dim) begin
         @(negedge clk);
-        result_ready = ((cycles % 5) != 1) && ((cycles % 7) != 3);
+        result_ready = (cycles >= initial_result_stall_cycles) &&
+            ((cycles % 5) != 1) && ((cycles % 7) != 3);
+        if (dut.quant_output_valid && !dut.quant_output_ready)
+          saw_quant_stall = 1'b1;
         if (job_done)
           saw_done = 1'b1;
         if (result_valid && !result_ready) begin
@@ -373,6 +411,9 @@ module dense_engine_checker #(
       end
       if (!saw_done)
         $fatal(1, "P=%0d dense engine job_done missing", NUM_PE);
+      if (initial_result_stall_cycles > 0 && !saw_quant_stall)
+        $fatal(1, "P=%0d directed FIFO stall never reached quant pipeline",
+               NUM_PE);
       if (error_valid)
         $fatal(1, "P=%0d unexpected dense engine error %0d", NUM_PE, error_code);
     end
@@ -570,13 +611,13 @@ module dense_engine_checker #(
       for (phase1_case = 0; phase1_case < PHASE1_CASE_COUNT;
            phase1_case = phase1_case + 1)
         run_phase1_case(phase1_case);
-      run_layer(13, 7, 1, 1, 1'b0, 8'h82);
-      run_layer(1024, 1, 2, 20, 1'b0, 8'h83);
+      run_layer(13, 7, 1, 1, 1'b0, 8'h82, 80);
+      run_layer(1024, 1, 2, 20, 1'b0, 8'h83, 0);
     end else begin
-      run_layer(3, 5, 1, 0, 1'b0, 8'h41);
-      run_layer(64, 32, 0, 4, 1'b1, 8'h42);
-      run_layer(65, 17, 1, 4, 1'b0, 8'h43);
-      run_layer(1024, 1, 2, 20, 1'b0, 8'h44);
+      run_layer(3, 5, 1, 0, 1'b0, 8'h41, 80);
+      run_layer(64, 32, 0, 4, 1'b1, 8'h42, 0);
+      run_layer(65, 17, 1, 4, 1'b0, 8'h43, 0);
+      run_layer(1024, 1, 2, 20, 1'b0, 8'h44, 0);
     end
     check_invalid_descriptor(0);
     check_invalid_descriptor(1);
