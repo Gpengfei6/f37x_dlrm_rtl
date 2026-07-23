@@ -383,3 +383,30 @@
 - **Boundary:** this decision accepts compile, XSim, and post-synthesis OOC
   evidence only. It does not approve implementation, post-route timing,
   F37X/VU37P compilation, `.xclbin` generation, or board execution.
+
+## D-026 - Adopt a strict Artix-7 OOC post-route feasibility flow
+
+- **Status:** local Vivado 2022.1 precheck adopted; exact Vivado 2020.2
+  reproduction pending.
+- **Frozen input:** keep the Stage 2D RTL, `mlp_sequence_controller`,
+  `xc7a200tfbg484-2`, the 10.000 ns Stage 2C XDC, and the Stage 2C/2D synthesis
+  source order. No design, testbench, constraint, or expected-value change is
+  part of this decision.
+- **Flow:** run synthesis, opt, place, physical opt, and route in a clean
+  repository-contained work directory. Emit four checkpoints, eight core
+  post-route report classes plus a power report, and a machine-readable status
+  file. Do not commit generated checkpoints, logs, or reports.
+- **Acceptance:** require route completion, 0 unrouted nets, non-negative setup
+  WNS and hold WHS, 0 setup/hold failing endpoints, 0 DRC errors, the complete
+  artifact set, and 0 line-start Vivado errors. Source echoes are not errors.
+- **Local evidence:** Vivado 2022.1 build 3526262 passes twice with setup WNS
+  +0.597 ns/TNS 0, hold WHS +0.098 ns/THS 0, 4,320 LUT, 1,946 FF, 17 RAMB36,
+  32 RAMB18, 21 DSP, 0 latches, 0 unrouted nets, and 0 anchored errors or
+  critical warnings.
+- **Review evidence:** retain 44 DRC warnings and 593 methodology warnings.
+  No congestion window exceeds level 5. OOC missing-pin, I/O-delay, board
+  voltage, and part-pin warnings are boundaries, not reasons to invent board
+  constraints.
+- **Boundary:** this decision does not close Vivado 2020.2 post-route
+  reproduction and does not approve board-level implementation, F37X/VU37P,
+  platform integration, `.xclbin`, board timing, execution, or measured power.
