@@ -358,24 +358,28 @@
   `.xclbin` generation, or board execution. No false path, relaxed clock, RAM
   demotion, dimension reduction, or expected-output change is adopted.
 
-## D-025 - Require an authenticated local Vivado 2020.2 run for Stage 2E
+## D-025 - Accept the authenticated Vivado 2020.2 Stage 2E reproduction
 
-- **Status:** adopted; target-version execution remains NOT RUN locally.
-- **Tool identity:** query `vivado -version` before any regression and accept
-  only exact `Vivado v2020.2`. Never substitute or relabel the available
-  Vivado 2022.1 reports.
-- **Execution boundary:** repository policy forbids network, SSH, remote
-  execution, and server access. Do not install a tool or use a server path to
-  manufacture Stage 2E evidence.
-- **Source policy:** preserve the Stage 2D RTL, testbenches, expected values,
-  RAM capacities, and 10.000 ns constraint until a genuine 2020.2 failure
-  identifies a minimal compatibility issue.
-- **Evidence:** the local Python suites pass; the existing same-source 2022.1
-  reports parse to 4,550 LUT, 1,946 FF, 17 RAMB36, 32 RAMB18, 21 DSP, WNS
-  +0.758 ns, TNS 0, zero failing endpoints/latches, and the expected 16+1+32
-  RAM mapping. Every 2020.2 comparison field remains unknown.
-- **Reproduction:** keep one guarded runner and one version-aware report parser
-  so a workstation with an existing 2020.2 installation can regenerate all
-  Python, Stage 2A/2B XSim, and OOC evidence without an RTL edit.
-- **Boundary:** no Stage 2E pass, implementation, F37X board, or `.xclbin`
-  claim is made until the corresponding real artifacts exist.
+- **Status:** adopted; exact-source target-version reproduction passes.
+- **Tool identity:** returned evidence identifies
+  `/opt/Xilinx/Vivado/2020.2/bin/vivado`, Vivado v2020.2 SW Build 3064766,
+  branch `work/stage2e-vivado2020-repro`, and source head `fff6bd8`.
+- **Functional evidence:** Phase 1, Stage 2A, and Stage 2B Python pass; all six
+  Stage 2A XSim benches pass compile, elaborate, and simulate; Stage 2B passes
+  all 20 cases with `valid=11 invalid=9 total=20`.
+- **Synthesis evidence:** `xc7a200tfbg484-2` OOC synthesis at 10.000 ns passes
+  with 4,550 LUT, 1,946 FF, 17 RAMB36, 32 RAMB18, 21 DSP, WNS +0.758 ns,
+  TNS 0, zero failing endpoints, and zero latches. The 16+1+32 RAM mapping is
+  preserved.
+- **Version comparison:** Vivado 2020.2 and 2022.1 produce identical resources,
+  RAM inference, WNS, TNS, and latch count for the reviewed OOC configuration.
+- **Log interpretation:** accept only true line-start error records. The Tcl
+  source echo containing `run_synth_stage2c: FAIL` is not an execution failure;
+  the execution log has zero line-start errors or critical warnings and ends
+  with `COMPLETE` and `TIMING_MET`.
+- **Source-state qualification:** no evidence shows a tracked server source
+  modification, but the server was not completely clean because XSim WDBs and
+  tool logs remained untracked.
+- **Boundary:** this decision accepts compile, XSim, and post-synthesis OOC
+  evidence only. It does not approve implementation, post-route timing,
+  F37X/VU37P compilation, `.xclbin` generation, or board execution.

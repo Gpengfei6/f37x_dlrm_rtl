@@ -2,109 +2,136 @@
 
 ## Status and evidence boundary
 
-The exact Vivado 2020.2 Stage 2E run is **NOT RUN** on this local workstation.
-Local read-only detection found no `vivado` command, no `XILINX_VIVADO`
-environment, no Vivado installation registration, and no executable at the
-known local 2020.2 paths. The only executable discovered by this bounded probe
-is Vivado 2022.1 at
-`D:\vivado2022\vivado2022forwins\Vivado\2022.1\bin\vivado.bat`; its own
-`-version` output identifies `Vivado v2022.1`.
+Stage 2E exact-source reproduction is complete and passes under Vivado 2020.2.
+The returned server evidence covers the Phase 1, Stage 2A, and Stage 2B Python
+regressions, Stage 2A and Stage 2B XSim, and 10.000 ns out-of-context synthesis
+of `mlp_sequence_controller` for `xc7a200tfbg484-2`.
 
-Repository policy prohibits network, SSH, remote execution, and server access.
-Therefore no server-side Vivado path was searched or executed, no tool was
-installed, and no 2022.1 result is relabeled as 2020.2 evidence. Stage 2E is
-blocked at target-version execution, not failed at RTL compile, RAM inference,
-DSP mapping, quantization timing, or constraints.
+The evidence archive `stage2e_vivado2020_evidence.tar.gz` has SHA-256
+`6819538778D5E25B702188503C5042F28A01D0ACC9C157475D4F646884584DE4`.
+Its extracted copy under `local_results/stage2e_vivado2020/` was audited as a
+read-only local input and remains untracked. No server or network access was
+used during this audit.
 
-The reviewed source base is Stage 2D commit
-`f566b838deddfce87f69cc34bf36ed0b614c6900`. Stage 2E changes only local
-reproduction/reporting scripts and documentation; `rtl/`, `tb/`, expected
-outputs, dimensions, memory capacities, and the 10.000 ns constraint are
-unchanged.
+This is compile, simulation, and post-synthesis OOC evidence. It is not a full
+implementation or place-and-route result, not a VU37P/F37X target compile, not
+an `.xclbin`, and not board-execution evidence.
 
-## Regression status
+## Tool and source identity
 
-The three tool-independent regressions were rerun on the Stage 2D source:
+The server evidence records:
 
-| Suite | Stage 2E local result |
+- executable: `/opt/Xilinx/Vivado/2020.2/bin/vivado`;
+- version: Vivado v2020.2, SW Build 3064766, IP Build 3064653;
+- Python: 3.10.12;
+- repository: `/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2e`;
+- branch: `work/stage2e-vivado2020-repro`;
+- source head: `fff6bd8 docs: record Stage 2E reproduction boundary`.
+
+The recorded source chain continues through `8a4e8ca`, `f566b83`, `1e3bbf7`,
+and `539b406`. The Stage 2D RTL base is therefore source-matched to the local
+review. No evidence indicates a tracked source modification on the server.
+The server status was not completely clean: it contained untracked XSim WDBs,
+`webtalk*.log`, `xelab.log`, `xsim*.log`, and `xvlog.log`. These are generated
+simulation artifacts and were not added to this repository.
+
+## Audited evidence
+
+The audit cross-checked the following returned files:
+
+- `STAGE2E_SERVER_SUMMARY.txt`;
+- `python/phase1_python.txt`, `python/stage2a_python.txt`, and
+  `python/stage2b_python.txt`;
+- `results/xsim_stage2a_status.txt` and
+  `results/xsim_stage2b_status.txt`;
+- `logs/xsim_stage2b.log` and `logs/vivado_stage2e_2020_2.log`;
+- `results/stage2c/stage2c_synth_status.txt`;
+- the Stage 2C utilization, RAM utilization, timing summary, `check_timing`,
+  high-fanout, methodology, and DRC reports.
+
+Every synthesis report identifies Vivado v2020.2 build 3064766. The raw reports
+and the version-aware Stage 2E parser agree on all resource, timing, RAM, DRC,
+methodology, and high-fanout values.
+
+## Functional regression
+
+| Suite | Vivado 2020.2 server result |
 |---|---|
 | Phase 1 Python | PASS, 24 deterministic cases |
 | Stage 2A Python | PASS |
 | Stage 2B Python | PASS, 11 valid and 9 invalid cases |
-| Vivado 2020.2 Stage 2A XSim | NOT RUN; target tool unavailable |
-| Vivado 2020.2 Stage 2B XSim | NOT RUN; target tool unavailable |
-| Vivado 2020.2 OOC synthesis | NOT RUN; target tool unavailable |
+| Stage 2A XSim compile | PASS |
+| Stage 2A XSim elaborate/simulate | PASS, 6/6 benches |
+| Stage 2B XSim compile/elaborate/simulate | PASS |
+| Stage 2B exact result | PASS, `valid=11 invalid=9 total=20` |
+| OOC synthesis | PASS, `STAGE2C_SYNTH_COMPLETE` |
+| Line-start error / critical warning | 0 / 0 |
 
-The current ignored workspace reports from the final Stage 2D run are at the
-same `f566b83` source and still show Vivado 2022.1 Stage 2A XSim 6/6 PASS and
-Stage 2B XSim PASS with the exact marker
-`valid=11 invalid=9 total=20`. They are retained as the comparison baseline,
-not target-version evidence.
+## OOC synthesis and RAM inference
 
-## Version comparison
+Synthesis reports `STAGE2C_SYNTH_COMPLETE` for
+`mlp_sequence_controller`, part `xc7a200tfbg484-2`, at 10.000 ns. Resource and
+RAM inference are:
 
-| Metric | Vivado 2020.2 | Vivado 2022.1 baseline | Difference |
+- 4,550 total LUT, including 4,530 logic LUT and 20 LUTRAM; zero SRL;
+- 1,946 FF, 17 RAMB36E1, 32 RAMB18E1, and 21 DSP;
+- 16 independent `4096x8` weight banks in 16 RAMB36E1 blocks;
+- one `1024x24` bias RAM in one RAMB36E1 block;
+- two activation buffers containing 32 total `64x16` banks in 32 RAMB18E1
+  blocks;
+- zero inferred latches.
+
+The Stage 2C bank mapping is therefore preserved exactly under Vivado 2020.2.
+
+## Timing and report audit
+
+At 10.000 ns, WNS is +0.758 ns, TNS is 0.000 ns, and zero of 7,008 setup
+endpoints fail. Vivado states that all user-specified timing constraints are
+met. The worst path remains the met
+`provider_weight_req_address/CLK` to `weight_rsp_error_reg/D` path.
+
+`check_timing` reports zero no-clock, constant-clock, unconstrained-internal,
+multiple-clock, generated-clock, loop, partial-delay, and latch-loop issues.
+The 482 inputs and 44 outputs without I/O delays remain the expected clock-only
+OOC boundary.
+
+DRC reports 43 warnings: CFGBVS-1 (1), DPIP-1 (32), DPOP-1 (5), and DPOP-2
+(5). Methodology reports 548 warnings: SYNTH-6 (12), SYNTH-11 (2), and
+TIMING-18 (534). The highest-fanout net is the vector-dot state decode at 1,363
+loads. These OOC warnings do not establish implementation or board closure.
+
+The 908-line Vivado execution log contains zero lines beginning with `ERROR:`
+and zero lines beginning with `CRITICAL WARNING:`. Its single occurrence of
+`run_synth_stage2c: FAIL` is a Tcl procedure body echoed at source line 40, not
+an execution failure. The actual execution ends with the
+`run_synth_stage2c: COMPLETE` marker, `TIMING_MET`, worst slack 0.758 ns, and
+latch count zero.
+
+## Vivado version comparison
+
+| Metric | Vivado 2020.2 | Vivado 2022.1 | Difference |
 |---|---:|---:|---:|
-| LUT | NOT RUN | 4,550 | unknown |
-| FF | NOT RUN | 1,946 | unknown |
-| RAMB36E1 | NOT RUN | 17 | unknown |
-| RAMB18E1 | NOT RUN | 32 | unknown |
-| DSP | NOT RUN | 21 | unknown |
-| WNS at 10.000 ns | NOT RUN | +0.758 ns | unknown |
-| TNS | NOT RUN | 0.000 ns | unknown |
-| Failing setup endpoints | NOT RUN | 0 | unknown |
-| Latches | NOT RUN | 0 | unknown |
-| DRC violations | NOT RUN | 43 warnings | unknown |
-| Methodology violations | NOT RUN | 548 warnings | unknown |
+| Total LUT | 4,550 | 4,550 | 0 |
+| Logic LUT | 4,530 | 4,530 | 0 |
+| LUTRAM | 20 | 20 | 0 |
+| SRL | 0 | 0 | 0 |
+| FF | 1,946 | 1,946 | 0 |
+| RAMB36E1 | 17 | 17 | 0 |
+| RAMB18E1 | 32 | 32 | 0 |
+| DSP | 21 | 21 | 0 |
+| WNS at 10.000 ns | +0.758 ns | +0.758 ns | 0.000 ns |
+| TNS | 0.000 ns | 0.000 ns | 0.000 ns |
+| Failing setup endpoints | 0 | 0 | 0 |
+| Latches | 0 | 0 | 0 |
 
-The 2022.1 report parser independently confirms 16 unique `4096x8` weight
-banks and one `1024x24` bias RAM in 17 RAMB36E1 blocks, plus 32 unique `64x16`
-activation banks in RAMB18E1 blocks. The top resources are 4,550 LUT, 1,946 FF,
-17 RAMB36E1, 32 RAMB18E1, and 21 DSP.
-
-At 10.000 ns, the 2022.1 reports contain WNS +0.758 ns, TNS 0, and no failing
-setup endpoint. The worst path remains
-`provider_weight_req_address/CLK` to `weight_rsp_error_reg/D`. `check_timing`
-has zero internal clock, unconstrained-endpoint, multiple-clock, loop,
-partial-delay, or latch-loop issues; its 482 missing input delays and 44 missing
-output delays are the expected clock-only OOC boundary.
-
-The 43 DRC warnings are CFGBVS-1 (1), DPIP-1 (32), DPOP-1 (5), and DPOP-2 (5).
-The 548 methodology warnings are SYNTH-6 (12), SYNTH-11 (2), and TIMING-18
-(534). The highest-fanout net is a vector-dot state decode with fanout 1,363.
-These are synthesized OOC observations, not implementation or board results.
-
-## Reproduction entry
-
-`scripts/run_stage2e_repro.ps1` accepts an explicit local Vivado executable or
-checks `XILINX_VIVADO`, `PATH`, and bounded known local paths. It queries
-`vivado -version` first and refuses to run if the executable is not exactly
-Vivado 2020.2. A valid run executes, in order:
-
-1. Phase 1, Stage 2A, and Stage 2B Python regressions;
-2. Stage 2A XSim and all six explicit PASS markers;
-3. Stage 2B XSim and the exact `valid=11 invalid=9 total=20` marker;
-4. the existing Stage 2C/2D OOC synthesis at 10.000 ns;
-5. report extraction and structural/timing checks.
-
-Example for a workstation that already has the target tool:
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass `
-  -File scripts/run_stage2e_repro.ps1 `
-  -VivadoExe 'C:\Xilinx\Vivado\2020.2\bin\vivado.bat'
-```
-
-The generated logs, DCP, XSim products, reports, and JSON summaries remain
-ignored. `scripts/summarize_stage2e_reports.py` extracts the lightweight
-comparison data and rejects a report whose embedded Vivado version does not
-match the requested version.
+Vivado 2020.2 and 2022.1 therefore produce identical resources, RAM mapping,
+and post-synthesis OOC timing for this reviewed configuration.
 
 ## Remaining evidence
 
-- Vivado 2020.2 compile, XSim, resource, RAM-inference, timing, DRC,
-  methodology, and high-fanout results remain unavailable.
-- No compatibility RTL change is justified without a real 2020.2 failure.
-- Full place-and-route implementation has not been run under either version.
-- F37X/VU37P compilation and board execution have not been run.
+- Full implementation and place-and-route have not been run or reviewed.
+- Post-route timing has not been established.
+- F37X/VU37P target compilation has not been run.
 - No `.xclbin` has been generated.
+- Board execution has not been validated.
+- This result must not be described as F37X board success.

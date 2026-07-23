@@ -7,9 +7,9 @@ architecture is frozen in commit
 `748013312e9cb7dce106a8be4ea7a17aacbb87a7`.  The Stage-2A non-overlapped vector
 PE baseline is implemented.  Stage 2C makes its activation and weight storage
 synthesis-friendly.  Stage 2D adds elastic runtime-quantization and DSP-product
-pipelines and closes the local 100 MHz Vivado 2022.1 OOC constraint.  Stage-2A
-RTL is still **not target-version passed** because exact Vivado 2020.2 evidence
-has not been returned.
+pipelines and closes the local 100 MHz Vivado 2022.1 OOC constraint.  Stage 2E
+returns exact-source Vivado 2020.2 Python, XSim, synthesis, memory-inference,
+and 100 MHz OOC timing evidence; the target-version reproduction now passes.
 
 The final thesis scope is frozen.  Stage 2A remains the compute foundation.
 The first software-only DLRM and embedding-access feasibility tool set is now
@@ -49,11 +49,12 @@ phase-1 module.  Local Python evidence is:
 - 200 deterministic random dot-product checks PASS;
 - estimator self-check PASS.
 
-Local Vivado 2022.1/XSim now passes all six independent Stage 2A benches after
-the Stage 2C memory changes.  Stage 2B also passes all 20 deterministic cases
-with the exact marker `valid=11 invalid=9 total=20`.  The phase-1, Stage 2A, and
-Stage 2B Python suites pass.  These are real local tool runs but do not substitute
-for the required Vivado 2020.2 source-matched evidence.
+Local Vivado 2022.1/XSim passes all six independent Stage 2A benches after the
+Stage 2C memory changes, and Stage 2B passes all 20 deterministic cases with the
+exact marker `valid=11 invalid=9 total=20`.  Returned exact-source Vivado 2020.2
+evidence now independently passes the same six Stage 2A benches and all 20
+Stage 2B cases.  The Phase 1, Stage 2A, and Stage 2B Python suites pass in both
+reviewed environments.
 
 The default Stage 2D `mlp_sequence_controller` completes 100 MHz Artix-7 OOC
 synthesis with 4,550 LUT, 1,946 FF, 17 RAMB36E1, 32 RAMB18E1, 21 DSP, and no
@@ -63,14 +64,15 @@ quantization-to-activation path is split into two elastic stages; the final
 worst path is a met weight-request-address range-check path.  See
 `docs/STAGE2D_TIMING_REVIEW.md`.
 
-Stage 2E local detection found no Vivado 2020.2 executable.  The only Vivado
-found by the bounded probe is 2022.1, verified through its own version output.
-Repository policy prohibits using a remote/server installation, so exact
-target-version XSim and
-OOC synthesis remain NOT RUN.  A guarded local runner now requires an actual
-`Vivado v2020.2` before it can execute any regression or synthesis command, and
-a report parser extracts the required version/resource/timing/RAM/DRC evidence.
-See `docs/STAGE2E_VIVADO2020_REPRO.md`.
+Stage 2E evidence identifies `/opt/Xilinx/Vivado/2020.2/bin/vivado`, Vivado
+v2020.2 SW Build 3064766, branch `work/stage2e-vivado2020-repro`, and source
+head `fff6bd8`.  OOC synthesis for `xc7a200tfbg484-2` at 10.000 ns exactly
+matches the Vivado 2022.1 baseline: 4,550 LUT, 1,946 FF, 17 RAMB36E1,
+32 RAMB18E1, 21 DSP, WNS +0.758 ns, TNS 0, zero failing endpoints, and zero
+latches.  The 16 weight banks, one bias RAM, and 32 activation banks retain
+their Stage 2C mappings.  The returned server status includes untracked
+simulation products but no evidence of a tracked source modification.  See
+`docs/STAGE2E_VIVADO2020_REPRO.md`.
 
 The software feasibility regression is separately 12 PASS, 0 FAIL, and 2
 SKIPPED.  Config/model dimensions, deterministic NumPy oracle forward and exact
@@ -90,19 +92,20 @@ real user-supplied Criteo data is present.
 
 ## Next action
 
-Three independent follow-up tracks remain:
+Two independent follow-up tracks remain:
 
-1. run `scripts/run_stage2e_repro.ps1` in a local environment that already has
-   Vivado 2020.2, then review the generated version-comparison summary;
-2. wait for the user to run the frozen Stage-2A payload under Vivado 2020.2;
-3. place classic Criteo TSV data in a user-chosen local file/directory and run
+1. place classic Criteo TSV data in a user-chosen local file/directory and run
    `python -m analysis.run_trace_feasibility --criteo-path <local-path>`.
+2. when separately authorized, the user performs full implementation,
+   F37X/VU37P compilation, `.xclbin` generation, and board validation.
 
 An environment that already contains PyTorch may also rerun CPU and optional
 CUDA tests; this repository will not install it or download data.
 
-The Stage 2D local timing result does not authorize further Stage-2A arithmetic
-or latency changes.  Stage 2B overlap remains optional and deferred.
+The Stage 2E OOC result does not prove implementation, post-route timing,
+F37X/VU37P compilation, `.xclbin` generation, or board execution, and does not
+authorize further Stage-2A arithmetic or latency changes.  Stage 2B overlap
+remains optional and deferred.
 Coalescing/scheduling RTL, complete DLRM RTL, feature interaction RTL, HBM, AXI,
 and Vitis remain blocked until real traces pass GATE-T1/T2/T3 and a later
 architecture review authorizes hardware.
