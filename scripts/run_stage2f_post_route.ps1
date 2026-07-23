@@ -1,352 +1,232 @@
 [CmdletBinding()]
 param(
-    [Parameter()]
-    [string]$VivadoExe = "",
-
-    [Parameter()]
-    [string]$ResultDir = "results/stage2f"
+    [string]$VivadoPath = "D:\vivado2022\vivado2022forwins\Vivado\2022.1\bin\vivado.bat",
+    [string]$Part = "xc7a200tfbg484-2",
+    [string]$ResultDir = "results\stage2f",
+    [string]$WorkDir = "work\stage2f"
 )
 
+Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-function Write-Utf8NoBom {
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$Path,
-
-        [Parameter(Mandatory = $true)]
-        [AllowEmptyString()]
-        [string]$Text
-    )
-
-    $encoding = New-Object System.Text.UTF8Encoding($false)
-    [System.IO.File]::WriteAllText($Path, $Text, $encoding)
-}
-
-function Resolve-RepositoryChildPath {
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$Candidate,
-
-        [Parameter(Mandatory = $true)]
-        [string]$RepositoryRoot
-    )
-
-    if ([System.IO.Path]::IsPathRooted($Candidate)) {
-        $fullCandidate = [System.IO.Path]::GetFullPath($Candidate)
-    }
-    else {
-        $fullCandidate = [System.IO.Path]::GetFullPath(
-            (Join-Path -Path $RepositoryRoot -ChildPath $Candidate)
-        )
-    }
-
-    $rootWithSeparator = $RepositoryRoot.TrimEnd(
-        [System.IO.Path]::DirectorySeparatorChar,
-        [System.IO.Path]::AltDirectorySeparatorChar
-    ) + [System.IO.Path]::DirectorySeparatorChar
-
-    if (-not $fullCandidate.StartsWith(
-            $rootWithSeparator,
-            [System.StringComparison]::OrdinalIgnoreCase
-        )) {
-        throw "Generated directory must be a child of the repository: $fullCandidate"
-    }
-
-    return $fullCandidate
-}
-
-function Resolve-VivadoExecutable {
-    param(
-        [Parameter()]
-        [string]$RequestedPath
-    )
-
-    if (-not [string]::IsNullOrWhiteSpace($RequestedPath)) {
-        if (Test-Path -LiteralPath $RequestedPath -PathType Leaf) {
-            return (Resolve-Path -LiteralPath $RequestedPath).Path
-        }
-
-        $requestedCommand = Get-Command -Name $RequestedPath -ErrorAction SilentlyContinue
-        if ($null -ne $requestedCommand) {
-            return $requestedCommand.Source
-        }
-
-        throw "Vivado executable was not found: $RequestedPath"
-    }
-
-    $candidates = New-Object System.Collections.Generic.List[string]
-    if (-not [string]::IsNullOrWhiteSpace($env:XILINX_VIVADO)) {
-        $candidates.Add((Join-Path $env:XILINX_VIVADO "bin/vivado.bat"))
-    }
-    $candidates.Add("D:\vivado2022\vivado2022forwins\Vivado\2022.1\bin\vivado.bat")
-    $candidates.Add("D:\Xilinx\Vivado\2022.1\bin\vivado.bat")
-    $candidates.Add("C:\Xilinx\Vivado\2022.1\bin\vivado.bat")
-
-    foreach ($candidate in $candidates) {
-        if (Test-Path -LiteralPath $candidate -PathType Leaf) {
-            return (Resolve-Path -LiteralPath $candidate).Path
-        }
-    }
-
-    foreach ($commandName in @("vivado.bat", "vivado")) {
-        $command = Get-Command -Name $commandName -ErrorAction SilentlyContinue
-        if ($null -ne $command) {
-            return $command.Source
-        }
-    }
-
-    throw "Vivado was not found. Pass -VivadoExe or set XILINX_VIVADO."
-}
-
-function Read-KeyValueStatus {
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$Path
-    )
-
-    $status = @{}
-    foreach ($line in [System.IO.File]::ReadAllLines($Path)) {
-        $separator = $line.IndexOf("=")
-        if ($separator -gt 0) {
-            $key = $line.Substring(0, $separator)
-            $value = $line.Substring($separator + 1)
-            $status[$key] = $value
-        }
-    }
-    return $status
-}
-
-$projectRoot = [System.IO.Path]::GetFullPath(
-    (Join-Path -Path $PSScriptRoot -ChildPath "..")
-).TrimEnd(
-    [System.IO.Path]::DirectorySeparatorChar,
-    [System.IO.Path]::AltDirectorySeparatorChar
+$RepositoryRoot = [System.IO.Path]::GetFullPath(
+    (Join-Path $PSScriptRoot "..")
 )
-$resolvedResultDir = Resolve-RepositoryChildPath `
-    -Candidate $ResultDir `
-    -RepositoryRoot $projectRoot
-$resolvedVivado = Resolve-VivadoExecutable -RequestedPath $VivadoExe
+$TclScript = Join-Path $RepositoryRoot "scripts\run_stage2f_post_route.tcl"
+$LogDirectory = Join-Path $RepositoryRoot "logs"
+$ConsoleLog = Join-Path $LogDirectory "vivado_stage2f_post_route.log"
 
-$logsDir = Join-Path $projectRoot "logs"
-[System.IO.Directory]::CreateDirectory($logsDir) | Out-Null
-$vivadoLog = Join-Path $logsDir "vivado_stage2f_post_route.log"
-$consoleLog = Join-Path $logsDir "stage2f_post_route_console.log"
-$tclScript = Join-Path $projectRoot "scripts/run_stage2f_post_route.tcl"
-$statusPath = Join-Path $resolvedResultDir "stage2f_post_route_status.txt"
-$requiredArtifacts = @(
-    "post_synth.dcp",
-    "post_opt.dcp",
-    "post_place.dcp",
-    "post_route.dcp",
-    "post_route_timing_summary.rpt",
-    "post_route_utilization.rpt",
-    "post_route_route_status.rpt",
-    "post_route_drc.rpt",
-    "post_route_methodology.rpt",
-    "post_route_clock_utilization.rpt",
-    "post_route_high_fanout.rpt",
-    "post_route_congestion.rpt",
-    "post_route_power.rpt"
-)
+function Resolve-RepositoryPath {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$PathValue
+    )
 
-if (-not (Test-Path -LiteralPath $tclScript -PathType Leaf)) {
-    throw "Stage 2F Tcl driver is missing: $tclScript"
+    if ([System.IO.Path]::IsPathRooted($PathValue)) {
+        return [System.IO.Path]::GetFullPath($PathValue)
+    }
+
+    return [System.IO.Path]::GetFullPath(
+        (Join-Path $RepositoryRoot $PathValue)
+    )
 }
 
-Write-Host "Stage 2F local Artix-7 post-route precheck"
-Write-Host "Repository : $projectRoot"
-Write-Host "Vivado     : $resolvedVivado"
-Write-Host "Result dir : $resolvedResultDir"
-Write-Host "Part       : xc7a200tfbg484-2"
-Write-Host "Clock      : 10.000 ns (100 MHz)"
+function Set-StatusValue {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$StatusPath,
 
-$previousResultDir = $env:STAGE2F_RESULT_DIR
-$vivadoOutput = @()
-$vivadoExitCode = 1
-$vivadoArguments = @(
-    "-mode",
-    "batch",
-    "-nojournal",
-    "-log",
-    $vivadoLog,
-    "-source",
-    $tclScript
-)
+        [Parameter(Mandatory = $true)]
+        [string]$Key,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Value
+    )
+
+    $Lines = [System.Collections.Generic.List[string]]::new()
+    $Found = $false
+
+    foreach ($Line in Get-Content -LiteralPath $StatusPath) {
+        if ($Line -match ("^{0}=" -f [regex]::Escape($Key))) {
+            $Lines.Add("$Key=$Value")
+            $Found = $true
+        }
+        else {
+            $Lines.Add($Line)
+        }
+    }
+
+    if (-not $Found) {
+        $Lines.Add("$Key=$Value")
+    }
+
+    Set-Content `
+        -LiteralPath $StatusPath `
+        -Value $Lines `
+        -Encoding ASCII
+}
+
+function Get-StatusMap {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$StatusPath
+    )
+
+    $Map = @{}
+
+    foreach ($Line in Get-Content -LiteralPath $StatusPath) {
+        if ($Line -match "^([^=]+)=(.*)$") {
+            $Map[$Matches[1]] = $Matches[2]
+        }
+        elseif ($Line -match "^STAGE2F_") {
+            $Map[$Line] = $true
+        }
+    }
+
+    return $Map
+}
+
+$ResolvedResultDir = Resolve-RepositoryPath -PathValue $ResultDir
+$ResolvedWorkDir = Resolve-RepositoryPath -PathValue $WorkDir
+$StatusPath = Join-Path $ResolvedResultDir "stage2f_post_route_status.txt"
+
+if (-not (Test-Path -LiteralPath $VivadoPath -PathType Leaf)) {
+    throw "Vivado executable was not found: $VivadoPath"
+}
+
+if (-not (Test-Path -LiteralPath $TclScript -PathType Leaf)) {
+    throw "Stage 2F Tcl script was not found: $TclScript"
+}
+
+New-Item -ItemType Directory -Force $LogDirectory | Out-Null
+
+$PreviousResultDir = $env:STAGE2F_RESULT_DIR
+$PreviousWorkDir = $env:STAGE2F_WORK_DIR
+$PreviousPart = $env:STAGE2F_PART
+$VivadoExitCode = $null
+
 try {
-    $env:STAGE2F_RESULT_DIR = $resolvedResultDir
-    Push-Location $projectRoot
+    $env:STAGE2F_RESULT_DIR = $ResolvedResultDir
+    $env:STAGE2F_WORK_DIR = $ResolvedWorkDir
+    $env:STAGE2F_PART = $Part
+
+    Write-Host "============================================================"
+    Write-Host "Stage 2F Artix-7 OOC post-route implementation"
+    Write-Host "Repository : $RepositoryRoot"
+    Write-Host "Vivado     : $VivadoPath"
+    Write-Host "Part       : $Part"
+    Write-Host "Results    : $ResolvedResultDir"
+    Write-Host "Work       : $ResolvedWorkDir"
+    Write-Host "Log        : $ConsoleLog"
+    Write-Host "============================================================"
+
+    Push-Location $RepositoryRoot
     try {
-        $vivadoOutput = @(
-            & $resolvedVivado @vivadoArguments 2>&1 |
-                ForEach-Object { $_.ToString() }
-        )
-        $vivadoExitCode = $LASTEXITCODE
+        & $VivadoPath `
+            -mode batch `
+            -nolog `
+            -nojournal `
+            -source $TclScript 2>&1 |
+            Tee-Object -FilePath $ConsoleLog
+
+        $VivadoExitCode = $LASTEXITCODE
     }
     finally {
         Pop-Location
     }
 }
 finally {
-    if ($null -eq $previousResultDir) {
-        Remove-Item Env:STAGE2F_RESULT_DIR -ErrorAction SilentlyContinue
-    }
-    else {
-        $env:STAGE2F_RESULT_DIR = $previousResultDir
-    }
+    $env:STAGE2F_RESULT_DIR = $PreviousResultDir
+    $env:STAGE2F_WORK_DIR = $PreviousWorkDir
+    $env:STAGE2F_PART = $PreviousPart
 }
 
-$consoleText = ($vivadoOutput -join [Environment]::NewLine) +
-    [Environment]::NewLine
-Write-Utf8NoBom -Path $consoleLog -Text $consoleText
-$vivadoOutput | ForEach-Object { Write-Host $_ }
-
-if (-not (Test-Path -LiteralPath $vivadoLog -PathType Leaf)) {
-    throw "Vivado did not create its log: $vivadoLog"
+if (-not (Test-Path -LiteralPath $ConsoleLog -PathType Leaf)) {
+    throw "Vivado console log was not created: $ConsoleLog"
 }
 
-$vivadoLogLines = [System.IO.File]::ReadAllLines($vivadoLog)
-$errorCount = @($vivadoLogLines | Where-Object { $_ -match '^ERROR:' }).Count
-$criticalWarningCount = @(
-    $vivadoLogLines | Where-Object { $_ -match '^CRITICAL WARNING:' }
+$ErrorCount = @(
+    Select-String `
+        -LiteralPath $ConsoleLog `
+        -Pattern "^ERROR:" `
+        -CaseSensitive
 ).Count
 
-if (-not (Test-Path -LiteralPath $statusPath -PathType Leaf)) {
-    throw "Stage 2F status file is missing (Vivado exit $vivadoExitCode): $statusPath"
+$CriticalWarningCount = @(
+    Select-String `
+        -LiteralPath $ConsoleLog `
+        -Pattern "^CRITICAL WARNING:" `
+        -CaseSensitive
+).Count
+
+if (Test-Path -LiteralPath $StatusPath -PathType Leaf) {
+    Set-StatusValue `
+        -StatusPath $StatusPath `
+        -Key "ERROR_COUNT" `
+        -Value ([string]$ErrorCount)
+
+    Set-StatusValue `
+        -StatusPath $StatusPath `
+        -Key "CRITICAL_WARNING_COUNT" `
+        -Value ([string]$CriticalWarningCount)
 }
 
-$statusText = [System.IO.File]::ReadAllText($statusPath)
-if ($statusText -notmatch '(?m)^ERROR_COUNT=') {
-    throw "Stage 2F status is missing ERROR_COUNT: $statusPath"
+if ($null -eq $VivadoExitCode) {
+    throw "Vivado did not return an exit code. See: $ConsoleLog"
 }
-if ($statusText -notmatch '(?m)^CRITICAL_WARNING_COUNT=') {
-    throw "Stage 2F status is missing CRITICAL_WARNING_COUNT: $statusPath"
-}
-$statusText = [System.Text.RegularExpressions.Regex]::Replace(
-    $statusText,
-    '(?m)^ERROR_COUNT=.*$',
-    "ERROR_COUNT=$errorCount"
-)
-$statusText = [System.Text.RegularExpressions.Regex]::Replace(
-    $statusText,
-    '(?m)^CRITICAL_WARNING_COUNT=.*$',
-    "CRITICAL_WARNING_COUNT=$criticalWarningCount"
-)
-Write-Utf8NoBom -Path $statusPath -Text $statusText
 
-$firstStatusLine = [System.IO.File]::ReadLines($statusPath) |
-    Select-Object -First 1
-$status = Read-KeyValueStatus -Path $statusPath
-$requiredFields = @(
-    "TOP",
-    "PART",
-    "CLOCK_PERIOD_NS",
-    "SYNTH_STATE",
-    "OPT_STATE",
-    "PLACE_STATE",
-    "PHYS_OPT_STATE",
-    "ROUTE_STATE",
-    "SETUP_WNS_NS",
-    "SETUP_TNS_NS",
-    "SETUP_FAILING_ENDPOINTS",
-    "HOLD_WHS_NS",
-    "HOLD_THS_NS",
-    "HOLD_FAILING_ENDPOINTS",
-    "UNROUTED_NETS",
-    "LATCH_COUNT",
-    "TOTAL_LUTS",
-    "LOGIC_LUTS",
-    "LUTRAMS",
-    "SRLS",
-    "FFS",
-    "RAMB36",
-    "RAMB18",
-    "DSP_BLOCKS",
-    "ERROR_COUNT",
-    "CRITICAL_WARNING_COUNT",
-    "DRC_ERROR_COUNT",
-    "DRC_CRITICAL_WARNING_COUNT",
-    "METHODOLOGY_CRITICAL_WARNING_COUNT",
-    "POWER_REPORT_STATE",
-    "TIMING_STATE"
-)
-foreach ($field in $requiredFields) {
-    if (-not $status.ContainsKey($field)) {
-        throw "Stage 2F status is missing required field: $field"
+if ($VivadoExitCode -ne 0) {
+    throw "Vivado Stage 2F flow failed with exit code $VivadoExitCode. See: $ConsoleLog"
+}
+
+if (-not (Test-Path -LiteralPath $StatusPath -PathType Leaf)) {
+    throw "Stage 2F status file was not created: $StatusPath"
+}
+
+$Status = Get-StatusMap -StatusPath $StatusPath
+
+$RequiredValues = @{
+    "ROUTE_STATE" = "ROUTE_COMPLETE"
+    "UNROUTED_NETS" = "0"
+    "SETUP_FAILING_ENDPOINTS" = "0"
+    "HOLD_FAILING_ENDPOINTS" = "0"
+    "TIMING_STATE" = "TIMING_MET"
+}
+
+if (-not $Status.ContainsKey("STAGE2F_RUN_COMPLETE")) {
+    throw "Status file does not contain STAGE2F_RUN_COMPLETE."
+}
+
+foreach ($Key in $RequiredValues.Keys) {
+    if (-not $Status.ContainsKey($Key)) {
+        throw "Status file is missing required key: $Key"
+    }
+
+    if ([string]$Status[$Key] -ne [string]$RequiredValues[$Key]) {
+        throw (
+            "Stage 2F acceptance failed: {0}={1}, expected {2}" -f
+            $Key, $Status[$Key], $RequiredValues[$Key]
+        )
     }
 }
 
-$failures = New-Object System.Collections.Generic.List[string]
-if ($vivadoExitCode -ne 0) {
-    $failures.Add("Vivado exited with code $vivadoExitCode")
-}
-if ($firstStatusLine -ne "STAGE2F_RUN_COMPLETE") {
-    $failures.Add("run marker is $firstStatusLine")
-}
-if ($status["TOP"] -ne "mlp_sequence_controller") {
-    $failures.Add("TOP=$($status['TOP'])")
-}
-if ($status["PART"] -ne "xc7a200tfbg484-2") {
-    $failures.Add("PART=$($status['PART'])")
-}
-if ($status["CLOCK_PERIOD_NS"] -ne "10.000") {
-    $failures.Add("CLOCK_PERIOD_NS=$($status['CLOCK_PERIOD_NS'])")
-}
-foreach ($stateField in @(
-        "SYNTH_STATE",
-        "OPT_STATE",
-        "PLACE_STATE",
-        "PHYS_OPT_STATE",
-        "ROUTE_STATE"
-    )) {
-    if ($status[$stateField] -ne "COMPLETE") {
-        $failures.Add("$stateField=$($status[$stateField])")
-    }
-}
-if ($status["UNROUTED_NETS"] -ne "0") {
-    $failures.Add("UNROUTED_NETS=$($status['UNROUTED_NETS'])")
-}
-if ($status["SETUP_FAILING_ENDPOINTS"] -ne "0") {
-    $failures.Add(
-        "SETUP_FAILING_ENDPOINTS=$($status['SETUP_FAILING_ENDPOINTS'])"
-    )
-}
-if ($status["HOLD_FAILING_ENDPOINTS"] -ne "0") {
-    $failures.Add(
-        "HOLD_FAILING_ENDPOINTS=$($status['HOLD_FAILING_ENDPOINTS'])"
-    )
-}
-if ($status["TIMING_STATE"] -ne "TIMING_MET") {
-    $failures.Add("TIMING_STATE=$($status['TIMING_STATE'])")
-}
-if ($status["DRC_ERROR_COUNT"] -ne "0") {
-    $failures.Add("DRC_ERROR_COUNT=$($status['DRC_ERROR_COUNT'])")
-}
-if ($status["ERROR_COUNT"] -ne "0") {
-    $failures.Add("ERROR_COUNT=$($status['ERROR_COUNT'])")
-}
-foreach ($artifactName in $requiredArtifacts) {
-    $artifactPath = Join-Path $resolvedResultDir $artifactName
-    if (-not (Test-Path -LiteralPath $artifactPath -PathType Leaf)) {
-        $failures.Add("required artifact is missing: $artifactName")
-    }
+if ($ErrorCount -ne 0) {
+    throw "Vivado log contains $ErrorCount anchored ERROR line(s)."
 }
 
 Write-Host ""
-Write-Host "Stage 2F status summary"
-Write-Host "Route       : $($status['ROUTE_STATE'])"
-Write-Host "Unrouted    : $($status['UNROUTED_NETS'])"
-Write-Host "Setup       : WNS $($status['SETUP_WNS_NS']) ns, TNS $($status['SETUP_TNS_NS']) ns, failing $($status['SETUP_FAILING_ENDPOINTS'])"
-Write-Host "Hold        : WHS $($status['HOLD_WHS_NS']) ns, THS $($status['HOLD_THS_NS']) ns, failing $($status['HOLD_FAILING_ENDPOINTS'])"
-Write-Host "Resources   : LUT $($status['TOTAL_LUTS']), FF $($status['FFS']), RAMB36 $($status['RAMB36']), RAMB18 $($status['RAMB18']), DSP $($status['DSP_BLOCKS'])"
-Write-Host "Latch       : $($status['LATCH_COUNT'])"
-Write-Host "DRC errors  : $($status['DRC_ERROR_COUNT'])"
-Write-Host "Log markers : ERROR $($status['ERROR_COUNT']), CRITICAL WARNING $($status['CRITICAL_WARNING_COUNT'])"
-Write-Host "Timing      : $($status['TIMING_STATE'])"
-Write-Host "Status file : $statusPath"
+Write-Host "========== Stage 2F status ==========" -ForegroundColor Cyan
+Get-Content -LiteralPath $StatusPath
 
-if ($failures.Count -ne 0) {
-    throw "Stage 2F acceptance failed: $($failures -join '; ')"
+if ($CriticalWarningCount -ne 0) {
+    Write-Warning (
+        "Vivado log contains {0} anchored CRITICAL WARNING line(s). " +
+        "Review the log before closing Stage 2F." -f
+        $CriticalWarningCount
+    )
 }
 
-Write-Host "run_stage2f_post_route: PASS"
+Write-Host ""
+Write-Host "STAGE2F_POST_ROUTE_FLOW_PASS" -ForegroundColor Green
+Write-Host "Status: $StatusPath"
+Write-Host "Log:    $ConsoleLog"
