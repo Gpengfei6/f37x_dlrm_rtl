@@ -1,0 +1,249 @@
+{
+  "architecture": [
+    16,
+    16,
+    8,
+    2
+  ],
+  "artifact_provenance": {
+    "generator": "python/generate_stage2l_model_package.py",
+    "generator_sha256": "e704f0b77a57b7ba5f497a3208df9251e26be8ab7d6eabb0e6ac0a624d971787",
+    "mode": "deterministic_prebuilt_reference_package"
+  },
+  "dataset": {
+    "kind": "deterministic_nonlinear_synthetic_binary_classification",
+    "label_source": "independent_nonlinear_rule",
+    "seed": 20260724,
+    "test_class_counts": {
+      "0": 129,
+      "1": 127
+    },
+    "test_count": 256,
+    "train_count": 2048
+  },
+  "format": "F37XMPK1",
+  "format_version": 1,
+  "input_scale": 16,
+  "layers": [
+    {
+      "bias_base": 0,
+      "bias_count": 16,
+      "bias_max": 146,
+      "bias_min": -372,
+      "in_dim": 16,
+      "index": 0,
+      "max_abs_test_accumulator": 4487,
+      "out_dim": 16,
+      "output_shift": 5,
+      "relu": true,
+      "weight_base": 0,
+      "weight_count": 256,
+      "weight_max": 64,
+      "weight_min": -45,
+      "weight_scale": 32
+    },
+    {
+      "bias_base": 16,
+      "bias_count": 8,
+      "bias_max": 1115,
+      "bias_min": -236,
+      "in_dim": 16,
+      "index": 1,
+      "max_abs_test_accumulator": 18120,
+      "out_dim": 8,
+      "output_shift": 6,
+      "relu": true,
+      "weight_base": 256,
+      "weight_count": 128,
+      "weight_max": 74,
+      "weight_min": -79,
+      "weight_scale": 64
+    },
+    {
+      "bias_base": 24,
+      "bias_count": 2,
+      "bias_max": 153,
+      "bias_min": -153,
+      "in_dim": 8,
+      "index": 2,
+      "max_abs_test_accumulator": 43962,
+      "out_dim": 2,
+      "output_shift": 6,
+      "relu": false,
+      "weight_base": 384,
+      "weight_count": 16,
+      "weight_max": 103,
+      "weight_min": -104,
+      "weight_scale": 64
+    }
+  ],
+  "model_name": "stage2l_trained_quantized_classifier_16x16x8x2",
+  "package": {
+    "bytes": 11976,
+    "expected_output_values": 512,
+    "input_dim": 16,
+    "output_dim": 2,
+    "path": "models/stage2l/stage2l_trained_quantized_classifier.f37xmp",
+    "payload_fnv1a64": "0x97604ad926849fbd",
+    "sample_count": 256,
+    "sha256": "b50119676dd5f70c63986980bb0f73e3c7dba287c72f1874c5a2c4ff0064d8f8"
+  },
+  "quantization": {
+    "accumulator_type": "signed_int48",
+    "activation_scale": 16,
+    "activation_type": "signed_int16",
+    "bias_type": "signed_int24",
+    "hidden_activation": "relu",
+    "quantized_test_accuracy": 0.953125,
+    "quantized_test_correct": 244,
+    "quantized_train_accuracy": 1.0,
+    "rounding": "nearest_ties_away_from_zero",
+    "saturation": "signed_int16",
+    "weight_type": "signed_int8"
+  },
+  "reference_examples": [
+    {
+      "expected_output": [
+        -106,
+        99
+      ],
+      "input": [
+        14,
+        13,
+        -16,
+        -1,
+        14,
+        -2,
+        -18,
+        11,
+        3,
+        11,
+        -1,
+        8,
+        -8,
+        13,
+        6,
+        12
+      ],
+      "label": 1,
+      "prediction": 1,
+      "sample_index": 0
+    },
+    {
+      "expected_output": [
+        -322,
+        301
+      ],
+      "input": [
+        1,
+        -16,
+        24,
+        2,
+        13,
+        7,
+        -15,
+        -25,
+        -6,
+        16,
+        -5,
+        14,
+        15,
+        2,
+        -6,
+        -16
+      ],
+      "label": 1,
+      "prediction": 1,
+      "sample_index": 1
+    },
+    {
+      "expected_output": [
+        164,
+        -165
+      ],
+      "input": [
+        -17,
+        14,
+        -1,
+        -2,
+        26,
+        -1,
+        -14,
+        19,
+        -27,
+        2,
+        2,
+        -3,
+        22,
+        6,
+        3,
+        16
+      ],
+      "label": 0,
+      "prediction": 0,
+      "sample_index": 2
+    },
+    {
+      "expected_output": [
+        99,
+        -96
+      ],
+      "input": [
+        -9,
+        -17,
+        11,
+        -10,
+        -27,
+        22,
+        -4,
+        7,
+        -14,
+        10,
+        -1,
+        4,
+        2,
+        -8,
+        1,
+        -8
+      ],
+      "label": 1,
+      "prediction": 0,
+      "sample_index": 3
+    },
+    {
+      "expected_output": [
+        -258,
+        241
+      ],
+      "input": [
+        16,
+        -16,
+        22,
+        16,
+        -11,
+        -23,
+        38,
+        13,
+        28,
+        16,
+        -6,
+        1,
+        -16,
+        3,
+        -27,
+        13
+      ],
+      "label": 1,
+      "prediction": 1,
+      "sample_index": 4
+    }
+  ],
+  "training": {
+    "epochs": 500,
+    "float_test_accuracy": 0.953125,
+    "float_train_accuracy": 1.0,
+    "learning_rate": 0.01,
+    "method": "numpy_adam_float_mlp",
+    "seed": 123
+  }
+}
