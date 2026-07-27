@@ -1,0 +1,84 @@
+{
+  "dataset": {
+    "claim_boundary": "functional hybrid-DLRM validation only; not real Criteo evidence",
+    "seed": 3701,
+    "source": "deterministic synthetic",
+    "test_samples": 256,
+    "train_samples": 1536
+  },
+  "format": "F37XHD1",
+  "format_version": 1,
+  "model": {
+    "architecture": {
+      "bottom_mlp": [
+        8,
+        16,
+        8
+      ],
+      "embedding_dim": 8,
+      "embedding_tables": [
+        64,
+        80,
+        96,
+        128
+      ],
+      "feature_vectors": 5,
+      "interaction_output_dim": 18,
+      "interaction_pairs": 10,
+      "top_mlp": [
+        18,
+        32,
+        16,
+        1
+      ]
+    },
+    "execution_partition": {
+      "bottom_mlp": "F37X FPGA",
+      "embedding_lookup": "CPU host",
+      "feature_interaction": "CPU host integer reference",
+      "top_mlp": "F37X FPGA"
+    },
+    "name": "stage2m_trained_hybrid_dlrm_8x16x8_interact18_32x16x1"
+  },
+  "package": {
+    "bottom_bias_values": 24,
+    "bottom_weight_values": 256,
+    "bytes": 32005,
+    "embedding_values": 2944,
+    "path": "/mnt/data/stage2m_assets/stage2m_trained_hybrid_dlrm.f37xhd",
+    "payload_fnv1a64": "0x550ea17bcba314e5",
+    "sample_count": 256,
+    "sha256": "b953289de8910f8402c4eefb79c516ab7d2468dba34fcc44532b9469cdcb2b3b",
+    "top_bias_values": 49,
+    "top_weight_values": 1104
+  },
+  "provenance": {
+    "generator": "/mnt/data/generate_stage2m_hybrid_dlrm_package.py",
+    "generator_sha256": "1337524c76ba9ba3fa7e6d876f0174a49f82a1a973f74139dc6e7e86c3bd8cc2",
+    "numpy_version": "2.3.5"
+  },
+  "quantization": {
+    "accumulator": "signed_int48",
+    "activation": "int16",
+    "bias": "int24",
+    "dense_scale_log2": 11,
+    "final_scale_log2": 8,
+    "interaction_shift": 11,
+    "quantized_test_accuracy": 0.890625,
+    "quantized_test_correct": 228,
+    "quantized_train_accuracy": 0.96875,
+    "rounding": "nearest_ties_away_from_zero",
+    "top_hidden_scale_log2": 9,
+    "vector_scale_log2": 11,
+    "weight": "int8",
+    "weight_scale_log2": 6
+  },
+  "training": {
+    "batch_size": 128,
+    "epochs": 8,
+    "float_test_accuracy": 0.88671875,
+    "float_train_accuracy": 0.9700520833333334,
+    "learning_rate": 0.003,
+    "method": "numpy_adam_full_hybrid_dlrm"
+  }
+}
