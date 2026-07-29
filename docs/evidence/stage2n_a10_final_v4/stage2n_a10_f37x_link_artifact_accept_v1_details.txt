@@ -1,0 +1,21 @@
+STAGE2N_A10_F37X_LINK_ARTIFACT_ACCEPT_V1_DETAILS
+GIT_BRANCH=work/stage2n-a10-model-batch-regression
+GIT_HEAD=b69f9c6836f080d77dcf672da192e2a3121938ac
+KERNEL=dlrm_f37x_rtl_kernel_stage2n_a10_v2
+COMPUTE_UNIT=dlrm_a10_1
+PLATFORM=inspur_f37x_xdma_201920_3
+KERNEL_FREQUENCY_MHZ=100
+PIPELINE_VERSION=0x00024E11
+MAX_LAYERS=8
+MAX_WEIGHT_VALUES=2048
+MAX_BIAS_VALUES=128
+MODEL_SHAPE=8x16x8_interact18_32x16x1
+XCLBIN=/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n/build/stage2n_a10/link_v1/hw/dlrm_f37x_rtl_kernel_stage2n_a10_v2.xclbin
+XCLBIN_SIZE_BYTES=43078792
+XCLBIN_SHA256=f00bc61649c2ebac51845cf4ad6ad83d05bf3c9e9855ba1f9b19d182841ac3bd
+XCLBIN_UUID=f7a23117-5218-4fba-adb5-f093b596df03
+TIMING_MET=1
+TIMING_SUMMARY_LINE=      0.000        0.000                      0               426806        0.000        0.000                      0               424357        0.000        0.000                       0                175404  
+TIMING_MARGIN_NOTE=Timing met at report precision; WNS/WHS are displayed as 0.000 ns.
+NO_FPGA_ACCESS=1
+NO_FPGA_PROGRAMMING_OR_RESET=1
