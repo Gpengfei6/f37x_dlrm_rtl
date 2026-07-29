@@ -1,0 +1,4 @@
+STAGE2N_A10_FINAL_ACCEPTANCE_V2_FAILED
+REASON=required file missing or empty: /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n/scripts/package_stage2n_a10_xo_v2.tcl
+NO_FPGA_ACCESS=1
+NO_FPGA_PROGRAMMING_OR_RESET=1
