@@ -1,0 +1,134 @@
+{
+  "claim_boundary": "deterministic synthetic Stage 2M trained-model regression asset; not real Criteo evidence",
+  "format": "F37XPB1",
+  "format_version": 1,
+  "model": {
+    "bias_count": 73,
+    "dense_dim": 8,
+    "descriptor_count": 5,
+    "descriptors": [
+      {
+        "bias_base": 0,
+        "in_dim": 8,
+        "index": 0,
+        "out_dim": 16,
+        "output_shift": 6,
+        "relu": true,
+        "weight_base": 0,
+        "word0": "0x00008008",
+        "word1": "0x00000000",
+        "word2": "0x11800000"
+      },
+      {
+        "bias_base": 16,
+        "in_dim": 16,
+        "index": 1,
+        "out_dim": 8,
+        "output_shift": 6,
+        "relu": true,
+        "weight_base": 128,
+        "word0": "0x20004010",
+        "word1": "0x04000000",
+        "word2": "0x11800000"
+      },
+      {
+        "bias_base": 24,
+        "in_dim": 18,
+        "index": 2,
+        "out_dim": 32,
+        "output_shift": 6,
+        "relu": true,
+        "weight_base": 256,
+        "word0": "0x40010012",
+        "word1": "0x06000000",
+        "word2": "0x11800000"
+      },
+      {
+        "bias_base": 56,
+        "in_dim": 32,
+        "index": 3,
+        "out_dim": 16,
+        "output_shift": 8,
+        "relu": true,
+        "weight_base": 832,
+        "word0": "0xd0008020",
+        "word1": "0x0e000000",
+        "word2": "0x12000000"
+      },
+      {
+        "bias_base": 72,
+        "in_dim": 16,
+        "index": 4,
+        "out_dim": 1,
+        "output_shift": 7,
+        "relu": false,
+        "weight_base": 1344,
+        "word0": "0x50000810",
+        "word1": "0x12000001",
+        "word2": "0x01c00000"
+      }
+    ],
+    "embedding_dim": 8,
+    "embedding_table_sizes": [
+      64,
+      80,
+      96,
+      128
+    ],
+    "interaction_dim": 18,
+    "sample_count": 256,
+    "shape": "8x16x8_interact18_32x16x1",
+    "weight_count": 1360
+  },
+  "no_fpga_access": true,
+  "no_fpga_programming_or_reset": true,
+  "output": {
+    "bias_count": 73,
+    "bottom_layers": 2,
+    "bytes": 43881,
+    "dense_dim": 8,
+    "descriptor_count": 5,
+    "embedding_dim": 8,
+    "embedding_tables": 4,
+    "flags": 127,
+    "interaction_dim": 18,
+    "interaction_shift": 11,
+    "path": "/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n/build/stage2n_a11/assets_v2/stage2n_a11_real_model_batch_v2.f37xpb",
+    "payload_bytes": 43753,
+    "payload_fnv1a64": "0x27a4d0f53052d3d8",
+    "result_dim": 1,
+    "sample_count": 256,
+    "samples_csv": "/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n/results/stage2n_a11/assets_v2/stage2n_a11_real_model_batch_v2_samples.csv",
+    "sha256": "f1b1356b0e9286f300147f8b300eaa15321868bc3aabbe52baeda3dcf45c59fb",
+    "source_payload_fnv1a64": "0x550ea17bcba314e5",
+    "source_sha256_prefix_u64": "0xb953289de8910f84",
+    "top_layers": 3,
+    "weight_count": 1360
+  },
+  "pipeline": {
+    "bias_capacity": 128,
+    "bottom_descriptor_base": 0,
+    "bottom_layer_count": 2,
+    "descriptor_capacity": 8,
+    "final_descriptor_tag": 4,
+    "interaction_shift": 11,
+    "top_descriptor_base": 2,
+    "top_layer_count": 3,
+    "version": "0x00024E11",
+    "weight_capacity": 2048
+  },
+  "reference": {
+    "classification_accuracy": 0.890625,
+    "classification_correct": 228,
+    "software_bottom_exact": 256,
+    "software_interaction_exact": 256,
+    "software_top_exact": 256
+  },
+  "source": {
+    "format": "F37XHD1",
+    "model_name": "stage2m_trained_hybrid_dlrm_8x16x8_interact18_32x16x1",
+    "path": "/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n/models/stage2m/stage2m_trained_hybrid_dlrm.f37xhd",
+    "payload_fnv1a64": "0x550ea17bcba314e5",
+    "sha256": "b953289de8910f8402c4eefb79c516ab7d2468dba34fcc44532b9469cdcb2b3b"
+  }
+}
