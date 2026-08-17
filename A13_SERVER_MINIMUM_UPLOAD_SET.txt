@@ -1,0 +1,55 @@
+# NEW_A13
+rtl/pipeline/dlrm_internal_pipeline_controller_stage2n_a13_v1.sv
+rtl/f37x/dlrm_internal_pipeline_axi_lite_adapter_stage2n_a13_v1.sv
+rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a13_v1.sv
+tb/tb_dlrm_f37x_rtl_kernel_stage2n_a13_cycle_counter_v1.sv
+host/stage2n_a13_cycle_counter_board_v1.cpp
+constraints/stage2n_a13_cycle_counter_100mhz_v1.xdc
+scripts/run_stage2n_a13_cycle_counter_xsim_v1.ps1
+scripts/run_stage2n_a13_cycle_counter_ooc_v1.tcl
+scripts/run_stage2n_a13_cycle_counter_ooc_v1.ps1
+docs/STAGE2N_A13_CYCLE_COUNTER_V1.md
+
+# CANONICAL_RTL
+rtl/common/rv_fifo.sv
+rtl/common/runtime_relu_quant.sv
+rtl/compute/mac_lane.sv
+rtl/memory/banked_activation_buffer.sv
+rtl/memory/local_weight_provider.sv
+rtl/compute/vector_dot_product_core.sv
+rtl/compute/dense_layer_engine.sv
+rtl/control/mlp_sequence_controller.sv
+rtl/top/dlrm_f37x_rtl_kernel.sv
+rtl/interaction/dlrm_feature_interaction_engine.sv
+rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a2.sv
+rtl/control/mlp_sequence_controller_segmented.sv
+rtl/pipeline/dlrm_internal_pipeline_controller.sv
+
+# BUILD
+A13_FILE_SHA256_VERIFIED.txt
+A13_F37X_BUILD_FLOW_SOURCE.md
+A13_SERVER_MINIMUM_UPLOAD_SET.txt
+scripts/package_stage2n_a13_rtl_kernel_v1.tcl
+scripts/run_stage2n_a13_target_vu37p_v1.tcl
+scripts/report_stage2n_a13_vitis_post_route_v1.tcl
+scripts/build_stage2n_a13_host_v1.sh
+scripts/build_stage2n_a13_target_v1.sh
+config/stage2n_a13_v1.cfg
+
+# MODEL_ASSET
+models/stage2m/stage2m_trained_hybrid_dlrm.f37xhd
+models/stage2m/stage2m_trained_hybrid_dlrm_manifest.json
+python/build_stage2n_a11_pipeline_batch_asset_v2.py
+scripts/run_stage2n_a11_pipeline_batch_asset_v2.sh
+
+# NOT_REQUIRED
+# No handwritten kernel.xml: package_xo generates it.
+# No A10 v1/non-v2 RTL, TB, Tcl, Host, or runner.
+# No A8 v1/v2 packaging/link files or obsolete A8 v3 XO wrapper runner.
+# No A11 asset-builder v1 or asset-runner v1 (known F37XPB magic defect).
+# No A12 runner v1 (known CSV schema defect).
+# No local build/, results/, logs/, xsim.dir/, DCP, WDB, XO, xclbin, or CSV.
+# No board runner/collector is needed for this build-only stage.
+# No m_axi, HBM mapping, DDR mapping, connectivity.sp, BO, or DMA source exists.
+# The generated A11 .f37xpb is not needed to compile/link A13 and is not used
+# because Host execution and board access are prohibited in this stage.
