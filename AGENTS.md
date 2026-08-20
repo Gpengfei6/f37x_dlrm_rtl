@@ -53,3 +53,86 @@ GATE-T1/T2/T3 review.
   simulation logs satisfying GATE-1.  Python-only checks never satisfy GATE-1.
 - Stop before changing the fixed-point contract, public top-level interface,
   model direction, real HBM mapping, or paper/patent innovation.
+
+## Stage 2N-A14.1 HBM Lookup Prototype Authorization
+
+Purpose:
+Allow isolated prototype development for validating FPGA-side embedding lookup architecture.
+
+Authorized:
+1. Add new standalone AXI4 read-master RTL prototype:
+   `rtl/hbm/dlrm_hbm_embedding_lookup_stage2n_a14_v1.sv`
+
+2. Add independent simulation testbench:
+   `tb/tb_dlrm_hbm_embedding_lookup_stage2n_a14_v1.sv`
+
+3. Add A14 RTL design documentation:
+   `docs/STAGE2N_A14_HBM_LOOKUP_RTL_DESIGN.md`
+
+Restrictions:
+1. Do not modify any Stage 2N-A13 accepted RTL.
+2. Do not modify existing kernel top.
+3. Do not add Vitis `m_axi` kernel interface.
+4. Do not add `connectivity.sp` HBM mapping.
+5. Do not generate xclbin.
+6. Do not perform board programming.
+7. Do not claim physical HBM access validation.
+
+Evidence boundary:
+A14.1 only validates:
+- address generation logic
+- AXI4 read transaction behavior
+- embedding vector packing
+- simulation golden comparison
+
+It does not validate:
+- F37X physical HBM connectivity
+- bandwidth
+- latency
+- performance improvement.
+
+## Stage 2N-A14.3-A2 Kernel Wrapper Simulation Authorization
+
+Purpose:
+Allow standalone simulation verification of the A14 Vitis-style kernel wrapper.
+
+Authorized:
+
+1. Add standalone kernel wrapper simulation testbench:
+
+   `tb/tb_dlrm_f37x_rtl_kernel_stage2n_a14_v1.sv`
+
+2. Verify:
+
+   - AXI4-Lite register access
+   - START control behavior
+   - LOOKUP_INDEX programming
+   - lookup engine integration
+   - m_axi_gmem read transaction
+   - RESULT register readback
+
+Restrictions:
+
+- Do not modify existing A13 RTL.
+- Do not modify existing A14.1 lookup RTL.
+- Do not generate XO.
+- Do not generate xclbin.
+- Do not perform Vitis linking.
+- Do not perform physical HBM validation.
+- Do not make performance claims.
+
+Evidence boundary:
+
+This phase only proves:
+
+- AXI-Lite control
+- Kernel wrapper logic
+- Lookup IP integration
+- Simulation correctness
+
+It does not prove:
+
+- physical HBM connectivity
+- FPGA board execution
+- bandwidth
+- latency improvement
