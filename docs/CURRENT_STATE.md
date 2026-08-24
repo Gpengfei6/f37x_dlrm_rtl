@@ -6,8 +6,8 @@ Snapshot date: 2026-08-24
 
 - Repository: `D:\FpgaWork\f37x_dlrm_rtl`
 - Branch: `work/stage2n-a13-cycle-counter`
-- HEAD: `50a97bc90766343f09b0a35d72d89b83548b3b42`
-- HEAD subject: `docs: authorize Stage 2N-A14 development boundary`
+- HEAD: `41cd7776b77e4af410684824038886851d5a315e`
+- HEAD subject: `docs: establish AI-readable project context and collaboration policy`
 - A14 source integration commit: `a19d338`
 - Current engineering stage: **Stage 2N-A14**
 - Accepted and frozen functional baseline: **Stage 2N-A13**
@@ -48,6 +48,9 @@ deletion, or `git add .`.
 - Independent self-checking lookup and wrapper testbenches committed.
 - XO packaging Tcl and future `m_axi_gmem -> HBM[0]` configuration committed.
 - Link architecture and environment-block documentation committed.
+- A target-build runner, shortened-CU target configuration, and routed-report
+  script are prepared in the current stage and have passed local syntax and
+  structural checks only. They have not been run with Vivado/Vitis 2020.2.
 
 ## Verification Summary
 
@@ -60,6 +63,7 @@ deletion, or `git add .`.
 | A14.1 lookup XSim | PASS | 64/64 rows against fake AXI memory |
 | A14 wrapper XSim | PASS | 14/14 lookups; 14 AR and 14 R handshakes |
 | A14 local proxy XO packaging | Documented PASS | Artix-7 packaging-structure proxy only; generated artifact is not in the current worktree |
+| A14 target runner static checks | PASS | Bash syntax, two embedded Python blocks, and Tcl structural completeness only; ShellCheck unavailable |
 | A14 exact VU37P XO | BLOCKED/PENDING | Exact target database/environment not available locally |
 | A14 Vitis link | BLOCKED | Local `v++` and F37X platform metadata unavailable |
 | A14 xclbin | NOT GENERATED | No A14 xclbin exists in the current build tree |
@@ -72,6 +76,7 @@ Primary evidence:
 - `docs/STAGE2N_A14_KERNEL_WRAPPER_SIMULATION.md`
 - `docs/STAGE2N_A14_XO_PACKAGING_PLAN.md`
 - `docs/STAGE2N_A14_B2_1_ENVIRONMENT_BLOCK.md`
+- `docs/STAGE2N_A14_TARGET_BUILD_RUNNER_V1.md`
 
 ## Current Local Environment
 
@@ -118,7 +123,7 @@ A14 XSim tests.
 2. Confirm the kernel name and `m_axi_gmem` port from generated metadata rather
    than filenames.
 3. In a separately authorized Vitis 2020.2/F37X environment, link the XO using
-   `config/stage2n_a14_v1.cfg` and record the resolved
+   `config/stage2n_a14_target_v1.cfg` and record the resolved
    `m_axi_gmem -> HBM[0]` connection, timing, UUID, and xclbin SHA256.
 4. Stop before board execution and request separate authorization.
 5. Validate one physical HBM bank with categorical row IDs and bit-exact
