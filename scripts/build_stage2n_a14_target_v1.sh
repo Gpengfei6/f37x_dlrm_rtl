@@ -19,6 +19,8 @@ KERNEL_NAME="dlrm_f37x_rtl_kernel_stage2n_a14_v1"
 CU_NAME="dlrm_a14_1"
 KERNEL_FREQUENCY_MHZ="${KERNEL_FREQUENCY_MHZ:-100}"
 JOBS="${JOBS:-8}"
+A14_TARGET_BUILD_FLOW="${A14_TARGET_BUILD_FLOW:-STAGE2N_A14_TARGET_V1}"
+A14_TARGET_RUNNER_VERSION="${A14_TARGET_RUNNER_VERSION:-V1}"
 
 CONFIG="${REPO_ROOT}/config/stage2n_a14_target_v1.cfg"
 PACKAGE_TCL="${REPO_ROOT}/scripts/package_stage2n_a14_rtl_kernel_v1.tcl"
@@ -67,7 +69,8 @@ CURRENT_HEAD="NOT_RECORDED"
 write_status()
 {
     cat > "${STATUS}" <<EOF
-A14_TARGET_BUILD_FLOW=STAGE2N_A14_TARGET_V1
+A14_TARGET_BUILD_FLOW=${A14_TARGET_BUILD_FLOW}
+A14_TARGET_RUNNER_VERSION=${A14_TARGET_RUNNER_VERSION}
 A14_TARGET_XO_BUILD=${A14_TARGET_XO_BUILD}
 A14_VPP_LINK=${A14_VPP_LINK}
 A14_XCLBIN_BUILD=${A14_XCLBIN_BUILD}
@@ -191,7 +194,7 @@ done
 
 CURRENT_BRANCH="$(cd "${REPO_ROOT}" && git symbolic-ref --short HEAD 2>/dev/null || echo DETACHED)"
 CURRENT_HEAD="$(cd "${REPO_ROOT}" && git rev-parse HEAD)"
-(cd "${REPO_ROOT}" && git status --porcelain=v1) > "${GIT_STATUS_FILE}"
+(cd "${REPO_ROOT}" && git status --porcelain) > "${GIT_STATUS_FILE}"
 write_status
 
 {
