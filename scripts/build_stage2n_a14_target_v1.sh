@@ -23,7 +23,7 @@ A14_TARGET_BUILD_FLOW="${A14_TARGET_BUILD_FLOW:-STAGE2N_A14_TARGET_V1}"
 A14_TARGET_RUNNER_VERSION="${A14_TARGET_RUNNER_VERSION:-V1}"
 
 CONFIG="${REPO_ROOT}/config/stage2n_a14_target_v1.cfg"
-PACKAGE_TCL="${REPO_ROOT}/scripts/package_stage2n_a14_rtl_kernel_v1.tcl"
+PACKAGE_TCL="${A14_PACKAGE_TCL:-${REPO_ROOT}/scripts/package_stage2n_a14_rtl_kernel_v1.tcl}"
 POST_ROUTE_TCL="${REPO_ROOT}/scripts/report_stage2n_a14_vitis_post_route_v1.tcl"
 A14_LOOKUP_RTL="${REPO_ROOT}/rtl/hbm/dlrm_hbm_embedding_lookup_stage2n_a14_v1.sv"
 A14_WRAPPER_RTL="${REPO_ROOT}/rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a14_v1.sv"
@@ -261,6 +261,8 @@ if control.get("mode") != "slave" or control.get("dataWidth") != "32":
 memory = ports["m_axi_gmem"]
 if memory.get("mode") != "master" or memory.get("dataWidth") != "128":
     raise SystemExit("m_axi_gmem metadata mismatch")
+if int(memory.get("range", "0"), 0) != 0xFFFFFFFFFFFFFFFF:
+    raise SystemExit("m_axi_gmem address range is not 64-bit")
 
 args = {}
 for arg in kernel.findall("./args/arg"):

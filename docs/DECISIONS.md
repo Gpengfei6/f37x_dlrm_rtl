@@ -410,3 +410,25 @@
 - **Boundary:** this decision does not close Vivado 2020.2 post-route
   reproduction and does not approve board-level implementation, F37X/VU37P,
   platform integration, `.xclbin`, board timing, execution, or measured power.
+
+## D-027 - Write A14 AXI master width metadata explicitly
+
+- **Status:** adopted for the Stage 2N-A14 V3 packaging retry; target execution
+  remains pending.
+- **Problem:** Vivado 2020.2 successfully packaged the exact VU37P XO but wrote
+  the inferred `m_axi_gmem` defaults `dataWidth=32` and
+  `range=0xFFFFFFFF`. The frozen RTL ports are 128-bit data and 64-bit address.
+- **Adopted:** packaging V2 creates or updates the AXI bus parameters
+  `DATA_WIDTH=128` and `ADDR_WIDTH=64` before saving the IP and invoking
+  `package_xo`. The target runner requires both values in generated XML.
+- **Not adopted:** changing A14 RTL widths, weakening the metadata validator,
+  manually editing generated XML after packaging, or allowing `v++` to proceed
+  with inconsistent metadata.
+- **Reason:** AMD documents that `package_xo` derives kernel XML from packaged
+  IP metadata, that the data-width default is 32, and that Vitis RTL-kernel AXI
+  masters require 64-bit address support. Explicit bus parameters keep the
+  metadata aligned with the already reviewed RTL interface.
+- **Impact:** no functional RTL, register, clock, HBM mapping, A13, Host, or
+  fixed-point behavior changes. The V3 target retry must still prove the XO,
+  link, xclbin, HBM[0] link metadata, and routed timing; physical HBM and board
+  behavior remain unvalidated.

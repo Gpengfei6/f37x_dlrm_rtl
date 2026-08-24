@@ -6,8 +6,8 @@ Snapshot date: 2026-08-24
 
 - Repository: `D:\FpgaWork\f37x_dlrm_rtl`
 - Branch: `work/stage2n-a13-cycle-counter`
-- HEAD: `4d24272a9788a3b7006cc37667aefda33c83878e`
-- HEAD subject: `build(a14): add target xclbin validation runner`
+- V3-fix parent HEAD: `e2aa046fa290ad352602cf5dd135b09a37dc80cc`
+- V3-fix parent subject: `fix(a14): support older git in target runner`
 - A14 source integration commit: `a19d338`
 - Current engineering stage: **Stage 2N-A14**
 - Accepted and frozen functional baseline: **Stage 2N-A13**
@@ -52,8 +52,13 @@ deletion, or `git add .`.
   script are prepared in the current stage and have passed local syntax and
   structural checks.
 - The first target-server runner attempt stopped before Vivado because the
-  older server Git rejects `git status --porcelain=v1`. A V2 compatibility
-  entry is prepared; the target retry has not yet run.
+  older server Git rejects `git status --porcelain=v1`; its evidence is retained.
+- The V2 compatibility entry passed that gate and generated an intact XO with
+  the exact VU37P target. Its post-package metadata gate correctly stopped
+  before `v++` because Vivado 2020.2 recorded `m_axi_gmem` as 32-bit data and a
+  32-bit address range instead of the RTL's 128-bit data and 64-bit address.
+- A V3 packaging entry now writes both AXI bus parameters explicitly. It has
+  passed local static checks but has not yet run on the target server.
 
 ## Verification Summary
 
@@ -69,8 +74,10 @@ deletion, or `git add .`.
 | A14 target runner static checks | PASS | Bash syntax, two embedded Python blocks, and Tcl structural completeness only; ShellCheck unavailable |
 | A14 target attempt 1 | BLOCKED/NOT RUN | V1 stopped at old-Git worktree-status collection before Vivado; no XO or link attempt |
 | A14 V2 Git compatibility static | PASS | V1/V2 Bash, embedded Python, evidence tags, and valueless `--porcelain` checks |
-| A14 V2 target retry | NOT RUN | Compatibility fix prepared; server execution pending |
-| A14 exact VU37P XO | BLOCKED/PENDING | Exact target database/environment not available locally |
+| A14 V2 target retry | STOPPED/REVIEWED | Exact VU37P XO generated and archive integrity passed; XML metadata gate failed before `v++` |
+| A14 exact VU37P XO generation | CONFIRMED | Vivado log: `TARGET_PART_USED=1`, package PASS, XO size 12,325 bytes |
+| A14 exact VU37P XO metadata | FAIL | `m_axi_gmem` generated as data width 32/address range 32 instead of 128/64 |
+| A14 V3 explicit AXI metadata fix | STATIC PASS/NOT RUN | New packaging Tcl writes `DATA_WIDTH=128` and `ADDR_WIDTH=64`; target retry pending |
 | A14 Vitis link | BLOCKED | Local `v++` and F37X platform metadata unavailable |
 | A14 xclbin | NOT GENERATED | No A14 xclbin exists in the current build tree |
 | A14 physical HBM | NOT VALIDATED | No board access or physical HBM transaction has been run |
@@ -84,6 +91,7 @@ Primary evidence:
 - `docs/STAGE2N_A14_B2_1_ENVIRONMENT_BLOCK.md`
 - `docs/STAGE2N_A14_TARGET_BUILD_RUNNER_V1.md`
 - `docs/STAGE2N_A14_TARGET_BUILD_RUNNER_V2_GIT_COMPAT.md`
+- `docs/STAGE2N_A14_TARGET_BUILD_RUNNER_V3_XO_METADATA_FIX.md`
 
 ## Current Local Environment
 
@@ -114,8 +122,9 @@ Historical target environment recorded by accepted evidence:
    paths.
 4. The previously documented proxy XO was a generated worktree artifact and is
    not present in this main working tree.
-5. The first server runner attempt was blocked by old-Git CLI compatibility
-   before any Vivado/Vitis build command; the V2 retry is pending.
+5. V2 exact-target XO packaging ran, but Vivado 2020.2 defaulted the packaged
+   AXI master width metadata to 32-bit data and a 32-bit address range. V3 must
+   confirm the explicit 128-bit data/64-bit address metadata before linking.
 6. A14 has no xclbin, physical HBM access evidence, XRT BO/DMA Host, or board
    result.
 7. A14 lookup output is not connected to A13 Feature Interaction; the two tops
@@ -126,13 +135,13 @@ A14 XSim tests.
 
 ## Next Actions
 
-1. Preserve the first server-attempt build and result roots under the names in
-   `docs/STAGE2N_A14_TARGET_BUILD_RUNNER_V2_GIT_COMPAT.md`.
-2. Apply the V2 compatibility fix to the clean server repository and run
-   `scripts/build_stage2n_a14_target_v2.sh`.
-3. Retain the XO packaging command, exit status, `kernel.xml`, size, and SHA256.
-4. Confirm the kernel name and `m_axi_gmem` port from generated metadata rather
-   than filenames.
+1. Preserve the V2 build and result roots under the attempt-2 names in
+   `docs/STAGE2N_A14_TARGET_BUILD_RUNNER_V3_XO_METADATA_FIX.md`.
+2. Apply the V3 metadata fix to the clean server repository and run
+   `scripts/build_stage2n_a14_target_v3.sh`.
+3. Confirm the generated `m_axi_gmem` metadata reports 128-bit data and a
+   64-bit address range before accepting the XO gate.
+4. Retain the XO packaging command, exit status, XML, size, and SHA256.
 5. In the user-controlled Vitis 2020.2/F37X environment, link the XO using
    `config/stage2n_a14_target_v1.cfg` and record the resolved
    `m_axi_gmem -> HBM[0]` connection, timing, UUID, and xclbin SHA256.
