@@ -1,7 +1,17 @@
 # Single-F37X all-RTL DLRM research project
 
-This repository is a local, simulation-first prototype for a recommendation
-inference accelerator.  The implemented scope is deliberately small:
+> **AI assistant entry point:** Before modifying this repository, read
+> [`docs/AI_CONTEXT.md`](docs/AI_CONTEXT.md), then
+> [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) and `AGENTS.md`. Sections
+> below preserve early-stage context; the current-state documents and later
+> final-acceptance evidence take precedence when stage descriptions differ.
+
+## Historical project introduction
+
+The following introduction preserves the repository's original early-stage
+scope. It is not the current A13/A14 status. The repository began as a local,
+simulation-first prototype for a recommendation inference accelerator with this
+deliberately small implemented scope:
 
 ```text
 NUM_LOOKUPS embedding IDs
@@ -21,11 +31,11 @@ coalescing plus one-read/multi-consumer result broadcast.  Lightweight
 post-coalescing HBM-channel-aware scheduling is secondary; embedding/MLP double
 buffering is a system optimization.  Software trace analysis must establish
 their value before any corresponding RTL is authorized.
-It is **not** a complete DLRM and does not contain AXI, HBM, an XRT host,
+At that early stage it was **not** a complete DLRM and did not contain AXI, HBM, an XRT host,
 duplicate-ID merging, dynamic micro-batching, an RTL-kernel shell, or an
 `.xclbin`.  No claim is made that the design has been compiled or run on F37X.
 
-## Default configuration
+## Historical default configuration
 
 The source of truth is `config/model_config.json`.  The default model uses 32
 embedding rows, 4 lookups, an embedding/dense input dimension of 8, and 4 dense
@@ -88,9 +98,11 @@ Its dependency-free Python oracle is:
 python3 scripts/run_stage2a_python_tests.py
 ```
 
-## Verification status
+## Historical verification status
 
-This section records only commands actually run in the current local workspace.
+This section preserves checks recorded during earlier milestones. It is not the
+current project status and must be read together with `docs/CURRENT_STATE.md`
+and the applicable final-acceptance documents.
 
 - Python reference/tests: **passed locally on 2026-07-22** using Python 3.13.
   The phase-1 24-vector suite and the Stage 2A/2B Python contracts all pass.
