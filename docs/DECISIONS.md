@@ -435,10 +435,9 @@
 
 ## D-028 - Add a runtime 64-bit A14 table-base ABI before physical HBM work
 
-- **Status:** authorized and implemented as versioned A14.5 source; corrected
-  local XSim is PASS at `d428e8b`. Exact-target attempt 1 at `de9276e`
-  generated an intact XO and confirmed the intended TABLE_BASE/component
-  fields by returned inspection; a corrected automated retry remains pending.
+- **Status:** accepted for the isolated A14.5 prototype. Corrected local XSim is
+  PASS at `d428e8b`; the corrected exact-target XO-only gate is PASS at tested
+  server HEAD `4096614` with retained logs and hashes.
 - **Problem:** the V3 target retry proved that RTL ports, AXI bus parameters,
   model parameters, and the IP-XACT master address space are 64-bit, while
   `package_xo` still emitted `range=0xFFFFFFFF`. The generated kernel metadata
@@ -464,8 +463,8 @@
 
 ## D-029 - Validate A14.5 AXI address width across RTL and IP-XACT layers
 
-- **Status:** adopted for a versioned, non-overwriting exact-target retry;
-  retry execution is pending.
+- **Status:** adopted and accepted. The versioned, non-overwriting exact-target
+  retry passed at tested server HEAD `4096614`.
 - **Observed evidence:** Vivado 2020.2 generated an intact exact-VU37P A14.5
   XO. Its `kernel.xml` reports `m_axi_gmem dataWidth=128`, an 8-byte `void*`
   TABLE_BASE with `addressQualifier=1`, and `range=0xFFFFFFFF`. Its packaged
@@ -488,8 +487,32 @@
 - **Not adopted:** editing generated XML/XO, overwriting attempt-1 outputs,
   treating the range field as proof of physical HBM, relaxing data/address
   interface checks, running `v++`, or accessing the device.
+- **Accepted evidence:** target part used, 12,951-byte XO, matching standalone
+  and in-XO XML hashes, TABLE_BASE ABI PASS, 128-bit data, 64-bit
+  RTL/component address ports and parameters, `2^64` IP-XACT address space,
+  five matching source hashes, seven reviewed warnings, zero critical warnings,
+  and zero errors.
 - **Impact:** no RTL, A13, A14 v1, fixed-point, register-map, or protocol change.
-  The retry writes to new `xo_v3` and `target_xo_v2` roots. Until its returned
-  logs/status/hashes pass review, the corrected automated XO gate is NOT RUN;
-  xclbin, Host, physical HBM, board behavior, and performance remain
+  The retry writes to new `xo_v3` and `target_xo_v2` roots. The XO-only gate is
+  closed; xclbin, Host, physical HBM, board behavior, and performance remain
   unvalidated.
+
+## D-030 - Accept the A14.5 exact-target XO-only gate without promoting board claims
+
+- **Status:** accepted on 2026-08-25.
+- **Evidence:** user-returned status, Vivado package log, standalone and in-XO
+  XML, cross-layer validator output, source/artifact SHA256 manifests, and tool
+  version record for tested server HEAD `4096614`.
+- **Decision:** record `A14_5_TARGET_XO_BUILD=PASS`,
+  `A14_5_TABLE_BASE_ABI=PASS`, and
+  `A14_5_AXI_ADDR_WIDTH_EVIDENCE=PASS`. Retain
+  `KERNEL_XML_PORT_RANGE=0xFFFFFFFF` exactly and interpret it only together with
+  the consistent 64-bit RTL/component/IP-XACT/global-pointer evidence.
+- **Warning disposition:** seven package warnings are retained and classified;
+  final clock/reset associations and IP integrity are present, CPU emulation is
+  outside scope, and no critical warning or error occurred.
+- **Not adopted:** claiming Vitis link, xclbin, routed timing, HBM[0], XRT BO,
+  Host, FPGA programming, physical HBM data, performance, A13 integration, or
+  complete DLRM from XO metadata.
+- **Impact:** A14.5 is closed at its authorized XO-only boundary. Any link,
+  Host, device, or physical-memory work requires a separately reviewed stage.

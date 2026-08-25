@@ -124,8 +124,9 @@ Feature Interaction
 
 A14 implements only the lookup portion as a separate top-level prototype. The
 simulation-accepted v1 path uses a relative row offset. The A14.5 v2 source
-adds a runtime table allocation base and has passed local XSim at `d428e8b`;
-the exact-target XO gate remains pending:
+adds a runtime table allocation base, passed local XSim at `d428e8b`, and
+passed the exact-target XO-only packaging/metadata gate at tested server HEAD
+`4096614`:
 
 ```text
 AXI4-Lite
@@ -186,11 +187,12 @@ response without an AXI read. Packaging represents the two control words as a
 single 64-bit global-memory argument associated with `m_axi_gmem`.
 
 This ABI is implemented in source and its local functional XSim gate is PASS.
-The first exact-target attempt generated an intact XO whose returned
+The corrected exact-target retry generated a 12,951-byte XO whose returned
 `kernel.xml` contains the intended 8-byte global pointer and whose
-`component.xml` proves a 64-bit AXI address interface. Its old automated gate
-stopped on the less-specific `kernel.xml range=0xFFFFFFFF` field, so the
-corrected reproducible XO gate remains pending.
+`component.xml` proves a 64-bit AXI address interface. The retained
+`kernel.xml range=0xFFFFFFFF` is descriptive rather than the sole width proof;
+the versioned validator requires consistent RTL, component, IP-XACT, and
+pointer evidence and passed that complete gate.
 
 For Vivado 2020.2, address width is accepted only when these layers agree:
 
@@ -276,7 +278,7 @@ required.
 - wrapper table-base low/high programming and capture-on-START behavior passed;
 - lookup 67/67 and wrapper 17/17 cases passed with exact AR/R counts.
 
-### A14.5 exact-target XO evidence and pending retry
+### A14.5 exact-target XO evidence
 
 - attempt 1 at `de9276e` generated an intact exact-VU37P XO;
 - returned inspection confirms 128-bit data, an 8-byte `TABLE_BASE`
@@ -285,7 +287,12 @@ required.
 - Vivado 2020.2 retained `kernel.xml range=0xFFFFFFFF`; the old range-only gate
   stopped and its `ERR` trap produced an inaccurate `BLOCKED_NOT_RUN` status;
 - the versioned retry records that range while requiring the complete
-  cross-layer 64-bit evidence; it has not run.
+  cross-layer 64-bit evidence;
+- the corrected retry at tested server HEAD `4096614` passed: XO size 12,951
+  bytes, TABLE_BASE ABI PASS, address-width evidence PASS, matching standalone
+  and in-XO XML hashes, seven reviewed warnings, zero critical warnings, and
+  zero errors;
+- no Vitis link, xclbin, physical HBM, Host, or FPGA operation occurred.
 
 ## 5. Source Map
 
@@ -324,6 +331,8 @@ A14.5 versioned table-base source:
 - `docs/STAGE2N_A14_5_HBM_TABLE_BASE_ABI.md`
 - `docs/STAGE2N_A14_5_XSIM_ACCEPTANCE.md`
 - `docs/STAGE2N_A14_5_TARGET_XO_ATTEMPT1_DIAGNOSIS.md`
+- `docs/STAGE2N_A14_5_TARGET_XO_ACCEPTANCE.md`
+- `docs/evidence/stage2n_a14_5/`
 
 Arithmetic details remain governed by `docs/fixed_point_spec_v0.md`, later
 stage-specific contracts, and the exact RTL. Do not infer a new numerical

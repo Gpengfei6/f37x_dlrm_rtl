@@ -6,6 +6,8 @@ Snapshot date: 2026-08-25
 
 - Repository: `D:\FpgaWork\f37x_dlrm_rtl`
 - Branch: `work/stage2n-a13-cycle-counter`
+- A14.5 accepted target-XO tested HEAD:
+  `4096614419170404d5dcb334432f5f322c4f92d5`
 - A14.5 target-attempt parent HEAD: `de9276ebe5c62f54cff5877bc9b11b66606d1549`
 - A14.5 source-preparation commit: `29401e5`
 - A14.5 XSim-fix commit: `d428e8b`
@@ -100,8 +102,16 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
   `BLOCKED_NOT_RUN` because its `ERR` trap fired during expected return-code
   capture; the v2 runner corrects this.
 - New versioned package/validator/runner files preserve attempt 1 and write to
-  `xo_v3` and `target_xo_v2`. They are locally syntax/structure checked but the
-  corrected exact-target retry is **NOT RUN**.
+  `xo_v3` and `target_xo_v2`.
+- The corrected exact-target retry at server HEAD `4096614` is **PASS**:
+  - exact part `xcvu37p-fsvh2892-2L-e` and Vivado 2020.2;
+  - 12,951-byte XO;
+  - 8-byte `TABLE_BASE` global pointer at `0x18` on `m_axi_gmem`;
+  - 128-bit data path, 64-bit RTL/component address path, and `2^64` IP-XACT
+    address space;
+  - standalone and in-XO XML hashes match;
+  - source and artifact SHA256 manifests retained;
+  - seven reviewed warnings, zero critical warnings, and zero errors.
 - No v++ link, xclbin, Host, FPGA programming, or physical HBM operation is
   part of this milestone.
 
@@ -128,7 +138,7 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 | A14.5 XSim attempt 1 | FAIL/DIAGNOSED | Lookup compile/elaboration completed; 32-bit TB index was connected to the DUT's unoverridden 6-bit default; first comparison observed upper `Z`; wrapper not run |
 | A14.5 XSim corrected retry | PASS | At `d428e8b`: lookup 67/67 and wrapper 17/17; 78 valid reads total; six rejected-request checks; both error/fatal counts zero |
 | A14.5 exact VU37P XO attempt 1 | STOPPED/DIAGNOSED | At `de9276e`: exact-part XO generated and archive intact; returned inspection confirms TABLE_BASE/global-pointer ABI and 64-bit component address evidence; obsolete range-only assertion stopped the old automated gate |
-| A14.5 target retry flow | PREPARED/NOT RUN | Versioned XO v3, cross-layer validator, accurate ERR/status handling, and non-overwriting target_xo_v2 root; local syntax/structure only |
+| A14.5 exact VU37P corrected retry | **PASS** | At tested server HEAD `4096614`: XO 12,951 bytes; TABLE_BASE ABI and RTL/component/IP-XACT 64-bit address evidence PASS; seven warnings, zero critical warnings/errors; no v++ or device access |
 | A14 Vitis link | BLOCKED | Local `v++` and F37X platform metadata unavailable |
 | A14 xclbin | NOT GENERATED | No A14 xclbin exists in the current build tree |
 | A14 physical HBM | NOT VALIDATED | No board access or physical HBM transaction has been run |
@@ -146,6 +156,8 @@ Primary evidence:
 - `docs/STAGE2N_A14_5_HBM_TABLE_BASE_ABI.md`
 - `docs/STAGE2N_A14_5_XSIM_ACCEPTANCE.md`
 - `docs/STAGE2N_A14_5_TARGET_XO_ATTEMPT1_DIAGNOSIS.md`
+- `docs/STAGE2N_A14_5_TARGET_XO_ACCEPTANCE.md`
+- `docs/evidence/stage2n_a14_5/`
 
 ## Current Local Environment
 
@@ -176,12 +188,9 @@ Historical target environment recorded by accepted evidence:
    paths.
 4. The previously documented proxy XO was a generated worktree artifact and is
    not present in this main working tree.
-5. The A14.5 exact-target attempt generated and exposed a structurally correct
-   XO, but its obsolete range-only automated assertion stopped; the corrected
-   cross-layer metadata retry has not run.
-6. A14 has no xclbin, physical HBM access evidence, XRT BO/DMA Host, or board
+5. A14 has no xclbin, physical HBM access evidence, XRT BO/DMA Host, or board
    result.
-7. A14 lookup output is not connected to A13 Feature Interaction; the two tops
+6. A14 lookup output is not connected to A13 Feature Interaction; the two tops
    are independent.
 
 These are environment and integration blockers, not failures of the completed
@@ -189,20 +198,14 @@ A14 XSim tests.
 
 ## Next Actions
 
-1. Commit and push the A14.5 exact-target attempt-1 diagnosis and versioned
-   retry flow.
-2. Transfer the resulting committed revision to the clean user-controlled
-   server and run
-   `scripts/build_stage2n_a14_5_target_xo_v2.sh` without changing or deleting
-   attempt-1 output.
-3. Accept the XO-only gate only if the runner proves 128-bit data, the 8-byte
-   `addressQualifier=1` TABLE_BASE argument, 64-bit RTL/component AXI address
-   ports and parameters, and a `2^64` IP-XACT address space; retain the
-   observed kernel port range, XML, logs, status, size, and SHA256.
-4. Update current-state/evidence documents and commit the actual retry result.
-5. Only after the A14.5 gates pass, review a separate link/Host stage. Do not
-   run v++, generate an xclbin, or access the FPGA as part of A14.5.
-6. Only after standalone physical lookup validation, design a separate stage to
+1. Commit and push the reviewed A14.5 exact-target XO acceptance record and
+   retained small evidence files.
+2. Review and authorize a separate A14 link/Host stage before adding or running
+   `v++`, xclbin, XRT BO, physical HBM, or device operations.
+3. In that later stage, preserve the accepted v2 TABLE_BASE ABI and require
+   explicit `m_axi_gmem -> HBM[0]` link evidence before any physical-memory
+   claim.
+4. Only after standalone physical lookup validation, design a separate stage to
    connect embedding vectors to the frozen A13 Feature Interaction input.
 
 ## Non-Goals of the Current Stage

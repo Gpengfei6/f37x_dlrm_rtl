@@ -233,8 +233,12 @@ Acceptance requires:
 - component register `TABLE_BASE` at `0x18`, size 64 bits;
 - retained source/artifact SHA256 manifests.
 
-The runner contains no `v++` call and performs no FPGA access. The v2 retry is
-prepared but has not yet run.
+The runner contains no `v++` call and performs no FPGA access. The v2 retry ran
+at tested server HEAD `4096614` and passed the complete gate. It generated a
+12,951-byte XO; TABLE_BASE ABI and cross-layer address-width evidence both
+passed; standalone/in-XO XML hashes matched; and retained source/artifact
+manifests identify the exact inputs and outputs. See
+`docs/STAGE2N_A14_5_TARGET_XO_ACCEPTANCE.md`.
 
 ## 8. Current verification status
 
@@ -246,7 +250,7 @@ prepared but has not yet run.
 | Vivado/XSim attempt 1 | FAIL/DIAGNOSED | Standalone TB 32-bit signals connected to default 6-bit DUT index ports; wrapper not run |
 | Vivado/XSim fixed retry | PASS | At `d428e8b`: lookup 67/67, wrapper 17/17, exact AR/R counts, guards PASS, zero error/fatal records |
 | Exact VU37P XO attempt 1 | STOPPED/DIAGNOSED | Exact-part XO generated and archive intact; TABLE_BASE and 64-bit component evidence confirmed; obsolete range-only assertion stopped the old gate; no v++ or device access |
-| Exact VU37P corrected retry | NOT RUN | Versioned range-compatible cross-layer metadata gate requires user server Vivado 2020.2 |
+| Exact VU37P corrected retry | **PASS** | At tested server HEAD `4096614`: exact target, 12,951-byte XO, TABLE_BASE ABI PASS, 64-bit RTL/component/IP-XACT evidence PASS, retained hashes; no v++ or device access |
 | Vitis link/xclbin | NOT RUN | Deliberately outside this small stage |
 | XRT BO/Host | NOT IMPLEMENTED | Later stage |
 | Physical HBM | NOT VALIDATED | No board transaction |
@@ -254,17 +258,12 @@ prepared but has not yet run.
 
 ## 9. Exit and next-stage rule
 
-The versioned source-preparation and corrected local-XSim milestones are
-accepted. Attempt 1 confirms that the target tool can generate the A14.5 XO and
-that its inspected TABLE_BASE/component metadata has the intended shape, but
-the complete reproducible XO gate remains pending because the old automated
-assertion stopped. A14.5 itself is accepted only after the versioned
-exact-target XO metadata gate passes with retained logs and hashes. At that
-point this document,
-`CURRENT_STATE.md`, `ARCHITECTURE.md`, `STAGE_HISTORY.md`, and `DECISIONS.md`
-must be updated again with the actual evidence in a separate commit.
+The versioned source-preparation, corrected local-XSim, and exact-target
+XO-only metadata milestones are accepted. Attempt 1 remains retained as a
+diagnosis; the corrected retry closes the reproducible cross-layer metadata
+gate with status, logs, XML, sizes, and hashes.
 
-Only after A14.5 acceptance may a separately reviewed stage add the v2 link
-configuration, XRT BO preparation, Host execution, or physical HBM access.  No
+Only a separately reviewed later stage may add the v2 link configuration, XRT
+BO preparation, Host execution, or physical HBM access. No
 latency, bandwidth, throughput, speedup, complete-DLRM, or board-success claim
 is authorized by this stage.
