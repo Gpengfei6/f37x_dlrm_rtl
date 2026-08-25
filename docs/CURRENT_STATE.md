@@ -8,12 +8,14 @@ Snapshot date: 2026-08-25
 - Branch: `work/stage2n-a13-cycle-counter`
 - A14.5 accepted target-XO tested HEAD:
   `4096614419170404d5dcb334432f5f322c4f92d5`
+- A14.6 accepted link-only tested HEAD:
+  `b44855ed4bc8b469257cb3de80cf530e9d5039b9`
 - A14.5 target-attempt parent HEAD: `de9276ebe5c62f54cff5877bc9b11b66606d1549`
 - A14.5 source-preparation commit: `29401e5`
 - A14.5 XSim-fix commit: `d428e8b`
 - A14.5 XSim-acceptance commit: `de9276e`
 - A14 source integration commit: `a19d338`
-- Current engineering stage: **Stage 2N-A14.6 link-only preparation**
+- Current engineering stage: **Stage 2N-A14.6 link-only accepted**
 - Accepted and frozen functional baseline: **Stage 2N-A13**
 
 The branch name still refers to A13 even though A14 prototype files are now
@@ -117,7 +119,8 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 
 ### Stage 2N-A14.6
 
-- Link-only authorization and architecture are frozen.
+- Link-only authorization and architecture are frozen, and the reviewed target
+  link has completed successfully.
 - The accepted input is the exact-target A14.5 v2 XO with SHA256
   `7c05895b4ef7f3b3e1169d722f88a4ea5103ae9d5cb5283fd0372e7bc3e43dea`.
 - The frozen target is one `dlrm_a14_1` compute unit at 100 MHz with
@@ -126,8 +129,18 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
   add a Host, open a device, program/reset the FPGA, or access physical HBM.
 - The versioned configuration, explicit-`yes` link-only runner, and offline
   xclbin validator are present and locally syntax/structure tested.
-- No local or target `v++` command has been run for A14.6; no xclbin, routed
-  timing, Host, device, or physical-HBM result exists.
+- The accepted attempt 3 used Vitis/Vivado 2020.2 and produced a 43 MiB
+  xclbin with SHA256
+  `9a7ce2518691e1d9a9ef55a0037d5d5345e3781f1e11eb7c2c7d19697144f573`
+  and UUID `6f29087c-9598-4e68-877a-cc4840d078b8`.
+- The xclbin validator found exactly one reviewed CU-to-used-HBM[0]
+  connection. Routed timing at 100 MHz passed with WNS/TNS `0.000 ns` and
+  zero failing endpoints.
+- The 55 methodology critical warnings are retained as platform/static-clock
+  methodology debt. WNS has no positive margin, so no frequency-headroom or
+  broad physical-signoff claim is made.
+- No Host, FPGA programming/reset, physical-HBM transaction, board result, or
+  A13 integration exists.
 
 ## Verification Summary
 
@@ -154,9 +167,11 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 | A14.5 exact VU37P XO attempt 1 | STOPPED/DIAGNOSED | At `de9276e`: exact-part XO generated and archive intact; returned inspection confirms TABLE_BASE/global-pointer ABI and 64-bit component address evidence; obsolete range-only assertion stopped the old automated gate |
 | A14.5 exact VU37P corrected retry | **PASS** | At tested server HEAD `4096614`: XO 12,951 bytes; TABLE_BASE ABI and RTL/component/IP-XACT 64-bit address evidence PASS; seven warnings, zero critical warnings/errors; no v++ or device access |
 | A14.6 link-only architecture | FROZEN | Accepted XO identity, one-CU HBM[0] mapping, 100 MHz request, evidence and non-claim gates documented |
-| A14.6 link-only source preparation | PASS | Versioned config/runner/validator; Bash/Python syntax and synthetic metadata validation only |
-| A14 Vitis link | NOT RUN | Authorized only through the forthcoming A14.6 versioned runner in the user-controlled target environment |
-| A14 xclbin | NOT GENERATED | No A14 xclbin exists in the current build tree |
+| A14.6 link-only source preparation | PASS | Versioned config/runner/validator; Bash/Python syntax and synthetic metadata validation |
+| A14 Vitis link | **PASS** | Vitis 2020.2, accepted XO, exact reviewed platform and connectivity; zero v++ errors/critical warnings |
+| A14 xclbin | **PASS** | Non-empty 43 MiB artifact; SHA256 and UUID retained; generated artifact remains outside Git |
+| A14 linked HBM[0] metadata | **PASS** | Exactly one `dlrm_a14_1` connection to used HBM[0] in extracted xclbin metadata |
+| A14 target timing | **PASS** | Exact VU37P route at 100 MHz; WNS/TNS 0.000 ns, zero failing endpoints; no positive setup margin |
 | A14 physical HBM | NOT VALIDATED | No board access or physical HBM transaction has been run |
 
 Primary evidence:
@@ -174,6 +189,8 @@ Primary evidence:
 - `docs/STAGE2N_A14_5_TARGET_XO_ATTEMPT1_DIAGNOSIS.md`
 - `docs/STAGE2N_A14_5_TARGET_XO_ACCEPTANCE.md`
 - `docs/evidence/stage2n_a14_5/`
+- `docs/STAGE2N_A14_6_LINK_ONLY_ACCEPTANCE.md`
+- `docs/evidence/stage2n_a14_6/`
 
 ## Current Local Environment
 
@@ -204,8 +221,8 @@ Historical target environment recorded by accepted evidence:
    paths.
 4. The previously documented proxy XO was a generated worktree artifact and is
    not present in this main working tree.
-5. A14 has no xclbin, physical HBM access evidence, XRT BO/DMA Host, or board
-   result.
+5. A14 has an accepted generated link-only xclbin, but no physical HBM access
+   evidence, XRT BO/DMA Host, or board result.
 6. A14 lookup output is not connected to A13 Feature Interaction; the two tops
    are independent.
 
@@ -214,13 +231,12 @@ A14 XSim tests.
 
 ## Next Actions
 
-1. Commit and push the A14.6 source-preparation milestone before any target
-   run.
-2. Transfer that exact commit through the established key/bundle or patch
-   workflow without replacing the accepted server-side XO.
-3. The user then runs the reviewed A14.6 runner in the established server
-   environment and returns its evidence for acceptance review.
-4. Keep Host/XRT/device/physical-HBM work outside A14.6 even if link passes.
+1. Commit and push the A14.6 link-only acceptance record without committing
+   the generated xclbin, routed DCP, or large reports.
+2. Preserve the accepted XO and xclbin identities and the returned evidence;
+   do not rerun or overwrite the accepted roots merely to reproduce them.
+3. Keep Host/XRT/device/physical-HBM work outside A14.6.
+4. Review and authorize a separate stage before any Host or device operation.
 5. Only after standalone physical lookup validation, design a separate stage to
    connect embedding vectors to the frozen A13 Feature Interaction input.
 

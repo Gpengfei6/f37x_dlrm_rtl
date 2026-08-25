@@ -520,7 +520,8 @@
 ## D-031 - Separate A14.6 link-only validation from Host and physical HBM work
 
 - **Status:** adopted and source-prepared as the next isolated engineering
-  stage; target execution remains NOT RUN.
+  stage. Target execution was NOT RUN at this decision point; D-032 records
+  the later accepted target result.
 - **Input:** consume only the accepted 12,951-byte A14.5 v2 XO with SHA256
   `7c05895b4ef7f3b3e1169d722f88a4ea5103ae9d5cb5283fd0372e7bc3e43dea`.
   The link runner must fail before `v++` if this identity or the cross-layer
@@ -543,3 +544,32 @@
   non-overwriting link runner, and standalone xclbin JSON validator passed
   local syntax/structure and synthetic-metadata tests. This is not a target
   link or xclbin result.
+
+## D-032 - Accept A14.6 at the exact-target link-only boundary
+
+- **Status:** accepted on 2026-08-25 from user-returned target evidence at
+  tested server HEAD `b44855ed4bc8b469257cb3de80cf530e9d5039b9`.
+- **Decision:** record the accepted XO, TABLE_BASE ABI, Vitis hardware link,
+  non-empty xclbin, one-CU-to-used-HBM[0] metadata mapping, and exact-VU37P
+  100 MHz routed timing as PASS.
+- **Artifact identity:** retain input XO SHA256
+  `7c05895b4ef7f3b3e1169d722f88a4ea5103ae9d5cb5283fd0372e7bc3e43dea`,
+  xclbin SHA256
+  `9a7ce2518691e1d9a9ef55a0037d5d5345e3781f1e11eb7c2c7d19697144f573`,
+  and xclbin UUID `6f29087c-9598-4e68-877a-cc4840d078b8`.
+- **Timing disposition:** accept WNS `0.000 ns`, TNS `0.000 ns`, and zero
+  failing endpoints against the frozen non-negative-slack gate. Do not claim
+  positive timing margin or frequency headroom.
+- **Warning disposition:** zero v++ errors/critical warnings, zero routed DRC
+  errors/critical warnings, and zero methodology errors passed. Retain 55
+  methodology critical warnings (`TIMING-1/3/4/14/27/54`) as
+  platform/static-clock constraint debt. Retain the two report-session
+  `Board 49-67` messages separately; the custom board repository was absent
+  when reopening the routed DCP.
+- **Scope:** whole-design resource counts include the static platform shell and
+  are not accepted as kernel-only utilization.
+- **Not adopted:** physical HBM access, XRT allocation, TABLE_BASE programming,
+  Host build/execution, FPGA programming/reset, returned-row correctness,
+  board readiness, performance, power, speedup, or A13 integration.
+- **Impact:** A14.6 is closed as LINK-ONLY PASS. Any Host/device/physical-HBM
+  work requires a separately reviewed and authorized stage.

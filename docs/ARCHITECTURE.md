@@ -229,6 +229,13 @@ CU-to-bank metadata, exact VU37P implementation, and routed timing. It cannot
 establish XRT allocation semantics, physical HBM reads, row-data correctness,
 or end-to-end DLRM behavior because no Host or FPGA access exists in A14.6.
 
+The accepted A14.6 result at tested HEAD `b44855e` establishes those link-only
+properties: a non-empty xclbin, one `dlrm_a14_1.m_axi_gmem -> HBM[0]`
+connection, and exact-VU37P 100 MHz route with WNS/TNS `0.000 ns` and zero
+failing endpoints. WNS has no positive margin. Fifty-five retained methodology
+critical warnings concern platform/static clock constraints and remain debt for
+future physical signoff. This does not alter the Host/device boundary above.
+
 ### 2.5 Wrapper register boundary
 
 The standalone A14 wrapper exposes:

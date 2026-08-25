@@ -1,4 +1,4 @@
-# Stage 2N-A14.6 Exact-Target Link-Only Plan
+# Stage 2N-A14.6 Exact-Target Link-Only Plan and Execution Record
 
 ## 1. Objective
 
@@ -140,9 +140,9 @@ artifact. It does not prove that a physical transaction reached HBM or that the
 returned 128-bit row matches the software golden. Those require a separately
 authorized Host/board stage.
 
-## 8. Source-preparation status
+## 8. Final link-only status
 
-At this planning checkpoint:
+The reviewed third target attempt completed at tested server HEAD `b44855e`:
 
 ```text
 A14_6_AUTHORIZATION=APPROVED
@@ -150,9 +150,10 @@ A14_6_LINK_ARCHITECTURE=FROZEN
 A14_6_LINK_RUNNER=SOURCE_PREPARED
 A14_6_XCLBIN_VALIDATOR=SOURCE_PREPARED
 A14_6_LOCAL_STATIC_CHECK=PASS
-A14_6_VPP_LINK=NOT_RUN
-A14_6_XCLBIN=NOT_GENERATED
-A14_6_TARGET_TIMING=NOT_RUN
+A14_6_VPP_LINK=PASS
+A14_6_XCLBIN=PASS
+A14_6_HBM0_LINK_MAPPING=PASS
+A14_6_TARGET_TIMING=PASS
 A14_6_PHYSICAL_HBM=NOT_VALIDATED
 A14_6_FPGA_DEVICE_ACCESS=NONE
 ```
@@ -169,4 +170,6 @@ The runner requires an explicit `yes` before `v++`, refuses existing A14.6
 output roots, checks the accepted XO/XML hashes and ABI, extracts linked JSON
 sections, and reuses the read-only routed-report Tcl. Local Bash syntax, Python
 syntax, synthetic xclbin-validator, exact-config, and no-device-command checks
-pass. Vitis link and target timing remain NOT RUN.
+passed before target execution. The accepted target run and its warning
+disposition are recorded in
+`docs/STAGE2N_A14_6_LINK_ONLY_ACCEPTANCE.md`.

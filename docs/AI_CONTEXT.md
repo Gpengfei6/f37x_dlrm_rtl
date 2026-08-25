@@ -66,7 +66,7 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A14.6 — exact-target link-only preparation**.
+Current stage: **Stage 2N-A14.6 — exact-target link-only accepted**.
 
 Stage 2N-A13 is complete and frozen. Its accepted top remains the reference for
 the integrated DLRM pipeline. Stage 2N-A14 is intentionally isolated so it can
@@ -123,25 +123,28 @@ Completed or present in the current source tree:
   `m_axi_gmem -> HBM[0]`, request 100 MHz, and stop before Host/device access.
 - versioned A14.6 configuration, explicit-`yes` non-overwriting link-only
   runner, and offline xclbin/HBM[0] metadata validator; local static and
-  synthetic-validator checks pass, while `v++` remains NOT RUN.
+  synthetic-validator checks pass;
+- user-returned A14.6 target evidence at tested HEAD `b44855e`: Vitis 2020.2
+  linked the accepted XO into a non-empty F37X xclbin, the single
+  `dlrm_a14_1.m_axi_gmem -> HBM[0]` metadata connection passed, and the exact
+  VU37P routed design met 100 MHz with WNS/TNS `0.000 ns` and zero failing
+  endpoints.
 
-Pending or blocked at the A14.6 planning checkpoint:
+Pending beyond the accepted A14.6 link-only boundary:
 
-- availability of Vitis `v++` and the F37X `.xpfm` platform locally;
-- `v++ --link`;
-- A14 xclbin generation;
-- physical `m_axi_gmem -> HBM[0]` connectivity validation;
+- physical `m_axi_gmem -> HBM[0]` transaction validation;
 - XRT buffer allocation, data transfer, Host execution, and board testing;
 - integration of the lookup result into the accepted A13 Feature Interaction
   input path;
 - any HBM latency, bandwidth, throughput, or performance-improvement claim.
 
-Generated A14 XO files are not tracked in Git. A14.6 is authorized to consume
-the accepted server-side v2 XO only after its exact SHA256 and cross-layer
-metadata pass; it must not silently rebuild or substitute that input. A14.5
-structural review, local XSim, and exact-target XO-only packaging/metadata are
-PASS. A14.6 `v++`, xclbin, connectivity, and timing remain NOT RUN until the
-user returns evidence. See `docs/STAGE2N_A14_6_LINK_ONLY_PLAN.md`.
+Generated A14 XO and xclbin files are not tracked in Git. A14.6 consumed the
+accepted server-side v2 XO only after its exact SHA256 and cross-layer metadata
+passed. A14.5 structural review, local XSim, and exact-target XO-only
+packaging/metadata are PASS. A14.6 link, xclbin, linked HBM[0] metadata, and
+routed 100 MHz timing are also PASS within the link-only boundary. Physical
+HBM, Host, FPGA, board, performance, and A13-integration claims remain NOT RUN
+or NOT VALIDATED. See `docs/STAGE2N_A14_6_LINK_ONLY_ACCEPTANCE.md`.
 
 ## 4. Hardware Environment
 
