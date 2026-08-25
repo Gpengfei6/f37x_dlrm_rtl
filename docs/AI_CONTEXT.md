@@ -121,6 +121,9 @@ Completed or present in the current source tree:
 - A14.6 link-only authorization and architecture freeze: consume only the
   accepted v2 XO, create one `dlrm_a14_1` compute unit, map
   `m_axi_gmem -> HBM[0]`, request 100 MHz, and stop before Host/device access.
+- versioned A14.6 configuration, explicit-`yes` non-overwriting link-only
+  runner, and offline xclbin/HBM[0] metadata validator; local static and
+  synthetic-validator checks pass, while `v++` remains NOT RUN.
 
 Pending or blocked at the A14.6 planning checkpoint:
 

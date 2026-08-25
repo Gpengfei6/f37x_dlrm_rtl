@@ -147,10 +147,26 @@ At this planning checkpoint:
 ```text
 A14_6_AUTHORIZATION=APPROVED
 A14_6_LINK_ARCHITECTURE=FROZEN
-A14_6_LINK_RUNNER=NOT_YET_ADDED
+A14_6_LINK_RUNNER=SOURCE_PREPARED
+A14_6_XCLBIN_VALIDATOR=SOURCE_PREPARED
+A14_6_LOCAL_STATIC_CHECK=PASS
 A14_6_VPP_LINK=NOT_RUN
 A14_6_XCLBIN=NOT_GENERATED
 A14_6_TARGET_TIMING=NOT_RUN
 A14_6_PHYSICAL_HBM=NOT_VALIDATED
 A14_6_FPGA_DEVICE_ACCESS=NONE
 ```
+
+Prepared source files:
+
+```text
+config/stage2n_a14_6_target_v1.cfg
+scripts/link_stage2n_a14_6_target_v1.sh
+scripts/validate_stage2n_a14_6_xclbin_v1.py
+```
+
+The runner requires an explicit `yes` before `v++`, refuses existing A14.6
+output roots, checks the accepted XO/XML hashes and ABI, extracts linked JSON
+sections, and reuses the read-only routed-report Tcl. Local Bash syntax, Python
+syntax, synthetic xclbin-validator, exact-config, and no-device-command checks
+pass. Vitis link and target timing remain NOT RUN.

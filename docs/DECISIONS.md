@@ -519,8 +519,8 @@
 
 ## D-031 - Separate A14.6 link-only validation from Host and physical HBM work
 
-- **Status:** adopted as the next isolated engineering stage; target execution
-  remains NOT RUN.
+- **Status:** adopted and source-prepared as the next isolated engineering
+  stage; target execution remains NOT RUN.
 - **Input:** consume only the accepted 12,951-byte A14.5 v2 XO with SHA256
   `7c05895b4ef7f3b3e1169d722f88a4ea5103ae9d5cb5283fd0372e7bc3e43dea`.
   The link runner must fail before `v++` if this identity or the cross-layer
@@ -539,3 +539,7 @@
   XRT buffer, render node, programming/reset, FPGA transaction, lookup result,
   latency, bandwidth, throughput, power, speedup, or A13 integration is
   authorized or accepted by A14.6.
+- **Prepared implementation:** the versioned config, explicit-`yes`,
+  non-overwriting link runner, and standalone xclbin JSON validator passed
+  local syntax/structure and synthetic-metadata tests. This is not a target
+  link or xclbin result.

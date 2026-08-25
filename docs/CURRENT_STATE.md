@@ -124,8 +124,10 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
   `m_axi_gmem -> HBM[0]` on `inspur_f37x_xdma_201920_3`.
 - The flow must be link-only and non-overwriting; it may not rebuild the XO,
   add a Host, open a device, program/reset the FPGA, or access physical HBM.
-- The versioned configuration, runner, and xclbin validator are not yet added
-  at this planning checkpoint.
+- The versioned configuration, explicit-`yes` link-only runner, and offline
+  xclbin validator are present and locally syntax/structure tested.
+- No local or target `v++` command has been run for A14.6; no xclbin, routed
+  timing, Host, device, or physical-HBM result exists.
 
 ## Verification Summary
 
@@ -152,6 +154,7 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 | A14.5 exact VU37P XO attempt 1 | STOPPED/DIAGNOSED | At `de9276e`: exact-part XO generated and archive intact; returned inspection confirms TABLE_BASE/global-pointer ABI and 64-bit component address evidence; obsolete range-only assertion stopped the old automated gate |
 | A14.5 exact VU37P corrected retry | **PASS** | At tested server HEAD `4096614`: XO 12,951 bytes; TABLE_BASE ABI and RTL/component/IP-XACT 64-bit address evidence PASS; seven warnings, zero critical warnings/errors; no v++ or device access |
 | A14.6 link-only architecture | FROZEN | Accepted XO identity, one-CU HBM[0] mapping, 100 MHz request, evidence and non-claim gates documented |
+| A14.6 link-only source preparation | PASS | Versioned config/runner/validator; Bash/Python syntax and synthetic metadata validation only |
 | A14 Vitis link | NOT RUN | Authorized only through the forthcoming A14.6 versioned runner in the user-controlled target environment |
 | A14 xclbin | NOT GENERATED | No A14 xclbin exists in the current build tree |
 | A14 physical HBM | NOT VALIDATED | No board access or physical HBM transaction has been run |
@@ -211,9 +214,10 @@ A14 XSim tests.
 
 ## Next Actions
 
-1. Add and locally validate the versioned A14.6 link configuration, link-only
-   runner, and offline xclbin metadata validator.
-2. Commit and push that source-preparation milestone before any target run.
+1. Commit and push the A14.6 source-preparation milestone before any target
+   run.
+2. Transfer that exact commit through the established key/bundle or patch
+   workflow without replacing the accepted server-side XO.
 3. The user then runs the reviewed A14.6 runner in the established server
    environment and returns its evidence for acceptance review.
 4. Keep Host/XRT/device/physical-HBM work outside A14.6 even if link passes.
