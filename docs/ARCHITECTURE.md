@@ -186,7 +186,26 @@ response without an AXI read. Packaging represents the two control words as a
 single 64-bit global-memory argument associated with `m_axi_gmem`.
 
 This ABI is implemented in source and its local functional XSim gate is PASS.
-Generated exact-target XO metadata is not yet verified.
+The first exact-target attempt generated an intact XO whose returned
+`kernel.xml` contains the intended 8-byte global pointer and whose
+`component.xml` proves a 64-bit AXI address interface. Its old automated gate
+stopped on the less-specific `kernel.xml range=0xFFFFFFFF` field, so the
+corrected reproducible XO gate remains pending.
+
+For Vivado 2020.2, address width is accepted only when these layers agree:
+
+```text
+RTL C_M_AXI_GMEM_ADDR_WIDTH=64 and AWADDR/ARADDR[63:0]
+        +
+IP-XACT ADDR_WIDTH/model/user parameters=64
+        +
+IP-XACT address space=2^64 bytes
+        +
+TABLE_BASE size=8, addressQualifier=1, port=m_axi_gmem
+```
+
+The generated kernel port `range` is recorded but is not the sole width proof.
+A real 32-bit RTL/component path still fails the combined gate.
 
 ### 2.4 Wrapper register boundary
 
@@ -257,10 +276,16 @@ required.
 - wrapper table-base low/high programming and capture-on-START behavior passed;
 - lookup 67/67 and wrapper 17/17 cases passed with exact AR/R counts.
 
-### A14.5 pending exact-target gate
+### A14.5 exact-target XO evidence and pending retry
 
-- exact-VU37P XO metadata with 128-bit data, 64-bit range, and an 8-byte
-  `TABLE_BASE` global-memory argument on `m_axi_gmem`.
+- attempt 1 at `de9276e` generated an intact exact-VU37P XO;
+- returned inspection confirms 128-bit data, an 8-byte `TABLE_BASE`
+  global-memory argument on `m_axi_gmem`, 64-bit component address ports and
+  parameters, and a `2^64` IP-XACT address space;
+- Vivado 2020.2 retained `kernel.xml range=0xFFFFFFFF`; the old range-only gate
+  stopped and its `ERR` trap produced an inaccurate `BLOCKED_NOT_RUN` status;
+- the versioned retry records that range while requiring the complete
+  cross-layer 64-bit evidence; it has not run.
 
 ## 5. Source Map
 
@@ -293,8 +318,12 @@ A14.5 versioned table-base source:
 - `scripts/run_stage2n_a14_5_table_base_xsim_v1.ps1`
 - `scripts/package_stage2n_a14_rtl_kernel_v3.tcl`
 - `scripts/build_stage2n_a14_5_target_xo_v1.sh`
+- `scripts/package_stage2n_a14_rtl_kernel_v4.tcl`
+- `scripts/validate_stage2n_a14_5_xo_v2.py`
+- `scripts/build_stage2n_a14_5_target_xo_v2.sh`
 - `docs/STAGE2N_A14_5_HBM_TABLE_BASE_ABI.md`
 - `docs/STAGE2N_A14_5_XSIM_ACCEPTANCE.md`
+- `docs/STAGE2N_A14_5_TARGET_XO_ATTEMPT1_DIAGNOSIS.md`
 
 Arithmetic details remain governed by `docs/fixed_point_spec_v0.md`, later
 stage-specific contracts, and the exact RTL. Do not infer a new numerical

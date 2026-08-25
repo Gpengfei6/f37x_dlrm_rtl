@@ -107,7 +107,10 @@ New validation/build entries:
 
 - `scripts/run_stage2n_a14_5_table_base_xsim_v1.ps1`;
 - `scripts/package_stage2n_a14_rtl_kernel_v3.tcl`;
-- `scripts/build_stage2n_a14_5_target_xo_v1.sh`.
+- `scripts/build_stage2n_a14_5_target_xo_v1.sh`;
+- `scripts/package_stage2n_a14_rtl_kernel_v4.tcl`;
+- `scripts/validate_stage2n_a14_5_xo_v2.py`;
+- `scripts/build_stage2n_a14_5_target_xo_v2.sh`.
 
 No A13 file and no A14 v1 source, testbench, package script, result, or
 historical document is replaced.
@@ -179,30 +182,59 @@ See `docs/STAGE2N_A14_5_XSIM_ACCEPTANCE.md` for the acceptance boundary.
 
 ## 7. Exact-target XO-only gate
 
-The user-controlled server entry is:
+The first user-controlled server entry was:
 
 ```bash
 bash scripts/build_stage2n_a14_5_target_xo_v1.sh
 ```
 
-It uses Vivado 2020.2 and the exact VU37P part, writes to the new `xo_v2` and
-`results/stage2n_a14_5/target_xo_v1` roots, and refuses to overwrite either.
-It deliberately stops after XO/metadata validation.
+At commit `de9276e`, Vivado 2020.2 used the exact VU37P part and successfully
+generated an intact, non-empty XO. The returned generated metadata confirms:
+
+- `TABLE_BASE` at `0x18`, size and host size 8 bytes;
+- `TABLE_BASE addressQualifier=1`, `type=void*`, and `port=m_axi_gmem`;
+- component register `TABLE_BASE` at `0x18`, size 64 bits, RW, with
+  `ASSOCIATED_BUSIF=m_axi_gmem`;
+- AXI bus/model/user address-width parameters equal to 64;
+- component `AWADDR[63:0]` and `ARADDR[63:0]`;
+- IP-XACT address space equal to `2^64` bytes and data width equal to 128.
+
+The old gate stopped because Vivado 2020.2 emitted
+`kernel.xml range=0xFFFFFFFF`, not because the packaged address ports were
+32-bit. Its status also incorrectly remained `BLOCKED_NOT_RUN` because the
+active Bash `ERR` trap intercepted the expected Vivado return-code capture.
+See `docs/STAGE2N_A14_5_TARGET_XO_ATTEMPT1_DIAGNOSIS.md`.
+
+The versioned retry entry is:
+
+```bash
+bash scripts/build_stage2n_a14_5_target_xo_v2.sh
+```
+
+It writes to new `xo_v3` and `results/stage2n_a14_5/target_xo_v2` roots and
+refuses to overwrite either. It deliberately stops after XO/metadata
+validation. It also disables the `ERR` trap only while capturing Vivado's
+expected return code so a real failure is recorded as `FAIL`.
 
 Acceptance requires:
 
 - `TARGET_PART_USED=1`;
 - intact, non-empty XO;
-- identical standalone and in-XO `kernel.xml`;
+- identical standalone and in-XO `kernel.xml` and `component.xml`;
 - `m_axi_gmem` data width 128;
-- `m_axi_gmem` range `0xFFFFFFFFFFFFFFFF`;
+- `kernel.xml` port range recorded as either the Vivado 2020.2 value
+  `0xFFFFFFFF` or the full value `0xFFFFFFFFFFFFFFFF`;
+- `m_axi_gmem` address width 64 proven independently by RTL, AXI bus/model/user
+  parameters, `AWADDR[63:0]`/`ARADDR[63:0]`, and a `2^64` IP-XACT address
+  space;
 - `TABLE_BASE` at `0x18`, size 8 bytes;
 - `TABLE_BASE addressQualifier=1`;
 - `TABLE_BASE port=m_axi_gmem`;
 - component register `TABLE_BASE` at `0x18`, size 64 bits;
 - retained source/artifact SHA256 manifests.
 
-The runner contains no `v++` call and performs no FPGA access.
+The runner contains no `v++` call and performs no FPGA access. The v2 retry is
+prepared but has not yet run.
 
 ## 8. Current verification status
 
@@ -213,7 +245,8 @@ The runner contains no `v++` call and performs no FPGA access.
 | Structural source checks | PASS | Required fields, mappings and guards present |
 | Vivado/XSim attempt 1 | FAIL/DIAGNOSED | Standalone TB 32-bit signals connected to default 6-bit DUT index ports; wrapper not run |
 | Vivado/XSim fixed retry | PASS | At `d428e8b`: lookup 67/67, wrapper 17/17, exact AR/R counts, guards PASS, zero error/fatal records |
-| Exact VU37P XO v2 | NOT RUN | User server Vivado 2020.2 required |
+| Exact VU37P XO attempt 1 | STOPPED/DIAGNOSED | Exact-part XO generated and archive intact; TABLE_BASE and 64-bit component evidence confirmed; obsolete range-only assertion stopped the old gate; no v++ or device access |
+| Exact VU37P corrected retry | NOT RUN | Versioned range-compatible cross-layer metadata gate requires user server Vivado 2020.2 |
 | Vitis link/xclbin | NOT RUN | Deliberately outside this small stage |
 | XRT BO/Host | NOT IMPLEMENTED | Later stage |
 | Physical HBM | NOT VALIDATED | No board transaction |
@@ -222,8 +255,12 @@ The runner contains no `v++` call and performs no FPGA access.
 ## 9. Exit and next-stage rule
 
 The versioned source-preparation and corrected local-XSim milestones are
-accepted. A14.5 itself is accepted only after the exact-target XO metadata gate
-also passes with retained logs and hashes. At that point this document,
+accepted. Attempt 1 confirms that the target tool can generate the A14.5 XO and
+that its inspected TABLE_BASE/component metadata has the intended shape, but
+the complete reproducible XO gate remains pending because the old automated
+assertion stopped. A14.5 itself is accepted only after the versioned
+exact-target XO metadata gate passes with retained logs and hashes. At that
+point this document,
 `CURRENT_STATE.md`, `ARCHITECTURE.md`, `STAGE_HISTORY.md`, and `DECISIONS.md`
 must be updated again with the actual evidence in a separate commit.
 

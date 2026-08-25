@@ -436,7 +436,9 @@
 ## D-028 - Add a runtime 64-bit A14 table-base ABI before physical HBM work
 
 - **Status:** authorized and implemented as versioned A14.5 source; corrected
-  local XSim is PASS at `d428e8b`; exact-target XO evidence is pending.
+  local XSim is PASS at `d428e8b`. Exact-target attempt 1 at `de9276e`
+  generated an intact XO and confirmed the intended TABLE_BASE/component
+  fields by returned inspection; a corrected automated retry remains pending.
 - **Problem:** the V3 target retry proved that RTL ports, AXI bus parameters,
   model parameters, and the IP-XACT master address space are 64-bit, while
   `package_xo` still emitted `range=0xFFFFFFFF`. The generated kernel metadata
@@ -449,9 +451,9 @@
   kernel XML.
 - **Safety behavior:** reject unaligned bases and 64-bit address overflow with
   a deterministic zero-vector error response and no AXI read.
-- **Not adopted:** hand-edit or re-zip generated XO metadata, weaken the 64-bit
-  range gate, assume an XRT BO is allocated at address zero, overwrite A14 v1,
-  modify A13, or proceed directly to v++/board work.
+- **Not adopted:** hand-edit or re-zip generated XO metadata, accept a truly
+  32-bit RTL/component address path, assume an XRT BO is allocated at address
+  zero, overwrite A14 v1, modify A13, or proceed directly to v++/board work.
 - **Reason:** physical-bank selection and table-allocation address are distinct.
   `connectivity.sp` selects HBM[0], while the runtime base selects the actual
   table location within the connected address space.
@@ -459,3 +461,35 @@
   existing result offsets `0x20..0x2C`, INT16 row layout, one-beat protocol,
   A13 design, and fixed-point behavior remain unchanged. Physical HBM, Host,
   xclbin, timing, and performance remain unvalidated.
+
+## D-029 - Validate A14.5 AXI address width across RTL and IP-XACT layers
+
+- **Status:** adopted for a versioned, non-overwriting exact-target retry;
+  retry execution is pending.
+- **Observed evidence:** Vivado 2020.2 generated an intact exact-VU37P A14.5
+  XO. Its `kernel.xml` reports `m_axi_gmem dataWidth=128`, an 8-byte `void*`
+  TABLE_BASE with `addressQualifier=1`, and `range=0xFFFFFFFF`. Its packaged
+  component simultaneously reports AXI `ADDR_WIDTH=64`,
+  `C_M_AXI_GMEM_ADDR_WIDTH=64`, `AWADDR[63:0]`, `ARADDR[63:0]`, and an IP-XACT
+  address space of `16777216T` (`2^64` bytes).
+- **Interpretation:** the Vivado 2020.2 kernel port `range` field is retained as
+  generated metadata but is not a sufficient sole proof of physical AXI
+  address width. The more specific source and packaged-component fields prove
+  the actual interface width.
+- **Adopted gate:** require exact target part, intact XO, identical standalone
+  and in-XO XML, 128-bit data, an 8-byte TABLE_BASE global pointer associated
+  with `m_axi_gmem`, RTL/component 64-bit address ports and parameters, and a
+  `2^64` IP-XACT address space. Accept only the observed kernel range values
+  `0xFFFFFFFF` or `0xFFFFFFFFFFFFFFFF`, record the exact value, and reject any
+  inconsistent RTL/component evidence.
+- **Runner correction:** temporarily disable the Bash `ERR` trap only while
+  capturing the Vivado pipeline return code. A packaging failure must be
+  recorded as `FAIL`, not left as `BLOCKED_NOT_RUN`.
+- **Not adopted:** editing generated XML/XO, overwriting attempt-1 outputs,
+  treating the range field as proof of physical HBM, relaxing data/address
+  interface checks, running `v++`, or accessing the device.
+- **Impact:** no RTL, A13, A14 v1, fixed-point, register-map, or protocol change.
+  The retry writes to new `xo_v3` and `target_xo_v2` roots. Until its returned
+  logs/status/hashes pass review, the corrected automated XO gate is NOT RUN;
+  xclbin, Host, physical HBM, board behavior, and performance remain
+  unvalidated.

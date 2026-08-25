@@ -102,12 +102,22 @@ Completed or present in the current source tree:
 - corrected local Vivado/XSim 2022.1 acceptance at `d428e8b`: standalone
   lookup 67/67 cases and wrapper 17/17 cases PASS, including three rejected
   requests per bench, high addresses above 4 GiB, table-base readback, exact
-  AR/R counts, and zero anchored error/fatal records.
+  AR/R counts, and zero anchored error/fatal records;
+- user-returned exact-target attempt-1 evidence at `de9276e`: Vivado 2020.2
+  generated an intact XO with the exact VU37P part; returned XML confirms an
+  8-byte `TABLE_BASE` global pointer on `m_axi_gmem`, 128-bit AXI data,
+  64-bit component address parameters and AWADDR/ARADDR ports, and a `2^64`
+  IP-XACT address space;
+- a diagnosed obsolete gate: Vivado 2020.2 retained
+  `kernel.xml range=0xFFFFFFFF`, so the old range-only assertion stopped after
+  package generation and the old `ERR` trap misclassified the status. A
+  versioned cross-layer metadata validator and non-overwriting retry runner are
+  prepared but not run.
 
 Pending or blocked:
 
-- A14.5 exact-VU37P XO metadata validation, including a 64-bit
-  `addressQualifier=1` `TABLE_BASE` argument on `m_axi_gmem`;
+- completion of the corrected A14.5 exact-VU37P automated XO gate using the
+  combined RTL, component/IP-XACT, and global-pointer evidence;
 - availability of Vitis `v++` and the F37X `.xpfm` platform locally;
 - `v++ --link`;
 - A14 xclbin generation;
@@ -119,8 +129,10 @@ Pending or blocked:
 
 Generated A14 XO files are not tracked in Git and are not current source
 artifacts. Treat packaging as a reproducibility task. A14.5 structural review
-and local XSim are PASS with user-returned evidence; do not describe the target
-XO gate as PASS until its separate evidence is retained.
+and local XSim are PASS with user-returned evidence. Attempt 1 confirms XO
+generation and the inspected target metadata listed above, but do not describe
+the complete automated target XO gate as PASS until the versioned retry logs,
+status, and hashes are returned and reviewed.
 
 ## 4. Hardware Environment
 
@@ -212,18 +224,23 @@ The first user-controlled XSim attempt failed on a diagnosed testbench
 parameter binding before wrapper simulation. The corrected retry at `d428e8b`
 passed both testbenches.
 
-### Present but not proven on the exact target for A14.5
+### Proven by returned exact-target A14.5 attempt-1 inspection
 
-- exact-target XO-only package and metadata runner;
-- 128-bit data, 64-bit range, and global-memory `TABLE_BASE` metadata in a
-  generated exact-VU37P XO.
+- Vivado 2020.2 generated an intact, non-empty XO with the exact VU37P part;
+- `TABLE_BASE` is an 8-byte `addressQualifier=1` global-memory argument on
+  `m_axi_gmem` at offset `0x18`;
+- packaged AXI bus/model/user address parameters and AWADDR/ARADDR ports are
+  64-bit, the IP-XACT address space is `2^64` bytes, and data width is 128;
+- `kernel.xml` still records port `range=0xFFFFFFFF`; this observed field is
+  retained but contradicts the more specific 64-bit component evidence.
 
-The exact-target v2 XO gate has not run.
+The old automated gate stopped on that range field and did not produce a valid
+PASS status. The versioned cross-layer target XO retry is present but not run.
 
 ### Not proven by A14
 
 - physical F37X HBM connectivity or `HBM[0]` access;
-- target VU37P packaging or implementation in the current main worktree;
+- target VU37P implementation in the current main worktree;
 - Vitis link or A14 xclbin generation;
 - XRT BO/DMA behavior;
 - physical HBM bandwidth, latency, throughput, or speedup;

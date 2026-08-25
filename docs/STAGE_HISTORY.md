@@ -27,7 +27,7 @@ hybrid CPU-embedding/FPGA-dense inference path.
 | Stage 2N-A12 | Measure Host-visible automatic-pipeline performance | Restored Host benchmark, runner, and evidence collector with separate programming/start/wait/result/retire timing boundaries | Commit `f629642`; A12 benchmark documents | Measurement flow present; do not reuse unretained historical performance numbers as current evidence |
 | Stage 2N-A13 | Add observable hardware cycle counts without changing arithmetic | Added Bottom, Interaction, Top, and Total 32-bit saturating counters; completed target build, 100 MHz timing, xclbin, protected F37X board validation, and 256-sample exact regression | Commit `be33ba0`/main equivalent `63ae1c4`; `docs/STAGE2N_A13_FINAL_ACCEPTANCE.md`; `docs/A13_FINAL_STATUS.txt` | **FINAL PASS; accepted and frozen** |
 | Stage 2N-A14 | Prototype FPGA-side embedding lookup | Added 64-row INT16 lookup asset, standalone single-outstanding AXI4 read master, AXI4-Lite kernel wrapper, self-checking lookup/wrapper XSim, packaging plan, and future single-bank link config | Commits `a19d338`, `50a97bc`; `docs/STAGE2N_A14_*.md`; A14 RTL/TBs/config/model | Simulation prototype PASS; exact-target V3 XO diagnosed the missing global-memory/table-base ABI; no Vitis link, xclbin, physical HBM, A13 integration, or board validation |
-| Stage 2N-A14.5 | Add a runtime HBM table-base ABI | Added versioned v2 lookup/wrapper with 64-bit `TABLE_BASE`, base-plus-row addressing, invalid-base/overflow guards, independent TBs, and XSim/XO-only validation runners | Commits `29401e5`, `d428e8b`; `docs/STAGE2N_A14_5_HBM_TABLE_BASE_ABI.md`; `docs/STAGE2N_A14_5_XSIM_ACCEPTANCE.md` | **Local XSim PASS**: lookup 67/67 and wrapper 17/17 after a diagnosed TB-only width-binding fix; exact-VU37P XO v2 NOT RUN; no v++, xclbin, Host, HBM, board, or A13 integration |
+| Stage 2N-A14.5 | Add a runtime HBM table-base ABI | Added versioned v2 lookup/wrapper with 64-bit `TABLE_BASE`, base-plus-row addressing, invalid-base/overflow guards, independent TBs, and XSim/XO-only validation runners | Commits `29401e5`, `d428e8b`, `de9276e`; `docs/STAGE2N_A14_5_HBM_TABLE_BASE_ABI.md`; XSim acceptance and target-attempt diagnosis | **Local XSim PASS**: lookup 67/67 and wrapper 17/17. Exact-VU37P attempt 1 generated an intact XO and returned inspection confirms TABLE_BASE plus 64-bit component evidence; obsolete range-only assertion stopped the old automated gate. Corrected retry NOT RUN; no v++, xclbin, Host, HBM, board, or A13 integration |
 
 ## Current Milestone Interpretation
 
@@ -38,7 +38,9 @@ hybrid CPU-embedding/FPGA-dense inference path.
 - The presence of `m_axi_gmem` in the A14 wrapper proves a logical interface and
   simulation behavior only.
 - A physical HBM or performance claim requires target link and board evidence.
-- A14.5 source presence does not prove its XSim or XO metadata gates.
+- A14.5 XSim is accepted. Attempt-1 target inspection proves the specifically
+  returned XO/component fields only; it does not make the corrected automated
+  XO gate, Vitis link, physical HBM, or board execution PASS.
 
 ## Superseded and Historical Files
 
