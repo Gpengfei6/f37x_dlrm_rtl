@@ -136,3 +136,33 @@ It does not prove:
 - FPGA board execution
 - bandwidth
 - latency improvement
+
+## Stage 2N-A14.5 Runtime Table-Base ABI Authorization
+
+Purpose:
+Close the address-ABI gap identified by the exact-target A14 V3 XO metadata
+without modifying accepted A13 or historical A14 v1 assets.
+
+Authorized:
+
+1. Add versioned A14 v2 lookup and kernel-wrapper RTL with a 64-bit runtime
+   `TABLE_BASE` and `TABLE_BASE + (LOOKUP_INDEX << 4)` addressing.
+2. Add independent v2 self-checking testbenches and a local XSim runner.
+3. Add a versioned XO package Tcl and an exact-target XO-only metadata runner.
+4. Update current-state, architecture, history, decision, and A14.5 design
+   documentation with explicit evidence boundaries.
+
+Restrictions:
+
+- Do not modify A13 or A14 v1 RTL, testbenches, scripts, or accepted evidence.
+- Do not run Vitis `v++`, generate an xclbin, build/execute an XRT Host, access
+  the FPGA, or claim physical HBM behavior in this stage.
+- Do not hand-edit generated XO/kernel XML or weaken the 64-bit metadata gate.
+- Vivado/XSim and exact-target XO results remain NOT RUN until returned and
+  reviewed from the user-controlled environments.
+
+Evidence boundary:
+
+This source-preparation stage can prove only source structure, syntax checks
+available locally, and preservation of protected files. Functional XSim and
+target XO acceptance require their separate retained logs and status records.

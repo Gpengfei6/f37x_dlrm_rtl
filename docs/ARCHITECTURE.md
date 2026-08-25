@@ -122,12 +122,15 @@ INT16x8 embedding vector
 Feature Interaction
 ```
 
-A14 currently implements only the lookup portion as a separate top-level
-prototype:
+A14 implements only the lookup portion as a separate top-level prototype. The
+simulation-accepted v1 path uses a relative row offset. The current A14.5 v2
+source adds a runtime table allocation base but has not yet passed XSim or the
+exact-target XO gate:
 
 ```text
 AXI4-Lite
   |-- LOOKUP_INDEX
+  |-- TABLE_BASE (A14.5 v2)
   `-- START
         |
         v
@@ -159,13 +162,33 @@ RESULT0..RESULT3
 - in-order request/response;
 - complete ready/valid response retention under backpressure.
 
+The A14.1 v1 byte address is relative to the beginning of the connected memory
+space. It has no Host/XRT buffer-allocation address and must not be used as a
+physical-HBM ABI.
+
 The deterministic row formula used by the software and fake-memory golden is:
 
 ```text
 value[row][lane] = row * 8 + lane - 256
 ```
 
-### 2.3 Wrapper register boundary
+### 2.3 A14.5 runtime table-base ABI
+
+A14.5 v2 retains the row format and single-outstanding protocol but uses:
+
+```text
+read_address = TABLE_BASE + (lookup_index << 4)
+```
+
+`TABLE_BASE` is captured atomically with the index when START is accepted. A
+misaligned base, invalid row, or 64-bit addition overflow produces a zero/error
+response without an AXI read. Packaging represents the two control words as a
+single 64-bit global-memory argument associated with `m_axi_gmem`.
+
+This ABI is implemented in source but its XSim and generated-XO metadata are
+not yet verified.
+
+### 2.4 Wrapper register boundary
 
 The standalone A14 wrapper exposes:
 
@@ -173,6 +196,8 @@ The standalone A14 wrapper exposes:
 |---:|---|---|
 | `0x00` | `CONTROL` | START and status |
 | `0x10` | `LOOKUP_INDEX` | row ID |
+| `0x18` | `TABLE_BASE_LO` | v2 table-base bits 31:0; absent from v1 |
+| `0x1C` | `TABLE_BASE_HI` | v2 table-base bits 63:32; absent from v1 |
 | `0x20` | `RESULT0` | lanes 0–1 |
 | `0x24` | `RESULT1` | lanes 2–3 |
 | `0x28` | `RESULT2` | lanes 4–5 |
@@ -189,11 +214,12 @@ That configuration is a plan, not proof of a physical connection.
 
 ## 3. A13 and A14 Relationship
 
-| Property | A13 accepted baseline | A14 current prototype |
+| Property | A13 accepted baseline | A14/A14.5 standalone prototype |
 |---|---|---|
 | Top-level purpose | Complete ordered Bottom–Interaction–Top execution | One embedding-row lookup |
 | Embedding source | CPU-resolved vectors over AXI4-Lite | Logical AXI4 memory read |
 | Memory master | None | `m_axi_gmem`, read-only prototype |
+| Address model | No HBM address | v1 relative row offset; v2 runtime 64-bit base |
 | Physical HBM | Not used | Not yet validated |
 | Board evidence | Accepted F37X functional evidence | None |
 | Integration with dense pipeline | Yes | No |
@@ -222,6 +248,15 @@ required.
 - future target packaging, Vitis link, and board evidence remain separate
   gates.
 
+### A14.5 pending gates
+
+- all 64 rows at a non-zero base above 4 GiB;
+- exact `TABLE_BASE + row*16` AR address checks;
+- invalid-base zero/error response with no AXI read;
+- wrapper table-base low/high programming and capture-on-START behavior;
+- exact-VU37P XO metadata with 128-bit data, 64-bit range, and an 8-byte
+  `TABLE_BASE` global-memory argument on `m_axi_gmem`.
+
 ## 5. Source Map
 
 Accepted A13 implementation:
@@ -243,6 +278,17 @@ A14 prototype:
 - `config/stage2n_a14_hbm_v1.cfg`
 - `config/stage2n_a14_v1.cfg`
 - `scripts/package_stage2n_a14_rtl_kernel_v1.tcl`
+
+A14.5 versioned table-base source:
+
+- `rtl/hbm/dlrm_hbm_embedding_lookup_stage2n_a14_v2.sv`
+- `rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a14_v2.sv`
+- `tb/tb_dlrm_hbm_embedding_lookup_stage2n_a14_v2.sv`
+- `tb/tb_dlrm_f37x_rtl_kernel_stage2n_a14_v2.sv`
+- `scripts/run_stage2n_a14_5_table_base_xsim_v1.ps1`
+- `scripts/package_stage2n_a14_rtl_kernel_v3.tcl`
+- `scripts/build_stage2n_a14_5_target_xo_v1.sh`
+- `docs/STAGE2N_A14_5_HBM_TABLE_BASE_ABI.md`
 
 Arithmetic details remain governed by `docs/fixed_point_spec_v0.md`, later
 stage-specific contracts, and the exact RTL. Do not infer a new numerical

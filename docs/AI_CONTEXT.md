@@ -66,7 +66,7 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A14 — FPGA-side HBM embedding lookup prototype**.
+Current stage: **Stage 2N-A14.5 — runtime HBM table-base ABI**.
 
 Stage 2N-A13 is complete and frozen. Its accepted top remains the reference for
 the integrated DLRM pipeline. Stage 2N-A14 is intentionally isolated so it can
@@ -87,11 +87,19 @@ Completed or present in the current source tree:
 - XO packaging Tcl, kernel metadata plan, and future `HBM[0]` link
   configuration;
 - a documented local Artix-7 proxy packaging result from the former A14
-  worktree.
+  worktree;
+- exact-target V3 packaging evidence showing 128-bit AXI data and 64-bit
+  component-side address metadata, but only a 32-bit kernel XML range and no
+  global-memory argument in the v1 ABI;
+- versioned A14.5 v2 source with a 64-bit `TABLE_BASE`, address rule
+  `TABLE_BASE + (LOOKUP_INDEX << 4)`, independent testbenches, and new XSim and
+  exact-target XO-only runners.
 
 Pending or blocked:
 
-- reproducible XO packaging with the exact VU37P target environment;
+- A14.5 v2 lookup/wrapper XSim execution;
+- A14.5 exact-VU37P XO metadata validation, including a 64-bit
+  `addressQualifier=1` `TABLE_BASE` argument on `m_axi_gmem`;
 - availability of Vitis `v++` and the F37X `.xpfm` platform locally;
 - `v++ --link`;
 - A14 xclbin generation;
@@ -101,9 +109,10 @@ Pending or blocked:
   input path;
 - any HBM latency, bandwidth, throughput, or performance-improvement claim.
 
-The generated A14 XO described by historical A14 documents is not tracked in
-Git and is not currently present in this main working tree. Treat packaging as
-a reproducibility task, not as an available source artifact.
+Generated A14 XO files are not tracked in Git and are not current source
+artifacts. Treat packaging as a reproducibility task. The A14.5 source itself
+has passed structural review only; do not describe its XSim or target XO gates
+as PASS until user-returned evidence is retained.
 
 ## 4. Hardware Environment
 
@@ -181,6 +190,15 @@ According to `docs/STAGE2N_A13_FINAL_ACCEPTANCE.md`:
 - 14/14 wrapper cases with one AR and one R handshake per lookup;
 - logical wrapper integration between AXI4-Lite control, the lookup IP, and
   `m_axi_gmem` in XSim.
+
+### Present but not yet proven for A14.5
+
+- versioned 64-bit runtime `TABLE_BASE` RTL and control map;
+- explicit rejection of unaligned bases and address overflow;
+- v2 self-checking XSim sources and exact-target XO-only metadata runner.
+
+These items have passed local structural checks only. Vivado/XSim and the
+exact-target v2 XO gate have not run.
 
 ### Not proven by A14
 

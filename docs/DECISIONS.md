@@ -432,3 +432,30 @@
   fixed-point behavior changes. The V3 target retry must still prove the XO,
   link, xclbin, HBM[0] link metadata, and routed timing; physical HBM and board
   behavior remain unvalidated.
+
+## D-028 - Add a runtime 64-bit A14 table-base ABI before physical HBM work
+
+- **Status:** authorized and implemented as versioned A14.5 source; XSim and
+  exact-target XO evidence are pending.
+- **Problem:** the V3 target retry proved that RTL ports, AXI bus parameters,
+  model parameters, and the IP-XACT master address space are 64-bit, while
+  `package_xo` still emitted `range=0xFFFFFFFF`. The generated kernel metadata
+  contained no global-memory argument associated with `m_axi_gmem`, and the v1
+  register map had no way to provide a future XRT BO/table allocation address.
+- **Adopted:** retain A14 v1 unchanged and add v2 RTL with one 64-bit
+  `TABLE_BASE` at AXI-Lite offset `0x18`. Capture the base on START and issue
+  `TABLE_BASE + (LOOKUP_INDEX << 4)`. Package the 64-bit register with
+  `ASSOCIATED_BUSIF=m_axi_gmem`, requiring `addressQualifier=1` in generated
+  kernel XML.
+- **Safety behavior:** reject unaligned bases and 64-bit address overflow with
+  a deterministic zero-vector error response and no AXI read.
+- **Not adopted:** hand-edit or re-zip generated XO metadata, weaken the 64-bit
+  range gate, assume an XRT BO is allocated at address zero, overwrite A14 v1,
+  modify A13, or proceed directly to v++/board work.
+- **Reason:** physical-bank selection and table-allocation address are distinct.
+  `connectivity.sp` selects HBM[0], while the runtime base selects the actual
+  table location within the connected address space.
+- **Impact:** the A14 control ABI gains two 32-bit words at `0x18/0x1C`; the
+  existing result offsets `0x20..0x2C`, INT16 row layout, one-beat protocol,
+  A13 design, and fixed-point behavior remain unchanged. Physical HBM, Host,
+  xclbin, timing, and performance remain unvalidated.

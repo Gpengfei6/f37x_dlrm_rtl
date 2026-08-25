@@ -1,23 +1,23 @@
 # Current State
 
-Snapshot date: 2026-08-24
+Snapshot date: 2026-08-25
 
 ## Repository State
 
 - Repository: `D:\FpgaWork\f37x_dlrm_rtl`
 - Branch: `work/stage2n-a13-cycle-counter`
-- V3-fix parent HEAD: `e2aa046fa290ad352602cf5dd135b09a37dc80cc`
-- V3-fix parent subject: `fix(a14): support older git in target runner`
+- A14.5 parent HEAD: `cd68a795cb75b709a428949fb8b91733c28a8415`
+- A14.5 parent subject: `fix(a14): set explicit AXI metadata for target XO`
 - A14 source integration commit: `a19d338`
-- Current engineering stage: **Stage 2N-A14**
+- Current engineering stage: **Stage 2N-A14.5**
 - Accepted and frozen functional baseline: **Stage 2N-A13**
 
 The branch name still refers to A13 even though A14 prototype files are now
 present. Do not infer stage status from the branch name alone.
 
-The working tree contains pre-existing untracked recovery, historical evidence,
-patent, source, and helper files. Preserve them. Never use `git clean`, bulk
-deletion, or `git add .`.
+The primary Windows worktree may contain pre-existing untracked recovery,
+historical evidence, patent, source, and helper files. Preserve them. Never use
+`git clean`, bulk deletion, or `git add .`.
 
 ## Completed
 
@@ -57,8 +57,25 @@ deletion, or `git add .`.
   the exact VU37P target. Its post-package metadata gate correctly stopped
   before `v++` because Vivado 2020.2 recorded `m_axi_gmem` as 32-bit data and a
   32-bit address range instead of the RTL's 128-bit data and 64-bit address.
-- A V3 packaging entry now writes both AXI bus parameters explicitly. It has
-  passed local static checks but has not yet run on the target server.
+- The V3 target retry at commit `cd68a79` generated an intact exact-VU37P XO.
+  The generated kernel XML correctly reports 128-bit data, while the packaged
+  component reports 64-bit AXI address ports, parameters, and address space.
+  Kernel XML nevertheless retains `range=0xFFFFFFFF` because the v1 ABI has no
+  global-memory/table-base argument associated with `m_axi_gmem`.
+
+### Stage 2N-A14.5
+
+- Added a versioned A14 v2 lookup and wrapper; A13 and A14 v1 remain unchanged.
+- Added a runtime 64-bit `TABLE_BASE` ABI at AXI-Lite offsets `0x18/0x1C`.
+- The v2 read address is `TABLE_BASE + (LOOKUP_INDEX << 4)`.
+- Unaligned table bases, out-of-range row IDs, and 64-bit address overflow
+  return a zero/error response without issuing an AXI read.
+- Added independent v2 lookup/wrapper self-checking testbenches, a local XSim
+  runner, and an exact-target XO-only package/metadata runner.
+- Local structural checks and Bash syntax pass in the Codex environment.
+- Vivado/XSim and exact-target XO v2 packaging are **NOT RUN**. No v++ link,
+  xclbin, Host, FPGA programming, or physical HBM operation is part of this
+  source-preparation milestone.
 
 ## Verification Summary
 
@@ -76,8 +93,12 @@ deletion, or `git add .`.
 | A14 V2 Git compatibility static | PASS | V1/V2 Bash, embedded Python, evidence tags, and valueless `--porcelain` checks |
 | A14 V2 target retry | STOPPED/REVIEWED | Exact VU37P XO generated and archive integrity passed; XML metadata gate failed before `v++` |
 | A14 exact VU37P XO generation | CONFIRMED | Vivado log: `TARGET_PART_USED=1`, package PASS, XO size 12,325 bytes |
-| A14 exact VU37P XO metadata | FAIL | `m_axi_gmem` generated as data width 32/address range 32 instead of 128/64 |
-| A14 V3 explicit AXI metadata fix | STATIC PASS/NOT RUN | New packaging Tcl writes `DATA_WIDTH=128` and `ADDR_WIDTH=64`; target retry pending |
+| A14 exact VU37P XO metadata | PARTIAL/STOPPED | V3 generated data width 128 and component-side 64-bit addressing, but kernel XML range remained 32-bit and no global-memory argument existed |
+| A14 V3 explicit AXI metadata retry | REVIEWED | Exact VU37P XO generated at `cd68a79`; diagnosis above; no `v++` or device operation |
+| A14.5 table-base source | PRESENT | New versioned RTL/TBs/package runners; A13 and A14 v1 untouched |
+| A14.5 local structural checks | PASS | Required address, ABI, guard, metadata, and no-`v++` invariants only |
+| A14.5 lookup/wrapper XSim | NOT RUN | Vivado/XSim unavailable in the Codex environment |
+| A14.5 exact VU37P XO v2 | NOT RUN | User-controlled Vivado 2020.2 server gate required |
 | A14 Vitis link | BLOCKED | Local `v++` and F37X platform metadata unavailable |
 | A14 xclbin | NOT GENERATED | No A14 xclbin exists in the current build tree |
 | A14 physical HBM | NOT VALIDATED | No board access or physical HBM transaction has been run |
@@ -92,6 +113,7 @@ Primary evidence:
 - `docs/STAGE2N_A14_TARGET_BUILD_RUNNER_V1.md`
 - `docs/STAGE2N_A14_TARGET_BUILD_RUNNER_V2_GIT_COMPAT.md`
 - `docs/STAGE2N_A14_TARGET_BUILD_RUNNER_V3_XO_METADATA_FIX.md`
+- `docs/STAGE2N_A14_5_HBM_TABLE_BASE_ABI.md`
 
 ## Current Local Environment
 
@@ -122,12 +144,13 @@ Historical target environment recorded by accepted evidence:
    paths.
 4. The previously documented proxy XO was a generated worktree artifact and is
    not present in this main working tree.
-5. V2 exact-target XO packaging ran, but Vivado 2020.2 defaulted the packaged
-   AXI master width metadata to 32-bit data and a 32-bit address range. V3 must
-   confirm the explicit 128-bit data/64-bit address metadata before linking.
-6. A14 has no xclbin, physical HBM access evidence, XRT BO/DMA Host, or board
+5. The V3 exact-target XO confirms 128-bit AXI data and 64-bit component-side
+   addressing, but the v1 kernel ABI has no `m_axi_gmem` table-base argument;
+   generated kernel XML therefore retains a 32-bit range.
+6. A14.5 v2 XSim and exact-target XO metadata gates have not yet run.
+7. A14 has no xclbin, physical HBM access evidence, XRT BO/DMA Host, or board
    result.
-7. A14 lookup output is not connected to A13 Feature Interaction; the two tops
+8. A14 lookup output is not connected to A13 Feature Interaction; the two tops
    are independent.
 
 These are environment and integration blockers, not failures of the completed
@@ -135,20 +158,20 @@ A14 XSim tests.
 
 ## Next Actions
 
-1. Preserve the V2 build and result roots under the attempt-2 names in
-   `docs/STAGE2N_A14_TARGET_BUILD_RUNNER_V3_XO_METADATA_FIX.md`.
-2. Apply the V3 metadata fix to the clean server repository and run
-   `scripts/build_stage2n_a14_target_v3.sh`.
-3. Confirm the generated `m_axi_gmem` metadata reports 128-bit data and a
-   64-bit address range before accepting the XO gate.
-4. Retain the XO packaging command, exit status, XML, size, and SHA256.
-5. In the user-controlled Vitis 2020.2/F37X environment, link the XO using
-   `config/stage2n_a14_target_v1.cfg` and record the resolved
-   `m_axi_gmem -> HBM[0]` connection, timing, UUID, and xclbin SHA256.
-6. Stop before board execution and request separate authorization.
-7. Validate one physical HBM bank with categorical row IDs and bit-exact
-   embedding vectors before measuring performance.
-8. Only after standalone physical lookup validation, design a separate stage to
+1. Review and commit the A14.5 source-preparation milestone with its explicit
+   `NOT RUN` evidence boundary.
+2. On local Windows Vivado 2022.1, run
+   `scripts/run_stage2n_a14_5_table_base_xsim_v1.ps1` and retain both PASS
+   markers and the status file.
+3. Transfer that committed revision to the clean user-controlled server and run
+   `scripts/build_stage2n_a14_5_target_xo_v1.sh`.
+4. Accept the XO-only gate only if generated kernel XML reports 128-bit data,
+   64-bit range, and `TABLE_BASE` as an 8-byte `addressQualifier=1` argument on
+   `m_axi_gmem`; retain XML, logs, status, size, and SHA256.
+5. Update current-state/evidence documents and commit the actual XSim/XO result.
+6. Only after the A14.5 gates pass, review a separate link/Host stage. Do not
+   run v++, generate an xclbin, or access the FPGA as part of A14.5.
+7. Only after standalone physical lookup validation, design a separate stage to
    connect embedding vectors to the frozen A13 Feature Interaction input.
 
 ## Non-Goals of the Current Stage

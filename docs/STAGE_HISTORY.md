@@ -26,16 +26,19 @@ hybrid CPU-embedding/FPGA-dense inference path.
 | Stage 2N-A11 | Build and validate a trained-model batch asset | Corrected the `F37XPB1` magic contract; regenerated and parsed 256 samples with Bottom, Interaction, and Top software-golden exactness | Commit `59e3d23`; `docs/PRE_A13_REVALIDATION_V1.md`; A11 asset docs | Software-golden PASS for 256 samples; historical board regression was not independently rerun during recovery |
 | Stage 2N-A12 | Measure Host-visible automatic-pipeline performance | Restored Host benchmark, runner, and evidence collector with separate programming/start/wait/result/retire timing boundaries | Commit `f629642`; A12 benchmark documents | Measurement flow present; do not reuse unretained historical performance numbers as current evidence |
 | Stage 2N-A13 | Add observable hardware cycle counts without changing arithmetic | Added Bottom, Interaction, Top, and Total 32-bit saturating counters; completed target build, 100 MHz timing, xclbin, protected F37X board validation, and 256-sample exact regression | Commit `be33ba0`/main equivalent `63ae1c4`; `docs/STAGE2N_A13_FINAL_ACCEPTANCE.md`; `docs/A13_FINAL_STATUS.txt` | **FINAL PASS; accepted and frozen** |
-| Stage 2N-A14 | Prototype FPGA-side embedding lookup | Added 64-row INT16 lookup asset, standalone single-outstanding AXI4 read master, AXI4-Lite kernel wrapper, self-checking lookup/wrapper XSim, packaging plan, and future single-bank link config | Commits `a19d338`, `50a97bc`; `docs/STAGE2N_A14_*.md`; A14 RTL/TBs/config/model | **Current stage**: simulation prototype PASS; exact VU37P XO, Vitis link, xclbin, physical HBM, A13 integration, and board validation pending |
+| Stage 2N-A14 | Prototype FPGA-side embedding lookup | Added 64-row INT16 lookup asset, standalone single-outstanding AXI4 read master, AXI4-Lite kernel wrapper, self-checking lookup/wrapper XSim, packaging plan, and future single-bank link config | Commits `a19d338`, `50a97bc`; `docs/STAGE2N_A14_*.md`; A14 RTL/TBs/config/model | Simulation prototype PASS; exact-target V3 XO diagnosed the missing global-memory/table-base ABI; no Vitis link, xclbin, physical HBM, A13 integration, or board validation |
+| Stage 2N-A14.5 | Add a runtime HBM table-base ABI | Added versioned v2 lookup/wrapper with 64-bit `TABLE_BASE`, base-plus-row addressing, invalid-base/overflow guards, independent TBs, and XSim/XO-only validation runners | Parent `cd68a79`; `docs/STAGE2N_A14_5_HBM_TABLE_BASE_ABI.md`; A14 v2 RTL/TBs/scripts | **Current stage**: source and structural checks present; Vivado/XSim and exact-VU37P XO v2 are NOT RUN; no v++, xclbin, Host, HBM, board, or A13 integration |
 
 ## Current Milestone Interpretation
 
 - A13 is the last accepted integrated and board-validated DLRM pipeline.
-- A14 is newer source work but has a narrower scope: standalone embedding lookup.
+- A14/A14.5 are newer source work but have a narrower scope: standalone
+  embedding lookup and its runtime table-base ABI.
 - A14 does not supersede A13 as an integrated inference top.
 - The presence of `m_axi_gmem` in the A14 wrapper proves a logical interface and
   simulation behavior only.
 - A physical HBM or performance claim requires target link and board evidence.
+- A14.5 source presence does not prove its XSim or XO metadata gates.
 
 ## Superseded and Historical Files
 
