@@ -123,9 +123,9 @@ Feature Interaction
 ```
 
 A14 implements only the lookup portion as a separate top-level prototype. The
-simulation-accepted v1 path uses a relative row offset. The current A14.5 v2
-source adds a runtime table allocation base but has not yet passed XSim or the
-exact-target XO gate:
+simulation-accepted v1 path uses a relative row offset. The A14.5 v2 source
+adds a runtime table allocation base and has passed local XSim at `d428e8b`;
+the exact-target XO gate remains pending:
 
 ```text
 AXI4-Lite
@@ -185,8 +185,8 @@ misaligned base, invalid row, or 64-bit addition overflow produces a zero/error
 response without an AXI read. Packaging represents the two control words as a
 single 64-bit global-memory argument associated with `m_axi_gmem`.
 
-This ABI is implemented in source but its XSim and generated-XO metadata are
-not yet verified.
+This ABI is implemented in source and its local functional XSim gate is PASS.
+Generated exact-target XO metadata is not yet verified.
 
 ### 2.4 Wrapper register boundary
 
@@ -248,12 +248,17 @@ required.
 - future target packaging, Vitis link, and board evidence remain separate
   gates.
 
-### A14.5 pending gates
+### A14.5 local XSim evidence
 
-- all 64 rows at a non-zero base above 4 GiB;
-- exact `TABLE_BASE + row*16` AR address checks;
-- invalid-base zero/error response with no AXI read;
-- wrapper table-base low/high programming and capture-on-START behavior;
+- all 64 rows passed at a non-zero base above 4 GiB;
+- exact `TABLE_BASE + row*16` AR address checks passed;
+- unaligned-base, out-of-range-index, and overflow zero/error behavior passed
+  without AXI reads;
+- wrapper table-base low/high programming and capture-on-START behavior passed;
+- lookup 67/67 and wrapper 17/17 cases passed with exact AR/R counts.
+
+### A14.5 pending exact-target gate
+
 - exact-VU37P XO metadata with 128-bit data, 64-bit range, and an 8-byte
   `TABLE_BASE` global-memory argument on `m_axi_gmem`.
 
@@ -289,6 +294,7 @@ A14.5 versioned table-base source:
 - `scripts/package_stage2n_a14_rtl_kernel_v3.tcl`
 - `scripts/build_stage2n_a14_5_target_xo_v1.sh`
 - `docs/STAGE2N_A14_5_HBM_TABLE_BASE_ABI.md`
+- `docs/STAGE2N_A14_5_XSIM_ACCEPTANCE.md`
 
 Arithmetic details remain governed by `docs/fixed_point_spec_v0.md`, later
 stage-specific contracts, and the exact RTL. Do not infer a new numerical

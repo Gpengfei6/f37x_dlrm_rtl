@@ -435,8 +435,8 @@
 
 ## D-028 - Add a runtime 64-bit A14 table-base ABI before physical HBM work
 
-- **Status:** authorized and implemented as versioned A14.5 source; XSim and
-  exact-target XO evidence are pending.
+- **Status:** authorized and implemented as versioned A14.5 source; corrected
+  local XSim is PASS at `d428e8b`; exact-target XO evidence is pending.
 - **Problem:** the V3 target retry proved that RTL ports, AXI bus parameters,
   model parameters, and the IP-XACT master address space are 64-bit, while
   `package_xo` still emitted `range=0xFFFFFFFF`. The generated kernel metadata

@@ -159,12 +159,23 @@ The cause was testbench-only: the TB declared 32-bit index signals so it could
 exercise the out-of-range guard, but omitted `.INDEX_WIDTH(INDEX_WIDTH)` on the
 DUT instance. The DUT therefore retained its six-bit default. The fix binds
 the 32-bit parameter explicitly. The RTL address/data implementation is not
-changed by this fix, and the corrected simulation is **NOT RUN**.
+changed by this fix. The corrected simulation at `d428e8b` is **PASS**.
 
 The XSim runner now also creates a `RUNNING` status before simulation and
 rewrites it as `FAIL` with the active case and failure reason when a future run
 stops early. Attempt 1 predated that improvement, so its absent `status.txt` is
 expected; its compile/elaboration/XSim logs remain the evidence.
+
+The corrected retry produced both required markers:
+
+```text
+tb_dlrm_hbm_embedding_lookup_stage2n_a14_v2: PASS cases=67 valid=64 rejected=3 ar=64 r=64
+tb_dlrm_f37x_rtl_kernel_stage2n_a14_v2: PASS cases=17 valid=14 rejected=3 ar=14 r=14
+```
+
+The machine-readable status reports all three guards, table-base readback, and
+addresses above 4 GiB as PASS, with zero lookup/wrapper error/fatal records.
+See `docs/STAGE2N_A14_5_XSIM_ACCEPTANCE.md` for the acceptance boundary.
 
 ## 7. Exact-target XO-only gate
 
@@ -201,7 +212,7 @@ The runner contains no `v++` call and performs no FPGA access.
 | Bash syntax | PASS | `bash -n`; not functional RTL evidence |
 | Structural source checks | PASS | Required fields, mappings and guards present |
 | Vivado/XSim attempt 1 | FAIL/DIAGNOSED | Standalone TB 32-bit signals connected to default 6-bit DUT index ports; wrapper not run |
-| Vivado/XSim fixed retry | NOT RUN | Explicit `.INDEX_WIDTH(32)` binding present |
+| Vivado/XSim fixed retry | PASS | At `d428e8b`: lookup 67/67, wrapper 17/17, exact AR/R counts, guards PASS, zero error/fatal records |
 | Exact VU37P XO v2 | NOT RUN | User server Vivado 2020.2 required |
 | Vitis link/xclbin | NOT RUN | Deliberately outside this small stage |
 | XRT BO/Host | NOT IMPLEMENTED | Later stage |
@@ -210,10 +221,9 @@ The runner contains no `v++` call and performs no FPGA access.
 
 ## 9. Exit and next-stage rule
 
-The versioned source-preparation milestone may be reviewed, committed, and
-pushed with XSim and exact-target XO explicitly recorded as **NOT RUN**. A14.5
-itself is accepted only after both XSim benches and the exact-target XO
-metadata gate pass with retained logs and hashes. At that point this document,
+The versioned source-preparation and corrected local-XSim milestones are
+accepted. A14.5 itself is accepted only after the exact-target XO metadata gate
+also passes with retained logs and hashes. At that point this document,
 `CURRENT_STATE.md`, `ARCHITECTURE.md`, `STAGE_HISTORY.md`, and `DECISIONS.md`
 must be updated again with the actual evidence in a separate commit.
 

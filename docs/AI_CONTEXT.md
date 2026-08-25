@@ -98,12 +98,14 @@ Completed or present in the current source tree:
   explicit 32-bit `INDEX_WIDTH` parameter, so Vivado connected its 32-bit
   signals to 6-bit DUT ports and the first response-index comparison saw upper
   `Z` bits. The TB binding and runner failure-status behavior are fixed in
-  source, but the retry is not yet run.
+  source;
+- corrected local Vivado/XSim 2022.1 acceptance at `d428e8b`: standalone
+  lookup 67/67 cases and wrapper 17/17 cases PASS, including three rejected
+  requests per bench, high addresses above 4 GiB, table-base readback, exact
+  AR/R counts, and zero anchored error/fatal records.
 
 Pending or blocked:
 
-- A14.5 v2 lookup/wrapper XSim retry after the diagnosed testbench-only width
-  binding fix;
 - A14.5 exact-VU37P XO metadata validation, including a 64-bit
   `addressQualifier=1` `TABLE_BASE` argument on `m_axi_gmem`;
 - availability of Vitis `v++` and the F37X `.xpfm` platform locally;
@@ -116,9 +118,9 @@ Pending or blocked:
 - any HBM latency, bandwidth, throughput, or performance-improvement claim.
 
 Generated A14 XO files are not tracked in Git and are not current source
-artifacts. Treat packaging as a reproducibility task. The A14.5 source itself
-has passed structural review only; do not describe its XSim or target XO gates
-as PASS until user-returned evidence is retained.
+artifacts. Treat packaging as a reproducibility task. A14.5 structural review
+and local XSim are PASS with user-returned evidence; do not describe the target
+XO gate as PASS until its separate evidence is retained.
 
 ## 4. Hardware Environment
 
@@ -197,15 +199,26 @@ According to `docs/STAGE2N_A13_FINAL_ACCEPTANCE.md`:
 - logical wrapper integration between AXI4-Lite control, the lookup IP, and
   `m_axi_gmem` in XSim.
 
-### Present but not yet proven for A14.5
+### Proven by local A14.5 XSim
 
 - versioned 64-bit runtime `TABLE_BASE` RTL and control map;
-- explicit rejection of unaligned bases and address overflow;
-- v2 self-checking XSim sources and exact-target XO-only metadata runner.
+- `TABLE_BASE + (LOOKUP_INDEX << 4)` addresses above 4 GiB against fake AXI
+  memory;
+- explicit zero/error rejection of unaligned bases, out-of-range indices, and
+  64-bit address overflow without issuing AXI reads;
+- AXI-Lite table-base programming/readback and exact AR/R transaction counts.
 
-These items have passed local structural checks only. The first user-controlled
-XSim attempt failed on a diagnosed testbench parameter binding before wrapper
-simulation; the fixed retry and exact-target v2 XO gate have not run.
+The first user-controlled XSim attempt failed on a diagnosed testbench
+parameter binding before wrapper simulation. The corrected retry at `d428e8b`
+passed both testbenches.
+
+### Present but not proven on the exact target for A14.5
+
+- exact-target XO-only package and metadata runner;
+- 128-bit data, 64-bit range, and global-memory `TABLE_BASE` metadata in a
+  generated exact-VU37P XO.
+
+The exact-target v2 XO gate has not run.
 
 ### Not proven by A14
 
