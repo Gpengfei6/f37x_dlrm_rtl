@@ -166,3 +166,42 @@ Evidence boundary:
 This source-preparation stage can prove only source structure, syntax checks
 available locally, and preservation of protected files. Functional XSim and
 target XO acceptance require their separate retained logs and status records.
+
+## Stage 2N-A14.6 Exact-Target Link-Only Authorization
+
+Purpose:
+Consume the accepted A14.5 exact-target v2 XO in a separately versioned F37X
+Vitis hardware-link flow and validate the resulting xclbin metadata and routed
+timing without accessing an FPGA device.
+
+Authorized:
+
+1. Add a versioned A14.6 connectivity configuration for exactly one compute
+   unit and `m_axi_gmem -> HBM[0]`.
+2. Add a non-overwriting link-only runner and offline xclbin metadata validator
+   compatible with Vitis/Vivado 2020.2 and Python 3.
+3. The user may run that reviewed runner in the established server environment
+   after an explicit `yes` confirmation and return its evidence.
+4. Update current-state, architecture, history, decision, and A14.6 stage
+   documentation with exact evidence boundaries.
+
+Restrictions:
+
+- Do not modify A13 RTL or any A14 v1/v2 RTL, testbench, XO package script, or
+  accepted evidence.
+- Do not rebuild or silently replace the accepted A14.5 XO inside the link-only
+  runner; require its recorded SHA256 before invoking `v++`.
+- Do not add or run an XRT Host, open a render node, program/reset an FPGA, or
+  perform a physical HBM transaction.
+- Do not claim physical `HBM[0]` access, lookup correctness on hardware,
+  latency, bandwidth, throughput, power, energy, speedup, or A13 integration.
+- Codex does not connect to or execute on the server; the user performs the
+  target run and returns evidence for a separate acceptance review.
+
+Evidence boundary:
+
+A successful A14.6 link-only result can prove only that the accepted v2 XO
+links for the reviewed F37X platform, produces a non-empty xclbin, records the
+requested CU-to-HBM[0] connectivity, targets the VU37P, and meets the frozen
+100 MHz routed timing gate. It cannot prove that an XRT allocation, physical
+HBM read, returned embedding vector, or board execution works.

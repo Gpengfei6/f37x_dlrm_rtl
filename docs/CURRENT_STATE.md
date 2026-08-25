@@ -13,7 +13,7 @@ Snapshot date: 2026-08-25
 - A14.5 XSim-fix commit: `d428e8b`
 - A14.5 XSim-acceptance commit: `de9276e`
 - A14 source integration commit: `a19d338`
-- Current engineering stage: **Stage 2N-A14.5**
+- Current engineering stage: **Stage 2N-A14.6 link-only preparation**
 - Accepted and frozen functional baseline: **Stage 2N-A13**
 
 The branch name still refers to A13 even though A14 prototype files are now
@@ -115,6 +115,18 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 - No v++ link, xclbin, Host, FPGA programming, or physical HBM operation is
   part of this milestone.
 
+### Stage 2N-A14.6
+
+- Link-only authorization and architecture are frozen.
+- The accepted input is the exact-target A14.5 v2 XO with SHA256
+  `7c05895b4ef7f3b3e1169d722f88a4ea5103ae9d5cb5283fd0372e7bc3e43dea`.
+- The frozen target is one `dlrm_a14_1` compute unit at 100 MHz with
+  `m_axi_gmem -> HBM[0]` on `inspur_f37x_xdma_201920_3`.
+- The flow must be link-only and non-overwriting; it may not rebuild the XO,
+  add a Host, open a device, program/reset the FPGA, or access physical HBM.
+- The versioned configuration, runner, and xclbin validator are not yet added
+  at this planning checkpoint.
+
 ## Verification Summary
 
 | Area | Result | Evidence boundary |
@@ -139,7 +151,8 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 | A14.5 XSim corrected retry | PASS | At `d428e8b`: lookup 67/67 and wrapper 17/17; 78 valid reads total; six rejected-request checks; both error/fatal counts zero |
 | A14.5 exact VU37P XO attempt 1 | STOPPED/DIAGNOSED | At `de9276e`: exact-part XO generated and archive intact; returned inspection confirms TABLE_BASE/global-pointer ABI and 64-bit component address evidence; obsolete range-only assertion stopped the old automated gate |
 | A14.5 exact VU37P corrected retry | **PASS** | At tested server HEAD `4096614`: XO 12,951 bytes; TABLE_BASE ABI and RTL/component/IP-XACT 64-bit address evidence PASS; seven warnings, zero critical warnings/errors; no v++ or device access |
-| A14 Vitis link | BLOCKED | Local `v++` and F37X platform metadata unavailable |
+| A14.6 link-only architecture | FROZEN | Accepted XO identity, one-CU HBM[0] mapping, 100 MHz request, evidence and non-claim gates documented |
+| A14 Vitis link | NOT RUN | Authorized only through the forthcoming A14.6 versioned runner in the user-controlled target environment |
 | A14 xclbin | NOT GENERATED | No A14 xclbin exists in the current build tree |
 | A14 physical HBM | NOT VALIDATED | No board access or physical HBM transaction has been run |
 
@@ -198,14 +211,13 @@ A14 XSim tests.
 
 ## Next Actions
 
-1. Commit and push the reviewed A14.5 exact-target XO acceptance record and
-   retained small evidence files.
-2. Review and authorize a separate A14 link/Host stage before adding or running
-   `v++`, xclbin, XRT BO, physical HBM, or device operations.
-3. In that later stage, preserve the accepted v2 TABLE_BASE ABI and require
-   explicit `m_axi_gmem -> HBM[0]` link evidence before any physical-memory
-   claim.
-4. Only after standalone physical lookup validation, design a separate stage to
+1. Add and locally validate the versioned A14.6 link configuration, link-only
+   runner, and offline xclbin metadata validator.
+2. Commit and push that source-preparation milestone before any target run.
+3. The user then runs the reviewed A14.6 runner in the established server
+   environment and returns its evidence for acceptance review.
+4. Keep Host/XRT/device/physical-HBM work outside A14.6 even if link passes.
+5. Only after standalone physical lookup validation, design a separate stage to
    connect embedding vectors to the frozen A13 Feature Interaction input.
 
 ## Non-Goals of the Current Stage

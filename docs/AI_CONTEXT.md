@@ -66,7 +66,7 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A14.5 — runtime HBM table-base ABI**.
+Current stage: **Stage 2N-A14.6 — exact-target link-only preparation**.
 
 Stage 2N-A13 is complete and frozen. Its accepted top remains the reference for
 the integrated DLRM pipeline. Stage 2N-A14 is intentionally isolated so it can
@@ -118,8 +118,11 @@ Completed or present in the current source tree:
   TABLE_BASE ABI and cross-layer 64-bit address evidence passed, the returned
   source/artifact hashes were retained, and the package log contained seven
   warnings, zero critical warnings, and zero errors.
+- A14.6 link-only authorization and architecture freeze: consume only the
+  accepted v2 XO, create one `dlrm_a14_1` compute unit, map
+  `m_axi_gmem -> HBM[0]`, request 100 MHz, and stop before Host/device access.
 
-Pending or blocked after A14.5 acceptance:
+Pending or blocked at the A14.6 planning checkpoint:
 
 - availability of Vitis `v++` and the F37X `.xpfm` platform locally;
 - `v++ --link`;
@@ -130,12 +133,12 @@ Pending or blocked after A14.5 acceptance:
   input path;
 - any HBM latency, bandwidth, throughput, or performance-improvement claim.
 
-Generated A14 XO files are not tracked in Git and are not current source
-artifacts. Treat packaging as a reproducibility task. A14.5 structural review,
-local XSim, and exact-target XO-only packaging/metadata are PASS with reviewed
-user-returned evidence. This does not authorize or imply Vitis link, xclbin,
-physical HBM, Host, device, board, or performance success. See
-`docs/STAGE2N_A14_5_TARGET_XO_ACCEPTANCE.md`.
+Generated A14 XO files are not tracked in Git. A14.6 is authorized to consume
+the accepted server-side v2 XO only after its exact SHA256 and cross-layer
+metadata pass; it must not silently rebuild or substitute that input. A14.5
+structural review, local XSim, and exact-target XO-only packaging/metadata are
+PASS. A14.6 `v++`, xclbin, connectivity, and timing remain NOT RUN until the
+user returns evidence. See `docs/STAGE2N_A14_6_LINK_ONLY_PLAN.md`.
 
 ## 4. Hardware Environment
 

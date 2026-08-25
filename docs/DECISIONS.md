@@ -516,3 +516,26 @@
   complete DLRM from XO metadata.
 - **Impact:** A14.5 is closed at its authorized XO-only boundary. Any link,
   Host, device, or physical-memory work requires a separately reviewed stage.
+
+## D-031 - Separate A14.6 link-only validation from Host and physical HBM work
+
+- **Status:** adopted as the next isolated engineering stage; target execution
+  remains NOT RUN.
+- **Input:** consume only the accepted 12,951-byte A14.5 v2 XO with SHA256
+  `7c05895b4ef7f3b3e1169d722f88a4ea5103ae9d5cb5283fd0372e7bc3e43dea`.
+  The link runner must fail before `v++` if this identity or the cross-layer
+  TABLE_BASE/64-bit address metadata does not match.
+- **Connectivity:** instantiate one `dlrm_a14_1` CU from
+  `dlrm_f37x_rtl_kernel_stage2n_a14_v2`, map only its `m_axi_gmem` port to
+  `HBM[0]`, and request 100 MHz on `inspur_f37x_xdma_201920_3`.
+- **Flow:** use new A14.6 build/result roots, generate a hardware xclbin, retain
+  xclbin sections and hashes, and extract exact-VU37P routed timing evidence.
+  Never rebuild the input XO or overwrite earlier A14 artifacts in this flow.
+- **Reason:** the previous target runner is hard-coded to A14 v1 and would not
+  validate the accepted runtime TABLE_BASE ABI. A dedicated v2 link-only flow
+  preserves provenance and prevents an old kernel from being mistaken for the
+  current design.
+- **Boundary:** linked `HBM[0]` metadata is not a physical-memory PASS. No Host,
+  XRT buffer, render node, programming/reset, FPGA transaction, lookup result,
+  latency, bandwidth, throughput, power, speedup, or A13 integration is
+  authorized or accepted by A14.6.

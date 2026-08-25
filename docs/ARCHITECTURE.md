@@ -209,7 +209,27 @@ TABLE_BASE size=8, addressQualifier=1, port=m_axi_gmem
 The generated kernel port `range` is recorded but is not the sole width proof.
 A real 32-bit RTL/component path still fails the combined gate.
 
-### 2.4 Wrapper register boundary
+### 2.4 A14.6 link-only boundary
+
+A14.6 does not change the v2 RTL or ABI. It consumes the accepted exact-target
+XO and applies platform connectivity during Vitis link:
+
+```text
+dlrm_f37x_rtl_kernel_stage2n_a14_v2.xo
+                    |
+                    | nk=...a14_v2:1:dlrm_a14_1
+                    | sp=dlrm_a14_1.m_axi_gmem:HBM[0]
+                    | target=hw, clock=100 MHz
+                    v
+                 xclbin
+```
+
+The link output may establish platform integration, the requested logical
+CU-to-bank metadata, exact VU37P implementation, and routed timing. It cannot
+establish XRT allocation semantics, physical HBM reads, row-data correctness,
+or end-to-end DLRM behavior because no Host or FPGA access exists in A14.6.
+
+### 2.5 Wrapper register boundary
 
 The standalone A14 wrapper exposes:
 
