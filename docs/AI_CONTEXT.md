@@ -93,11 +93,17 @@ Completed or present in the current source tree:
   global-memory argument in the v1 ABI;
 - versioned A14.5 v2 source with a 64-bit `TABLE_BASE`, address rule
   `TABLE_BASE + (LOOKUP_INDEX << 4)`, independent testbenches, and new XSim and
-  exact-target XO-only runners.
+  exact-target XO-only runners;
+- a retained first local-XSim failure diagnosis: the standalone TB omitted the
+  explicit 32-bit `INDEX_WIDTH` parameter, so Vivado connected its 32-bit
+  signals to 6-bit DUT ports and the first response-index comparison saw upper
+  `Z` bits. The TB binding and runner failure-status behavior are fixed in
+  source, but the retry is not yet run.
 
 Pending or blocked:
 
-- A14.5 v2 lookup/wrapper XSim execution;
+- A14.5 v2 lookup/wrapper XSim retry after the diagnosed testbench-only width
+  binding fix;
 - A14.5 exact-VU37P XO metadata validation, including a 64-bit
   `addressQualifier=1` `TABLE_BASE` argument on `m_axi_gmem`;
 - availability of Vitis `v++` and the F37X `.xpfm` platform locally;
@@ -197,8 +203,9 @@ According to `docs/STAGE2N_A13_FINAL_ACCEPTANCE.md`:
 - explicit rejection of unaligned bases and address overflow;
 - v2 self-checking XSim sources and exact-target XO-only metadata runner.
 
-These items have passed local structural checks only. Vivado/XSim and the
-exact-target v2 XO gate have not run.
+These items have passed local structural checks only. The first user-controlled
+XSim attempt failed on a diagnosed testbench parameter binding before wrapper
+simulation; the fixed retry and exact-target v2 XO gate have not run.
 
 ### Not proven by A14
 

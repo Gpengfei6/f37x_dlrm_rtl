@@ -86,7 +86,8 @@ module tb_dlrm_hbm_embedding_lookup_stage2n_a14_v2;
     .ELEMENT_WIDTH(ELEMENT_WIDTH),
     .DATA_WIDTH(DATA_WIDTH),
     .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
-    .AXI_ID_WIDTH(AXI_ID_WIDTH)
+    .AXI_ID_WIDTH(AXI_ID_WIDTH),
+    .INDEX_WIDTH(INDEX_WIDTH)
   ) dut (
     .clk(clk),
     .rst(rst),

@@ -146,10 +146,25 @@ Required marker:
 tb_dlrm_f37x_rtl_kernel_stage2n_a14_v2: PASS cases=17 valid=14 rejected=3 ar=14 r=14
 ```
 
-Local XSim is **NOT RUN** in the current Codex environment because Vivado/XSim
-is unavailable there.  File presence, Bash syntax, structural invariants, and
-diff formatting can be checked locally, but those checks are not RTL
-simulation evidence.
+Vivado/XSim is unavailable in the Codex environment. The first
+user-controlled Vivado/XSim 2022.1 attempt at commit `29401e5` compiled and
+elaborated the standalone lookup, then failed the first result-index check:
+
+```text
+actual bit length 32 differs from formal bit length 6
+lookup index mismatch expected=0 actual=Z
+```
+
+The cause was testbench-only: the TB declared 32-bit index signals so it could
+exercise the out-of-range guard, but omitted `.INDEX_WIDTH(INDEX_WIDTH)` on the
+DUT instance. The DUT therefore retained its six-bit default. The fix binds
+the 32-bit parameter explicitly. The RTL address/data implementation is not
+changed by this fix, and the corrected simulation is **NOT RUN**.
+
+The XSim runner now also creates a `RUNNING` status before simulation and
+rewrites it as `FAIL` with the active case and failure reason when a future run
+stops early. Attempt 1 predated that improvement, so its absent `status.txt` is
+expected; its compile/elaboration/XSim logs remain the evidence.
 
 ## 7. Exact-target XO-only gate
 
@@ -185,7 +200,8 @@ The runner contains no `v++` call and performs no FPGA access.
 | A14.5 RTL/TB implementation | PRESENT | Source review only |
 | Bash syntax | PASS | `bash -n`; not functional RTL evidence |
 | Structural source checks | PASS | Required fields, mappings and guards present |
-| Vivado/XSim | NOT RUN | User local Vivado 2022.1 required |
+| Vivado/XSim attempt 1 | FAIL/DIAGNOSED | Standalone TB 32-bit signals connected to default 6-bit DUT index ports; wrapper not run |
+| Vivado/XSim fixed retry | NOT RUN | Explicit `.INDEX_WIDTH(32)` binding present |
 | Exact VU37P XO v2 | NOT RUN | User server Vivado 2020.2 required |
 | Vitis link/xclbin | NOT RUN | Deliberately outside this small stage |
 | XRT BO/Host | NOT IMPLEMENTED | Later stage |

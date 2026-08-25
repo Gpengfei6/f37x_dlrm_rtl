@@ -18,6 +18,11 @@ $ResultDir = [System.IO.Path]::GetFullPath($ResultDir)
 $xvlog = Join-Path $VivadoBin 'xvlog.bat'
 $xelab = Join-Path $VivadoBin 'xelab.bat'
 $xsim = Join-Path $VivadoBin 'xsim.bat'
+$statusPath = Join-Path $ResultDir 'status.txt'
+$branch = 'NOT_RECORDED'
+$head = 'NOT_RECORDED'
+$activeCase = 'PRECHECK'
+$resultRootCreated = $false
 
 function Fail([string]$Message) {
     throw "Stage 2N-A14.5 XSim failed: $Message"
@@ -110,9 +115,21 @@ try {
     }
 
     New-Item -ItemType Directory -Path $ResultDir | Out-Null
+    $resultRootCreated = $true
     $branch = (git symbolic-ref --short HEAD).Trim()
     $head = (git rev-parse HEAD).Trim()
+    @(
+        'STAGE2N_A14_5_TABLE_BASE_XSIM=RUNNING'
+        "BRANCH=$branch"
+        "HEAD=$head"
+        'ACTIVE_CASE=PRECHECK'
+        'NO_VPP_LINK=1'
+        'NO_XCLBIN=1'
+        'NO_PHYSICAL_HBM_BINDING=1'
+        'NO_FPGA_ACCESS=1'
+    ) | Set-Content -LiteralPath $statusPath -Encoding UTF8
 
+    $activeCase = 'lookup_v2'
     $lookupResult = Invoke-XSimCase `
         -Name 'lookup_v2' `
         -Top 'tb_dlrm_hbm_embedding_lookup_stage2n_a14_v2' `
@@ -126,6 +143,7 @@ try {
         -PassMarker `
             'tb_dlrm_hbm_embedding_lookup_stage2n_a14_v2: PASS cases=67 valid=64 rejected=3 ar=64 r=64'
 
+    $activeCase = 'wrapper_v2'
     $wrapperResult = Invoke-XSimCase `
         -Name 'wrapper_v2' `
         -Top 'tb_dlrm_f37x_rtl_kernel_stage2n_a14_v2' `
@@ -166,8 +184,25 @@ try {
         'NO_FPGA_ACCESS=1'
     )
     $status | Set-Content -LiteralPath `
-        (Join-Path $ResultDir 'status.txt') -Encoding UTF8
+        $statusPath -Encoding UTF8
     Write-Output ($status -join [Environment]::NewLine)
+} catch {
+    if ($resultRootCreated -and
+        (Test-Path -LiteralPath $ResultDir -PathType Container)) {
+        $failureReason = $_.Exception.Message -replace '[\r\n]+', ' '
+        @(
+            'STAGE2N_A14_5_TABLE_BASE_XSIM=FAIL'
+            "BRANCH=$branch"
+            "HEAD=$head"
+            "ACTIVE_CASE=$activeCase"
+            "FAIL_REASON=$failureReason"
+            'NO_VPP_LINK=1'
+            'NO_XCLBIN=1'
+            'NO_PHYSICAL_HBM_BINDING=1'
+            'NO_FPGA_ACCESS=1'
+        ) | Set-Content -LiteralPath $statusPath -Encoding UTF8
+    }
+    throw
 } finally {
     Pop-Location
 }

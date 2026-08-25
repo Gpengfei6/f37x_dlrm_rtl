@@ -6,8 +6,8 @@ Snapshot date: 2026-08-25
 
 - Repository: `D:\FpgaWork\f37x_dlrm_rtl`
 - Branch: `work/stage2n-a13-cycle-counter`
-- A14.5 parent HEAD: `cd68a795cb75b709a428949fb8b91733c28a8415`
-- A14.5 parent subject: `fix(a14): set explicit AXI metadata for target XO`
+- A14.5 XSim-fix parent HEAD: `29401e51ce7f15e5fb5276d571906eaea28f1ba4`
+- A14.5 source-preparation commit: `29401e5`
 - A14 source integration commit: `a19d338`
 - Current engineering stage: **Stage 2N-A14.5**
 - Accepted and frozen functional baseline: **Stage 2N-A13**
@@ -73,9 +73,16 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 - Added independent v2 lookup/wrapper self-checking testbenches, a local XSim
   runner, and an exact-target XO-only package/metadata runner.
 - Local structural checks and Bash syntax pass in the Codex environment.
-- Vivado/XSim and exact-target XO v2 packaging are **NOT RUN**. No v++ link,
-  xclbin, Host, FPGA programming, or physical HBM operation is part of this
-  source-preparation milestone.
+- The first user-controlled Vivado/XSim 2022.1 attempt at `29401e5` compiled
+  and elaborated the standalone lookup, then failed its first result-index
+  comparison. Vivado reported a 32-bit actual versus 6-bit formal connection
+  for both lookup index ports; the unbound DUT default truncated the request
+  and left the observed upper response-index bits as `Z`.
+- A versioned test-infrastructure fix now binds `INDEX_WIDTH=32` explicitly and
+  makes the runner retain `status.txt` on failures. The fixed retry is
+  **NOT RUN**. The wrapper bench did not run in attempt 1.
+- Exact-target XO v2 packaging remains **NOT RUN**. No v++ link, xclbin, Host,
+  FPGA programming, or physical HBM operation is part of this milestone.
 
 ## Verification Summary
 
@@ -97,7 +104,8 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 | A14 V3 explicit AXI metadata retry | REVIEWED | Exact VU37P XO generated at `cd68a79`; diagnosis above; no `v++` or device operation |
 | A14.5 table-base source | PRESENT | New versioned RTL/TBs/package runners; A13 and A14 v1 untouched |
 | A14.5 local structural checks | PASS | Required address, ABI, guard, metadata, and no-`v++` invariants only |
-| A14.5 lookup/wrapper XSim | NOT RUN | Vivado/XSim unavailable in the Codex environment |
+| A14.5 XSim attempt 1 | FAIL/DIAGNOSED | Lookup compile/elaboration completed; 32-bit TB index was connected to the DUT's unoverridden 6-bit default; first comparison observed upper `Z`; wrapper not run |
+| A14.5 XSim index-width fix | PRESENT/NOT RUN | Standalone TB now passes `.INDEX_WIDTH(32)` explicitly; runner retains failure status; retry pending |
 | A14.5 exact VU37P XO v2 | NOT RUN | User-controlled Vivado 2020.2 server gate required |
 | A14 Vitis link | BLOCKED | Local `v++` and F37X platform metadata unavailable |
 | A14 xclbin | NOT GENERATED | No A14 xclbin exists in the current build tree |
@@ -147,10 +155,12 @@ Historical target environment recorded by accepted evidence:
 5. The V3 exact-target XO confirms 128-bit AXI data and 64-bit component-side
    addressing, but the v1 kernel ABI has no `m_axi_gmem` table-base argument;
    generated kernel XML therefore retains a 32-bit range.
-6. A14.5 v2 XSim and exact-target XO metadata gates have not yet run.
-7. A14 has no xclbin, physical HBM access evidence, XRT BO/DMA Host, or board
+6. A14.5 XSim attempt 1 failed because the standalone TB omitted the explicit
+   32-bit index parameter. The diagnosed fix is present but has not been rerun.
+7. The exact-target XO metadata gate has not yet run.
+8. A14 has no xclbin, physical HBM access evidence, XRT BO/DMA Host, or board
    result.
-8. A14 lookup output is not connected to A13 Feature Interaction; the two tops
+9. A14 lookup output is not connected to A13 Feature Interaction; the two tops
    are independent.
 
 These are environment and integration blockers, not failures of the completed
@@ -158,20 +168,21 @@ A14 XSim tests.
 
 ## Next Actions
 
-1. Review and commit the A14.5 source-preparation milestone with its explicit
-   `NOT RUN` evidence boundary.
-2. On local Windows Vivado 2022.1, run
+1. Review, commit, and push the A14.5 XSim index-width/runner evidence fix.
+2. Preserve the first failed result root as
+   `results/stage2n_a14_5_table_base_xsim_v1_attempt1_index_width_binding_fail`.
+3. On local Windows Vivado 2022.1, rerun
    `scripts/run_stage2n_a14_5_table_base_xsim_v1.ps1` and retain both PASS
    markers and the status file.
-3. Transfer that committed revision to the clean user-controlled server and run
+4. Transfer that committed revision to the clean user-controlled server and run
    `scripts/build_stage2n_a14_5_target_xo_v1.sh`.
-4. Accept the XO-only gate only if generated kernel XML reports 128-bit data,
+5. Accept the XO-only gate only if generated kernel XML reports 128-bit data,
    64-bit range, and `TABLE_BASE` as an 8-byte `addressQualifier=1` argument on
    `m_axi_gmem`; retain XML, logs, status, size, and SHA256.
-5. Update current-state/evidence documents and commit the actual XSim/XO result.
-6. Only after the A14.5 gates pass, review a separate link/Host stage. Do not
+6. Update current-state/evidence documents and commit the actual XSim/XO result.
+7. Only after the A14.5 gates pass, review a separate link/Host stage. Do not
    run v++, generate an xclbin, or access the FPGA as part of A14.5.
-7. Only after standalone physical lookup validation, design a separate stage to
+8. Only after standalone physical lookup validation, design a separate stage to
    connect embedding vectors to the frozen A13 Feature Interaction input.
 
 ## Non-Goals of the Current Stage
