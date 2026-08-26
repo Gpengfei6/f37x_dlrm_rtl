@@ -135,7 +135,7 @@ require_empty_render()
     local stage="$1"
     local fuser_output lsof_output
     fuser_output="$(fuser -v "${TARGET_RENDER}" 2>&1 || true)"
-    lsof_output="$(lsof "${TARGET_RENDER}" 2>&1 || true)"
+    lsof_output="$(lsof -w "${TARGET_RENDER}" 2>&1 || true)"
     if [[ -n "${fuser_output//[[:space:]]/}" ]]; then
         printf '%s\n' "${fuser_output}"
         fail "${stage}: fuser reports an open handle on ${TARGET_RENDER}"
