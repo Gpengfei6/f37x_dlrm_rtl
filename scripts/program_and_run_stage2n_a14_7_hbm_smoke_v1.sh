@@ -227,8 +227,15 @@ host_value()
 [[ "${LOOKUP_INDEX}" =~ ^[0-9]+$ ]] || fail "A14_7_LOOKUP_INDEX must be decimal 0..63"
 (( LOOKUP_INDEX >= 0 && LOOKUP_INDEX < 64 )) || fail "A14_7_LOOKUP_INDEX must be in 0..63"
 [[ -f "${XRT_SETUP}" ]] || fail "XRT setup is missing: ${XRT_SETUP}"
-# shellcheck disable=SC1090
-source "${XRT_SETUP}" >/dev/null 2>&1 || fail "failed to initialize XRT"
+# XRT 2020.2 vendor setup.sh is not nounset-safe when caller variables such as
+# LD_LIBRARY_PATH or PYTHONPATH are unset. Suspend nounset only across the
+# trusted vendor environment setup, then restore strict mode immediately.
+set +u
+if ! source "${XRT_SETUP}" >/dev/null 2>&1; then
+    set -u
+    fail "failed to initialize XRT"
+fi
+set -u
 for tool in xbutil git sha256sum awk grep fuser lsof readlink stat python3; do
     command -v "${tool}" >/dev/null 2>&1 || fail "required tool not found: ${tool}"
 done
