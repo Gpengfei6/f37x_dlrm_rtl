@@ -5,7 +5,7 @@ Snapshot date: 2026-08-26
 ## Repository State
 
 - Repository: `D:\FpgaWork\f37x_dlrm_rtl`
-- Branch: `work/stage2n-a13-cycle-counter`
+- Branch: `work/stage2n-a15-hbm-pipeline-integration`
 - A14.5 accepted target-XO tested HEAD:
   `4096614419170404d5dcb334432f5f322c4f92d5`
 - A14.6 accepted link-only tested HEAD:
@@ -17,11 +17,14 @@ Snapshot date: 2026-08-26
 - A14.5 XSim-fix commit: `d428e8b`
 - A14.5 XSim-acceptance commit: `de9276e`
 - A14 source integration commit: `a19d338`
-- Current engineering stage: **Stage 2N-A14.7 target XRT build-only PASS; ready for protected physical-HBM board gate; Host/device/physical HBM NOT RUN**
+- A14.7 final protected source baseline: `70179f66c6fab8a28c2305c024bec3fa43f9c508`
+- A15.1 authorization and implementation baseline:
+  `2020e4ccd2f802d69714d957e7b8baf8172a39fa`
+- Current engineering stage: **Stage 2N-A15.1 controller-level HBM-to-pipeline integration; local XSim PASS**
 - Accepted and frozen functional baseline: **Stage 2N-A13**
 
-The branch name still refers to A13 even though A14 prototype files are now
-present. Do not infer stage status from the branch name alone.
+The branch contains the accepted A13/A14 history plus the versioned A15.1 local
+integration proof. Do not infer validation scope from stage numbering alone.
 
 The primary Windows worktree may contain pre-existing untracked recovery,
 historical evidence, patent, source, and helper files. Preserve them. Never use
@@ -170,9 +173,26 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
   `f5bfbd50562fcf31a45105a32f7edb414fc4886d007c8ab588f8032c3afc0946`;
   payload SHA256 remains
   `023ad250824def6b538ac40a7f0a9bd457e571136100ab1c1e574769f9061b03`.
-- Host execution, FPGA programming, physical HBM, and board evidence remain
-  **NOT RUN**. `A14_7_READY_FOR_BOARD=YES` means only that the separately
-  protected board gate may now be entered.
+- The build-only record was subsequently superseded by the final A14.7
+  acceptance below: one protected physical HBM[0] lookup completed with exact
+  row-37 software-golden agreement, then the BO was released and HBM[0]
+  returned to zero usage.
+
+### Stage 2N-A15.1
+
+- Added a versioned controller-level wrapper that instantiates, without editing,
+  the accepted A14 v2 lookup and accepted A13 cycle-counter pipeline.
+- A successful A14 128-bit response is retained until A13 accepts it as
+  embedding slot 0. No lane reorder is performed.
+- Embedding slot 0 is HBM-owned; Host writes to slot 0 are explicitly rejected.
+  Slots 1 through 3 preserve the A13 Host-configured handshake and data.
+- Pending HBM injection has configuration-port priority. Lookup errors never
+  write slot 0, and busy/repeated requests cannot replace retained state.
+- Local Vivado/XSim 2022.1 compile, elaboration, and simulation are **PASS** with
+  all nine behavioral/ABI markers, zero warnings, and zero anchored
+  error/fatal records.
+- This is a fake-memory controller-level proof. There is no A15 target build,
+  xclbin, public kernel-top integration, FPGA execution, or physical HBM result.
 ## Verification Summary
 
 | Area | Result | Evidence boundary |
@@ -207,7 +227,9 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 | A14.7 canonical payload | **PASS** | 1024 bytes; SHA256 `023ad250824def6b538ac40a7f0a9bd457e571136100ab1c1e574769f9061b03`; FNV1a64 `40a53c3698b88325` |
 | A14.7 local static/offline validation | **PASS** | C++11 declaration-only XRT stub compile, Bash/Python syntax, valid 64-line fixture, tampered-result rejection |
 | A14.7 target XRT Host build | **PASS** | Formal rerun at `82a6e46` with caller XRT variables explicitly unset; XRT `2.9.210507` symbol/API probe and GCC 4.8.5 `gnu++11` compile/link PASS; binary SHA256 `f5bfbd50562fcf31a45105a32f7edb414fc4886d007c8ab588f8032c3afc0946` |
-| A14 physical HBM | NOT VALIDATED | No A14.7 Host execution or physical HBM transaction has been run |
+| A14.7 physical HBM | **PASS** | One protected HBM[0] row-37 lookup returned `[40,41,42,43,44,45,46,47]` exactly; BO release and zero post-use HBM[0] state recorded |
+| A15.1 local HBM-to-pipeline integration | **PASS** | Controller-level XSim: slot-0 injection, exact lane order, Host slot1-3 preservation, delayed ready, error/busy/Host-slot0 guards, loaded mask and A13 ABI all passed; fake AXI memory only |
+| A15.1 physical HBM / target execution | NOT RUN | No public target top, target build/link, xclbin programming, FPGA access, or board run |
 
 Primary evidence:
 
@@ -228,6 +250,7 @@ Primary evidence:
 - `docs/evidence/stage2n_a14_6/`
 - `docs/STAGE2N_A14_7_HBM_SINGLE_TABLE_HOST_PREPARATION_V1.md`
 - `docs/evidence/stage2n_a14_7/local_source_preparation_v1.txt`
+- `docs/STAGE2N_A15_1_HBM_PIPELINE_INTEGRATION_V1.md`
 
 ## Current Local Environment
 
@@ -258,34 +281,25 @@ Historical target environment recorded by accepted evidence:
    paths.
 4. The previously documented proxy XO was a generated worktree artifact and is
    not present in this main working tree.
-5. A14 has an accepted generated link-only xclbin and locally prepared
-   A14.7 XRT BO/DMA Host/runner source. Target compile/link has passed
-   diagnostically under F37X XRT `2.9.210507`, but the versioned build runner
-   requires one nounset-compatibility fix and formal rerun. Host execution,
-   physical HBM access, and board evidence have not been run.
-6. A14 lookup output is not connected to A13 Feature Interaction; the two tops
-   are independent.
+5. A15.1 connects A14 v2 response data to the A13 slot-0 configuration path only
+   at controller level. A public F37X kernel/control top has not been integrated.
+6. A15.1 has no target build/link, xclbin, physical-HBM transaction, complete
+   prediction golden regression, or board evidence.
 
-These are environment and integration blockers, not failures of the completed
-A14 XSim tests.
+These are environment and next-level integration blockers, not failures of the
+completed A15.1 local XSim test.
 
 ## Next Actions
-1. Commit the narrow A14.7 target-build hardening change: isolate the XRT
-   vendor setup from `set -u`, remove the redundant GCC 4.8 aggregate-init
-   warning, and retain the target-build attempt diagnosis.
-2. Preserve the accepted A14.6 XO/xclbin identities and returned evidence; do
-   not rerun or overwrite accepted A14.6 roots merely to reproduce them.
-3. User-controlled target step: fast-forward the build-only clone to the fixed
-   commit and rerun only `bash scripts/build_stage2n_a14_7_host_v1.sh` with no
-   `LD_LIBRARY_PATH`/`PYTHONPATH` workaround.
-4. Keep `A14_7_READY_FOR_BOARD=NO` until that versioned-runner target XRT
-   `2.9.210507` build-only rerun is reviewed and accepted.
-5. After formal target build-only acceptance, separately authorize the
-   protected single-row physical-HBM smoke. If the currently loaded image is
-   not A14.6, first review its UUID/CU before supplying the explicit source
-   allowlist.
-6. Only after standalone physical lookup acceptance, design a separate stage to
-   connect embedding vectors to the frozen A13 Feature Interaction input.
+1. Preserve the accepted A13, A14.5, A14.6, and A14.7 identities and evidence;
+   do not rerun physical A14.7 merely to reconfirm it.
+2. Review and accept the A15.1 local controller-level proof and its exact-file
+   commit.
+3. Separately authorize any public F37X kernel/control-top integration. Preserve
+   the A13 cycle-counter offsets `0x218/0x21C/0x220/0x224` and slot1-3 Host ABI.
+4. Add a complete A15 functional-golden regression before any performance work.
+5. Treat target build/link, xclbin generation/programming, and board execution
+   as separately authorized gates performed only by the user-controlled target
+   environment.
 ## Non-Goals of the Current Stage
 
 - modifying accepted A13 RTL;

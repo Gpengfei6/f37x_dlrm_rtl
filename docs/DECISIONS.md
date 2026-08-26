@@ -683,3 +683,29 @@ No additional physical lookup was performed solely to retest the hardened guard.
 
 Next decision:
 move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipeline before introducing multi-table or multi-bank scaling.
+
+## D-036 - Integrate one HBM-owned embedding slot before public-top expansion
+
+- **Status:** accepted locally on 2026-08-26 by Stage 2N-A15.1 Vivado/XSim
+  2022.1 evidence.
+- **Decision:** prove the minimum A14-to-A13 handoff in a new controller-level
+  wrapper. A14 v2 owns embedding slot 0; the existing Host path retains slots 1
+  through 3. Do not copy or modify the accepted A13 or A14 v2 modules.
+- **Packing:** connect the 128-bit A14 response directly. Both sides use lane 0
+  in bits `[15:0]` through lane 7 in bits `[127:112]`; lane reordering would add
+  logic and violate the audited contract.
+- **Elasticity:** retain a successful lookup response until the A13 embedding
+  configuration port is ready. Pending HBM injection has arbitration priority
+  over Host configuration.
+- **Guards:** Host slot-0 writes are explicitly rejected; lookup errors never
+  inject data; busy/repeated lookup requests cannot replace active or retained
+  state; an error after a valid load preserves slot 0 and its loaded bit.
+- **A13 compatibility:** retain the original `embedding_loaded == 4'hF` START
+  gate and cycle-counter offsets Bottom `0x218`, Interaction `0x21C`, Top
+  `0x220`, and Total `0x224`.
+- **Evidence:** local XSim passed all nine behavioral/ABI markers with two AXI AR
+  and two AXI R fake-memory handshakes, zero warnings, and zero anchored
+  error/fatal records.
+- **Boundary:** this decision does not accept a public F37X top, complete A15
+  prediction golden, target build/link, xclbin, FPGA execution, physical A15
+  HBM access, multi-bank/table behavior, or any performance claim.

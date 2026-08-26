@@ -10,8 +10,8 @@ This repository develops a synthesizable SystemVerilog FPGA accelerator for
 Deep Learning Recommendation Model (DLRM) inference. The implemented research
 path combines a runtime-configurable fixed-point dense engine, Bottom MLP,
 feature interaction, Top MLP, host control, and stage-level observability. The
-current Stage 2N-A14 work explores moving embedding-row lookup from the CPU to a
-standalone FPGA-side AXI/HBM path.
+current Stage 2N-A15.1 work locally connects the accepted A14 v2 lookup result
+to the accepted A13 pipeline's embedding slot 0.
 
 Target environment:
 
@@ -24,15 +24,15 @@ Target environment:
 Main research direction:
 
 1. retain the accepted configurable Bottom–Interaction–Top inference pipeline;
-2. replace CPU-resolved embedding-vector injection with a measured FPGA-side
-   embedding lookup path;
-3. validate a single HBM bank before considering integration, multiple banks,
-   request coalescing, scheduling, or performance claims.
+2. integrate one accepted FPGA-side HBM lookup result without changing the A13
+   arithmetic, cycle counters, or Host-configured embedding slots 1 through 3;
+3. establish functional equivalence before considering multiple banks, request
+   coalescing, scheduling, or performance claims.
 
 Important distinction: A13 is the accepted integrated DLRM pipeline baseline,
-but its embedding lookup is performed by the CPU. A14 currently contains a
-standalone lookup prototype and wrapper; it is not connected to the A13
-Bottom–Interaction–Top pipeline.
+whose embedding lookup is performed by the CPU. A14.7 separately proved one
+physical HBM[0] lookup. A15.1 now proves only the local controller-level data
+handoff from A14 v2 to A13 slot 0; it is not yet a physical integrated DLRM top.
 
 ## 2. AI Reading Order
 
@@ -44,7 +44,8 @@ Read the repository in this order before proposing or making changes:
 4. `docs/CURRENT_STATE.md`
 5. `docs/ARCHITECTURE.md`
 6. `docs/STAGE_HISTORY.md`
-7. the documents for the active stage, currently `docs/STAGE2N_A14_*.md`
+7. the active-stage document,
+   `docs/STAGE2N_A15_1_HBM_PIPELINE_INTEGRATION_V1.md`
 8. the exact RTL, testbench, Host, configuration, and script files named by the
    active-stage documents
 
@@ -66,99 +67,42 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A14.7 — target XRT build-only PASS; protected physical-HBM board gate is next; Host/device/physical-HBM NOT RUN**.
+Current stage: **Stage 2N-A15.1 — local controller-level HBM-to-pipeline
+integration XSim PASS**.
 
-Stage 2N-A13 is complete and frozen. Its accepted top remains the reference for
-the integrated DLRM pipeline. Stage 2N-A14 is intentionally isolated so it can
-validate the memory-facing architecture without changing A13.
+Stage 2N-A13 remains the accepted and frozen integrated DLRM baseline. A14.5
+added the runtime 64-bit table-base ABI, A14.6 completed the accepted link-only
+F37X build, and A14.7 completed one protected physical HBM[0] lookup with exact
+software-golden agreement. Those stages remain separate evidence boundaries.
 
-Completed or present in the current source tree:
+A15.1 adds one new versioned wrapper. It instantiates the accepted A14 v2 lookup
+and accepted A13 cycle-counter controller without editing either file. Its
+minimum ownership and data path are:
 
-- A14 architecture and data-layout freeze;
-- deterministic 64-row, 8-lane, signed-INT16 embedding table;
-- A14.1 standalone AXI4 read-master lookup RTL;
-- single outstanding, one-beat reads with `ARLEN=0`;
-- byte-address rule `byte_addr = lookup_index << 4`;
-- 128-bit embedding-vector response;
-- self-checking lookup XSim record: 64/64 cases PASS;
-- Vitis-style standalone kernel wrapper with AXI4-Lite control and logical
-  `m_axi_gmem`;
-- wrapper XSim record: 14/14 cases, 14 AR and 14 R handshakes PASS;
-- XO packaging Tcl, kernel metadata plan, and future `HBM[0]` link
-  configuration;
-- a documented local Artix-7 proxy packaging result from the former A14
-  worktree;
-- exact-target V3 packaging evidence showing 128-bit AXI data and 64-bit
-  component-side address metadata, but only a 32-bit kernel XML range and no
-  global-memory argument in the v1 ABI;
-- versioned A14.5 v2 source with a 64-bit `TABLE_BASE`, address rule
-  `TABLE_BASE + (LOOKUP_INDEX << 4)`, independent testbenches, and new XSim and
-  exact-target XO-only runners;
-- a retained first local-XSim failure diagnosis: the standalone TB omitted the
-  explicit 32-bit `INDEX_WIDTH` parameter, so Vivado connected its 32-bit
-  signals to 6-bit DUT ports and the first response-index comparison saw upper
-  `Z` bits. The TB binding and runner failure-status behavior are fixed in
-  source;
-- corrected local Vivado/XSim 2022.1 acceptance at `d428e8b`: standalone
-  lookup 67/67 cases and wrapper 17/17 cases PASS, including three rejected
-  requests per bench, high addresses above 4 GiB, table-base readback, exact
-  AR/R counts, and zero anchored error/fatal records;
-- user-returned exact-target attempt-1 evidence at `de9276e`: Vivado 2020.2
-  generated an intact XO with the exact VU37P part; returned XML confirms an
-  8-byte `TABLE_BASE` global pointer on `m_axi_gmem`, 128-bit AXI data,
-  64-bit component address parameters and AWADDR/ARADDR ports, and a `2^64`
-  IP-XACT address space;
-- a diagnosed obsolete gate: Vivado 2020.2 retained
-  `kernel.xml range=0xFFFFFFFF`, so the old range-only assertion stopped after
-  package generation and the old `ERR` trap misclassified the status. A
-  versioned cross-layer metadata validator and non-overwriting retry runner
-  corrected both problems;
-- accepted exact-target corrected retry at tested server HEAD `4096614`:
-  Vivado 2020.2 generated a 12,951-byte XO for the exact VU37P part, the
-  TABLE_BASE ABI and cross-layer 64-bit address evidence passed, the returned
-  source/artifact hashes were retained, and the package log contained seven
-  warnings, zero critical warnings, and zero errors.
-- A14.6 link-only authorization and architecture freeze: consume only the
-  accepted v2 XO, create one `dlrm_a14_1` compute unit, map
-  `m_axi_gmem -> HBM[0]`, request 100 MHz, and stop before Host/device access.
-- versioned A14.6 configuration, explicit-`yes` non-overwriting link-only
-  runner, and offline xclbin/HBM[0] metadata validator; local static and
-  synthetic-validator checks pass;
-- user-returned A14.6 target evidence at tested HEAD `b44855e`: Vitis 2020.2
-  linked the accepted XO into a non-empty F37X xclbin, the single
-  `dlrm_a14_1.m_axi_gmem -> HBM[0]` metadata connection passed, and the exact
-  VU37P routed design met 100 MHz with WNS/TNS `0.000 ns` and zero failing
-  endpoints.
+- A14 v2 successful 128-bit response -> A13 embedding slot 0;
+- Host configuration -> A13 embedding slots 1 through 3;
+- Host slot-0 writes -> explicit rejection;
+- lookup error -> retained error indication and no slot-0 write;
+- pending HBM injection -> retained until A13 configuration ready and given
+  priority over Host configuration.
 
-A14.7 local source preparation adds a legacy-HAL Host, canonical 1024-byte
-HBM payload builder, target build-only XRT `2.9.210507` API/symbol gate,
-protected board runner, and exact 64-line offline evidence validator.
-User-returned target diagnostics then proved the payload, XRT symbol gate,
-GCC 4.8.5 C++11 compile, and Host link PASS on the F37X after explicitly
-defining `LD_LIBRARY_PATH` and `PYTHONPATH`. The versioned runner itself exposed
-a nounset incompatibility in `/opt/xilinx/xrt/setup.sh`; a narrow source fix
-must be formally rerun before target-build acceptance is frozen. All device
-operations remain NOT RUN.
+Local Vivado/XSim 2022.1 proves slot-0 injection, exact lane order, preservation
+of Host slots 1 through 3, delayed-ready retention, lookup-error and busy guards,
+the loaded-mask transition to `4'hF`, Host slot-0 rejection, and preservation of
+the A13 cycle-counter ABI. Compile, elaboration, and simulation exit codes are
+zero; the accepted log has zero warnings and zero anchored error/fatal records.
 
-Pending beyond the A14.7 local-source-preparation boundary:
+Pending beyond A15.1:
 
-- physical `m_axi_gmem -> HBM[0]` BO/DMA transaction and returned-row validation;
-- Host execution and board testing under the protected runner;
-- integration of the lookup result into the accepted A13 Feature Interaction
-  input path;
-- any HBM latency, bandwidth, throughput, or performance-improvement claim.
-Generated A14 XO and xclbin files are not tracked in Git. A14.6 consumed the
-accepted server-side v2 XO only after its exact SHA256 and cross-layer metadata
-passed. A14.5 structural review, local XSim, and exact-target XO-only
-packaging/metadata are PASS. A14.6 link, xclbin, linked HBM[0] metadata, and
-routed 100 MHz timing are also PASS within the link-only boundary. A14.7 local
-Host/runner/payload/validator source preparation is PASS, and a target
-compile/link diagnostic also passed under GCC 4.8.5 + XRT `2.9.210507` after an
-environment workaround. The versioned build runner still requires a formal
-post-fix rerun; Host execution, physical HBM, FPGA programming, board,
-performance, and A13-integration claims remain NOT RUN or NOT VALIDATED. See
-`docs/STAGE2N_A14_6_LINK_ONLY_ACCEPTANCE.md` and
-`docs/STAGE2N_A14_7_HBM_SINGLE_TABLE_HOST_PREPARATION_V1.md`.
+- public F37X AXI4-Lite/kernel-top integration;
+- complete A15 prediction software-golden regression;
+- A15 target build/link and xclbin;
+- A15 FPGA-device execution or physical HBM validation;
+- any A15 latency, bandwidth, throughput, power, or performance claim;
+- multi-table, multi-bank, burst, cache, coalescing, scheduling, or INT8 work.
+
+See `docs/STAGE2N_A15_1_HBM_PIPELINE_INTEGRATION_V1.md` for the exact local
+acceptance boundary and retained attempt history.
 ## 4. Hardware Environment
 
 ### Local development environment
@@ -276,29 +220,34 @@ passed both testbenches.
 
 This does not prove a physical HBM transaction.
 
-### Proven by local A14.7 source preparation
+### Proven by accepted A14.7 evidence
 
-- canonical table reconstruction to exactly 1024 little-endian bytes with
-  SHA256 `023ad250824def6b538ac40a7f0a9bd457e571136100ab1c1e574769f9061b03` and FNV1a64 `40a53c3698b88325`;
-- C++11 source/API-shape compile against a declaration-only legacy XRT stub;
-- Bash/Python syntax checks for the build-only gate, protected runner, asset
-  builder, and evidence validator;
-- valid exact-64-line synthetic evidence acceptance and tampered-result
-  rejection.
+- canonical table reconstruction to exactly 1024 little-endian bytes;
+- XRT `2.9.210507` Host build and protected runner controls;
+- one protected physical F37X HBM[0] lookup at index 37;
+- exact returned lanes `[40,41,42,43,44,45,46,47]`;
+- BO release and zero HBM[0] use after cleanup.
 
-These are local/offline source checks only.
+### Proven by local A15.1 XSim
 
-### Not proven by A14.7
+- direct A14 v2 128-bit response injection into A13 embedding slot 0;
+- exact lane0-at-LSB packing with no reorder;
+- preservation of Host-configured slots 1 through 3;
+- retained response data across delayed A13 configuration readiness;
+- lookup error, busy/repeated request, and Host slot-0 ownership guards;
+- loaded mask reaches `4'hF` and the existing A13 START readiness becomes true;
+- A13 cycle-counter offsets remain `0x218/0x21C/0x220/0x224`.
 
-- formal target-build acceptance from the versioned nounset-hardened A14.7 runner under F37X XRT `2.9.210507`;
-- Host execution or XRT BO/DMA behavior on the F37X;
-- physical F37X HBM[0] access or returned-row correctness;
-- A14.7 FPGA programming result, board smoke result, or post-run HBM0 cleanup;
+### Not proven by A15.1
+
+- public F37X kernel/control-top integration;
+- complete A15 prediction software-golden equivalence;
+- A15 target synthesis, implementation, link, xclbin, or timing;
+- A15 FPGA programming or physical HBM transaction;
 - physical HBM bandwidth, latency, throughput, power, or speedup;
 - multi-bank mapping, burst optimization, multiple outstanding reads,
   coalescing, caching, prefetching, or scheduling;
-- complete FPGA-resident sparse-plus-dense DLRM execution;
-- integration of A14 lookup output with A13 Feature Interaction.
+- complete FPGA-resident sparse-plus-dense DLRM execution.
 
 Use `docs/CURRENT_STATE.md` for the exact current branch, HEAD, blockers, and
 next actions.
@@ -334,7 +283,8 @@ the first protected board attempt found that the formal Host executable had beco
 
 Do not repeat A14.7 physical lookup merely to reconfirm it.
 
-The next engineering direction is A13/A14 integration:
-`physical HBM embedding -> Interaction -> Top MLP -> final result`.
+The local A13/A14 controller-level handoff is now accepted in A15.1. The next
+engineering direction is public-top integration plus complete functional-golden
+verification before any new target or performance gate.
 
 First priority is functional equivalence with the software golden model. Multi-table, multi-bank, cache and performance optimization should follow only after this integration path is correct.
