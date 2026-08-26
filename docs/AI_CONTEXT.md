@@ -66,7 +66,7 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A14.6 — exact-target link-only accepted**.
+Current stage: **Stage 2N-A14.7 — protected Host/XRT + physical-HBM single-table smoke source prepared locally; target build/device NOT RUN**.
 
 Stage 2N-A13 is complete and frozen. Its accepted top remains the reference for
 the integrated DLRM pipeline. Stage 2N-A14 is intentionally isolated so it can
@@ -130,22 +130,30 @@ Completed or present in the current source tree:
   VU37P routed design met 100 MHz with WNS/TNS `0.000 ns` and zero failing
   endpoints.
 
-Pending beyond the accepted A14.6 link-only boundary:
+A14.7 local source preparation now adds a legacy-HAL Host, canonical 1024-byte
+HBM payload builder, target build-only XRT `2.9.210507` API/symbol gate, protected
+board runner, and exact 64-line offline evidence validator. Local source/stub
+and synthetic-validator checks pass; target XRT compile/link and all device
+operations remain NOT RUN.
 
-- physical `m_axi_gmem -> HBM[0]` transaction validation;
-- XRT buffer allocation, data transfer, Host execution, and board testing;
+Pending beyond the A14.7 local-source-preparation boundary:
+
+- user-controlled target XRT `2.9.210507` Host compile/link validation;
+- physical `m_axi_gmem -> HBM[0]` BO/DMA transaction and returned-row validation;
+- Host execution and board testing under the protected runner;
 - integration of the lookup result into the accepted A13 Feature Interaction
   input path;
 - any HBM latency, bandwidth, throughput, or performance-improvement claim.
-
 Generated A14 XO and xclbin files are not tracked in Git. A14.6 consumed the
 accepted server-side v2 XO only after its exact SHA256 and cross-layer metadata
 passed. A14.5 structural review, local XSim, and exact-target XO-only
 packaging/metadata are PASS. A14.6 link, xclbin, linked HBM[0] metadata, and
-routed 100 MHz timing are also PASS within the link-only boundary. Physical
-HBM, Host, FPGA, board, performance, and A13-integration claims remain NOT RUN
-or NOT VALIDATED. See `docs/STAGE2N_A14_6_LINK_ONLY_ACCEPTANCE.md`.
-
+routed 100 MHz timing are also PASS within the link-only boundary. A14.7 local
+Host/runner/payload/validator source preparation is PASS, but target Host build,
+Host execution, physical HBM, FPGA programming, board, performance, and
+A13-integration claims remain NOT RUN or NOT VALIDATED. See
+`docs/STAGE2N_A14_6_LINK_ONLY_ACCEPTANCE.md` and
+`docs/STAGE2N_A14_7_HBM_SINGLE_TABLE_HOST_PREPARATION_V1.md`.
 ## 4. Hardware Environment
 
 ### Local development environment
@@ -252,13 +260,36 @@ passed both testbenches.
 - the package log has seven reviewed warnings, zero critical warnings, and zero
   errors.
 
-### Not proven by A14
+### Proven by returned exact-target A14.6 link-only evidence
 
-- physical F37X HBM connectivity or `HBM[0]` access;
-- target VU37P implementation in the current main worktree;
-- Vitis link or A14 xclbin generation;
-- XRT BO/DMA behavior;
-- physical HBM bandwidth, latency, throughput, or speedup;
+- Vitis 2020.2 linked the accepted A14.5 v2 XO into the accepted A14.6 xclbin;
+- xclbin SHA256 `9a7ce2518691e1d9a9ef55a0037d5d5345e3781f1e11eb7c2c7d19697144f573` and UUID `6f29087c-9598-4e68-877a-cc4840d078b8` are retained;
+- extracted metadata contains exactly one reviewed
+  `dlrm_a14_1.m_axi_gmem -> HBM[0]` connection;
+- exact-VU37P routing at 100 MHz passed with WNS/TNS `0.000 ns` and zero failing
+  endpoints within the accepted link-only timing boundary.
+
+This does not prove a physical HBM transaction.
+
+### Proven by local A14.7 source preparation
+
+- canonical table reconstruction to exactly 1024 little-endian bytes with
+  SHA256 `023ad250824def6b538ac40a7f0a9bd457e571136100ab1c1e574769f9061b03` and FNV1a64 `40a53c3698b88325`;
+- C++11 source/API-shape compile against a declaration-only legacy XRT stub;
+- Bash/Python syntax checks for the build-only gate, protected runner, asset
+  builder, and evidence validator;
+- valid exact-64-line synthetic evidence acceptance and tampered-result
+  rejection.
+
+These are local/offline source checks only.
+
+### Not proven by A14.7
+
+- target-side A14.7 Host compile/link under the accepted F37X XRT `2.9.210507`;
+- Host execution or XRT BO/DMA behavior on the F37X;
+- physical F37X HBM[0] access or returned-row correctness;
+- A14.7 FPGA programming result, board smoke result, or post-run HBM0 cleanup;
+- physical HBM bandwidth, latency, throughput, power, or speedup;
 - multi-bank mapping, burst optimization, multiple outstanding reads,
   coalescing, caching, prefetching, or scheduling;
 - complete FPGA-resident sparse-plus-dense DLRM execution;

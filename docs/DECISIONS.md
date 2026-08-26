@@ -573,3 +573,40 @@
   board readiness, performance, power, speedup, or A13 integration.
 - **Impact:** A14.6 is closed as LINK-ONLY PASS. Any Host/device/physical-HBM
   work requires a separately reviewed and authorized stage.
+## D-033 - Separate A14.7 protected physical-HBM single-table validation from broader DLRM integration
+- **Status:** adopted for local source preparation on 2026-08-26; target Host
+  build and all device/physical-HBM actions remain **NOT RUN** at this decision
+  point.
+- **Input:** consume only the accepted A14.6 xclbin with SHA256
+  `9a7ce2518691e1d9a9ef55a0037d5d5345e3781f1e11eb7c2c7d19697144f573`, UUID `6f29087c-9598-4e68-877a-cc4840d078b8`, one
+  `dlrm_f37x_rtl_kernel_stage2n_a14_v2:dlrm_a14_1` CU, and linked HBM[0]
+  memory-topology index 0.
+- **Target runtime:** retain the previously board-accepted F37X XRT runtime
+  `2.9.210507`; A13 final acceptance is the provenance for this target version.
+- **Canonical payload:** retain `models/stage2n_a14_embedding_table.json` as the
+  source of truth and generate exactly 1024 little-endian bytes with SHA256
+  `023ad250824def6b538ac40a7f0a9bd457e571136100ab1c1e574769f9061b03` and FNV1a64 `40a53c3698b88325`.
+- **Host:** use the accepted A13-style legacy HAL access model. Allocate one XRT
+  BO in HBM[0], obtain `xclBOProperties.paddr`, program both 32-bit halves of
+  `TABLE_BASE`, issue exactly one lookup, preserve the first read-to-clear DONE
+  word, compare all eight INT16 lanes, and release the BO on success and error
+  paths.
+- **Safety runner:** lock xbutil index 2, BDF `0000:9b:00.1`, render node
+  `/dev/dri/renderD129`, platform, xclbin identity, CU, and an empty HBM[0]
+  allocation state. If A14.6 is already loaded, skip programming. A different
+  source image is blocked unless its UUID and CU are explicitly allowlisted
+  after review. A simple yes/no authorization is required before the first
+  write action. Never reset or automatically roll back the FPGA.
+- **Evidence:** produce exactly 64 ordered `KEY=VALUE` lines and validate them
+  offline. The validator checks xclbin/payload identity, BO paddr to TABLE_BASE
+  reconstruction, read-to-clear CONTROL semantics, packed result words, all
+  eight signed lanes, BO release, HBM0 zero, and DMA-activity markers. A valid
+  synthetic fixture and a tampered-result fixture are mandatory local tests.
+- **Not adopted:** unmanaged absolute DMA, assuming device address zero, adding
+  a JSON parser to the C++ Host, changing A14 RTL/xclbin, multi-table or batch
+  lookup, performance measurement, A13 integration, automatic source
+  selection, reset, or rollback.
+- **Boundary:** local source/stub/offline-validator PASS does not imply target
+  XRT build, Host execution, FPGA programming, physical HBM, returned-row
+  hardware correctness, performance, or complete DLRM acceptance. Those claims
+  require separately returned target evidence.

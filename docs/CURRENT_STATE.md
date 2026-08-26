@@ -1,6 +1,6 @@
 # Current State
 
-Snapshot date: 2026-08-25
+Snapshot date: 2026-08-26
 
 ## Repository State
 
@@ -10,12 +10,14 @@ Snapshot date: 2026-08-25
   `4096614419170404d5dcb334432f5f322c4f92d5`
 - A14.6 accepted link-only tested HEAD:
   `b44855ed4bc8b469257cb3de80cf530e9d5039b9`
+- A14.7 local-source preparation base HEAD:
+  `3e9899519145d9a3f71f32aee1d1580d388c008f`
 - A14.5 target-attempt parent HEAD: `de9276ebe5c62f54cff5877bc9b11b66606d1549`
 - A14.5 source-preparation commit: `29401e5`
 - A14.5 XSim-fix commit: `d428e8b`
 - A14.5 XSim-acceptance commit: `de9276e`
 - A14 source integration commit: `a19d338`
-- Current engineering stage: **Stage 2N-A14.6 link-only accepted**
+- Current engineering stage: **Stage 2N-A14.7 local Host/XRT + protected physical-HBM single-table smoke source preparation PASS; target build/device NOT RUN**
 - Accepted and frozen functional baseline: **Stage 2N-A13**
 
 The branch name still refers to A13 even though A14 prototype files are now
@@ -142,6 +144,22 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 - No Host, FPGA programming/reset, physical-HBM transaction, board result, or
   A13 integration exists.
 
+### Stage 2N-A14.7
+- Added a protected legacy-HAL Host for one canonical physical-HBM[0] lookup
+  without changing A14 RTL or the accepted A14.6 xclbin.
+- Added a byte-exact canonical-table builder: 1024 bytes, SHA256
+  `023ad250824def6b538ac40a7f0a9bd457e571136100ab1c1e574769f9061b03`, FNV1a64 `40a53c3698b88325`.
+- The Host allocates one HBM[0] BO, obtains its 64-bit `paddr`, programs
+  `TABLE_BASE_LO/HI`, executes one row lookup, handles read-to-clear DONE,
+  checks all eight INT16 lanes, and releases the BO.
+- Added a target build-only XRT `2.9.210507` API/symbol gate, protected board runner,
+  and exact 64-line offline evidence validator with tamper rejection.
+- Local source checks PASS: canonical payload reconstruction, Python syntax,
+  C++11 declaration-only XRT stub compile, Bash syntax, valid evidence fixture,
+  and tampered-result rejection.
+- Target XRT compile/link, Host execution, FPGA programming, physical HBM, and
+  board evidence are **NOT RUN**. A14.7 is ready only for the user-controlled
+  target Host build-only gate, not for a claimed board PASS.
 ## Verification Summary
 
 | Area | Result | Evidence boundary |
@@ -172,7 +190,11 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 | A14 xclbin | **PASS** | Non-empty 43 MiB artifact; SHA256 and UUID retained; generated artifact remains outside Git |
 | A14 linked HBM[0] metadata | **PASS** | Exactly one `dlrm_a14_1` connection to used HBM[0] in extracted xclbin metadata |
 | A14 target timing | **PASS** | Exact VU37P route at 100 MHz; WNS/TNS 0.000 ns, zero failing endpoints; no positive setup margin |
-| A14 physical HBM | NOT VALIDATED | No board access or physical HBM transaction has been run |
+| A14.7 local Host/HBM source preparation | **PASS** | Legacy-HAL Host, canonical builder, build-only gate, protected runner, and 64-line validator prepared locally |
+| A14.7 canonical payload | **PASS** | 1024 bytes; SHA256 `023ad250824def6b538ac40a7f0a9bd457e571136100ab1c1e574769f9061b03`; FNV1a64 `40a53c3698b88325` |
+| A14.7 local static/offline validation | **PASS** | C++11 declaration-only XRT stub compile, Bash/Python syntax, valid 64-line fixture, tampered-result rejection |
+| A14.7 target XRT Host build | NOT RUN | Must be executed by the user in the accepted F37X XRT `2.9.210507` target environment |
+| A14 physical HBM | NOT VALIDATED | No A14.7 Host execution or physical HBM transaction has been run |
 
 Primary evidence:
 
@@ -191,6 +213,8 @@ Primary evidence:
 - `docs/evidence/stage2n_a14_5/`
 - `docs/STAGE2N_A14_6_LINK_ONLY_ACCEPTANCE.md`
 - `docs/evidence/stage2n_a14_6/`
+- `docs/STAGE2N_A14_7_HBM_SINGLE_TABLE_HOST_PREPARATION_V1.md`
+- `docs/evidence/stage2n_a14_7/local_source_preparation_v1.txt`
 
 ## Current Local Environment
 
@@ -221,8 +245,9 @@ Historical target environment recorded by accepted evidence:
    paths.
 4. The previously documented proxy XO was a generated worktree artifact and is
    not present in this main working tree.
-5. A14 has an accepted generated link-only xclbin, but no physical HBM access
-   evidence, XRT BO/DMA Host, or board result.
+5. A14 has an accepted generated link-only xclbin and locally prepared
+   A14.7 XRT BO/DMA Host/runner source, but the target XRT build-only gate, Host
+   execution, physical HBM access, and board evidence have not been run.
 6. A14 lookup output is not connected to A13 Feature Interaction; the two tops
    are independent.
 
@@ -230,16 +255,21 @@ These are environment and integration blockers, not failures of the completed
 A14 XSim tests.
 
 ## Next Actions
-
-1. Commit and push the A14.6 link-only acceptance record without committing
-   the generated xclbin, routed DCP, or large reports.
-2. Preserve the accepted XO and xclbin identities and the returned evidence;
-   do not rerun or overwrite the accepted roots merely to reproduce them.
-3. Keep Host/XRT/device/physical-HBM work outside A14.6.
-4. Review and authorize a separate stage before any Host or device operation.
-5. Only after standalone physical lookup validation, design a separate stage to
+1. Review and commit only the explicit A14.7 source/doc files plus the four
+   entry-point Markdown updates; do not use `git add .` and do not touch
+   historical untracked files.
+2. Preserve the accepted A14.6 XO/xclbin identities and returned evidence; do
+   not rerun or overwrite accepted A14.6 roots merely to reproduce them.
+3. User-controlled target step: run only
+   `bash scripts/build_stage2n_a14_7_host_v1.sh` and return its status plus
+   version/symbol/build logs for review.
+4. Keep `A14_7_READY_FOR_BOARD=NO` until the target XRT `2.9.210507` Host build-only
+   gate is reviewed and accepted. No AI agent accesses the server or device.
+5. After target build-only acceptance, separately authorize the protected
+   single-row physical-HBM smoke. If the currently loaded image is not A14.6,
+   first review its UUID/CU before supplying the explicit source allowlist.
+6. Only after standalone physical lookup acceptance, design a separate stage to
    connect embedding vectors to the frozen A13 Feature Interaction input.
-
 ## Non-Goals of the Current Stage
 
 - modifying accepted A13 RTL;
