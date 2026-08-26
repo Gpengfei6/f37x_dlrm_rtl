@@ -1,0 +1,112 @@
+============================================================
+Stage 2N-A14.7 Protected Physical HBM Single-Table Smoke
+TARGET_INDEX=2
+TARGET_BDF=0000:9b:00.1
+TARGET_RENDER=/dev/dri/renderD129
+EXPECTED_UUID=6f29087c-9598-4e68-877a-cc4840d078b8
+EXPECTED_CU=dlrm_f37x_rtl_kernel_stage2n_a14_v2:dlrm_a14_1
+LOOKUP_INDEX=37
+NO FPGA RESET OR AUTOMATIC ROLLBACK IS PERMITTED
+============================================================
+INFO: Found total 4 card(s), 4 are usable
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+System Configuration
+OS name:	Linux
+Release:	3.10.0-957.el7.x86_64
+Version:	#1 SMP Thu Nov 8 23:39:32 UTC 2018
+Machine:	x86_64
+Model:		NF5468M6
+CPU cores:	112
+Memory:		257429 MB
+Glibc:		2.17
+Distribution:	CentOS Linux 7 (Core)
+Now:		Wed Aug 26 08:37:50 2026 GMT
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+XRT Information
+Version:	2.9.210507
+Git Hash:	b0230e59e22351fb957dc46a6e68d7560e5f630c
+Git Branch:	HEAD
+Build Date:	2021-05-07 20:56:44
+XOCL:		2.9.210507,b0230e59e22351fb957dc46a6e68d7560e5f630c
+XCLMGMT:	2.9.210507,b0230e59e22351fb957dc46a6e68d7560e5f630c
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ [0] 0000:9e:00.1 inspur_f37x_xdma_201920_3(ID=0x601d7f34) user(inst=131)
+ [1] 0000:9c:00.1 inspur_f37x_xdma_201920_3(ID=0x601d7f34) user(inst=130)
+ [2] 0000:9b:00.1 inspur_f37x_xdma_201920_3(ID=0x601d7f34) user(inst=129)
+ [3] 0000:9a:00.1 inspur_f37x_xdma_201920_3(ID=0x601d7f34) user(inst=128)
+RENDER_SYSFS=/sys/devices/pci0000:97/0000:97:02.0/0000:98:00.0/0000:99:02.0/0000:9b:00.1
+PRE_DEVICE_STATE: render node has no open handle
+PRE_DEVICE_STATE: HBM[0] usage is 0 Byte and BO count is 0
+PRE_HOST: render node has no open handle
+PRE_HOST: HBM[0] usage is 0 Byte and BO count is 0
+========== A14.7 READ-ONLY ACTIVITY GUARD / SAMPLE 1 ==========
+ACTIVITY_GUARD_SAMPLE1: render node has no open handle
+ACTIVITY_GUARD_SAMPLE1: HBM[0] usage is 0 Byte and BO count is 0
+Waiting 30 seconds; no programming or Host access occurs.
+========== A14.7 READ-ONLY ACTIVITY GUARD / SAMPLE 2 ==========
+ACTIVITY_GUARD_SAMPLE2: render node has no open handle
+ACTIVITY_GUARD_SAMPLE2: HBM[0] usage is 0 Byte and BO count is 0
+A14_7_ACTIVITY_GUARD=PASS
+FINAL_PRE_HOST: render node has no open handle
+FINAL_PRE_HOST: HBM[0] usage is 0 Byte and BO count is 0
+The accepted A14.6 image is already loaded on 0000:9b:00.1; exactly one physical-HBM lookup will run; no programming/reset/rollback.
+Proceed with the protected A14.7 lookup? [yes/no] ========== EXECUTE ONE A14.7 PHYSICAL-HBM LOOKUP ==========
+A14_7_HOST_SMOKE=PASS
+TARGET_INDEX=2
+TARGET_BDF=0000:9b:00.1
+XCLBIN_UUID=6f29087c-9598-4e68-877a-cc4840d078b8
+IP_NAME=dlrm_f37x_rtl_kernel_stage2n_a14_v2:dlrm_a14_1
+IP_INDEX=0
+HBM_MEMORY_INDEX=0
+BO_FLAGS_HEX=0x00000000
+BO_SIZE_BYTES=4096
+BO_PADDR_HEX=0x0000000000000000
+TABLE_BASE_LO_HEX=0x00000000
+TABLE_BASE_HI_HEX=0x00000000
+PAYLOAD_BYTES=1024
+PAYLOAD_FNV1A64=40a53c3698b88325
+LOOKUP_INDEX=37
+CONTROL_PRE_START_HEX=0x0000000c
+CONTROL_DONE_WORD_HEX=0x00000006
+CONTROL_POST_DONE_HEX=0x0000000c
+CONTROL_POLL_COUNT=1
+RESULT0_HEX=0x00290028
+RESULT1_HEX=0x002b002a
+RESULT2_HEX=0x002d002c
+RESULT3_HEX=0x002f002e
+EXPECTED_LANE0=40
+ACTUAL_LANE0=40
+EXPECTED_LANE1=41
+ACTUAL_LANE1=41
+EXPECTED_LANE2=42
+ACTUAL_LANE2=42
+EXPECTED_LANE3=43
+ACTUAL_LANE3=43
+EXPECTED_LANE4=44
+ACTUAL_LANE4=44
+EXPECTED_LANE5=45
+ACTUAL_LANE5=45
+EXPECTED_LANE6=46
+ACTUAL_LANE6=46
+EXPECTED_LANE7=47
+ACTUAL_LANE7=47
+A14_7_RESULT_MATCH=PASS
+A14_7_BO_RELEASED=PASS
+A14_7_HOST_PASS=1
+========== POST-HOST DEVICE/HBM RELEASE VERIFICATION ==========
+POST_HOST: render node has no open handle
+POST_HOST: HBM[0] usage is 0 Byte and BO count is 0
+============================================================
+STAGE2N_A14_7_HBM_SINGLE_TABLE_BOARD_SMOKE_V1_PASS
+XCLBIN_UUID=6f29087c-9598-4e68-877a-cc4840d078b8
+HBM_BANK=HBM[0]
+LOOKUP_INDEX=37
+PAYLOAD_SHA256=023ad250824def6b538ac40a7f0a9bd457e571136100ab1c1e574769f9061b03
+A14_7_RESULT_MATCH=PASS
+A14_7_HBM0_POST_RELEASE_ZERO=PASS
+A14_7_DMA_ACTIVITY_OBSERVED=PASS
+FPGA_PROGRAMMING=SKIPPED_ALREADY_LOADED
+FPGA_RESET=NOT_RUN
+EVIDENCE=/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a14_7_buildonly/results/stage2n_a14_7/board_smoke_v1/20260826_163749/a14_7_evidence_64.txt
+LOG=/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a14_7_buildonly/server_results/stage2n_a14_7/stage2n_a14_7_hbm_smoke_v1_20260826_163749.log
+============================================================

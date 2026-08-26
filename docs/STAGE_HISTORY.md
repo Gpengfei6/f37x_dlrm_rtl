@@ -61,3 +61,42 @@ materials. Stage-specific documents identify canonical versions, especially
 for A8–A12. Do not delete those files, do not run `git clean`, and do not select
 a file merely because it has the highest-looking suffix. Start from the source
 map in `docs/ARCHITECTURE.md` and the active-stage documents.
+
+## Stage 2N-A14.7 — Protected physical-HBM single-table lookup
+
+Date: 2026-08-26
+
+Result: `PASS`
+
+A14.7 completed the first accepted physical F37X HBM embedding lookup in Stage 2N.
+
+Key milestones:
+1. prepared target-compatible low-level XRT Host;
+2. generated and verified canonical 1024-byte table payload;
+3. built Host successfully against XRT `2.9.210507` / GCC `4.8.5`;
+4. protected target index `2`, BDF `0000:9b:00.1`, renderD129, UUID, CU and HBM[0];
+5. loaded the accepted A14.6 xclbin during the first protected attempt;
+6. identified a zero-byte Host artifact before any valid physical lookup completed;
+7. rebuilt the formal Host ELF and recovered the accepted SHA256;
+8. performed one valid physical HBM[0] lookup;
+9. obtained exact 8-lane software-golden agreement;
+10. released the BO and confirmed HBM[0] returned to zero usage;
+11. hardened the protected runner with runtime Host artifact SHA binding;
+12. validated the hardened guard to the authorization boundary without performing another physical lookup.
+
+Accepted functional result:
+- lookup index: `37`
+- actual: `[40,41,42,43,44,45,46,47]`
+- expected: `[40,41,42,43,44,45,46,47]`
+- result match: `PASS`
+
+Evidence:
+- functional evidence SHA256: `644155ffc1c4e40456a52a2a8ca3a84765b1ce685b9d377138bdd25b6871d2d2`
+- board PASS log SHA256: `cecce17484def1645938b14df8f9b1744e13bf67ea9e4af3ab3ab25dbef54ca5`
+- final guard log SHA256: `9c7db499b84444d278c3be195439fa0984b144cb4586930112f2a2ba7755e368`
+
+Final source baseline before A14.7 documentation closure:
+`70179f66c6fab8a28c2305c024bec3fa43f9c508`
+
+Next:
+integrate physical HBM embedding data into the established A13 DLRM Interaction and Top-MLP pipeline.

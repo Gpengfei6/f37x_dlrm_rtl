@@ -302,3 +302,39 @@ These are local/offline source checks only.
 
 Use `docs/CURRENT_STATE.md` for the exact current branch, HEAD, blockers, and
 next actions.
+
+## Stage 2N-A14.7 handoff context
+
+A14.7 is formally accepted.
+
+Final functional proof:
+- physical F37X HBM[0] lookup completed successfully;
+- lookup index `37`;
+- returned INT16 lanes `[40,41,42,43,44,45,46,47]`;
+- exact software-golden match;
+- BO released after lookup;
+- HBM[0] returned to `0 Byte / 0 BO`;
+- DMA activity was observed;
+- no FPGA reset or automatic rollback occurred.
+
+Successful functional board run:
+- timestamp: `20260826_163749`
+- tested HEAD: `74301a458ef8f6ad7d59dafc80ff30bbae9961d3`
+- evidence SHA256: `644155ffc1c4e40456a52a2a8ca3a84765b1ce685b9d377138bdd25b6871d2d2`
+- log SHA256: `cecce17484def1645938b14df8f9b1744e13bf67ea9e4af3ab3ab25dbef54ca5`
+
+Final source/protection baseline:
+- HEAD: `70179f66c6fab8a28c2305c024bec3fa43f9c508`
+- Host binary SHA256: `f5bfbd50562fcf31a45105a32f7edb414fc4886d007c8ab588f8032c3afc0946`
+- runner SHA256: `03838a0e0a3d85f8a0df622efa35c3a81cf69f58a56bc07792ec16965e48e47e`
+- final guard log SHA256: `9c7db499b84444d278c3be195439fa0984b144cb4586930112f2a2ba7755e368`
+
+Important failure history:
+the first protected board attempt found that the formal Host executable had become a 0-byte executable file while the old build-status SHA remained present. That attempt successfully loaded the accepted A14.6 xclbin but did not execute the real C++ Host/HBM path. Commit `70179f6` added runtime Host non-empty and SHA identity enforcement.
+
+Do not repeat A14.7 physical lookup merely to reconfirm it.
+
+The next engineering direction is A13/A14 integration:
+`physical HBM embedding -> Interaction -> Top MLP -> final result`.
+
+First priority is functional equivalence with the software golden model. Multi-table, multi-bank, cache and performance optimization should follow only after this integration path is correct.

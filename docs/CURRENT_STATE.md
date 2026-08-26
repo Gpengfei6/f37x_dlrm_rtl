@@ -302,3 +302,47 @@ Do not promote `BLOCKED`, `NOT RUN`, a planning document, or a missing generated
 artifact to PASS. Do not demote the final A13 acceptance based on the earlier
 local-only A13 design report. For current work, this file and the later final
 acceptance documents take precedence over older summaries.
+
+## Stage 2N-A14.7 — Final Acceptance
+
+Status: `PASS`
+
+Stage 2N-A14.7 has completed protected Host/XRT + physical HBM[0] single-table lookup validation on the authorized F37X target.
+
+Accepted functional board evidence:
+- Functional tested HEAD: `74301a458ef8f6ad7d59dafc80ff30bbae9961d3`
+- Target BDF: `0000:9b:00.1`
+- XRT: `2.9.210507`
+- XCLBIN UUID: `6f29087c-9598-4e68-877a-cc4840d078b8`
+- XCLBIN SHA256: `9a7ce2518691e1d9a9ef55a0037d5d5345e3781f1e11eb7c2c7d19697144f573`
+- HBM bank: `HBM[0]`
+- Lookup index: `37`
+- Expected lanes: `[40, 41, 42, 43, 44, 45, 46, 47]`
+- Actual lanes: `[40, 41, 42, 43, 44, 45, 46, 47]`
+- `A14_7_RESULT_MATCH=PASS`
+- `A14_7_BO_RELEASED=PASS`
+- `A14_7_HBM0_POST_RELEASE_ZERO=PASS`
+- `A14_7_DMA_ACTIVITY_OBSERVED=PASS`
+- FPGA reset: `NOT_RUN`
+- automatic rollback: `NOT_RUN`
+
+Raw evidence:
+- 64-line evidence SHA256: `644155ffc1c4e40456a52a2a8ca3a84765b1ce685b9d377138bdd25b6871d2d2`
+- successful board log SHA256: `cecce17484def1645938b14df8f9b1744e13bf67ea9e4af3ab3ab25dbef54ca5`
+
+Final protected source baseline:
+- HEAD: `70179f66c6fab8a28c2305c024bec3fa43f9c508`
+- protected runner SHA256: `03838a0e0a3d85f8a0df622efa35c3a81cf69f58a56bc07792ec16965e48e47e`
+- accepted Host ELF SHA256: `f5bfbd50562fcf31a45105a32f7edb414fc4886d007c8ab588f8032c3afc0946`
+- final hardened guard log SHA256: `9c7db499b84444d278c3be195439fa0984b144cb4586930112f2a2ba7755e368`
+
+The first protected attempt exposed a zero-byte runtime Host artifact. The physical A14.6 programming operation succeeded, but the real C++ Host/HBM path did not execute. The protected runner was subsequently hardened to require a non-empty Host ELF plus recorded and actual SHA256 equality before any physical execution.
+
+A14.7 is now frozen. No further single-table HBM smoke is required merely for confirmation.
+
+Next stage:
+integrate the accepted physical-HBM embedding lookup path with the existing A13 DLRM compute pipeline, initially targeting:
+
+`Physical HBM embedding lookup -> Interaction -> Top MLP -> final result`
+
+Multi-table and multi-HBM-bank parallelism remain future work after functional integration.

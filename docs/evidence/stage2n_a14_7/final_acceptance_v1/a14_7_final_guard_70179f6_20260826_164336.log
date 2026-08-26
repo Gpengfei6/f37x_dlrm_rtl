@@ -1,0 +1,53 @@
+============================================================
+Stage 2N-A14.7 Protected Physical HBM Single-Table Smoke
+TARGET_INDEX=2
+TARGET_BDF=0000:9b:00.1
+TARGET_RENDER=/dev/dri/renderD129
+EXPECTED_UUID=6f29087c-9598-4e68-877a-cc4840d078b8
+EXPECTED_CU=dlrm_f37x_rtl_kernel_stage2n_a14_v2:dlrm_a14_1
+LOOKUP_INDEX=37
+NO FPGA RESET OR AUTOMATIC ROLLBACK IS PERMITTED
+============================================================
+INFO: Found total 4 card(s), 4 are usable
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+System Configuration
+OS name:	Linux
+Release:	3.10.0-957.el7.x86_64
+Version:	#1 SMP Thu Nov 8 23:39:32 UTC 2018
+Machine:	x86_64
+Model:		NF5468M6
+CPU cores:	112
+Memory:		257429 MB
+Glibc:		2.17
+Distribution:	CentOS Linux 7 (Core)
+Now:		Wed Aug 26 08:43:37 2026 GMT
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+XRT Information
+Version:	2.9.210507
+Git Hash:	b0230e59e22351fb957dc46a6e68d7560e5f630c
+Git Branch:	HEAD
+Build Date:	2021-05-07 20:56:44
+XOCL:		2.9.210507,b0230e59e22351fb957dc46a6e68d7560e5f630c
+XCLMGMT:	2.9.210507,b0230e59e22351fb957dc46a6e68d7560e5f630c
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ [0] 0000:9e:00.1 inspur_f37x_xdma_201920_3(ID=0x601d7f34) user(inst=131)
+ [1] 0000:9c:00.1 inspur_f37x_xdma_201920_3(ID=0x601d7f34) user(inst=130)
+ [2] 0000:9b:00.1 inspur_f37x_xdma_201920_3(ID=0x601d7f34) user(inst=129)
+ [3] 0000:9a:00.1 inspur_f37x_xdma_201920_3(ID=0x601d7f34) user(inst=128)
+RENDER_SYSFS=/sys/devices/pci0000:97/0000:97:02.0/0000:98:00.0/0000:99:02.0/0000:9b:00.1
+PRE_DEVICE_STATE: render node has no open handle
+PRE_DEVICE_STATE: HBM[0] usage is 0 Byte and BO count is 0
+PRE_HOST: render node has no open handle
+PRE_HOST: HBM[0] usage is 0 Byte and BO count is 0
+========== A14.7 READ-ONLY ACTIVITY GUARD / SAMPLE 1 ==========
+ACTIVITY_GUARD_SAMPLE1: render node has no open handle
+ACTIVITY_GUARD_SAMPLE1: HBM[0] usage is 0 Byte and BO count is 0
+Waiting 30 seconds; no programming or Host access occurs.
+========== A14.7 READ-ONLY ACTIVITY GUARD / SAMPLE 2 ==========
+ACTIVITY_GUARD_SAMPLE2: render node has no open handle
+ACTIVITY_GUARD_SAMPLE2: HBM[0] usage is 0 Byte and BO count is 0
+A14_7_ACTIVITY_GUARD=PASS
+FINAL_PRE_HOST: render node has no open handle
+FINAL_PRE_HOST: HBM[0] usage is 0 Byte and BO count is 0
+The accepted A14.6 image is already loaded on 0000:9b:00.1; exactly one physical-HBM lookup will run; no programming/reset/rollback.
+Proceed with the protected A14.7 lookup? [yes/no] A14.7 protected lookup cancelled safely.

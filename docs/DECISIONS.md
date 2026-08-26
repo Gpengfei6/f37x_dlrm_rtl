@@ -654,3 +654,32 @@
 - **Still not proven:** Host execution, FPGA programming, device BO allocation,
   TABLE_BASE programming on hardware, physical HBM data movement, returned-row
   correctness, cleanup, performance, or A13 integration.
+
+## Decision — Close A14.7 after accepted physical-HBM proof
+
+Date: 2026-08-26
+
+Decision:
+Stage 2N-A14.7 is accepted and closed after one valid physical HBM[0] single-table lookup with exact software-golden agreement.
+
+Rationale:
+A14.7 was intended to establish the minimum physical-HBM capability rather than performance, multi-table scaling or full DLRM integration. The accepted run proves the complete path:
+
+`Host -> XRT BO -> physical HBM[0] -> TABLE_BASE -> RTL AXI master -> result registers -> software comparison`
+
+The successful result for lookup index `37` was:
+
+`[40, 41, 42, 43, 44, 45, 46, 47]`
+
+matching the software golden vector exactly.
+
+The first protected physical attempt is retained as an engineering failure record, not as an HBM functional failure. Its runtime Host artifact had been truncated to zero bytes, so the actual C++ physical-HBM Host path did not execute. The runtime guard was therefore hardened to bind execution to a non-empty, SHA256-verified Host ELF.
+
+Final functional evidence and final protection baseline are deliberately separated:
+- functional board-tested HEAD: `74301a4`
+- final protected source HEAD: `70179f6`
+
+No additional physical lookup was performed solely to retest the hardened guard. The hardened runner was instead executed to the final authorization boundary and intentionally cancelled.
+
+Next decision:
+move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipeline before introducing multi-table or multi-bank scaling.

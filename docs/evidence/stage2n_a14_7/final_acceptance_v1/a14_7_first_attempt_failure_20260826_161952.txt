@@ -1,0 +1,10 @@
+A14_7_BOARD_SMOKE=FAILED
+TIME=2026-08-26T16:21:15+0800
+TARGET_INDEX=2
+TARGET_BDF=0000:9b:00.1
+TARGET_RENDER=/dev/dri/renderD129
+REASON=Host smoke PASS marker missing
+NO_FPGA_RESET=1
+NO_AUTOMATIC_ROLLBACK=1
+NO_OTHER_DEVICE_WRITE=1
+LOG=/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a14_7_buildonly/server_results/stage2n_a14_7/stage2n_a14_7_hbm_smoke_v1_20260826_161952.log
