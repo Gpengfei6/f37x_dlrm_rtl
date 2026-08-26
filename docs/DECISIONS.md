@@ -610,3 +610,32 @@
   XRT build, Host execution, FPGA programming, physical HBM, returned-row
   hardware correctness, performance, or complete DLRM acceptance. Those claims
   require separately returned target evidence.
+
+## D-034 - Treat XRT 2020.2 vendor setup as nounset-unsafe third-party environment code
+- **Status:** adopted after the first A14.7 target build-only attempt on
+  2026-08-26; formal post-fix target rerun pending.
+- **Observed target behavior:** the tracked build runner starts with
+  `set -Eeuo pipefail`, while `/opt/xilinx/xrt/setup.sh` directly expands
+  `$LD_LIBRARY_PATH` and `$PYTHONPATH`. On the F37X login shell both variables
+  were unset, so sourcing the vendor setup under `set -u` stopped first at line
+  37 (`LD_LIBRARY_PATH`) and then at line 39 (`PYTHONPATH`).
+- **Diagnostic proof:** with both variables explicitly defined as empty only for
+  the diagnostic subprocess, the same tracked Host source passed canonical
+  payload validation, the required XRT symbol probe, GCC 4.8.5 `gnu++11`
+  compile/link, and produced an x86-64 ELF Host binary. Binary SHA256 was
+  `af743c77ec380fc31e2cf79a07e328f7831eb16d0e4f8459846dd99f3e6b532a`;
+  payload SHA256 remained
+  `023ad250824def6b538ac40a7f0a9bd457e571136100ab1c1e574769f9061b03`.
+- **Adopted fix:** temporarily disable Bash `nounset` only while sourcing the
+  trusted XRT vendor setup, then immediately restore `set -u`. Keep `errexit`
+  and `pipefail` active. Do not hard-code empty runtime library/Python paths as
+  project policy.
+- **Compiler-warning cleanup:** remove the redundant aggregate initializer on
+  `xclBOProperties`; the constructor already zeroes the structure with
+  `std::memset` before its first use. This avoids GCC 4.8
+  `-Wmissing-field-initializers` noise without changing Host behavior.
+- **Boundary:** the diagnostic target build does not authorize or prove Host
+  execution, FPGA programming, XRT BO allocation on hardware, physical HBM,
+  returned-row correctness, board safety, performance, or A13 integration.
+  Target-build acceptance requires one clean rerun of the versioned fixed
+  runner with no environment workaround.

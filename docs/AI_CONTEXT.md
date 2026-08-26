@@ -66,7 +66,7 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A14.7 — protected Host/XRT + physical-HBM single-table smoke source prepared locally; target build/device NOT RUN**.
+Current stage: **Stage 2N-A14.7 — target XRT build diagnostic PASS; versioned build-runner hardening/formal rerun pending; Host/device/physical-HBM NOT RUN**.
 
 Stage 2N-A13 is complete and frozen. Its accepted top remains the reference for
 the integrated DLRM pipeline. Stage 2N-A14 is intentionally isolated so it can
@@ -130,15 +130,19 @@ Completed or present in the current source tree:
   VU37P routed design met 100 MHz with WNS/TNS `0.000 ns` and zero failing
   endpoints.
 
-A14.7 local source preparation now adds a legacy-HAL Host, canonical 1024-byte
-HBM payload builder, target build-only XRT `2.9.210507` API/symbol gate, protected
-board runner, and exact 64-line offline evidence validator. Local source/stub
-and synthetic-validator checks pass; target XRT compile/link and all device
+A14.7 local source preparation adds a legacy-HAL Host, canonical 1024-byte
+HBM payload builder, target build-only XRT `2.9.210507` API/symbol gate,
+protected board runner, and exact 64-line offline evidence validator.
+User-returned target diagnostics then proved the payload, XRT symbol gate,
+GCC 4.8.5 C++11 compile, and Host link PASS on the F37X after explicitly
+defining `LD_LIBRARY_PATH` and `PYTHONPATH`. The versioned runner itself exposed
+a nounset incompatibility in `/opt/xilinx/xrt/setup.sh`; a narrow source fix
+must be formally rerun before target-build acceptance is frozen. All device
 operations remain NOT RUN.
 
 Pending beyond the A14.7 local-source-preparation boundary:
 
-- user-controlled target XRT `2.9.210507` Host compile/link validation;
+- formal user-controlled rerun of the fixed target XRT `2.9.210507` Host compile/link gate with no environment workaround;
 - physical `m_axi_gmem -> HBM[0]` BO/DMA transaction and returned-row validation;
 - Host execution and board testing under the protected runner;
 - integration of the lookup result into the accepted A13 Feature Interaction
@@ -149,9 +153,11 @@ accepted server-side v2 XO only after its exact SHA256 and cross-layer metadata
 passed. A14.5 structural review, local XSim, and exact-target XO-only
 packaging/metadata are PASS. A14.6 link, xclbin, linked HBM[0] metadata, and
 routed 100 MHz timing are also PASS within the link-only boundary. A14.7 local
-Host/runner/payload/validator source preparation is PASS, but target Host build,
-Host execution, physical HBM, FPGA programming, board, performance, and
-A13-integration claims remain NOT RUN or NOT VALIDATED. See
+Host/runner/payload/validator source preparation is PASS, and a target
+compile/link diagnostic also passed under GCC 4.8.5 + XRT `2.9.210507` after an
+environment workaround. The versioned build runner still requires a formal
+post-fix rerun; Host execution, physical HBM, FPGA programming, board,
+performance, and A13-integration claims remain NOT RUN or NOT VALIDATED. See
 `docs/STAGE2N_A14_6_LINK_ONLY_ACCEPTANCE.md` and
 `docs/STAGE2N_A14_7_HBM_SINGLE_TABLE_HOST_PREPARATION_V1.md`.
 ## 4. Hardware Environment
@@ -285,7 +291,7 @@ These are local/offline source checks only.
 
 ### Not proven by A14.7
 
-- target-side A14.7 Host compile/link under the accepted F37X XRT `2.9.210507`;
+- formal target-build acceptance from the versioned nounset-hardened A14.7 runner under F37X XRT `2.9.210507`;
 - Host execution or XRT BO/DMA behavior on the F37X;
 - physical F37X HBM[0] access or returned-row correctness;
 - A14.7 FPGA programming result, board smoke result, or post-run HBM0 cleanup;

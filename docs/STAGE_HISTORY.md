@@ -30,7 +30,7 @@ hybrid CPU-embedding/FPGA-dense inference path.
 | Stage 2N-A14.5 | Add and validate a runtime HBM table-base ABI | Added versioned v2 lookup/wrapper with 64-bit `TABLE_BASE`, base-plus-row addressing, invalid-base/overflow guards, independent TBs, and XSim/XO-only validation runners | Commits `29401e5`, `d428e8b`, `de9276e`, tested target HEAD `4096614`; `docs/STAGE2N_A14_5_TARGET_XO_ACCEPTANCE.md`; retained evidence under `docs/evidence/stage2n_a14_5/` | **Local XSim PASS and exact-VU37P XO-only PASS**: lookup 67/67, wrapper 17/17, 12,951-byte target XO, TABLE_BASE ABI and cross-layer 64-bit metadata accepted. No v++, xclbin, Host, physical HBM, board, performance, or A13 integration |
 | Stage 2N-A14.6 | Link the accepted v2 XO without device access | Linked the exact accepted XO as one CU to HBM[0], produced and validated a hardware xclbin, and completed exact-VU37P routing at 100 MHz | Tested target HEAD `b44855e`; `docs/STAGE2N_A14_6_LINK_ONLY_ACCEPTANCE.md`; A14.6 runner/validator; curated returned evidence under `docs/evidence/stage2n_a14_6/` | **LINK-ONLY PASS**: v++/xclbin/HBM[0] metadata/timing PASS; WNS/TNS 0.000 ns and zero failing endpoints. No Host, device access, physical HBM, board, performance, or A13 integration |
 
-| Stage 2N-A14.7 | Prepare a protected Host/XRT single-table physical-HBM smoke | Added legacy-HAL BO/paddr/TABLE_BASE Host, canonical 1024-byte payload builder, XRT 2.9.210507 build-only gate, protected board runner, and exact 64-line offline evidence validator | `docs/STAGE2N_A14_7_HBM_SINGLE_TABLE_HOST_PREPARATION_V1.md`; `docs/evidence/stage2n_a14_7/local_source_preparation_v1.txt` | **LOCAL SOURCE PREPARATION PASS ONLY**: canonical payload, C++11 declaration-stub compile, Bash/Python syntax, valid evidence fixture, and tamper rejection PASS; target Host build, device access, physical HBM, board, performance, and A13 integration NOT RUN |
+| Stage 2N-A14.7 | Prepare a protected Host/XRT single-table physical-HBM smoke | Added legacy-HAL BO/paddr/TABLE_BASE Host, canonical 1024-byte payload builder, XRT 2.9.210507 build-only gate, protected board runner, and exact 64-line offline evidence validator | `docs/STAGE2N_A14_7_HBM_SINGLE_TABLE_HOST_PREPARATION_V1.md`; `docs/evidence/stage2n_a14_7/local_source_preparation_v1.txt` | **LOCAL SOURCE PREPARATION PASS; TARGET BUILD DIAGNOSTIC PASS**: canonical payload, XRT symbol probe, GCC 4.8.5 C++11 compile, and Host link passed on F37X after a temporary vendor-setup environment workaround; versioned runner fix/formal rerun pending. Host execution, device access, physical HBM, board, performance, and A13 integration NOT RUN |
 ## Current Milestone Interpretation
 
 - A13 is the last accepted integrated and board-validated DLRM pipeline.
@@ -47,11 +47,13 @@ hybrid CPU-embedding/FPGA-dense inference path.
   metadata, and 100 MHz timing are PASS within that narrow boundary. Physical
   HBM, Host, board, performance, and A13 integration remain unvalidated.
 
-- A14.7 local source preparation is accepted only as an offline engineering
-  milestone: the protected Host/build/runner/validator source and canonical
-  1024-byte payload contract are ready for the user-controlled target Host
-  build-only gate. No A14.7 target XRT build, Host execution, FPGA programming,
-  physical HBM, board, performance, or A13-integration result exists yet.
+- A14.7 local source preparation is accepted as an offline engineering
+  milestone. A user-returned F37X target-build diagnostic additionally proved
+  the canonical payload, XRT symbol gate, GCC 4.8.5 C++11 compile, and Host
+  link after explicitly defining vendor setup variables. The tracked build
+  runner still needs the nounset hardening fix and one formal rerun before the
+  target-build gate is accepted. Host execution, FPGA programming, physical
+  HBM, board, performance, and A13 integration remain unvalidated.
 ## Superseded and Historical Files
 
 The working tree intentionally retains old, duplicate, recovery, and patent

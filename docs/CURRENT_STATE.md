@@ -17,7 +17,7 @@ Snapshot date: 2026-08-26
 - A14.5 XSim-fix commit: `d428e8b`
 - A14.5 XSim-acceptance commit: `de9276e`
 - A14 source integration commit: `a19d338`
-- Current engineering stage: **Stage 2N-A14.7 local Host/XRT + protected physical-HBM single-table smoke source preparation PASS; target build/device NOT RUN**
+- Current engineering stage: **Stage 2N-A14.7 target XRT build diagnostic PASS; versioned runner hardening/formal rerun pending; Host/device/physical HBM NOT RUN**
 - Accepted and frozen functional baseline: **Stage 2N-A13**
 
 The branch name still refers to A13 even though A14 prototype files are now
@@ -157,9 +157,15 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 - Local source checks PASS: canonical payload reconstruction, Python syntax,
   C++11 declaration-only XRT stub compile, Bash syntax, valid evidence fixture,
   and tampered-result rejection.
-- Target XRT compile/link, Host execution, FPGA programming, physical HBM, and
-  board evidence are **NOT RUN**. A14.7 is ready only for the user-controlled
-  target Host build-only gate, not for a claimed board PASS.
+- User-returned target build diagnostics on F37X/XRT `2.9.210507` proved the
+  canonical payload, required XRT symbols, GCC 4.8.5 C++11 compile, and final
+  Host link all PASS after explicitly defining the vendor setup environment.
+- The versioned build runner itself exposed a shell-compatibility defect:
+  `/opt/xilinx/xrt/setup.sh` reads unset `LD_LIBRARY_PATH`/`PYTHONPATH` while
+  inheriting `set -u`. A source fix is prepared and requires one formal target
+  rerun before target-build acceptance is frozen.
+- Host execution, FPGA programming, physical HBM, and board evidence remain
+  **NOT RUN**. A14.7 is not yet a claimed board PASS.
 ## Verification Summary
 
 | Area | Result | Evidence boundary |
@@ -193,7 +199,7 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 | A14.7 local Host/HBM source preparation | **PASS** | Legacy-HAL Host, canonical builder, build-only gate, protected runner, and 64-line validator prepared locally |
 | A14.7 canonical payload | **PASS** | 1024 bytes; SHA256 `023ad250824def6b538ac40a7f0a9bd457e571136100ab1c1e574769f9061b03`; FNV1a64 `40a53c3698b88325` |
 | A14.7 local static/offline validation | **PASS** | C++11 declaration-only XRT stub compile, Bash/Python syntax, valid 64-line fixture, tampered-result rejection |
-| A14.7 target XRT Host build | NOT RUN | Must be executed by the user in the accepted F37X XRT `2.9.210507` target environment |
+| A14.7 target XRT Host build | **DIAGNOSTIC PASS / FORMAL RERUN REQUIRED** | GCC 4.8.5 + XRT `2.9.210507` compiled/linked the Host after a temporary environment workaround; versioned runner nounset fix must be rerun before acceptance |
 | A14 physical HBM | NOT VALIDATED | No A14.7 Host execution or physical HBM transaction has been run |
 
 Primary evidence:
@@ -246,8 +252,10 @@ Historical target environment recorded by accepted evidence:
 4. The previously documented proxy XO was a generated worktree artifact and is
    not present in this main working tree.
 5. A14 has an accepted generated link-only xclbin and locally prepared
-   A14.7 XRT BO/DMA Host/runner source, but the target XRT build-only gate, Host
-   execution, physical HBM access, and board evidence have not been run.
+   A14.7 XRT BO/DMA Host/runner source. Target compile/link has passed
+   diagnostically under F37X XRT `2.9.210507`, but the versioned build runner
+   requires one nounset-compatibility fix and formal rerun. Host execution,
+   physical HBM access, and board evidence have not been run.
 6. A14 lookup output is not connected to A13 Feature Interaction; the two tops
    are independent.
 
@@ -255,19 +263,20 @@ These are environment and integration blockers, not failures of the completed
 A14 XSim tests.
 
 ## Next Actions
-1. Review and commit only the explicit A14.7 source/doc files plus the four
-   entry-point Markdown updates; do not use `git add .` and do not touch
-   historical untracked files.
+1. Commit the narrow A14.7 target-build hardening change: isolate the XRT
+   vendor setup from `set -u`, remove the redundant GCC 4.8 aggregate-init
+   warning, and retain the target-build attempt diagnosis.
 2. Preserve the accepted A14.6 XO/xclbin identities and returned evidence; do
    not rerun or overwrite accepted A14.6 roots merely to reproduce them.
-3. User-controlled target step: run only
-   `bash scripts/build_stage2n_a14_7_host_v1.sh` and return its status plus
-   version/symbol/build logs for review.
-4. Keep `A14_7_READY_FOR_BOARD=NO` until the target XRT `2.9.210507` Host build-only
-   gate is reviewed and accepted. No AI agent accesses the server or device.
-5. After target build-only acceptance, separately authorize the protected
-   single-row physical-HBM smoke. If the currently loaded image is not A14.6,
-   first review its UUID/CU before supplying the explicit source allowlist.
+3. User-controlled target step: fast-forward the build-only clone to the fixed
+   commit and rerun only `bash scripts/build_stage2n_a14_7_host_v1.sh` with no
+   `LD_LIBRARY_PATH`/`PYTHONPATH` workaround.
+4. Keep `A14_7_READY_FOR_BOARD=NO` until that versioned-runner target XRT
+   `2.9.210507` build-only rerun is reviewed and accepted.
+5. After formal target build-only acceptance, separately authorize the
+   protected single-row physical-HBM smoke. If the currently loaded image is
+   not A14.6, first review its UUID/CU before supplying the explicit source
+   allowlist.
 6. Only after standalone physical lookup acceptance, design a separate stage to
    connect embedding vectors to the frozen A13 Feature Interaction input.
 ## Non-Goals of the Current Stage

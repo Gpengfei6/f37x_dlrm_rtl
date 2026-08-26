@@ -320,7 +320,7 @@ private:
     xclDeviceHandle handle_ = nullptr;
     xclBufferHandle bo_ = XRT_NULL_BO;
     void* mapped_ = nullptr;
-    xclBOProperties properties_ = {};
+    xclBOProperties properties_;
 };
 
 }  // namespace

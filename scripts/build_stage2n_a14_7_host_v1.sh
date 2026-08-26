@@ -53,8 +53,14 @@ actual_payload_sha256="$(sha256sum "${PAYLOAD}" | awk '{print $1}')"
 [[ "$(stat -c '%s' "${PAYLOAD}")" == "1024" ]] ||
     fail 6 "canonical payload size is not 1024 bytes"
 
+# XRT 2020.2 vendor setup.sh reads caller variables such as
+# LD_LIBRARY_PATH and PYTHONPATH without nounset-safe ${var-} guards.
+# Keep third-party environment setup outside this script's nounset boundary,
+# then immediately restore strict mode.
+set +u
 # shellcheck disable=SC1090
 source "${XRT_SETUP}" >/dev/null
+set -u
 for tool in g++ nm sha256sum xbutil; do
     command -v "${tool}" >/dev/null 2>&1 || fail 7 "required tool unavailable: ${tool}"
 done
