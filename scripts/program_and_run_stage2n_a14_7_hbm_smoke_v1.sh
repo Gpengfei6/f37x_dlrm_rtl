@@ -36,6 +36,7 @@ EXPECTED_INSTANCE="dlrm_a14_1"
 EXPECTED_CU="${EXPECTED_KERNEL}:${EXPECTED_INSTANCE}"
 EXPECTED_IP_INDEX="0"
 EXPECTED_HBM_MEMORY_INDEX="0"
+EXPECTED_HOST_BINARY_SHA256="f5bfbd50562fcf31a45105a32f7edb414fc4886d007c8ab588f8032c3afc0946"
 LOOKUP_INDEX="${A14_7_LOOKUP_INDEX:-37}"
 GUARD_SECONDS=30
 
@@ -280,6 +281,16 @@ grep -Fxq "A14_7_HOST_XRT_BUILD=PASS" "${HOST_BUILD_STATUS}" || fail "A14.7 Host
 grep -Fxq "A14_7_XRT2020_2_API_PROBE=PASS" "${HOST_BUILD_STATUS}" || fail "A14.7 XRT API probe PASS missing"
 grep -Fxq "A14_7_CANONICAL_PAYLOAD=PASS" "${HOST_BUILD_STATUS}" || fail "A14.7 canonical payload PASS missing"
 [[ -x "${HOST_BINARY}" ]] || fail "A14.7 Host binary missing/not executable"
+[[ -s "${HOST_BINARY}" ]] || fail "A14.7 Host binary is empty"
+
+RECORDED_HOST_BINARY_SHA256="$(sed -n 's/^BINARY_SHA256=//p' "${HOST_BUILD_STATUS}" | head -n1 | tr -d '\r')"
+[[ "${RECORDED_HOST_BINARY_SHA256}" == "${EXPECTED_HOST_BINARY_SHA256}" ]] ||
+    fail "A14.7 recorded Host binary SHA256 mismatch: ${RECORDED_HOST_BINARY_SHA256}"
+
+ACTUAL_HOST_BINARY_SHA256="$(sha256sum "${HOST_BINARY}" | awk '{print $1}')"
+[[ "${ACTUAL_HOST_BINARY_SHA256}" == "${EXPECTED_HOST_BINARY_SHA256}" ]] ||
+    fail "A14.7 actual Host binary SHA256 mismatch: ${ACTUAL_HOST_BINARY_SHA256}"
+
 [[ -s "${PAYLOAD}" ]] || fail "A14.7 canonical payload missing"
 [[ "$(stat -c '%s' "${PAYLOAD}")" == "1024" ]] || fail "A14.7 payload size mismatch"
 [[ "$(sha256sum "${PAYLOAD}" | awk '{print $1}')" == "023ad250824def6b538ac40a7f0a9bd457e571136100ab1c1e574769f9061b03" ]] ||
