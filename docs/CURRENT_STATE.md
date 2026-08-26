@@ -17,7 +17,7 @@ Snapshot date: 2026-08-26
 - A14.5 XSim-fix commit: `d428e8b`
 - A14.5 XSim-acceptance commit: `de9276e`
 - A14 source integration commit: `a19d338`
-- Current engineering stage: **Stage 2N-A14.7 target XRT build diagnostic PASS; versioned runner hardening/formal rerun pending; Host/device/physical HBM NOT RUN**
+- Current engineering stage: **Stage 2N-A14.7 target XRT build-only PASS; ready for protected physical-HBM board gate; Host/device/physical HBM NOT RUN**
 - Accepted and frozen functional baseline: **Stage 2N-A13**
 
 The branch name still refers to A13 even though A14 prototype files are now
@@ -157,15 +157,22 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 - Local source checks PASS: canonical payload reconstruction, Python syntax,
   C++11 declaration-only XRT stub compile, Bash syntax, valid evidence fixture,
   and tampered-result rejection.
-- User-returned target build diagnostics on F37X/XRT `2.9.210507` proved the
-  canonical payload, required XRT symbols, GCC 4.8.5 C++11 compile, and final
-  Host link all PASS after explicitly defining the vendor setup environment.
-- The versioned build runner itself exposed a shell-compatibility defect:
-  `/opt/xilinx/xrt/setup.sh` reads unset `LD_LIBRARY_PATH`/`PYTHONPATH` while
-  inheriting `set -u`. A source fix is prepared and requires one formal target
-  rerun before target-build acceptance is frozen.
+- The first target build attempt diagnosed the XRT vendor `setup.sh` nounset
+  incompatibility. Commit `82a6e46` hardened the tracked runner by suspending
+  `nounset` only while sourcing the vendor environment and removed the redundant
+  GCC 4.8 aggregate-initializer warning.
+- The formal user-controlled rerun at server HEAD
+  `82a6e4627bcaa0e9c7bab6daf8ca6bcc095d7cc6`, with `LD_LIBRARY_PATH`,
+  `PYTHONPATH`, and `XILINX_XRT` explicitly unset before execution, is **PASS**:
+  canonical payload PASS, XRT `2.9.210507` API/symbol probe PASS, GCC 4.8.5
+  `gnu++11` compile/link PASS, and a 44 KiB x86-64 ELF Host binary was produced.
+- Formal Host binary SHA256 is
+  `f5bfbd50562fcf31a45105a32f7edb414fc4886d007c8ab588f8032c3afc0946`;
+  payload SHA256 remains
+  `023ad250824def6b538ac40a7f0a9bd457e571136100ab1c1e574769f9061b03`.
 - Host execution, FPGA programming, physical HBM, and board evidence remain
-  **NOT RUN**. A14.7 is not yet a claimed board PASS.
+  **NOT RUN**. `A14_7_READY_FOR_BOARD=YES` means only that the separately
+  protected board gate may now be entered.
 ## Verification Summary
 
 | Area | Result | Evidence boundary |
@@ -199,7 +206,7 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 | A14.7 local Host/HBM source preparation | **PASS** | Legacy-HAL Host, canonical builder, build-only gate, protected runner, and 64-line validator prepared locally |
 | A14.7 canonical payload | **PASS** | 1024 bytes; SHA256 `023ad250824def6b538ac40a7f0a9bd457e571136100ab1c1e574769f9061b03`; FNV1a64 `40a53c3698b88325` |
 | A14.7 local static/offline validation | **PASS** | C++11 declaration-only XRT stub compile, Bash/Python syntax, valid 64-line fixture, tampered-result rejection |
-| A14.7 target XRT Host build | **DIAGNOSTIC PASS / FORMAL RERUN REQUIRED** | GCC 4.8.5 + XRT `2.9.210507` compiled/linked the Host after a temporary environment workaround; versioned runner nounset fix must be rerun before acceptance |
+| A14.7 target XRT Host build | **PASS** | Formal rerun at `82a6e46` with caller XRT variables explicitly unset; XRT `2.9.210507` symbol/API probe and GCC 4.8.5 `gnu++11` compile/link PASS; binary SHA256 `f5bfbd50562fcf31a45105a32f7edb414fc4886d007c8ab588f8032c3afc0946` |
 | A14 physical HBM | NOT VALIDATED | No A14.7 Host execution or physical HBM transaction has been run |
 
 Primary evidence:

@@ -66,7 +66,7 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A14.7 — target XRT build diagnostic PASS; versioned build-runner hardening/formal rerun pending; Host/device/physical-HBM NOT RUN**.
+Current stage: **Stage 2N-A14.7 — target XRT build-only PASS; protected physical-HBM board gate is next; Host/device/physical-HBM NOT RUN**.
 
 Stage 2N-A13 is complete and frozen. Its accepted top remains the reference for
 the integrated DLRM pipeline. Stage 2N-A14 is intentionally isolated so it can
@@ -142,7 +142,6 @@ operations remain NOT RUN.
 
 Pending beyond the A14.7 local-source-preparation boundary:
 
-- formal user-controlled rerun of the fixed target XRT `2.9.210507` Host compile/link gate with no environment workaround;
 - physical `m_axi_gmem -> HBM[0]` BO/DMA transaction and returned-row validation;
 - Host execution and board testing under the protected runner;
 - integration of the lookup result into the accepted A13 Feature Interaction

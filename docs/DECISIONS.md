@@ -613,7 +613,7 @@
 
 ## D-034 - Treat XRT 2020.2 vendor setup as nounset-unsafe third-party environment code
 - **Status:** adopted after the first A14.7 target build-only attempt on
-  2026-08-26; formal post-fix target rerun pending.
+  2026-08-26; the post-fix formal rerun at `82a6e46` subsequently passed.
 - **Observed target behavior:** the tracked build runner starts with
   `set -Eeuo pipefail`, while `/opt/xilinx/xrt/setup.sh` directly expands
   `$LD_LIBRARY_PATH` and `$PYTHONPATH`. On the F37X login shell both variables
@@ -639,3 +639,18 @@
   returned-row correctness, board safety, performance, or A13 integration.
   Target-build acceptance requires one clean rerun of the versioned fixed
   runner with no environment workaround.
+
+## D-035 - Accept A14.7 at the target XRT build-only boundary
+- **Status:** accepted on 2026-08-26 from user-returned formal target evidence at
+  server HEAD `82a6e4627bcaa0e9c7bab6daf8ca6bcc095d7cc6`.
+- **Environment:** F37X Linux target, XRT `2.9.210507`, GCC 4.8.5, `gnu++11`;
+  caller `LD_LIBRARY_PATH`, `PYTHONPATH`, and `XILINX_XRT` were explicitly unset.
+- **Result:** canonical payload PASS, required XRT symbol/API probe PASS, Host
+  compile/link PASS, zero-byte `host_build.log`, and a 44 KiB x86-64 ELF Host
+  binary was produced.
+- **Decision:** `A14_7_TARGET_XRT_BUILD=PASS` and
+  `A14_7_READY_FOR_BOARD=YES`. READY_FOR_BOARD is permission to enter the
+  protected board gate, not a board PASS.
+- **Still not proven:** Host execution, FPGA programming, device BO allocation,
+  TABLE_BASE programming on hardware, physical HBM data movement, returned-row
+  correctness, cleanup, performance, or A13 integration.
