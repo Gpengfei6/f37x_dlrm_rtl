@@ -10,8 +10,8 @@ This repository develops a synthesizable SystemVerilog FPGA accelerator for
 Deep Learning Recommendation Model (DLRM) inference. The implemented research
 path combines a runtime-configurable fixed-point dense engine, Bottom MLP,
 feature interaction, Top MLP, host control, and stage-level observability. The
-current Stage 2N-A15.1 work locally connects the accepted A14 v2 lookup result
-to the accepted A13 pipeline's embedding slot 0.
+current Stage 2N-A15.2 work proves one complete local inference using the
+accepted A14 v2 lookup result as the accepted A13 pipeline's embedding slot 0.
 
 Target environment:
 
@@ -31,8 +31,9 @@ Main research direction:
 
 Important distinction: A13 is the accepted integrated DLRM pipeline baseline,
 whose embedding lookup is performed by the CPU. A14.7 separately proved one
-physical HBM[0] lookup. A15.1 now proves only the local controller-level data
-handoff from A14 v2 to A13 slot 0; it is not yet a physical integrated DLRM top.
+physical HBM[0] lookup. A15.1 proves the local controller-level data handoff,
+and A15.2 proves complete Bottom–Interaction–Top execution using that handoff.
+Neither result is a physical integrated A15 target.
 
 ## 2. AI Reading Order
 
@@ -45,7 +46,7 @@ Read the repository in this order before proposing or making changes:
 5. `docs/ARCHITECTURE.md`
 6. `docs/STAGE_HISTORY.md`
 7. the active-stage document,
-   `docs/STAGE2N_A15_1_HBM_PIPELINE_INTEGRATION_V1.md`
+   `docs/STAGE2N_A15_2_END_TO_END_PIPELINE_XSIM_V1.md`
 8. the exact RTL, testbench, Host, configuration, and script files named by the
    active-stage documents
 
@@ -67,8 +68,8 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A15.1 — local controller-level HBM-to-pipeline
-integration XSim PASS**.
+Current stage: **Stage 2N-A15.2 — local HBM-backed end-to-end pipeline XSim
+PASS**.
 
 Stage 2N-A13 remains the accepted and frozen integrated DLRM baseline. A14.5
 added the runtime 64-bit table-base ABI, A14.6 completed the accepted link-only
@@ -92,17 +93,24 @@ the loaded-mask transition to `4'hF`, Host slot-0 rejection, and preservation of
 the A13 cycle-counter ABI. Compile, elaboration, and simulation exit codes are
 zero; the accepted log has zero warnings and zero anchored error/fatal records.
 
-Pending beyond A15.1:
+A15.2 reuses that wrapper and the accepted A13 deterministic model without any
+RTL change. A fake AXI row supplies the same zero slot-0 value as the accepted
+sample; the bench then executes Bottom `8->16->8`, Interaction `5x8->18`, and
+Top `18->32->16->1`. It observes the real Interaction vector-load handshakes,
+matches the independently derived final result 36, and reproduces the accepted
+cycle counts `322/100/744/1174` with eight controller-overhead cycles.
+
+Pending beyond A15.2:
 
 - public F37X AXI4-Lite/kernel-top integration;
-- complete A15 prediction software-golden regression;
+- broader multi-sample A15 software-golden regression;
 - A15 target build/link and xclbin;
 - A15 FPGA-device execution or physical HBM validation;
 - any A15 latency, bandwidth, throughput, power, or performance claim;
 - multi-table, multi-bank, burst, cache, coalescing, scheduling, or INT8 work.
 
-See `docs/STAGE2N_A15_1_HBM_PIPELINE_INTEGRATION_V1.md` for the exact local
-acceptance boundary and retained attempt history.
+See `docs/STAGE2N_A15_2_END_TO_END_PIPELINE_XSIM_V1.md` for the exact local
+acceptance boundary, sample, command, and result.
 ## 4. Hardware Environment
 
 ### Local development environment
@@ -249,6 +257,24 @@ This does not prove a physical HBM transaction.
   coalescing, caching, prefetching, or scheduling;
 - complete FPGA-resident sparse-plus-dense DLRM execution.
 
+### Proven by local A15.2 XSim
+
+- one fake-memory A14 v2 lookup and successful A13 slot-0 injection;
+- complete Bottom, Feature Interaction, and Top execution with no bypass;
+- observed Interaction vector ordering: Bottom output, HBM slot0, then Host
+  slots1 through 3;
+- independent accepted-sample golden 36 equals final RTL result 36;
+- exact accepted cycle counts Bottom 322, Interaction 100, Top 744, Total 1174;
+- final result and counters remain stable under eight cycles of backpressure.
+
+### Not proven by A15.2
+
+- public F37X AXI4-Lite/kernel-top integration;
+- target synthesis, implementation, Vitis link, XO/xclbin, or target timing;
+- A15 FPGA programming, board execution, or physical HBM transaction;
+- multiple samples, multiple HBM-resident embedding slots, tables, or banks;
+- A15 latency, bandwidth, throughput, power, speedup, or performance benefit.
+
 Use `docs/CURRENT_STATE.md` for the exact current branch, HEAD, blockers, and
 next actions.
 
@@ -283,8 +309,9 @@ the first protected board attempt found that the formal Host executable had beco
 
 Do not repeat A14.7 physical lookup merely to reconfirm it.
 
-The local A13/A14 controller-level handoff is now accepted in A15.1. The next
-engineering direction is public-top integration plus complete functional-golden
-verification before any new target or performance gate.
+The local A13/A14 handoff and one complete deterministic inference are now
+accepted through A15.2. The next engineering direction is broader functional-
+golden coverage and separately authorized public-top integration before any
+new target or performance gate.
 
 First priority is functional equivalence with the software golden model. Multi-table, multi-bank, cache and performance optimization should follow only after this integration path is correct.

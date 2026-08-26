@@ -1,6 +1,6 @@
 # Stage 2N History
 
-This table is an AI-readable index of Stage 2N-A1 through A15.1. It does not turn
+This table is an AI-readable index of Stage 2N-A1 through A15.2. It does not turn
 historical claims into current verification. Follow each evidence link and use
 the status language exactly.
 
@@ -32,6 +32,7 @@ hybrid CPU-embedding/FPGA-dense inference path.
 
 | Stage 2N-A14.7 | Validate one protected physical-HBM lookup | Added legacy-HAL BO/paddr/TABLE_BASE Host, canonical 1024-byte payload, protected runner and evidence validator; completed one F37X HBM[0] row-37 lookup and cleanup | `docs/STAGE2N_A14_7_HBM_SINGLE_TABLE_HOST_PREPARATION_V1.md`; final A14.7 acceptance in `docs/CURRENT_STATE.md`; retained evidence hashes | **FINAL PASS** for the standalone physical lookup: lanes `[40,41,42,43,44,45,46,47]` exact, BO released and HBM[0] returned to zero usage. No A13 integration or performance claim |
 | Stage 2N-A15.1 | Connect the accepted HBM lookup result to the A13 pipeline locally | Added a versioned controller-level wrapper: A14 v2 response owns A13 slot0, Host retains slots1-3, successful data is retained until ready, and error/busy/ownership guards preserve state | Authorization/baseline `2020e4c`; `docs/STAGE2N_A15_1_HBM_PIPELINE_INTEGRATION_V1.md`; local XSim status/logs | **LOCAL XSIM PASS**: nine behavioral/ABI markers, zero warnings and zero anchored error/fatal records. No public target top, target build/link, xclbin, FPGA access, physical A15 HBM, full prediction golden, or performance claim |
+| Stage 2N-A15.2 | Execute one complete inference using the HBM-owned slot0 path | Reused the A15.1 wrapper and accepted A13 sample; fetched a fake-memory row into slot0, observed the exact Interaction vector loads, ran Bottom/Interaction/Top, and compared against an independent golden | Baseline `876046c`; `docs/STAGE2N_A15_2_END_TO_END_PIPELINE_XSIM_V1.md`; local XSim status/logs | **LOCAL XSIM PASS**: expected/actual result 36, cycles 322/100/744/1174, all 11 markers and zero warnings/errors/fatals. No new RTL, public target top, target build/xclbin, FPGA/physical HBM, board, or performance claim |
 ## Current Milestone Interpretation
 
 - A13 is the last accepted integrated and board-validated DLRM pipeline.
@@ -54,6 +55,10 @@ hybrid CPU-embedding/FPGA-dense inference path.
   response data reaches A13 embedding slot0, while slots1-3 retain Host
   ownership. It does not yet establish a public target top, physical A15 HBM,
   a complete prediction golden, or performance.
+- A15.2 is accepted as one complete local deterministic inference using that
+  slot0 path. It proves functional consumption by Bottom–Interaction–Top, but
+  does not promote A15 to a target, xclbin, physical-HBM, board, or performance
+  result.
 ## Superseded and Historical Files
 
 The working tree intentionally retains old, duplicate, recovery, and patent
@@ -122,3 +127,26 @@ Next:
 separately authorize public kernel/control integration and complete functional-
 golden verification. Do not infer A15 target, xclbin, board, physical HBM, or
 performance validation from this local result.
+
+## Stage 2N-A15.2 — Local HBM-backed end-to-end inference
+
+Date: 2026-08-26
+
+Result: `LOCAL XSIM PASS`
+
+A15.2 reused the A15.1 wrapper and accepted A13 cycle-counter sample without
+modifying RTL. Local fake-memory row 37 replaced the old Host source for the
+same all-zero slot0 vector. The bench observed vector0 `[1..8]` from Bottom,
+vector1 from HBM-owned slot0, and vectors2 through 4 from Host slots1 through 3,
+then completed Interaction and Top.
+
+Accepted result:
+- expected/final: `36/36`;
+- Bottom/Interaction/Top/Total: `322/100/744/1174` cycles;
+- controller overhead: 8 cycles;
+- final marker: `STAGE2N_A15_2_END_TO_END_PIPELINE_XSIM_V1_PASS`.
+
+Next:
+broaden functional-golden coverage and separately authorize public target-top
+integration. Target build/link, xclbin, device/physical HBM, board, and
+performance remain outside this local milestone.

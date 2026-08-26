@@ -709,3 +709,31 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
 - **Boundary:** this decision does not accept a public F37X top, complete A15
   prediction golden, target build/link, xclbin, FPGA execution, physical A15
   HBM access, multi-bank/table behavior, or any performance claim.
+
+## D-037 - Reuse the accepted A13 sample for the first A15 end-to-end proof
+
+- **Status:** accepted locally on 2026-08-26 by Stage 2N-A15.2 Vivado/XSim
+  2022.1 evidence.
+- **Decision:** do not add an A15 v2 RTL wrapper. The accepted A15.1 v1 wrapper
+  already exposes all A13 model/input/configuration, START, result, phase/count,
+  counter, and error signals needed for one full inference.
+- **Sample:** reuse the accepted A13 `8->16->8`, `5x8->18`,
+  `18->32->16->1` deterministic sample. Replace only the source of its all-zero
+  slot0 vector with fake AXI row 37; retain Host ownership of zero-valued slots
+  1 through 3.
+- **Golden:** derive 36 independently from the configured copy/sum network:
+  zero embeddings preserve dense values 1 through 8 as the first Interaction
+  outputs, and the final Top layer sums them.
+- **Consumption proof:** observe the accepted A13 Interaction load handshake so
+  final-result agreement is not the sole evidence. Vector0 must be the Bottom
+  output, vector1 the HBM-owned slot0, and vectors2 through 4 the Host-owned
+  slots.
+- **Counter rule:** retain the accepted A13 counter definition and exact sample
+  values Bottom 322, Interaction 100, Top 744, Total 1174, with eight ordered-
+  controller overhead cycles. Treat them as observability, not performance.
+- **Result:** expected and actual final result are both 36; all 11 A15.2 markers
+  passed; `xvlog`, `xelab`, and `xsim` exited zero with zero warnings and zero
+  anchored error/fatal records.
+- **Boundary:** the memory is a local fake AXI model. This decision does not
+  accept public F37X top integration, target build/link, XO/xclbin, FPGA access,
+  physical A15 HBM, board validation, multi-bank/table work, or performance.

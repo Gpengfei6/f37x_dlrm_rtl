@@ -20,11 +20,12 @@ Snapshot date: 2026-08-26
 - A14.7 final protected source baseline: `70179f66c6fab8a28c2305c024bec3fa43f9c508`
 - A15.1 authorization and implementation baseline:
   `2020e4ccd2f802d69714d957e7b8baf8172a39fa`
-- Current engineering stage: **Stage 2N-A15.1 controller-level HBM-to-pipeline integration; local XSim PASS**
+- Current engineering stage: **Stage 2N-A15.2 HBM-backed end-to-end pipeline; local XSim PASS**
 - Accepted and frozen functional baseline: **Stage 2N-A13**
 
 The branch contains the accepted A13/A14 history plus the versioned A15.1 local
-integration proof. Do not infer validation scope from stage numbering alone.
+integration wrapper and A15.2 end-to-end XSim proof. Do not infer validation
+scope from stage numbering alone.
 
 The primary Windows worktree may contain pre-existing untracked recovery,
 historical evidence, patent, source, and helper files. Preserve them. Never use
@@ -193,6 +194,27 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
   error/fatal records.
 - This is a fake-memory controller-level proof. There is no A15 target build,
   xclbin, public kernel-top integration, FPGA execution, or physical HBM result.
+
+### Stage 2N-A15.2
+
+- Reused the frozen A15.1 v1 wrapper; no new or modified RTL was required.
+- Reused the accepted A13 deterministic sample: Bottom `8->16->8`, Interaction
+  `5x8->18`, Top `18->32->16->1`, dense input `[1..8]`, zero embeddings, and
+  independently derived final golden 36.
+- Replaced only the source of slot 0: local fake-memory row 37 returned the same
+  all-zero vector previously written by the Host. Slots 1 through 3 remained
+  Host-configured.
+- The self-checking bench observed the real A13 Interaction load handshakes and
+  proved vector0 was the Bottom output and vector1 was the HBM-owned slot 0;
+  vectors2 through 4 were the Host-owned slots.
+- Complete Bottom, Feature Interaction, and Top execution passed with final
+  result 36 and exact cycle counts `322/100/744/1174`, including eight controller
+  overhead cycles.
+- Local `xvlog`, `xelab`, and `xsim` exit codes were all zero, with zero warnings
+  and zero anchored error/fatal records.
+- This remains fake-memory local XSim. A15 target build, xclbin, FPGA execution,
+  physical HBM integration, board validation, and performance are not proven.
+
 ## Verification Summary
 
 | Area | Result | Evidence boundary |
@@ -230,6 +252,8 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 | A14.7 physical HBM | **PASS** | One protected HBM[0] row-37 lookup returned `[40,41,42,43,44,45,46,47]` exactly; BO release and zero post-use HBM[0] state recorded |
 | A15.1 local HBM-to-pipeline integration | **PASS** | Controller-level XSim: slot-0 injection, exact lane order, Host slot1-3 preservation, delayed ready, error/busy/Host-slot0 guards, loaded mask and A13 ABI all passed; fake AXI memory only |
 | A15.1 physical HBM / target execution | NOT RUN | No public target top, target build/link, xclbin programming, FPGA access, or board run |
+| A15.2 local end-to-end pipeline | **PASS** | Fake-memory row37 -> slot0 -> Bottom/Interaction/Top -> final result 36; actual Interaction load ordering observed; exact 322/100/744/1174 counters |
+| A15.2 target/xclbin/physical HBM | NOT RUN | Local controller-level XSim only; no public target top, target build/link, xclbin, device, or board access |
 
 Primary evidence:
 
@@ -251,6 +275,7 @@ Primary evidence:
 - `docs/STAGE2N_A14_7_HBM_SINGLE_TABLE_HOST_PREPARATION_V1.md`
 - `docs/evidence/stage2n_a14_7/local_source_preparation_v1.txt`
 - `docs/STAGE2N_A15_1_HBM_PIPELINE_INTEGRATION_V1.md`
+- `docs/STAGE2N_A15_2_END_TO_END_PIPELINE_XSIM_V1.md`
 
 ## Current Local Environment
 
@@ -281,22 +306,22 @@ Historical target environment recorded by accepted evidence:
    paths.
 4. The previously documented proxy XO was a generated worktree artifact and is
    not present in this main working tree.
-5. A15.1 connects A14 v2 response data to the A13 slot-0 configuration path only
-   at controller level. A public F37X kernel/control top has not been integrated.
-6. A15.1 has no target build/link, xclbin, physical-HBM transaction, complete
-   prediction golden regression, or board evidence.
+5. A15.2 proves complete local controller-level inference but a public F37X
+   kernel/control top has not been integrated.
+6. A15.2 has no target build/link, xclbin, physical-HBM transaction, or board
+   evidence.
 
 These are environment and next-level integration blockers, not failures of the
-completed A15.1 local XSim test.
+completed A15.2 local XSim test.
 
 ## Next Actions
 1. Preserve the accepted A13, A14.5, A14.6, and A14.7 identities and evidence;
    do not rerun physical A14.7 merely to reconfirm it.
-2. Review and accept the A15.1 local controller-level proof and its exact-file
-   commit.
+2. Review and accept the A15.2 local end-to-end proof and its exact-file commit.
 3. Separately authorize any public F37X kernel/control-top integration. Preserve
    the A13 cycle-counter offsets `0x218/0x21C/0x220/0x224` and slot1-3 Host ABI.
-4. Add a complete A15 functional-golden regression before any performance work.
+4. Extend functional-golden coverage beyond the deterministic single sample
+   before any performance work.
 5. Treat target build/link, xclbin generation/programming, and board execution
    as separately authorized gates performed only by the user-controlled target
    environment.
