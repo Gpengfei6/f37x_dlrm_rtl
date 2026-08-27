@@ -737,3 +737,40 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
 - **Boundary:** the memory is a local fake AXI model. This decision does not
   accept public F37X top integration, target build/link, XO/xclbin, FPGA access,
   physical A15 HBM, board validation, multi-bank/table work, or performance.
+
+## D-038 - Sequence four canonical HBM rows through one engine before target expansion
+
+- **Status:** accepted locally on 2026-08-27 by Stage 2N-A15.3 Vivado/XSim
+  2022.1 evidence.
+- **Decision:** add a new versioned controller-level wrapper because the
+  accepted A15.1 wrapper intentionally fixes HBM ownership to slot 0 and cannot
+  express four-slot sequencing without changing its accepted behavior. Reuse
+  the accepted A14 v2 lookup engine and A13 cycle-counter pipeline unchanged.
+- **Lookup structure:** use one lookup engine, one AXI read master, one
+  outstanding transaction, and four sequential logical requests. Canonical
+  rows 37, 38, 39, and 40 map in order to embedding slots 0, 1, 2, and 3.
+- **Packing:** preserve lane 0 in bits `[15:0]` through lane 7 in bits
+  `[127:112]`. The expected row vectors are `[40..47]`, `[48..55]`,
+  `[56..63]`, and `[64..71]`; no lane reorder is inserted.
+- **Commit rule:** retain each successful 128-bit response until the accepted
+  A13 embedding-configuration handshake completes. Only that handshake writes
+  the assigned slot and advances the sequence. Host embedding writes are
+  consumed and explicitly rejected in this A15.3 path.
+- **Failure rule:** an error stops the sequence, does not write or mark the
+  failing slot, preserves earlier successful slots, and blocks automatic
+  pipeline execution. Busy or repeated requests cannot replace active or
+  retained state.
+- **Golden:** independently derive the 18-value Interaction vector as
+  `[1,2,3,4,5,6,7,8,1608,1896,17964,2184,20748,24556,2472,23532,27852,32172]`.
+  The accepted sparse Top configuration still produces final result 36.
+- **Result:** local XSim recorded exactly four logical requests, four AXI AR
+  handshakes, four AXI R handshakes, and four successful slot injections. The
+  mask reached `4'hF`, expected and actual results were both 36, and the
+  accepted counters remained Bottom 322, Interaction 100, Top 744, Total 1174.
+  `xvlog`, `xelab`, and `xsim` all exited zero with zero warnings and zero
+  anchored error/fatal records.
+- **Boundary:** this decision accepts only local fake-memory sequential lookup,
+  slot injection, error/busy/backpressure behavior, and full-pipeline golden
+  agreement. It does not accept a public target top, target build/link,
+  XO/xclbin, FPGA or physical-HBM execution, multi-bank parallelism, or any
+  performance result.

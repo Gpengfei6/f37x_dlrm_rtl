@@ -1,6 +1,6 @@
 # Stage 2N History
 
-This table is an AI-readable index of Stage 2N-A1 through A15.2. It does not turn
+This table is an AI-readable index of Stage 2N-A1 through A15.3. It does not turn
 historical claims into current verification. Follow each evidence link and use
 the status language exactly.
 
@@ -33,6 +33,7 @@ hybrid CPU-embedding/FPGA-dense inference path.
 | Stage 2N-A14.7 | Validate one protected physical-HBM lookup | Added legacy-HAL BO/paddr/TABLE_BASE Host, canonical 1024-byte payload, protected runner and evidence validator; completed one F37X HBM[0] row-37 lookup and cleanup | `docs/STAGE2N_A14_7_HBM_SINGLE_TABLE_HOST_PREPARATION_V1.md`; final A14.7 acceptance in `docs/CURRENT_STATE.md`; retained evidence hashes | **FINAL PASS** for the standalone physical lookup: lanes `[40,41,42,43,44,45,46,47]` exact, BO released and HBM[0] returned to zero usage. No A13 integration or performance claim |
 | Stage 2N-A15.1 | Connect the accepted HBM lookup result to the A13 pipeline locally | Added a versioned controller-level wrapper: A14 v2 response owns A13 slot0, Host retains slots1-3, successful data is retained until ready, and error/busy/ownership guards preserve state | Authorization/baseline `2020e4c`; `docs/STAGE2N_A15_1_HBM_PIPELINE_INTEGRATION_V1.md`; local XSim status/logs | **LOCAL XSIM PASS**: nine behavioral/ABI markers, zero warnings and zero anchored error/fatal records. No public target top, target build/link, xclbin, FPGA access, physical A15 HBM, full prediction golden, or performance claim |
 | Stage 2N-A15.2 | Execute one complete inference using the HBM-owned slot0 path | Reused the A15.1 wrapper and accepted A13 sample; fetched a fake-memory row into slot0, observed the exact Interaction vector loads, ran Bottom/Interaction/Top, and compared against an independent golden | Baseline `876046c`; `docs/STAGE2N_A15_2_END_TO_END_PIPELINE_XSIM_V1.md`; local XSim status/logs | **LOCAL XSIM PASS**: expected/actual result 36, cycles 322/100/744/1174, all 11 markers and zero warnings/errors/fatals. No new RTL, public target top, target build/xclbin, FPGA/physical HBM, board, or performance claim |
+| Stage 2N-A15.3 | Supply all four A13 embedding slots through one sequential lookup engine | Added a versioned controller wrapper that requests canonical rows 37–40, retains each response until A13 accepts it, injects slots 0–3, rejects Host embedding writes, and runs the accepted full pipeline after the mask reaches `4'hF` | Baseline `b3031d4`; `docs/STAGE2N_A15_3_ALL_HBM_EMBEDDING_PIPELINE_XSIM_V1.md`; retained local status/logs | **LOCAL XSIM PASS**: 4 logical requests/AR/R/injections, all four exact vectors, independent 18-value Interaction golden, result 36, cycles 322/100/744/1174, and zero warnings/errors/fatals. No target build/link, xclbin, FPGA/physical HBM, multi-bank, board, or performance claim |
 ## Current Milestone Interpretation
 
 - A13 is the last accepted integrated and board-validated DLRM pipeline.
@@ -59,6 +60,10 @@ hybrid CPU-embedding/FPGA-dense inference path.
   slot0 path. It proves functional consumption by Bottom–Interaction–Top, but
   does not promote A15 to a target, xclbin, physical-HBM, board, or performance
   result.
+- A15.3 is accepted as a local sequential four-row proof through one A14 v2
+  engine and one fake AXI memory. It supplies all four A13 embedding slots and
+  proves full-pipeline golden agreement, but it does not prove a target top,
+  physical HBM, multi-bank parallelism, board execution, or performance.
 ## Superseded and Historical Files
 
 The working tree intentionally retains old, duplicate, recovery, and patent
@@ -150,3 +155,42 @@ Next:
 broaden functional-golden coverage and separately authorize public target-top
 integration. Target build/link, xclbin, device/physical HBM, board, and
 performance remain outside this local milestone.
+
+## Stage 2N-A15.3 — Local all-HBM-embedding pipeline integration
+
+Date: 2026-08-27
+
+Result: `LOCAL XSIM PASS`
+
+A15.3 added a versioned orchestration wrapper around the unchanged accepted
+A14 v2 lookup engine and A13 cycle-counter pipeline. One lookup engine issued
+four sequential requests for canonical rows 37, 38, 39, and 40. Each response
+was retained until the accepted A13 embedding configuration handshake wrote it
+to slot 0, 1, 2, or 3 respectively. The loaded mask reached `4'hF` before the
+accepted START gate admitted the full Bottom–Interaction–Top inference.
+
+Accepted embedding vectors:
+- slot 0: `[40,41,42,43,44,45,46,47]`;
+- slot 1: `[48,49,50,51,52,53,54,55]`;
+- slot 2: `[56,57,58,59,60,61,62,63]`;
+- slot 3: `[64,65,66,67,68,69,70,71]`.
+
+Accepted functional result:
+- independent Interaction golden:
+  `[1,2,3,4,5,6,7,8,1608,1896,17964,2184,20748,24556,2472,23532,27852,32172]`;
+- expected/final result: `36/36`;
+- Bottom/Interaction/Top/Total: `322/100/744/1174` cycles;
+- logical requests/AXI AR/AXI R/injections: `4/4/4/4`;
+- final marker:
+  `STAGE2N_A15_3_ALL_HBM_EMBEDDING_PIPELINE_XSIM_V1_PASS`.
+
+The retained local XSim also covers response retention under backpressure,
+busy/repeated request rejection, error preservation, Host embedding-write
+rejection, the pre-`4'hF` START guard, unchanged pipeline behavior, and the
+cycle-counter offsets `0x218`, `0x21C`, `0x220`, and `0x224`. `xvlog`, `xelab`,
+and `xsim` exited zero with zero warnings and zero anchored error/fatal records.
+
+Next:
+separately authorize A15.4 public target-top and build preparation. A15.3 does
+not prove target build/link, XO/xclbin, physical HBM, FPGA/board behavior,
+multi-bank parallelism, or performance.

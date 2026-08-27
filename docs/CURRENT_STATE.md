@@ -1,6 +1,6 @@
 # Current State
 
-Snapshot date: 2026-08-26
+Snapshot date: 2026-08-27
 
 ## Repository State
 
@@ -20,12 +20,15 @@ Snapshot date: 2026-08-26
 - A14.7 final protected source baseline: `70179f66c6fab8a28c2305c024bec3fa43f9c508`
 - A15.1 authorization and implementation baseline:
   `2020e4ccd2f802d69714d957e7b8baf8172a39fa`
-- Current engineering stage: **Stage 2N-A15.2 HBM-backed end-to-end pipeline; local XSim PASS**
+- A15.3 authorization and parent baseline:
+  `b3031d4f9d3c445a3f1eaa227ae2d28d35d78ae9`
+- Current engineering stage: **Stage 2N-A15.3 four-sequential-HBM-embedding pipeline; local XSim PASS**
 - Accepted and frozen functional baseline: **Stage 2N-A13**
 
 The branch contains the accepted A13/A14 history plus the versioned A15.1 local
-integration wrapper and A15.2 end-to-end XSim proof. Do not infer validation
-scope from stage numbering alone.
+integration wrapper, A15.2 end-to-end proof, and A15.3 four-slot sequential
+lookup proof. Do not infer physical-HBM or target validation scope from stage
+numbering alone.
 
 The primary Windows worktree may contain pre-existing untracked recovery,
 historical evidence, patent, source, and helper files. Preserve them. Never use
@@ -215,6 +218,30 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 - This remains fake-memory local XSim. A15 target build, xclbin, FPGA execution,
   physical HBM integration, board validation, and performance are not proven.
 
+### Stage 2N-A15.3
+
+- Added a versioned orchestration wrapper because accepted A15.1 fixes HBM
+  ownership to slot 0 and cannot express four HBM-owned slots without changing
+  accepted behavior.
+- One unchanged A14 v2 lookup engine sequentially fetches canonical rows
+  37, 38, 39, and 40 and commits them to A13 slots 0 through 3 only on the
+  accepted embedding configuration handshake.
+- Expected and actual vectors are `[40..47]`, `[48..55]`, `[56..63]`, and
+  `[64..71]`; all 32 signed INT16 lanes and all four packed 128-bit values match.
+- The self-checking bench proves mask transitions `0->1->3->7->F`, delayed AXI
+  request/response and A13-ready retention, slot-2 error preservation, busy and
+  repeated-request rejection, Host writes rejected for all four slots, and the
+  existing A13 START gate.
+- Complete Bottom `8->16->8`, Interaction `5x8->18`, and Top `18->32->16->1`
+  execution matches the independently calculated result 36. Cycle counts remain
+  `322/100/744/1174`; the four lookup preloads occur before A13 START.
+- Final Vivado/XSim 2022.1 `xvlog/xelab/xsim` return codes are `0/0/0`, with
+  zero warnings, errors, and fatals. Successful transaction counts are four
+  logical lookups, four AR handshakes, four R handshakes, and four injections.
+- This remains local fake-memory evidence. It is not a public target top,
+  target build/link, xclbin, FPGA execution, physical HBM, multi-bank, or
+  performance result.
+
 ## Verification Summary
 
 | Area | Result | Evidence boundary |
@@ -254,6 +281,8 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 | A15.1 physical HBM / target execution | NOT RUN | No public target top, target build/link, xclbin programming, FPGA access, or board run |
 | A15.2 local end-to-end pipeline | **PASS** | Fake-memory row37 -> slot0 -> Bottom/Interaction/Top -> final result 36; actual Interaction load ordering observed; exact 322/100/744/1174 counters |
 | A15.2 target/xclbin/physical HBM | NOT RUN | Local controller-level XSim only; no public target top, target build/link, xclbin, device, or board access |
+| A15.3 local four-slot sequential lookup pipeline | **PASS** | One A14 v2 engine; rows 37-40 -> slots 0-3 -> Bottom/Interaction/Top; exact final 36; four logical/AR/R/injection handshakes; ready/error/busy/Host guards PASS |
+| A15.3 target/xclbin/physical HBM/performance | NOT RUN / NOT CLAIMED | Local fake-memory XSim only; no target build/link, XO/xclbin, device, physical HBM, multi-bank, board, or performance evidence |
 
 Primary evidence:
 
@@ -273,6 +302,9 @@ Primary evidence:
 - `docs/STAGE2N_A14_6_LINK_ONLY_ACCEPTANCE.md`
 - `docs/evidence/stage2n_a14_6/`
 - `docs/STAGE2N_A14_7_HBM_SINGLE_TABLE_HOST_PREPARATION_V1.md`
+- `docs/STAGE2N_A15_1_HBM_PIPELINE_INTEGRATION_V1.md`
+- `docs/STAGE2N_A15_2_END_TO_END_PIPELINE_XSIM_V1.md`
+- `docs/STAGE2N_A15_3_ALL_HBM_EMBEDDING_PIPELINE_XSIM_V1.md`
 - `docs/evidence/stage2n_a14_7/local_source_preparation_v1.txt`
 - `docs/STAGE2N_A15_1_HBM_PIPELINE_INTEGRATION_V1.md`
 - `docs/STAGE2N_A15_2_END_TO_END_PIPELINE_XSIM_V1.md`
@@ -306,20 +338,21 @@ Historical target environment recorded by accepted evidence:
    paths.
 4. The previously documented proxy XO was a generated worktree artifact and is
    not present in this main working tree.
-5. A15.2 proves complete local controller-level inference but a public F37X
+5. A15.3 proves complete local controller-level inference with four sequential
+   fake-memory embedding lookups, but a public F37X
    kernel/control top has not been integrated.
-6. A15.2 has no target build/link, xclbin, physical-HBM transaction, or board
-   evidence.
+6. A15.3 has no target build/link, xclbin, physical-HBM transaction, multi-bank,
+   board, or performance evidence.
 
 These are environment and next-level integration blockers, not failures of the
-completed A15.2 local XSim test.
+completed A15.3 local XSim test.
 
 ## Next Actions
 1. Preserve the accepted A13, A14.5, A14.6, and A14.7 identities and evidence;
    do not rerun physical A14.7 merely to reconfirm it.
-2. Review and accept the A15.2 local end-to-end proof and its exact-file commit.
-3. Separately authorize any public F37X kernel/control-top integration. Preserve
-   the A13 cycle-counter offsets `0x218/0x21C/0x220/0x224` and slot1-3 Host ABI.
+2. Review and accept the A15.3 local four-slot proof and its exact-file commit.
+3. Separately authorize A15.4 protected target packaging/build preparation and
+   preserve the A13 cycle-counter offsets `0x218/0x21C/0x220/0x224`.
 4. Extend functional-golden coverage beyond the deterministic single sample
    before any performance work.
 5. Treat target build/link, xclbin generation/programming, and board execution
@@ -379,9 +412,10 @@ The first protected attempt exposed a zero-byte runtime Host artifact. The physi
 
 A14.7 is now frozen. No further single-table HBM smoke is required merely for confirmation.
 
-Next stage:
-integrate the accepted physical-HBM embedding lookup path with the existing A13 DLRM compute pipeline, initially targeting:
+The local A13/A14 integration path is now functionally proven through A15.3 for
+four sequential fake-memory rows and a complete golden-matched inference. This
+does not convert the standalone A14.7 physical result into physical A15 proof.
 
-`Physical HBM embedding lookup -> Interaction -> Top MLP -> final result`
-
-Multi-table and multi-HBM-bank parallelism remain future work after functional integration.
+Next stage: separately authorize A15.4 protected target packaging/build
+preparation. Multi-table and multi-HBM-bank parallelism remain future work and
+are not implied by the A15.3 four-slot sequence.

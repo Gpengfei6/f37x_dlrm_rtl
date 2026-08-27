@@ -10,8 +10,9 @@ This repository develops a synthesizable SystemVerilog FPGA accelerator for
 Deep Learning Recommendation Model (DLRM) inference. The implemented research
 path combines a runtime-configurable fixed-point dense engine, Bottom MLP,
 feature interaction, Top MLP, host control, and stage-level observability. The
-current Stage 2N-A15.2 work proves one complete local inference using the
-accepted A14 v2 lookup result as the accepted A13 pipeline's embedding slot 0.
+current Stage 2N-A15.3 work proves one complete local inference after one
+accepted A14 v2 lookup engine sequentially supplies all four accepted A13
+embedding slots from canonical fake-memory rows.
 
 Target environment:
 
@@ -24,16 +25,17 @@ Target environment:
 Main research direction:
 
 1. retain the accepted configurable Bottom–Interaction–Top inference pipeline;
-2. integrate one accepted FPGA-side HBM lookup result without changing the A13
-   arithmetic, cycle counters, or Host-configured embedding slots 1 through 3;
+2. integrate four sequential logical embedding lookups without changing the
+   accepted A13 arithmetic, START gate, or cycle-counter ABI;
 3. establish functional equivalence before considering multiple banks, request
    coalescing, scheduling, or performance claims.
 
 Important distinction: A13 is the accepted integrated DLRM pipeline baseline,
 whose embedding lookup is performed by the CPU. A14.7 separately proved one
 physical HBM[0] lookup. A15.1 proves the local controller-level data handoff,
-and A15.2 proves complete Bottom–Interaction–Top execution using that handoff.
-Neither result is a physical integrated A15 target.
+A15.2 proves complete Bottom–Interaction–Top execution using one HBM-owned
+slot, and A15.3 locally proves four sequential HBM-owned slots and the complete
+pipeline. None of these local A15 results is a physical integrated A15 target.
 
 ## 2. AI Reading Order
 
@@ -46,7 +48,7 @@ Read the repository in this order before proposing or making changes:
 5. `docs/ARCHITECTURE.md`
 6. `docs/STAGE_HISTORY.md`
 7. the active-stage document,
-   `docs/STAGE2N_A15_2_END_TO_END_PIPELINE_XSIM_V1.md`
+   `docs/STAGE2N_A15_3_ALL_HBM_EMBEDDING_PIPELINE_XSIM_V1.md`
 8. the exact RTL, testbench, Host, configuration, and script files named by the
    active-stage documents
 
@@ -68,8 +70,8 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A15.2 — local HBM-backed end-to-end pipeline XSim
-PASS**.
+Current stage: **Stage 2N-A15.3 — local four-sequential-HBM-embedding pipeline
+XSim PASS**.
 
 Stage 2N-A13 remains the accepted and frozen integrated DLRM baseline. A14.5
 added the runtime 64-bit table-base ABI, A14.6 completed the accepted link-only
@@ -100,7 +102,16 @@ Top `18->32->16->1`. It observes the real Interaction vector-load handshakes,
 matches the independently derived final result 36, and reproduces the accepted
 cycle counts `322/100/744/1174` with eight controller-overhead cycles.
 
-Pending beyond A15.2:
+A15.3 adds one versioned orchestration wrapper because A15.1 cannot route a
+single lookup engine to slots 1 through 3. The unchanged A14 v2 engine reads
+canonical rows 37 through 40 sequentially, and each response is retained until
+the unchanged A13 configuration port commits it to the corresponding slot.
+Local XSim observes exact vectors `[40..47]`, `[48..55]`, `[56..63]`, and
+`[64..71]`, mask `4'hF`, complete inference result 36, and unchanged
+`322/100/744/1174` A13 cycle counts. Error, busy/repeated-request,
+ready-retention, Host-write rejection, START gate, and ABI checks all pass.
+
+Pending beyond A15.3:
 
 - public F37X AXI4-Lite/kernel-top integration;
 - broader multi-sample A15 software-golden regression;
@@ -109,7 +120,7 @@ Pending beyond A15.2:
 - any A15 latency, bandwidth, throughput, power, or performance claim;
 - multi-table, multi-bank, burst, cache, coalescing, scheduling, or INT8 work.
 
-See `docs/STAGE2N_A15_2_END_TO_END_PIPELINE_XSIM_V1.md` for the exact local
+See `docs/STAGE2N_A15_3_ALL_HBM_EMBEDDING_PIPELINE_XSIM_V1.md` for the exact local
 acceptance boundary, sample, command, and result.
 ## 4. Hardware Environment
 
@@ -275,6 +286,32 @@ This does not prove a physical HBM transaction.
 - multiple samples, multiple HBM-resident embedding slots, tables, or banks;
 - A15 latency, bandwidth, throughput, power, speedup, or performance benefit.
 
+### Proven by local A15.3 XSim
+
+- one accepted A14 v2 engine issues four sequential logical lookups through one
+  AXI read master;
+- canonical rows 37 through 40 are committed bit-exactly to A13 slots 0 through
+  3 with lane 0 in bits `[15:0]`;
+- the loaded mask transitions `0->1->3->7->F` only after A13 configuration
+  handshakes;
+- delayed request ready, delayed response, retained injection, lookup error,
+  busy/repeated request, and Host-write rejection preserve state;
+- complete Bottom, Feature Interaction, and Top execution matches independent
+  golden 36;
+- logical lookup/AR/R/injection counts are `4/4/4/4`;
+- A13 counters remain `322/100/744/1174` and ABI offsets remain
+  `0x218/0x21C/0x220/0x224`;
+- `xvlog`, `xelab`, and `xsim` exit zero with zero warnings, errors, and fatals.
+
+### Not proven by A15.3
+
+- public F37X AXI4-Lite/kernel-top integration;
+- target synthesis, implementation, Vitis link, XO/xclbin, or target timing;
+- FPGA programming, board execution, or a physical A15 HBM transaction;
+- parallel or multi-bank HBM behavior, bursts, or multiple outstanding reads;
+- HBM latency/bandwidth, throughput, power, speedup, or performance benefit;
+- broader multi-sample functional coverage.
+
 Use `docs/CURRENT_STATE.md` for the exact current branch, HEAD, blockers, and
 next actions.
 
@@ -309,9 +346,10 @@ the first protected board attempt found that the formal Host executable had beco
 
 Do not repeat A14.7 physical lookup merely to reconfirm it.
 
-The local A13/A14 handoff and one complete deterministic inference are now
-accepted through A15.2. The next engineering direction is broader functional-
-golden coverage and separately authorized public-top integration before any
-new target or performance gate.
+The local A13/A14 handoff and one complete deterministic inference using all
+four sequential HBM-owned slots are now proven through A15.3. The next
+engineering direction is separately authorized A15.4 protected target
+packaging/build preparation plus broader functional-golden coverage before any
+target execution or performance gate.
 
 First priority is functional equivalence with the software golden model. Multi-table, multi-bank, cache and performance optimization should follow only after this integration path is correct.
