@@ -774,3 +774,32 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
   agreement. It does not accept a public target top, target build/link,
   XO/xclbin, FPGA or physical-HBM execution, multi-bank parallelism, or any
   performance result.
+
+## D-039 - Add a disjoint public A15 kernel control window before target packaging
+
+- **Status:** accepted locally on 2026-08-27 by Stage 2N-A15.4 Vivado/XSim
+  2022.1 evidence.
+- **Decision:** add a new versioned public F37X-style top around the unchanged
+  A15.3 controller rather than modify the accepted A13, A14 v2, or A15.3 files.
+  Preserve the complete A13 AXI4-Lite ABI and expose the accepted lookup through
+  one 64-bit-address, 128-bit-data `m_axi_gmem` read master.
+- **Control ABI:** add only the disjoint window `0x300` A15 CONTROL/STATUS,
+  `0x304` TABLE_BASE low, and `0x308` TABLE_BASE high. Do not copy the conflicting
+  standalone A14 control map and do not move A13 counters at
+  `0x218/0x21C/0x220/0x224`.
+- **Command policy:** one A15 START snapshots TABLE_BASE and accepted pipeline
+  configuration, runs the accepted four-row load-all sequence, waits for mask
+  `4'hF`, then starts accepted A13. Lookup or pipeline error prevents automatic
+  continuation; repeated START cannot replace an active command; CLEAR performs
+  explicit recovery.
+- **Rows:** keep canonical rows 37–40 fixed. Programmable row registers are not
+  required for this deterministic kernel-composition proof and would enlarge
+  the ABI without new acceptance value.
+- **Result:** public-port fake-memory XSim observed exact addresses and vectors,
+  lookup/AR/R/injection counts `4/4/4/4`, loaded mask `0xF`, independent
+  golden/actual `36/36`, and A13 counters `322/100/744/1174`. Tool return codes
+  were `0/0/0`, with zero warning/error/fatal/assertion-failure records.
+- **Boundary:** this decision accepts only local public-interface composition
+  and functional behavior. It does not accept target build/link/timing, XO,
+  xclbin, physical HBM, Host runtime, FPGA/board execution, multi-bank behavior,
+  or any performance claim.

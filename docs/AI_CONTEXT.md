@@ -10,9 +10,10 @@ This repository develops a synthesizable SystemVerilog FPGA accelerator for
 Deep Learning Recommendation Model (DLRM) inference. The implemented research
 path combines a runtime-configurable fixed-point dense engine, Bottom MLP,
 feature interaction, Top MLP, host control, and stage-level observability. The
-current Stage 2N-A15.3 work proves one complete local inference after one
-accepted A14 v2 lookup engine sequentially supplies all four accepted A13
-embedding slots from canonical fake-memory rows.
+current Stage 2N-A15.4 work proves the same complete local inference through a
+versioned public AXI4-Lite plus `m_axi_gmem` kernel boundary after one accepted
+A14 v2 lookup engine sequentially supplies all four accepted A13 embedding
+slots from canonical fake-memory rows.
 
 Target environment:
 
@@ -34,8 +35,9 @@ Important distinction: A13 is the accepted integrated DLRM pipeline baseline,
 whose embedding lookup is performed by the CPU. A14.7 separately proved one
 physical HBM[0] lookup. A15.1 proves the local controller-level data handoff,
 A15.2 proves complete Bottom–Interaction–Top execution using one HBM-owned
-slot, and A15.3 locally proves four sequential HBM-owned slots and the complete
-pipeline. None of these local A15 results is a physical integrated A15 target.
+slot, A15.3 locally proves four sequential HBM-owned slots and the complete
+pipeline, and A15.4 exposes that composition at a public kernel boundary. None
+of these local A15 results is a physical integrated A15 target.
 
 ## 2. AI Reading Order
 
@@ -48,7 +50,7 @@ Read the repository in this order before proposing or making changes:
 5. `docs/ARCHITECTURE.md`
 6. `docs/STAGE_HISTORY.md`
 7. the active-stage document,
-   `docs/STAGE2N_A15_3_ALL_HBM_EMBEDDING_PIPELINE_XSIM_V1.md`
+   `docs/STAGE2N_A15_4_F37X_KERNEL_ALL_HBM_PIPELINE_XSIM_V1.md`
 8. the exact RTL, testbench, Host, configuration, and script files named by the
    active-stage documents
 
@@ -70,7 +72,7 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A15.3 — local four-sequential-HBM-embedding pipeline
+Current stage: **Stage 2N-A15.4 — public F37X kernel all-HBM pipeline local
 XSim PASS**.
 
 Stage 2N-A13 remains the accepted and frozen integrated DLRM baseline. A14.5
@@ -111,17 +113,24 @@ Local XSim observes exact vectors `[40..47]`, `[48..55]`, `[56..63]`, and
 `322/100/744/1174` A13 cycle counts. Error, busy/repeated-request,
 ready-retention, Host-write rejection, START gate, and ABI checks all pass.
 
-Pending beyond A15.3:
+A15.4 adds a new versioned public top without modifying A15.3. It preserves the
+accepted A13 register map, adds only `0x300` A15 control/status and
+`0x304/0x308` TABLE_BASE, and exposes one 64-bit-address/128-bit-data
+`m_axi_gmem` read master. Public-port XSim observes exact addresses and vectors,
+four lookup/AR/R/injection handshakes, mask `0xF`, final result 36, and unchanged
+`322/100/744/1174` counters.
 
-- public F37X AXI4-Lite/kernel-top integration;
+Pending beyond A15.4:
+
 - broader multi-sample A15 software-golden regression;
-- A15 target build/link and xclbin;
+- A15.4 target synthesis/implementation, packaging/link, XO, and xclbin;
 - A15 FPGA-device execution or physical HBM validation;
 - any A15 latency, bandwidth, throughput, power, or performance claim;
 - multi-table, multi-bank, burst, cache, coalescing, scheduling, or INT8 work.
 
-See `docs/STAGE2N_A15_3_ALL_HBM_EMBEDDING_PIPELINE_XSIM_V1.md` for the exact local
+See `docs/STAGE2N_A15_4_F37X_KERNEL_ALL_HBM_PIPELINE_XSIM_V1.md` for the exact local
 acceptance boundary, sample, command, and result.
+
 ## 4. Hardware Environment
 
 ### Local development environment
@@ -312,6 +321,30 @@ This does not prove a physical HBM transaction.
 - HBM latency/bandwidth, throughput, power, speedup, or performance benefit;
 - broader multi-sample functional coverage.
 
+### Proven by local A15.4 XSim
+
+- a public F37X-style AXI4-Lite plus `m_axi_gmem` boundary around unchanged
+  A15.3/A14 v2/A13 modules;
+- a disjoint A15 register window at `0x300/0x304/0x308`, with every accepted A13
+  address and counter offset preserved;
+- TABLE_BASE `0x0000000123456000` and exact row37–40 addresses ending in
+  `0x6250/0x6260/0x6270/0x6280`;
+- exact vectors `[40..47]`, `[48..55]`, `[56..63]`, `[64..71]`, exactly four
+  lookup/AR/R/injection handshakes, and final mask `0xF`;
+- complete Bottom–Interaction–Top result 36 and unchanged accepted A13 counters
+  `322/100/744/1174`;
+- public-port reset/error/busy/delayed-AXI/Host-ownership/ABI checks with
+  `xvlog/xelab/xsim` return codes `0/0/0` and zero warning/error/fatal/assertion
+  records.
+
+### Not proven by A15.4
+
+- exact-target synthesis, implementation, timing, packaging, or Vitis link;
+- XO/xclbin generation or validity;
+- physical HBM access or FPGA/F37X execution;
+- Host-runtime integration, multiple samples/tables/banks, performance, power,
+  latency, bandwidth, throughput, or speedup.
+
 Use `docs/CURRENT_STATE.md` for the exact current branch, HEAD, blockers, and
 next actions.
 
@@ -347,9 +380,9 @@ the first protected board attempt found that the formal Host executable had beco
 Do not repeat A14.7 physical lookup merely to reconfirm it.
 
 The local A13/A14 handoff and one complete deterministic inference using all
-four sequential HBM-owned slots are now proven through A15.3. The next
-engineering direction is separately authorized A15.4 protected target
-packaging/build preparation plus broader functional-golden coverage before any
-target execution or performance gate.
+four sequential HBM-owned slots are now proven through the A15.4 public local
+kernel boundary. The next engineering direction is separately authorized A15.5
+target packaging/build preparation plus broader functional-golden coverage
+before any target execution or performance gate.
 
 First priority is functional equivalence with the software golden model. Multi-table, multi-bank, cache and performance optimization should follow only after this integration path is correct.
