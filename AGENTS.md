@@ -425,3 +425,97 @@ accepted A13 inference pipeline, final-result golden agreement, and preservation
 of the A13 ABIs. It cannot prove physical HBM behavior, multi-bank parallelism,
 target build/link, xclbin validity, FPGA execution, board behavior, or any
 performance result.
+
+## Stage 2N-A15.4 Local F37X Kernel-Level All-HBM Pipeline Integration Authorization
+
+Purpose:
+Allow a local F37X kernel-level integration proof on branch
+`work/stage2n-a15-hbm-pipeline-integration`. The new versioned top shall expose
+one AXI4-Lite control interface, one 64-bit-address/128-bit-data `m_axi_gmem`
+interface, the accepted A15.3 sequential four-row embedding path, and the
+accepted A13 Bottom–Interaction–Top pipeline and cycle counters.
+
+Authorized:
+
+1. Add one new versioned A15.4 F37X kernel wrapper, including as needed:
+
+   `rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a15_v1.sv`
+
+2. Add one independent A15.4 self-checking kernel-level testbench, including as
+   needed:
+
+   `tb/tb_dlrm_f37x_rtl_kernel_stage2n_a15_v1.sv`
+
+3. Add local A15.4 XSim runners:
+
+   - `scripts/run_stage2n_a15_4_kernel_xsim_v1.ps1`
+   - `scripts/run_stage2n_a15_4_kernel_xsim_v1.tcl`
+
+4. Add local A15.4 documentation and retained local XSim evidence, including:
+
+   `docs/STAGE2N_A15_4_F37X_KERNEL_ALL_HBM_PIPELINE_XSIM_V1.md`
+
+5. After reviewable local acceptance evidence exists, minimally update:
+
+   - `docs/CURRENT_STATE.md`
+   - `docs/AI_CONTEXT.md`
+   - `docs/DECISIONS.md`
+   - `docs/STAGE_HISTORY.md`
+
+6. Create one local Git commit containing only the reviewed A15.4 files.
+
+Technical objective:
+
+Prove through the public ports of a new versioned local RTL kernel that
+AXI4-Lite control can capture a runtime HBM table base, start the accepted
+A15.3 four-row sequence, obtain rows 37, 38, 39, and 40 through exactly one
+accepted A14 v2 lookup engine and one AXI read master, inject slots 0 through 3,
+start the accepted A13 pipeline only after `embedding_loaded_mask == 4'hF`, and
+return the final result and unchanged A13 cycle counters.
+
+Authorized validation scope:
+
+- local source and address-map audit;
+- new versioned A15.4 F37X wrapper RTL only;
+- an independent testbench using the public AXI4-Lite and `m_axi_gmem` ports;
+- a local fake AXI HBM memory;
+- local Vivado/XSim execution and retained local logs/status;
+- local documentation and a local exact-file Git commit.
+
+Protected assets:
+
+- Do not modify accepted A13 RTL or cycle-counter RTL.
+- Do not modify accepted A14 v2 lookup or wrapper RTL.
+- Do not modify accepted A14.7 Host, runner, or evidence.
+- Do not modify accepted A15.1, A15.2, or A15.3 files or retained evidence.
+- Reuse protected blocks structurally from the new versioned A15.4 boundary.
+
+Restrictions:
+
+- No network access, Git push, SSH, SCP, server access, or access to
+  `/home/chaosuan`.
+- No `xbutil`, FPGA device access, physical HBM access, board execution, or
+  xclbin programming.
+- Do not run `v++`, target build/link, or XO/xclbin generation.
+- Do not add a second AXI master, second lookup engine, multiple HBM banks,
+  parallel lookup, bursts, multiple outstanding reads, caching, prefetching,
+  INT8 embeddings, performance optimization, power testing, GPU comparison, or
+  a model-size change.
+- Do not claim target acceptance, physical HBM behavior, bandwidth, latency,
+  throughput, speedup, power, board validation, or performance from local XSim.
+
+Git safety boundary:
+
+- Preserve all historical untracked files.
+- Do not run `git clean` or `git reset --hard`.
+- Do not use `git add .`.
+- Stage only the exact files created or updated for A15.4.
+
+Evidence boundary:
+
+A15.4 can prove only local public-kernel control/address behavior, four
+sequential fake-memory reads, four-slot injection, error/busy/backpressure
+behavior, full accepted A13 pipeline execution, final-result agreement, and
+preservation of the accepted A13 register and cycle-counter ABIs. It cannot
+prove target packaging/linking, XO/xclbin validity, physical HBM or FPGA
+execution, board behavior, multi-bank parallelism, or any performance result.
