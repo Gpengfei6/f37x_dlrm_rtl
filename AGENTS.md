@@ -304,3 +304,124 @@ A15.1 can prove only the local RTL/XSim integration behavior listed above. It
 does not re-run A14.7, access physical HBM, validate an A15 target build or
 xclbin, prove that all four embeddings come from HBM, or establish any
 performance result.
+
+## Stage 2N-A15.3 Local Multi-HBM-Lookup Pipeline Integration Authorization
+
+Purpose:
+Allow a local controller-level proof in which one accepted A14 v2 lookup engine
+performs four sequential lookups and supplies all four accepted A13 embedding
+slots without modifying accepted A13, A14, A15.1, or A15.2 assets.
+
+Authorized:
+
+1. Add a versioned A15.3 integration controller or wrapper, including as needed:
+
+   - `rtl/pipeline/dlrm_hbm_pipeline_integration_stage2n_a15_v2.sv`
+   - `rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a15_v2.sv`
+
+2. Add an independent A15.3 self-checking testbench, including as needed:
+
+   - `tb/tb_dlrm_hbm_pipeline_integration_stage2n_a15_v3.sv`
+   - `tb/tb_dlrm_f37x_rtl_kernel_stage2n_a15_v2.sv`
+
+3. Add local A15.3 XSim runners:
+
+   - `scripts/run_stage2n_a15_3_integration_xsim_v1.ps1`
+   - `scripts/run_stage2n_a15_3_integration_xsim_v1.tcl`
+
+4. Add the A15.3 stage document:
+
+   `docs/STAGE2N_A15_3_ALL_HBM_EMBEDDING_PIPELINE_XSIM_V1.md`
+
+5. After reviewable local acceptance evidence exists, update:
+
+   - `docs/CURRENT_STATE.md`
+   - `docs/AI_CONTEXT.md`
+   - `docs/DECISIONS.md`
+   - `docs/STAGE_HISTORY.md`
+
+6. Reuse, but do not directly modify:
+
+   - accepted A13 RTL and cycle-counter RTL;
+   - accepted A14 v2 lookup and wrapper RTL;
+   - accepted A14.7 Host, runner, and evidence;
+   - accepted A15.1 RTL, testbench, runners, documents, and evidence;
+   - accepted A15.2 testbench, runners, documents, and evidence.
+
+Technical objective:
+
+In local RTL/XSim, use one accepted A14 v2 lookup engine to issue four
+sequential requests and inject their bit-exact 128-bit results into A13
+embedding slots 0, 1, 2, and 3. After all four loaded bits are set, reuse the
+accepted A13 START mechanism to execute Bottom MLP, Feature Interaction, and Top
+MLP and compare the final result with an independently established golden.
+
+The phrase "all HBM embeddings" in this stage means four sequential logical
+lookups through one engine and one AXI read master. It does not authorize or
+imply four physical HBM banks, parallel lookups, multiple AXI masters, bursts,
+or multiple outstanding transactions.
+
+Authorized validation scope:
+
+- local source and model-asset audit;
+- new versioned A15.3 RTL only when the accepted A15.1 wrapper cannot express
+  the required four-slot sequence without changing its behavior;
+- independent local self-checking testbench and fake AXI memory;
+- local Vivado/XSim execution and retained local logs/status;
+- local stage and current-state documentation;
+- a local Git commit containing only reviewed A15.3 files.
+
+Required behavior:
+
+- lookup indexes and expected rows must be derived from the tracked canonical
+  A14 embedding table or payload builder before implementation;
+- response packing remains lane 0 in bits `[15:0]` through lane 7 in bits
+  `[127:112]`; no lane reorder is allowed without contradictory source proof;
+- each successful response writes exactly its assigned slot and sets that
+  slot's loaded bit only after the A13 configuration handshake;
+- `embedding_loaded_mask` must reach `4'hF` before pipeline START;
+- Host embedding writes to slots 0 through 3 are not exposed or are explicitly
+  rejected in the new A15.3 path, without changing the accepted A13 ABI;
+- an error stops the four-slot sequence, does not write or mark the failing
+  slot, preserves prior successful slots, exposes an error state, and never
+  starts the pipeline automatically;
+- busy/repeated requests cannot overwrite an active request, retained response,
+  or previously accepted embedding;
+- response data and control remain stable while downstream configuration ready
+  is low;
+- the full Bottom–Interaction–Top path must execute and match an independent
+  fixed-point golden result;
+- the A13 pipeline and cycle-counter ABIs remain unchanged, including offsets
+  `0x218`, `0x21C`, `0x220`, and `0x224`.
+
+Restrictions:
+
+- No network access, Git push, SSH, SCP, server access, or access to
+  `/home/chaosuan`.
+- No `xbutil`, FPGA device access, physical HBM access, xclbin programming,
+  target build/link, XO/xclbin generation, or board execution.
+- Do not modify any accepted A13, A14 v2, A14.7, A15.1, or A15.2 file or
+  retained evidence.
+- Do not add multiple HBM banks, multiple AXI masters, parallel lookup engines,
+  bursts, multiple outstanding transactions, caching, prefetching, INT8
+  embeddings, performance optimization, power testing, GPU comparison, or a
+  model-size change.
+- Do not claim physical A15 HBM operation, bandwidth, latency, throughput,
+  performance improvement, power, speedup, target acceptance, or board
+  validation from local XSim.
+
+Git safety boundary:
+
+- Preserve all historical untracked files.
+- Do not run `git clean` or `git reset --hard`.
+- Do not use `git add .`.
+- Stage only the exact files created or updated for A15.3.
+
+Evidence boundary:
+
+A15.3 can prove only sequential four-row lookup control, four-slot injection,
+ready/valid/error/busy behavior, exact local fake-memory data flow through the
+accepted A13 inference pipeline, final-result golden agreement, and preservation
+of the A13 ABIs. It cannot prove physical HBM behavior, multi-bank parallelism,
+target build/link, xclbin validity, FPGA execution, board behavior, or any
+performance result.
