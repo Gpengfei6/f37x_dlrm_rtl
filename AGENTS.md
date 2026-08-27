@@ -519,3 +519,126 @@ behavior, full accepted A13 pipeline execution, final-result agreement, and
 preservation of the accepted A13 register and cycle-counter ABIs. It cannot
 prove target packaging/linking, XO/xclbin validity, physical HBM or FPGA
 execution, board behavior, multi-bank parallelism, or any performance result.
+
+## Stage 2N-A15.5 Target XO/XCLBIN Build Preparation Authorization
+
+Purpose:
+Allow local, versioned source preparation and static acceptance for packaging
+the accepted A15.4 public F37X kernel as a target XO and later linking it as one
+compute unit to `HBM[0]`. The user alone may manually transfer reviewed files to
+the controlled target environment and execute a separately reviewed target
+build. This authorization does not permit Codex to access that environment.
+
+Authorized:
+
+1. Add a versioned A15.5 XO packaging Tcl that names the accepted A15.4 top:
+
+   `dlrm_f37x_rtl_kernel_stage2n_a15_v1`
+
+2. Add versioned A15.5 kernel XML, metadata, packaging helpers, or other
+   package-only files when required to describe the actual A15.4 RTL interface.
+
+3. Add a versioned target build/link configuration for exactly one compute unit
+   and exactly one connectivity mapping:
+
+   - kernel: `dlrm_f37x_rtl_kernel_stage2n_a15_v1`;
+   - CU: `dlrm_a15_1`;
+   - connectivity: `dlrm_a15_1.m_axi_gmem:HBM[0]`;
+   - requested kernel frequency: 100 MHz.
+
+4. Add local static validators for packaging inputs, kernel identity and
+   metadata, AXI-Lite ABI, AXI master count, connectivity, target identity, and
+   rejection of stale A14 single-lookup signatures.
+
+5. Add an A15.5 stage document with explicit `PASS`, `NOT_RUN`, `BLOCKED`, and
+   evidence-boundary language.
+
+6. Add versioned build-only shell runners that the user may inspect and later
+   execute manually in the controlled target environment.
+
+7. Perform local text/source, Tcl, CFG, XML, Python, shell, and Git static
+   checks that do not require the target platform.
+
+8. Create one local Git commit containing only the reviewed A15.5 preparation
+   files and permitted documentation updates.
+
+Required metadata and ABI boundary:
+
+- Derive metadata from the accepted A15.4 public RTL rather than copying the
+  obsolete A14 single-lookup Host signature.
+- Expose `s_axi_control` and exactly one `m_axi_gmem` global-memory master.
+- Preserve a 64-bit AXI memory address and 128-bit AXI memory data interface.
+- Preserve the complete accepted A13 AXI-Lite address map, including Bottom,
+  Interaction, Top, and Total counters at `0x218`, `0x21C`, `0x220`, and
+  `0x224`.
+- Preserve A15.4 CONTROL/STATUS at `0x300` and TABLE_BASE low/high at `0x304`
+  and `0x308`.
+- TABLE_BASE must remain software-writable through the A15.4 AXI-Lite ABI.
+- A15 CONTROL is an AXI-Lite control register, not a stale A14 lookup argument.
+- Do not expose the obsolete A14 `LOOKUP_INDEX` plus `RESULT0` through
+  `RESULT3` kernel-argument signature. A15.4 internally sequences fixed rows
+  37, 38, 39, and 40.
+
+Target identity:
+
+- part: `xcvu37p-fsvh2892-2L-e`;
+- platform: `inspur_f37x_xdma_201920_3`;
+- reviewed platform path:
+  `/opt/xilinx/platforms/inspur_f37x_xdma_201920_3/inspur_f37x_xdma_201920_3.xpfm`;
+- requested kernel frequency: 100 MHz;
+- exactly one CU and `m_axi_gmem -> HBM[0]`.
+
+Static acceptance criteria:
+
+- accepted A15.4 RTL remains unchanged;
+- package sources select the exact accepted A15.4 top and source set;
+- metadata contains the correct kernel/CU identities, `s_axi_control`, and one
+  64-bit-address/128-bit-data `m_axi_gmem` interface;
+- metadata and validators preserve the accepted A13 and A15.4 register offsets;
+- configuration contains only one CU and one `HBM[0]` mapping at 100 MHz;
+- target part and platform are exact;
+- validators reject a wrong kernel name, wrong CU, wrong HBM mapping, wrong
+  clock, stale A14 `LOOKUP_INDEX` signature, multiple HBM banks, and multiple
+  AXI memory masters;
+- no physical, device, network, server, or performance activity occurs during
+  local preparation.
+
+Protected assets:
+
+- Do not modify any accepted A13 RTL, Host, test, script, document, or evidence.
+- Do not modify accepted A14 v2 RTL or accepted A14.7 Host, runner, or evidence.
+- Do not modify accepted A15.1, A15.2, A15.3, or A15.4 files or retained
+  evidence.
+- Do not modify model shape, fixed-point behavior, established golden outputs,
+  or accepted public register offsets.
+
+Restrictions:
+
+- No network access, Git push, SSH, SCP, server access, or access to
+  `/home/chaosuan`.
+- No `xbutil`, FPGA device access, programming, reset, xclbin programming, or
+  board execution.
+- Codex must not execute a target XO build, target link, or target-platform
+  command. The user may later run reviewed build-only files manually.
+- Do not claim target XO, target link, or xclbin PASS from local preparation.
+- Do not add multiple HBM banks, multiple AXI masters, parallel lookup engines,
+  bursts, multiple outstanding requests, caching, prefetching, INT8 embeddings,
+  performance optimization/testing, power testing, GPU comparison, or a model-
+  size change.
+
+Git safety boundary:
+
+- Preserve all historical untracked files.
+- Do not run `git clean` or `git reset --hard`.
+- Do not use `git add .`.
+- Stage only the exact A15.5 files authorized for the current commit.
+
+Evidence boundary:
+
+Local A15.5 preparation may report `A15_5_LOCAL_PREPARATION=PASS` only after all
+reviewed static gates pass. Until user-returned target evidence is separately
+reviewed, it must report `A15_5_TARGET_XO_BUILD=NOT_RUN`,
+`A15_5_TARGET_LINK=NOT_RUN`, and `A15_5_XCLBIN=NOT_RUN`. It cannot prove XO or
+xclbin validity, target timing, physical HBM behavior, FPGA or board execution,
+Host runtime behavior, bandwidth, latency, throughput, power, energy, speedup,
+or any performance improvement.
