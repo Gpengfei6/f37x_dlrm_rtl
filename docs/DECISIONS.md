@@ -803,3 +803,24 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
   and functional behavior. It does not accept target build/link/timing, XO,
   xclbin, physical HBM, Host runtime, FPGA/board execution, multi-bank behavior,
   or any performance claim.
+
+## D-040 - Model only TABLE_BASE as the A15.5 global-memory kernel argument
+
+- **Status:** accepted for local source preparation on 2026-08-28; target
+  execution remains `NOT_RUN`.
+- **Decision:** package the accepted A15.4 top as a user-managed RTL kernel and
+  declare exactly one global-memory argument: 64-bit TABLE_BASE at `0x304`,
+  associated with the only `m_axi_gmem` master. Keep every other A13/A15
+  control and status register in the existing raw AXI-Lite address space.
+- **Reason:** TABLE_BASE is the only software value that must associate a
+  pointer with the linker-visible memory port. Turning the full raw register
+  map into independent kernel arguments would misrepresent the accepted ABI.
+- **Rejected:** the obsolete A14 `LOOKUP_INDEX` and `RESULT0` through `RESULT3`
+  argument signature, a second memory master, and multiple HBM mappings.
+- **Target contract:** one kernel `dlrm_f37x_rtl_kernel_stage2n_a15_v1`, one CU
+  `dlrm_a15_1`, one `dlrm_a15_1.m_axi_gmem:HBM[0]` mapping, exact VU37P part,
+  reviewed F37X platform, and requested 100 MHz.
+- **Local evidence:** source/metadata static gates and both validators' positive
+  and negative fixtures pass. Bash syntax is `NOT_RUN` locally.
+- **Boundary:** no target XO, Vitis link, xclbin, routed timing, device, Host,
+  board, physical HBM, or performance result is accepted by this decision.

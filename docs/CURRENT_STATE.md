@@ -1,6 +1,6 @@
 # Current State
 
-Snapshot date: 2026-08-27
+Snapshot date: 2026-08-28
 
 ## Repository State
 
@@ -24,12 +24,15 @@ Snapshot date: 2026-08-27
   `b3031d4f9d3c445a3f1eaa227ae2d28d35d78ae9`
 - A15.4 authorization and implementation starting HEAD:
   `7d0c3519c29b2dd07e0615dc98ba7060d728bc4f`
-- Current engineering stage: **Stage 2N-A15.4 public F37X kernel integration; local XSim PASS**
+- A15.5 target-preparation authorization baseline:
+  `0c705a360a036785e4c949185fcb5cc1dcc4f07f`
+- Current engineering stage: **Stage 2N-A15.5 target XO/xclbin source preparation; local static PASS, target NOT RUN**
 - Accepted and frozen functional baseline: **Stage 2N-A13**
 
 The branch contains the accepted A13/A14 history plus the versioned A15.1 local
 integration wrapper, A15.2 end-to-end proof, A15.3 four-slot sequential lookup
-proof, and A15.4 versioned public AXI4-Lite plus `m_axi_gmem` kernel boundary.
+proof, A15.4 versioned public AXI4-Lite plus `m_axi_gmem` kernel boundary, and
+A15.5 versioned target package/link preparation with offline validators.
 Do not infer physical-HBM or target validation scope from stage numbering alone.
 
 The primary Windows worktree may contain pre-existing untracked recovery,
@@ -265,6 +268,22 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 - This is still local fake-memory evidence. Target build/link, XO/xclbin,
   physical HBM, FPGA/board behavior, and performance are not validated.
 
+### Stage 2N-A15.5
+
+- Froze the accepted A15.4 top as
+  `dlrm_f37x_rtl_kernel_stage2n_a15_v1`, with accepted wrapper SHA256
+  `c3da5be63d4cf195df124e572887b6aa96a464522883c6cdc95c4bd56ff4e8a1`.
+- Prepared a non-overwriting exact-VU37P XO-only runner and a separate Vitis
+  link-only runner for one CU `dlrm_a15_1` and one
+  `dlrm_a15_1.m_axi_gmem:HBM[0]` mapping at a requested 100 MHz.
+- Kernel metadata exposes exactly one global pointer, 64-bit TABLE_BASE at
+  `0x304`; the complete A13/A15 ABI remains raw user-managed AXI-Lite. The
+  stale A14 `LOOKUP_INDEX/RESULT0-3` signature is rejected.
+- Local static validation and both validators' positive/negative self-tests
+  passed. Bash syntax is `NOT_RUN` because Bash is unavailable locally.
+- Target XO build/validation, Vitis link, xclbin, routed timing, physical HBM,
+  and FPGA/board execution are all `NOT_RUN` or `NOT_VALIDATED`.
+
 ## Verification Summary
 
 | Area | Result | Evidence boundary |
@@ -308,6 +327,9 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 | A15.3 target/xclbin/physical HBM/performance | NOT RUN / NOT CLAIMED | Local fake-memory XSim only; no target build/link, XO/xclbin, device, physical HBM, multi-bank, board, or performance evidence |
 | A15.4 public F37X kernel integration | **LOCAL XSIM PASS** | Public AXI4-Lite and one `m_axi_gmem`; TABLE_BASE plus rows 37-40; four lookup/AR/R/injection handshakes; mask `0xF`; result 36; counters and A13 ABI preserved |
 | A15.4 target/XO/xclbin/physical HBM/board/performance | NOT RUN / NOT CLAIMED | No target packaging, Vitis link, generated artifact, device access, physical transaction, or performance evidence |
+| A15.5 local target preparation | **PASS** | Exact source/ABI/connectivity static gates and XO/xclbin validator positive/negative self-tests; no target tool execution |
+| A15.5 target XO/link/xclbin/timing | NOT RUN | User-executed target runners are prepared; no generated A15 artifact or returned target evidence |
+| A15.5 physical HBM/board/performance | NOT VALIDATED / NOT RUN / NOT CLAIMED | No device access or performance activity occurred |
 
 Primary evidence:
 
@@ -331,6 +353,7 @@ Primary evidence:
 - `docs/STAGE2N_A15_2_END_TO_END_PIPELINE_XSIM_V1.md`
 - `docs/STAGE2N_A15_3_ALL_HBM_EMBEDDING_PIPELINE_XSIM_V1.md`
 - `docs/STAGE2N_A15_4_F37X_KERNEL_ALL_HBM_PIPELINE_XSIM_V1.md`
+- `docs/STAGE2N_A15_5_TARGET_XO_XCLBIN_PREPARATION_V1.md`
 - `docs/evidence/stage2n_a14_7/local_source_preparation_v1.txt`
 - `docs/STAGE2N_A15_1_HBM_PIPELINE_INTEGRATION_V1.md`
 - `docs/STAGE2N_A15_2_END_TO_END_PIPELINE_XSIM_V1.md`
@@ -364,11 +387,10 @@ Historical target environment recorded by accepted evidence:
    paths.
 4. The previously documented proxy XO was a generated worktree artifact and is
    not present in this main working tree.
-5. A15.4 now proves the public local AXI4-Lite plus `m_axi_gmem` composition,
-   but that new top has not been synthesized, implemented, packaged, or linked
-   for the exact F37X target.
-6. A15.4 has no XO/xclbin, physical-HBM transaction, board, multi-bank, or
-   performance evidence.
+5. A15.5 now provides reviewed package/link sources and fail-closed metadata
+   validators, but the exact F37X target flow has not been executed.
+6. A15.5 has no generated XO/xclbin, returned target timing, physical-HBM
+   transaction, board, multi-bank, or performance evidence.
 
 These are environment and next-level integration blockers, not failures of the
 completed A15.4 local XSim test.
@@ -376,11 +398,10 @@ completed A15.4 local XSim test.
 ## Next Actions
 1. Preserve the accepted A13, A14.5, A14.6, and A14.7 identities and evidence;
    do not rerun physical A14.7 merely to reconfirm it.
-2. Review and accept the A15.4 public-kernel local proof and its exact-file
-   commit.
-3. Separately authorize A15.5 target packaging/link preparation while preserving
-   A15.4 `0x300/0x304/0x308` and the A13 counter offsets
-   `0x218/0x21C/0x220/0x224`.
+2. Preserve the accepted A15.4 public-kernel local proof and exact-file commit.
+3. After reviewing the A15.5 preparation commit, the user may run the XO-only
+   runner in the controlled target environment and return its evidence before
+   any Vitis link is attempted.
 4. Extend functional-golden coverage beyond the deterministic single sample
    before any performance work.
 5. Treat target build/link, xclbin generation/programming, and board execution
@@ -445,6 +466,7 @@ a public AXI4-Lite plus `m_axi_gmem` boundary for four sequential fake-memory
 rows and a complete golden-matched inference. This
 does not convert the standalone A14.7 physical result into physical A15 proof.
 
-Next stage: separately authorize A15.5 protected target packaging/build
-preparation. Multi-table and multi-HBM-bank parallelism remain future work and
-are not implied by the A15.4 four-slot sequence.
+Current next gate: user-controlled A15.5 target XO-only execution and returned
+evidence review. Vitis link follows only a validated XO identity. Multi-table
+and multi-HBM-bank parallelism remain future work and are not implied by the
+A15.4 four-slot sequence.

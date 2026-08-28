@@ -1,6 +1,6 @@
 # Stage 2N History
 
-This table is an AI-readable index of Stage 2N-A1 through A15.4. It does not turn
+This table is an AI-readable index of Stage 2N-A1 through A15.5. It does not turn
 historical claims into current verification. Follow each evidence link and use
 the status language exactly.
 
@@ -35,6 +35,7 @@ hybrid CPU-embedding/FPGA-dense inference path.
 | Stage 2N-A15.2 | Execute one complete inference using the HBM-owned slot0 path | Reused the A15.1 wrapper and accepted A13 sample; fetched a fake-memory row into slot0, observed the exact Interaction vector loads, ran Bottom/Interaction/Top, and compared against an independent golden | Baseline `876046c`; `docs/STAGE2N_A15_2_END_TO_END_PIPELINE_XSIM_V1.md`; local XSim status/logs | **LOCAL XSIM PASS**: expected/actual result 36, cycles 322/100/744/1174, all 11 markers and zero warnings/errors/fatals. No new RTL, public target top, target build/xclbin, FPGA/physical HBM, board, or performance claim |
 | Stage 2N-A15.3 | Supply all four A13 embedding slots through one sequential lookup engine | Added a versioned controller wrapper that requests canonical rows 37–40, retains each response until A13 accepts it, injects slots 0–3, rejects Host embedding writes, and runs the accepted full pipeline after the mask reaches `4'hF` | Baseline `b3031d4`; `docs/STAGE2N_A15_3_ALL_HBM_EMBEDDING_PIPELINE_XSIM_V1.md`; retained local status/logs | **LOCAL XSIM PASS**: 4 logical requests/AR/R/injections, all four exact vectors, independent 18-value Interaction golden, result 36, cycles 322/100/744/1174, and zero warnings/errors/fatals. No target build/link, xclbin, FPGA/physical HBM, multi-bank, board, or performance claim |
 | Stage 2N-A15.4 | Expose the accepted all-HBM local pipeline through a public F37X-style kernel boundary | Added a versioned AXI4-Lite plus one `m_axi_gmem` top, preserved the entire A13 ABI, added disjoint `0x300/0x304/0x308` control, and automatically chained the accepted A15.3 load-all sequence into accepted A13 START | Starting/authorization HEAD `7d0c351`; `docs/STAGE2N_A15_4_F37X_KERNEL_ALL_HBM_PIPELINE_XSIM_V1.md`; retained local status/logs | **LOCAL XSIM PASS**: exact TABLE_BASE+rows37–40 addresses/vectors, 4/4/4/4 lookup/AR/R/injections, mask `0xF`, result 36, counters 322/100/744/1174, zero warning/error/fatal/assertion records. No target build/link, XO/xclbin, FPGA/physical HBM, board, or performance claim |
+| Stage 2N-A15.5 | Prepare the accepted A15.4 public kernel for controlled exact-target XO and xclbin flows | Added exact-source packaging, one-CU/one-HBM[0] link configuration, non-overwriting build-only runners, routed-report extraction, and fail-closed XO/xclbin validators | Authorization baseline `0c705a3`; `docs/STAGE2N_A15_5_TARGET_XO_XCLBIN_PREPARATION_V1.md`; retained local preparation status/self-test logs | **LOCAL STATIC PASS**: validators' positive/negative fixtures pass and accepted A15.4 source/ABI is unchanged. Bash syntax, target XO/link/xclbin/timing, device/board, and performance are NOT RUN/NOT CLAIMED |
 
 ## Current Milestone Interpretation
 
@@ -69,6 +70,9 @@ hybrid CPU-embedding/FPGA-dense inference path.
 - A15.4 is accepted as a public local kernel-composition proof. It preserves A13
   and exposes one `m_axi_gmem`, but it has not been synthesized, packaged,
   linked, or executed for F37X and does not prove physical HBM or performance.
+- A15.5 is accepted only as local target-flow preparation. Its scripts and
+  validator fixtures do not make the target XO, link, xclbin, timing, physical
+  HBM, board, or performance gates pass.
 
 ## Superseded and Historical Files
 
@@ -236,3 +240,29 @@ Next:
 separately authorize A15.5 target packaging/link preparation. A15.4 does not
 prove target build/timing/link, XO/xclbin, device or physical HBM access, board
 execution, multiple banks, Host runtime, or performance.
+
+## Stage 2N-A15.5 — Target XO/xclbin source preparation
+
+Date: 2026-08-28
+
+Result: `LOCAL STATIC PASS; TARGET NOT RUN`
+
+A15.5 freezes the accepted A15.4 public top and its 17-file RTL source closure.
+Its user-managed metadata declares only 64-bit TABLE_BASE at `0x304` as a
+global pointer associated with the single 64-bit-address/128-bit-data
+`m_axi_gmem`. The complete accepted A13/A15 raw register map remains unchanged,
+including counters `0x218/0x21C/0x220/0x224` and A15 control
+`0x300/0x304/0x308`.
+
+The prepared target contract is one kernel
+`dlrm_f37x_rtl_kernel_stage2n_a15_v1`, one CU `dlrm_a15_1`, one mapping
+`dlrm_a15_1.m_axi_gmem:HBM[0]`, exact part `xcvu37p-fsvh2892-2L-e`, reviewed
+platform `inspur_f37x_xdma_201920_3`, and requested 100 MHz. Local positive and
+negative validator fixtures pass. Bash is unavailable locally, so shell syntax
+is explicitly `NOT_RUN`.
+
+Next:
+the user may execute the XO-only runner in the controlled target environment
+and return evidence. Link is attempted only after the produced XO passes the
+reviewed validator and its SHA256 identity is retained. No current XO, xclbin,
+target timing, Host, physical HBM, device/board, or performance result exists.

@@ -10,10 +10,11 @@ This repository develops a synthesizable SystemVerilog FPGA accelerator for
 Deep Learning Recommendation Model (DLRM) inference. The implemented research
 path combines a runtime-configurable fixed-point dense engine, Bottom MLP,
 feature interaction, Top MLP, host control, and stage-level observability. The
-current Stage 2N-A15.4 work proves the same complete local inference through a
+Stage 2N-A15.4 proves the same complete local inference through a
 versioned public AXI4-Lite plus `m_axi_gmem` kernel boundary after one accepted
 A14 v2 lookup engine sequentially supplies all four accepted A13 embedding
-slots from canonical fake-memory rows.
+slots from canonical fake-memory rows. Current Stage 2N-A15.5 prepares, but has
+not run, the corresponding exact-target XO and xclbin flow.
 
 Target environment:
 
@@ -50,7 +51,7 @@ Read the repository in this order before proposing or making changes:
 5. `docs/ARCHITECTURE.md`
 6. `docs/STAGE_HISTORY.md`
 7. the active-stage document,
-   `docs/STAGE2N_A15_4_F37X_KERNEL_ALL_HBM_PIPELINE_XSIM_V1.md`
+   `docs/STAGE2N_A15_5_TARGET_XO_XCLBIN_PREPARATION_V1.md`
 8. the exact RTL, testbench, Host, configuration, and script files named by the
    active-stage documents
 
@@ -72,8 +73,8 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A15.4 — public F37X kernel all-HBM pipeline local
-XSim PASS**.
+Current stage: **Stage 2N-A15.5 — target XO/xclbin source preparation; local
+static PASS, target NOT RUN**.
 
 Stage 2N-A13 remains the accepted and frozen integrated DLRM baseline. A14.5
 added the runtime 64-bit table-base ABI, A14.6 completed the accepted link-only
@@ -120,16 +121,24 @@ accepted A13 register map, adds only `0x300` A15 control/status and
 four lookup/AR/R/injection handshakes, mask `0xF`, final result 36, and unchanged
 `322/100/744/1174` counters.
 
-Pending beyond A15.4:
+A15.5 freezes that accepted top, exposes only the 64-bit TABLE_BASE pointer at
+`0x304` as a global-memory kernel argument, and keeps the full A13/A15 control
+plane in the raw user-managed AXI-Lite map. It prepares one CU `dlrm_a15_1`,
+one `m_axi_gmem -> HBM[0]` mapping, and fail-closed XO/xclbin validators. Local
+static and validator fixture tests pass; Bash syntax and every target action
+remain `NOT_RUN`.
+
+Pending beyond local A15.5 preparation:
 
 - broader multi-sample A15 software-golden regression;
-- A15.4 target synthesis/implementation, packaging/link, XO, and xclbin;
+- A15.5 target XO packaging/validation, Vitis link, xclbin, and routed timing;
 - A15 FPGA-device execution or physical HBM validation;
 - any A15 latency, bandwidth, throughput, power, or performance claim;
 - multi-table, multi-bank, burst, cache, coalescing, scheduling, or INT8 work.
 
-See `docs/STAGE2N_A15_4_F37X_KERNEL_ALL_HBM_PIPELINE_XSIM_V1.md` for the exact local
-acceptance boundary, sample, command, and result.
+See `docs/STAGE2N_A15_5_TARGET_XO_XCLBIN_PREPARATION_V1.md` for the exact
+preparation contract and non-claim boundary. Use the A15.4 document for the
+underlying local functional result.
 
 ## 4. Hardware Environment
 
@@ -344,6 +353,21 @@ This does not prove a physical HBM transaction.
 - physical HBM access or FPGA/F37X execution;
 - Host-runtime integration, multiple samples/tables/banks, performance, power,
   latency, bandwidth, throughput, or speedup.
+
+### Proven by local A15.5 preparation
+
+- exact accepted A15.4 kernel/source identity and 17-file RTL package closure;
+- one TABLE_BASE global pointer at `0x304`, one `m_axi_gmem`, one CU, and one
+  `HBM[0]` connectivity contract;
+- positive validator fixtures and rejection of wrong identity, width, offset,
+  clock, platform, bank, extra master/mapping, and stale A14 arguments.
+
+### Not proven by A15.5 preparation
+
+- Bash syntax in the current Windows environment;
+- target XO packaging or metadata validation;
+- Vitis link, xclbin, routed timing, Host execution, physical HBM, FPGA/board
+  execution, or any performance result.
 
 Use `docs/CURRENT_STATE.md` for the exact current branch, HEAD, blockers, and
 next actions.
