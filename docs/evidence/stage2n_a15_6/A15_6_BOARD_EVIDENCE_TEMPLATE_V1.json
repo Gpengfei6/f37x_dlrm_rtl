@@ -1,0 +1,28 @@
+{
+  "schema": "STAGE2N_A15_6_BOARD_EVIDENCE_V1",
+  "template_only": true,
+  "artifact": {
+    "xclbin_sha256": "23ee48c91b3dfb5b68b3372ac49fc6607f203cf01d3b9fcfe04b4ea42be02356",
+    "xclbin_uuid": "1b555645-a9e2-4f5e-95af-6ce4adacbc3c",
+    "kernel": "dlrm_f37x_rtl_kernel_stage2n_a15_v1",
+    "compute_unit": "dlrm_a15_1"
+  },
+  "required_runtime_fields": [
+    "timestamp_utc",
+    "hostname",
+    "git_branch",
+    "git_head",
+    "device.index",
+    "device.bdf",
+    "memory.bo_size_bytes",
+    "memory.bo_physical_address",
+    "programming.fpga",
+    "cases[0..4].expected_result",
+    "cases[0..4].actual_result",
+    "cases[0..4].counters",
+    "cleanup.bo_release",
+    "cleanup.device_close"
+  ],
+  "runtime_status": "NOT_RUN",
+  "performance": "NOT_CLAIMED"
+}

@@ -1,0 +1,525 @@
+{
+  "cases": [
+    {
+      "case_index": 0,
+      "expected_bottom": [
+        849,
+        85,
+        853,
+        165,
+        0,
+        542,
+        1225,
+        1930
+      ],
+      "expected_final_result": -393,
+      "expected_interaction": [
+        849,
+        85,
+        853,
+        165,
+        0,
+        542,
+        1225,
+        1930,
+        748,
+        -176,
+        -52,
+        724,
+        109,
+        -28,
+        399,
+        32,
+        -109,
+        54
+      ],
+      "file": "stage2n_a15_6_case0_baseline_table_v1.bin",
+      "modified_lane": null,
+      "modified_row": null,
+      "modified_slot": null,
+      "name": "baseline",
+      "new_value": null,
+      "old_value": null,
+      "payload_sha256": "c319aeef84dc1cf4c73d16ab7c498bb31f37460f339cf849616952bb676d00cb",
+      "row37_to_row40": {
+        "37": [
+          -228,
+          270,
+          342,
+          22,
+          -301,
+          51,
+          453,
+          427
+        ],
+        "38": [
+          -67,
+          -338,
+          131,
+          150,
+          -60,
+          -240,
+          -118,
+          -71
+        ],
+        "39": [
+          258,
+          24,
+          186,
+          424,
+          181,
+          241,
+          254,
+          306
+        ],
+        "40": [
+          268,
+          272,
+          167,
+          -333,
+          163,
+          315,
+          -170,
+          268
+        ]
+      }
+    },
+    {
+      "case_index": 1,
+      "expected_bottom": [
+        849,
+        85,
+        853,
+        165,
+        0,
+        542,
+        1225,
+        1930
+      ],
+      "expected_final_result": -392,
+      "expected_interaction": [
+        849,
+        85,
+        853,
+        165,
+        0,
+        542,
+        1225,
+        1930,
+        1597,
+        -176,
+        -119,
+        724,
+        367,
+        -28,
+        399,
+        300,
+        -109,
+        54
+      ],
+      "file": "stage2n_a15_6_case1_slot0_sensitivity_table_v1.bin",
+      "modified_lane": 0,
+      "modified_row": 37,
+      "modified_slot": 0,
+      "name": "slot0_sensitivity",
+      "new_value": 1820,
+      "old_value": -228,
+      "payload_sha256": "5b7e39bd29ba27fdf6732cc441cdb7bea09d6abef07a78098a9d87af4b032717",
+      "row37_to_row40": {
+        "37": [
+          1820,
+          270,
+          342,
+          22,
+          -301,
+          51,
+          453,
+          427
+        ],
+        "38": [
+          -67,
+          -338,
+          131,
+          150,
+          -60,
+          -240,
+          -118,
+          -71
+        ],
+        "39": [
+          258,
+          24,
+          186,
+          424,
+          181,
+          241,
+          254,
+          306
+        ],
+        "40": [
+          268,
+          272,
+          167,
+          -333,
+          163,
+          315,
+          -170,
+          268
+        ]
+      }
+    },
+    {
+      "case_index": 2,
+      "expected_bottom": [
+        849,
+        85,
+        853,
+        165,
+        0,
+        542,
+        1225,
+        1930
+      ],
+      "expected_final_result": -93,
+      "expected_interaction": [
+        849,
+        85,
+        853,
+        165,
+        0,
+        542,
+        1225,
+        1930,
+        748,
+        673,
+        -280,
+        724,
+        109,
+        230,
+        399,
+        32,
+        159,
+        54
+      ],
+      "file": "stage2n_a15_6_case2_slot1_sensitivity_table_v1.bin",
+      "modified_lane": 0,
+      "modified_row": 38,
+      "modified_slot": 1,
+      "name": "slot1_sensitivity",
+      "new_value": 1981,
+      "old_value": -67,
+      "payload_sha256": "b37a4ff8e18ca29020a2e0b261f7b57f879b250025e309a8f4a0336df1b95f14",
+      "row37_to_row40": {
+        "37": [
+          -228,
+          270,
+          342,
+          22,
+          -301,
+          51,
+          453,
+          427
+        ],
+        "38": [
+          1981,
+          -338,
+          131,
+          150,
+          -60,
+          -240,
+          -118,
+          -71
+        ],
+        "39": [
+          258,
+          24,
+          186,
+          424,
+          181,
+          241,
+          254,
+          306
+        ],
+        "40": [
+          268,
+          272,
+          167,
+          -333,
+          163,
+          315,
+          -170,
+          268
+        ]
+      }
+    },
+    {
+      "case_index": 3,
+      "expected_bottom": [
+        849,
+        85,
+        853,
+        165,
+        0,
+        542,
+        1225,
+        1930
+      ],
+      "expected_final_result": -689,
+      "expected_interaction": [
+        849,
+        85,
+        853,
+        165,
+        0,
+        542,
+        1225,
+        1930,
+        748,
+        -176,
+        -52,
+        1573,
+        -119,
+        -95,
+        399,
+        32,
+        -109,
+        322
+      ],
+      "file": "stage2n_a15_6_case3_slot2_sensitivity_table_v1.bin",
+      "modified_lane": 0,
+      "modified_row": 39,
+      "modified_slot": 2,
+      "name": "slot2_sensitivity",
+      "new_value": 2306,
+      "old_value": 258,
+      "payload_sha256": "d0d0385e61590d0256e6b50e781a32718b9921066a4190ee8a38feba8638de12",
+      "row37_to_row40": {
+        "37": [
+          -228,
+          270,
+          342,
+          22,
+          -301,
+          51,
+          453,
+          427
+        ],
+        "38": [
+          -67,
+          -338,
+          131,
+          150,
+          -60,
+          -240,
+          -118,
+          -71
+        ],
+        "39": [
+          2306,
+          24,
+          186,
+          424,
+          181,
+          241,
+          254,
+          306
+        ],
+        "40": [
+          268,
+          272,
+          167,
+          -333,
+          163,
+          315,
+          -170,
+          268
+        ]
+      }
+    },
+    {
+      "case_index": 4,
+      "expected_bottom": [
+        849,
+        85,
+        853,
+        165,
+        0,
+        542,
+        1225,
+        1930
+      ],
+      "expected_final_result": -519,
+      "expected_interaction": [
+        849,
+        85,
+        853,
+        165,
+        0,
+        542,
+        1225,
+        1930,
+        748,
+        -176,
+        -52,
+        724,
+        109,
+        -28,
+        1248,
+        -196,
+        -176,
+        312
+      ],
+      "file": "stage2n_a15_6_case4_slot3_sensitivity_table_v1.bin",
+      "modified_lane": 0,
+      "modified_row": 40,
+      "modified_slot": 3,
+      "name": "slot3_sensitivity",
+      "new_value": 2316,
+      "old_value": 268,
+      "payload_sha256": "3914dcd2721ecf1263c37a9e909fc40475b5a08a90269d4c3b7542686f1ed216",
+      "row37_to_row40": {
+        "37": [
+          -228,
+          270,
+          342,
+          22,
+          -301,
+          51,
+          453,
+          427
+        ],
+        "38": [
+          -67,
+          -338,
+          131,
+          150,
+          -60,
+          -240,
+          -118,
+          -71
+        ],
+        "39": [
+          258,
+          24,
+          186,
+          424,
+          181,
+          241,
+          254,
+          306
+        ],
+        "40": [
+          2316,
+          272,
+          167,
+          -333,
+          163,
+          315,
+          -170,
+          268
+        ]
+      }
+    }
+  ],
+  "claim_boundary": "Local deterministic preparation only; no FPGA, physical HBM, board, server, network, or performance validation.",
+  "format": "STAGE2N_A15_6_CASES_V1",
+  "format_version": 1,
+  "hbm_table": {
+    "bank": 0,
+    "base_layout": "A14 canonical value[row][lane]=row*8+lane-256",
+    "dimension": 8,
+    "element_type": "INT16_LE",
+    "fixed_lookup_rows": [
+      37,
+      38,
+      39,
+      40
+    ],
+    "lane_packing": "lane0 bits[15:0] through lane7 bits[127:112]",
+    "payload_bytes": 1024,
+    "row_bytes": 16,
+    "rows": 64
+  },
+  "local_generation": {
+    "deterministic": true,
+    "no_device_access": true,
+    "sensitivity_delta": 2048,
+    "software_bottom_reference": "accepted A11 v2",
+    "software_interaction_reference": "accepted A11 v2",
+    "software_top_reference": "accepted A11 v2"
+  },
+  "model_asset": {
+    "bytes": 1824,
+    "file": "stage2n_a15_6_model_v1.bin",
+    "format": "F37XA156_MODEL_V1",
+    "header_bytes": 96,
+    "magic": "F37XA156",
+    "sha256": "3493f7946d2b609d2c7b39dc585eae698447d62a4f0504d33e5e1aa7c5301335"
+  },
+  "pipeline": {
+    "bias_count": 73,
+    "bottom_descriptor_base": 0,
+    "bottom_layer_count": 2,
+    "dense_input": [
+      -575,
+      591,
+      123,
+      -461,
+      2813,
+      -2032,
+      28,
+      -519
+    ],
+    "descriptor_count": 5,
+    "descriptors": [
+      {
+        "index": 0,
+        "word0": "0x00008008",
+        "word1": "0x00000000",
+        "word2": "0x11800000"
+      },
+      {
+        "index": 1,
+        "word0": "0x20004010",
+        "word1": "0x04000000",
+        "word2": "0x11800000"
+      },
+      {
+        "index": 2,
+        "word0": "0x40010012",
+        "word1": "0x06000000",
+        "word2": "0x11800000"
+      },
+      {
+        "index": 3,
+        "word0": "0xd0008020",
+        "word1": "0x0e000000",
+        "word2": "0x12000000"
+      },
+      {
+        "index": 4,
+        "word0": "0x50000810",
+        "word1": "0x12000001",
+        "word2": "0x01c00000"
+      }
+    ],
+    "final_descriptor_tag": 4,
+    "interaction_shift": 11,
+    "shape": "8x16x8_interact18_32x16x1",
+    "top_descriptor_base": 2,
+    "top_layer_count": 3,
+    "weight_count": 1360
+  },
+  "source": {
+    "categorical_ids": [
+      55,
+      45,
+      49,
+      63
+    ],
+    "format": "F37XHD1",
+    "path": "models/stage2m/stage2m_trained_hybrid_dlrm.f37xhd",
+    "sample_id": 0,
+    "sha256": "b953289de8910f8402c4eefb79c516ab7d2468dba34fcc44532b9469cdcb2b3b"
+  }
+}

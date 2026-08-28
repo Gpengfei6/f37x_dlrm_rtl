@@ -877,3 +877,34 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
 - **Boundary:** A15.5 does not accept FPGA programming, Host execution, physical
   HBM correctness, board function, latency, bandwidth, throughput, power,
   speedup, or performance.
+
+## D-043 - Use trained-model slot sensitivity for A15.6 functional validation
+
+- **Status:** accepted for local preparation on 2026-08-28; target Host/device
+  execution remains `NOT_RUN`.
+- **Problem:** the sparse A15.4 XSim smoke model returns 36 but its Top weights
+  use only the first eight Interaction outputs. That result cannot independently
+  prove that every physical HBM-derived embedding slot affects the final output.
+- **Decision:** reuse the accepted trained-model fixed-point reference and one
+  accepted sample. Generate one baseline physical table and four variants in
+  which only lane 0 of row 37, 38, 39, or 40 changes by +2048. Preserve the
+  existing 64-row, eight-lane, little-endian INT16, 16-byte-row layout and the
+  A15.4 fixed row-to-slot mapping.
+- **Golden contract:** baseline final result is `-393`; the slot0, slot1, slot2,
+  and slot3 sensitivity results are `-392`, `-93`, `-689`, and `-519`.
+  All four differ from the baseline and are pairwise distinct.
+- **Protection rule:** consume only the frozen A15.5 xclbin SHA256
+  `23ee48c91b3dfb5b68b3372ac49fc6607f203cf01d3b9fcfe04b4ea42be02356`
+  and UUID `1b555645-a9e2-4f5e-95af-6ce4adacbc3c`. Require explicit device/BDF,
+  firewall, CU, owner, HBM-use, artifact-identity, and literal-`yes` gates before
+  any separately authorized device operation. Never reset or globally clean.
+- **Local evidence:** deterministic asset generation, frozen-source checks,
+  positive evidence assembly/validation, and eight negative tamper/malformed
+  fixtures pass. Bash syntax and target XRT Host compilation are `NOT_RUN` in
+  the Windows preparation environment.
+- **Performance boundary:** functional preparation does not establish HBM
+  latency, bandwidth, throughput, power, speedup, or all-HBM end-to-end timing.
+  The accepted 1174-cycle compute counter excludes the four HBM lookups.
+- **Next gate:** a separately authorized user-controlled target execution must
+  run all five cases, verify exact results and cleanup, and return a complete
+  evidence package before A15.6 board acceptance can be considered.

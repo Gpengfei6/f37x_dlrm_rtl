@@ -1,6 +1,6 @@
 # Stage 2N History
 
-This table is an AI-readable index of Stage 2N-A1 through A15.5. It does not turn
+This table is an AI-readable index of Stage 2N-A1 through A15.6. It does not turn
 historical claims into current verification. Follow each evidence link and use
 the status language exactly.
 
@@ -36,6 +36,7 @@ hybrid CPU-embedding/FPGA-dense inference path.
 | Stage 2N-A15.3 | Supply all four A13 embedding slots through one sequential lookup engine | Added a versioned controller wrapper that requests canonical rows 37–40, retains each response until A13 accepts it, injects slots 0–3, rejects Host embedding writes, and runs the accepted full pipeline after the mask reaches `4'hF` | Baseline `b3031d4`; `docs/STAGE2N_A15_3_ALL_HBM_EMBEDDING_PIPELINE_XSIM_V1.md`; retained local status/logs | **LOCAL XSIM PASS**: 4 logical requests/AR/R/injections, all four exact vectors, independent 18-value Interaction golden, result 36, cycles 322/100/744/1174, and zero warnings/errors/fatals. No target build/link, xclbin, FPGA/physical HBM, multi-bank, board, or performance claim |
 | Stage 2N-A15.4 | Expose the accepted all-HBM local pipeline through a public F37X-style kernel boundary | Added a versioned AXI4-Lite plus one `m_axi_gmem` top, preserved the entire A13 ABI, added disjoint `0x300/0x304/0x308` control, and automatically chained the accepted A15.3 load-all sequence into accepted A13 START | Starting/authorization HEAD `7d0c351`; `docs/STAGE2N_A15_4_F37X_KERNEL_ALL_HBM_PIPELINE_XSIM_V1.md`; retained local status/logs | **LOCAL XSIM PASS**: exact TABLE_BASE+rows37–40 addresses/vectors, 4/4/4/4 lookup/AR/R/injections, mask `0xF`, result 36, counters 322/100/744/1174, zero warning/error/fatal/assertion records. No target build/link, XO/xclbin, FPGA/physical HBM, board, or performance claim |
 | Stage 2N-A15.5 | Package and link the accepted A15.4 public kernel for the exact F37X target and correct Vitis 2020.2 offline validation | Built/validated the exact-target XO, linked one CU to HBM[0], generated the fixed-SHA xclbin, corrected the v1 shell-IP false negative, and revalidated metadata/timing without rebuild | Source-build commit `30cbf64`; validator/revalidation commit `2ce2d44`; `docs/STAGE2N_A15_5_TARGET_XCLBIN_FINAL_ACCEPTANCE_V1.md`; curated raw evidence under `docs/evidence/stage2n_a15_5/` | **FINAL TARGET XO/XCLBIN/TIMING PASS**: unique kernel/CU, TABLE_BASE/arg0 to used HBM[0], xclbin SHA/UUID frozen, 100 MHz WNS/TNS 0.000/0.000 ns, zero failing endpoints. No Host, physical A15 HBM, FPGA/board, or performance result |
+| Stage 2N-A15.6 | Prepare protected physical-HBM full-pipeline functional validation using the frozen A15.5 artifact | Added a low-level XRT Host, guarded one-device/HBM[0] runner, five deterministic trained-model table payloads, evidence assembler, and fail-closed validator without changing frozen RTL or rebuilding the xclbin | Parent `14cb377`; `docs/STAGE2N_A15_6_PROTECTED_ALL_HBM_BOARD_VALIDATION_PREPARATION_V1.md`; local evidence under `docs/evidence/stage2n_a15_6/` | **LOCAL PREPARATION PASS**: source/assets, five golden cases, positive evidence path, and eight rejection fixtures pass. Host compilation, FPGA programming, physical HBM, board function, and performance are NOT RUN/NOT CLAIMED |
 
 ## Current Milestone Interpretation
 
@@ -74,6 +75,10 @@ hybrid CPU-embedding/FPGA-dense inference path.
   mapping, and 100 MHz routed timing. The validator-v1 failure was a shell-IP
   counting false negative; fixed-SHA v2 revalidation passed without rebuild.
   Host, physical A15 HBM, FPGA/board function, and performance remain unproven.
+- A15.6 is accepted only as local protected-board preparation. Its five golden
+  cases distinguish all four HBM-derived slots and its safety/evidence fixtures
+  pass, but no Host binary, device action, physical HBM transaction, board
+  function, cleanup, or performance result has yet been accepted.
 
 ## Superseded and Historical Files
 
@@ -277,3 +282,35 @@ A15.6 may be prepared separately for protected FPGA programming, Host/XRT,
 physical HBM[0], four sequential lookups, and full DLRM functional board
 validation. Performance remains unclaimed because the 1174-cycle counters do
 not include the four HBM lookups.
+
+## Stage 2N-A15.6 — Protected all-HBM board validation preparation
+
+Date: 2026-08-28
+
+Result: `LOCAL PREPARATION PASS`
+
+A15.6 consumes, but does not rebuild, the frozen xclbin SHA256
+`23ee48c91b3dfb5b68b3372ac49fc6607f203cf01d3b9fcfe04b4ea42be02356`
+and UUID `1b555645-a9e2-4f5e-95af-6ce4adacbc3c`. The accepted A15.4 wrapper
+SHA256 remains
+`c3da5be63d4cf195df124e572887b6aa96a464522883c6cdc95c4bd56ff4e8a1`.
+
+The prepared flow uses one explicit F37X device/BDF, one 1,024-byte BO in
+linked `HBM[0]`, the accepted TABLE_BASE ABI, rows 37 through 40, and the
+accepted A13 model/result/counter ABI. The runner checks exact artifact and
+device identity, firewall/CU/owner/HBM-use state, and requires a literal `yes`
+before any device-changing action. It neither resets the FPGA nor performs
+global cleanup or another-device access.
+
+The software reference produces one baseline result `-393` and four
+slot-sensitivity results `-392`, `-93`, `-689`, and `-519`. Each perturbation
+changes only one HBM row/embedding slot, and the five expected results are
+distinguishable. Local deterministic generation, source validation, positive
+evidence assembly/validation, and eight negative fixtures pass.
+
+Next:
+under separate explicit authorization, the user may compile the Host and run
+the protected five-case flow in the controlled target environment, then return
+the complete evidence package for a separate review. Until that happens,
+FPGA programming, Host execution, physical HBM, board function, cleanup, and
+performance remain `NOT_RUN`, `NOT_VALIDATED`, or `NOT_CLAIMED`.
