@@ -13,8 +13,10 @@ feature interaction, Top MLP, host control, and stage-level observability. The
 Stage 2N-A15.4 proves the same complete local inference through a
 versioned public AXI4-Lite plus `m_axi_gmem` kernel boundary after one accepted
 A14 v2 lookup engine sequentially supplies all four accepted A13 embedding
-slots from canonical fake-memory rows. Current Stage 2N-A15.5 prepares, but has
-not run, the corresponding exact-target XO and xclbin flow.
+slots from canonical fake-memory rows. Current Stage 2N-A15.5 includes the
+target-flow preparation and a validator-only Vitis 2020.2 compatibility fix.
+The user reports an existing fixed-SHA target XO/xclbin, but the raw artifact
+evidence is not local and remains pending the v2 read-only revalidation flow.
 
 Target environment:
 
@@ -51,7 +53,7 @@ Read the repository in this order before proposing or making changes:
 5. `docs/ARCHITECTURE.md`
 6. `docs/STAGE_HISTORY.md`
 7. the active-stage document,
-   `docs/STAGE2N_A15_5_TARGET_XO_XCLBIN_PREPARATION_V1.md`
+   `docs/STAGE2N_A15_5_XCLBIN_VALIDATOR_V2_COMPATIBILITY.md`
 8. the exact RTL, testbench, Host, configuration, and script files named by the
    active-stage documents
 
@@ -73,8 +75,8 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A15.5 — target XO/xclbin source preparation; local
-static PASS, target NOT RUN**.
+Current stage: **Stage 2N-A15.5 — xclbin-validator compatibility; local v2
+self-test PASS, user-reported target artifact pending v2 revalidation**.
 
 Stage 2N-A13 remains the accepted and frozen integrated DLRM baseline. A14.5
 added the runtime 64-bit table-base ABI, A14.6 completed the accepted link-only
@@ -125,20 +127,34 @@ A15.5 freezes that accepted top, exposes only the 64-bit TABLE_BASE pointer at
 `0x304` as a global-memory kernel argument, and keeps the full A13/A15 control
 plane in the raw user-managed AXI-Lite map. It prepares one CU `dlrm_a15_1`,
 one `m_axi_gmem -> HBM[0]` mapping, and fail-closed XO/xclbin validators. Local
-static and validator fixture tests pass; Bash syntax and every target action
-remain `NOT_RUN`.
+static and validator fixture tests pass. The versioned v2 xclbin validator
+accepts the legal Vitis 2020.2 shell layout only after filtering for exactly one
+`IP_KERNEL`, and it still requires the sole connection to reference that kernel
+and used `HBM[0]`. Its positive fixture and 12 negative fixtures pass. Bash
+syntax remains `NOT_RUN` locally.
+
+The user reports an XO SHA256 of
+`a88fd4bba7a534f7068cff838448c5ba7f330e5bec27c8c2697525c9dedee019`
+and xclbin SHA256 of
+`23ee48c91b3dfb5b68b3372ac49fc6607f203cf01d3b9fcfe04b4ea42be02356`,
+with Vitis link and zero-slack timing completion. Treat these as user-reported
+facts pending v2 revalidation and raw-evidence review, not as locally proven or
+repository-accepted target evidence. The validator-only fix requires no target
+rebuild.
 
 Pending beyond local A15.5 preparation:
 
 - broader multi-sample A15 software-golden regression;
-- A15.5 target XO packaging/validation, Vitis link, xclbin, and routed timing;
+- v2 read-only revalidation and raw-evidence review of the reported fixed-SHA
+  A15.5 XO/xclbin and routed timing;
 - A15 FPGA-device execution or physical HBM validation;
 - any A15 latency, bandwidth, throughput, power, or performance claim;
 - multi-table, multi-bank, burst, cache, coalescing, scheduling, or INT8 work.
 
-See `docs/STAGE2N_A15_5_TARGET_XO_XCLBIN_PREPARATION_V1.md` for the exact
-preparation contract and non-claim boundary. Use the A15.4 document for the
-underlying local functional result.
+See `docs/STAGE2N_A15_5_XCLBIN_VALIDATOR_V2_COMPATIBILITY.md` for the current
+compatibility rule and status boundary, and the preparation V1 document for the
+frozen package/link contract. Use the A15.4 document for the underlying local
+functional result.
 
 ## 4. Hardware Environment
 

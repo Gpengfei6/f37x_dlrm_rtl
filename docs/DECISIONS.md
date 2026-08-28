@@ -824,3 +824,27 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
   and negative fixtures pass. Bash syntax is `NOT_RUN` locally.
 - **Boundary:** no target XO, Vitis link, xclbin, routed timing, device, Host,
   board, physical HBM, or performance result is accepted by this decision.
+
+## D-041 - Identify A15.5 compute units by IP_KERNEL type, not total IP-layout count
+
+- **Status:** accepted locally on 2026-08-28 as a validator-only Vitis 2020.2
+  compatibility correction; target artifact acceptance remains pending the
+  read-only v2 revalidation and returned raw-evidence review.
+- **Problem:** the v1 validator required all `IP_LAYOUT.m_ip_data` entries to
+  total one. The user-reported Vitis 2020.2 layout contains one legal
+  `IP_KERNEL` plus three DDR4 and 32 HBM shell entries, so the total-list test
+  rejected a one-CU xclbin.
+- **Decision:** require `m_count` consistency, filter entries whose
+  `m_type == IP_KERNEL`, require exactly one exact `kernel:CU`, and require the
+  sole connectivity record to reference that kernel index and an in-range,
+  used `HBM[0]` memory index. Ignore unrelated shell IP entries.
+- **Retained gates:** keep exact kernel/CU/platform/part/clock/config identity,
+  TABLE_BASE-only metadata, one connection, one memory master, HBM[0], and
+  rejection of stale A14 `LOOKUP_INDEX/RESULT0-3` arguments.
+- **Revalidation:** use a non-overwriting v2 runner against the recorded XO and
+  xclbin SHA256 values. The runner does not invoke `v++`; a target rebuild is
+  not required for this metadata-only correction.
+- **Boundary:** local v2 fixture PASS does not accept the user-reported target
+  artifact, target timing, physical HBM, FPGA/board execution, Host runtime, or
+  performance. Those statuses require returned raw evidence and their
+  separately authorized gates.

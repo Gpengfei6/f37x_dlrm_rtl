@@ -26,13 +26,16 @@ Snapshot date: 2026-08-28
   `7d0c3519c29b2dd07e0615dc98ba7060d728bc4f`
 - A15.5 target-preparation authorization baseline:
   `0c705a360a036785e4c949185fcb5cc1dcc4f07f`
-- Current engineering stage: **Stage 2N-A15.5 target XO/xclbin source preparation; local static PASS, target NOT RUN**
+- Current engineering stage: **Stage 2N-A15.5 xclbin-validator compatibility;
+  local v2 self-test PASS, user-reported target artifact pending v2
+  revalidation**
 - Accepted and frozen functional baseline: **Stage 2N-A13**
 
 The branch contains the accepted A13/A14 history plus the versioned A15.1 local
 integration wrapper, A15.2 end-to-end proof, A15.3 four-slot sequential lookup
 proof, A15.4 versioned public AXI4-Lite plus `m_axi_gmem` kernel boundary, and
-A15.5 versioned target package/link preparation with offline validators.
+A15.5 versioned target package/link preparation with offline validators and a
+versioned Vitis 2020.2 xclbin-layout compatibility fix.
 Do not infer physical-HBM or target validation scope from stage numbering alone.
 
 The primary Windows worktree may contain pre-existing untracked recovery,
@@ -281,8 +284,19 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
   stale A14 `LOOKUP_INDEX/RESULT0-3` signature is rejected.
 - Local static validation and both validators' positive/negative self-tests
   passed. Bash syntax is `NOT_RUN` because Bash is unavailable locally.
-- Target XO build/validation, Vitis link, xclbin, routed timing, physical HBM,
-  and FPGA/board execution are all `NOT_RUN` or `NOT_VALIDATED`.
+- The user reported a fixed-source target XO and completed Vitis 2020.2 link,
+  with XO SHA256 `a88fd4bba7a534f7068cff838448c5ba7f330e5bec27c8c2697525c9dedee019`
+  and xclbin SHA256
+  `23ee48c91b3dfb5b68b3372ac49fc6607f203cf01d3b9fcfe04b4ea42be02356`.
+- The v1 xclbin validator falsely counted 35 shell IP entries as additional
+  compute units. The versioned v2 validator filters `m_type=IP_KERNEL`, requires
+  the unique kernel/CU, and dereferences the sole connection to used `HBM[0]`.
+- The v2 local positive fixture and 12 negative fixtures pass. Bash syntax is
+  still `NOT_RUN` locally. The target artifact and reported timing remain
+  pending read-only v2 revalidation and returned raw-evidence review; no target
+  rebuild is required.
+- Physical HBM, Host, FPGA/board execution, and performance remain
+  `NOT_VALIDATED`, `NOT_RUN`, or `NOT_CLAIMED`.
 
 ## Verification Summary
 
@@ -328,7 +342,8 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 | A15.4 public F37X kernel integration | **LOCAL XSIM PASS** | Public AXI4-Lite and one `m_axi_gmem`; TABLE_BASE plus rows 37-40; four lookup/AR/R/injection handshakes; mask `0xF`; result 36; counters and A13 ABI preserved |
 | A15.4 target/XO/xclbin/physical HBM/board/performance | NOT RUN / NOT CLAIMED | No target packaging, Vitis link, generated artifact, device access, physical transaction, or performance evidence |
 | A15.5 local target preparation | **PASS** | Exact source/ABI/connectivity static gates and XO/xclbin validator positive/negative self-tests; no target tool execution |
-| A15.5 target XO/link/xclbin/timing | NOT RUN | User-executed target runners are prepared; no generated A15 artifact or returned target evidence |
+| A15.5 validator v2 compatibility | **LOCAL PASS** | Vitis 2020.2 36-entry IP-layout positive fixture and 12 mutation/rejection fixtures pass; Bash syntax NOT RUN |
+| A15.5 target XO/link/xclbin/timing | USER-REPORTED PASS; PENDING V2 REVALIDATION | Fixed XO/xclbin SHA256 values and zero timing metrics were reported, but raw target evidence is not present locally and has not passed the non-rebuilding v2 flow |
 | A15.5 physical HBM/board/performance | NOT VALIDATED / NOT RUN / NOT CLAIMED | No device access or performance activity occurred |
 
 Primary evidence:
@@ -387,10 +402,11 @@ Historical target environment recorded by accepted evidence:
    paths.
 4. The previously documented proxy XO was a generated worktree artifact and is
    not present in this main working tree.
-5. A15.5 now provides reviewed package/link sources and fail-closed metadata
-   validators, but the exact F37X target flow has not been executed.
-6. A15.5 has no generated XO/xclbin, returned target timing, physical-HBM
-   transaction, board, multi-bank, or performance evidence.
+5. The user reports that the exact F37X target flow produced the fixed-SHA XO
+   and xclbin, but those artifacts and their raw logs/reports are not present in
+   this local worktree and have not completed the v2 revalidation review.
+6. A15.5 has no accepted physical-HBM transaction, Host, board, multi-bank, or
+   performance evidence.
 
 These are environment and next-level integration blockers, not failures of the
 completed A15.4 local XSim test.
@@ -399,9 +415,9 @@ completed A15.4 local XSim test.
 1. Preserve the accepted A13, A14.5, A14.6, and A14.7 identities and evidence;
    do not rerun physical A14.7 merely to reconfirm it.
 2. Preserve the accepted A15.4 public-kernel local proof and exact-file commit.
-3. After reviewing the A15.5 preparation commit, the user may run the XO-only
-   runner in the controlled target environment and return its evidence before
-   any Vitis link is attempted.
+3. The user may run the non-rebuilding A15.5 v2 revalidation runner in the
+   controlled target environment against the recorded fixed-SHA XO/xclbin and
+   return its raw status, metadata, hashes, and routed reports for review.
 4. Extend functional-golden coverage beyond the deterministic single sample
    before any performance work.
 5. Treat target build/link, xclbin generation/programming, and board execution
@@ -466,7 +482,7 @@ a public AXI4-Lite plus `m_axi_gmem` boundary for four sequential fake-memory
 rows and a complete golden-matched inference. This
 does not convert the standalone A14.7 physical result into physical A15 proof.
 
-Current next gate: user-controlled A15.5 target XO-only execution and returned
-evidence review. Vitis link follows only a validated XO identity. Multi-table
-and multi-HBM-bank parallelism remain future work and are not implied by the
-A15.4 four-slot sequence.
+Current next gate: user-controlled, non-rebuilding A15.5 v2 revalidation of the
+reported fixed-SHA XO/xclbin and returned raw-evidence review. Multi-table and
+multi-HBM-bank parallelism remain future work and are not implied by the A15.4
+four-slot sequence.

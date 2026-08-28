@@ -285,3 +285,19 @@ returns the expected vectors, or the FPGA executes the full pipeline.
 There is no bandwidth, latency, throughput, power, energy, speedup, or GPU
 comparison claim. Physical HBM/board execution remains a separately authorized
 future gate after target artifacts and evidence have been reviewed.
+
+## 12. 2026-08-28 validator-only compatibility note
+
+The user later reported that the fixed-source target XO and Vitis link produced
+an xclbin, but the v1 offline xclbin validator stopped on a Vitis 2020.2
+`IP_LAYOUT` compatibility assumption. The actual reported layout has 36 IP
+entries: one `IP_KERNEL`, three DDR4 shell entries, and 32 HBM shell entries.
+The v1 validator incorrectly required the complete IP-entry list to have length
+one instead of filtering for the unique `IP_KERNEL` entry.
+
+The versioned correction is documented in
+`docs/STAGE2N_A15_5_XCLBIN_VALIDATOR_V2_COMPATIBILITY.md`. It does not change
+this preparation record, any frozen RTL, the v1 validator/runner, or an existing
+target artifact. Target XO/link/xclbin/timing facts remain user-reported and
+pending read-only v2 revalidation plus returned raw-evidence review. No rebuild
+or relink is required for the compatibility fix.
