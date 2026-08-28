@@ -827,9 +827,9 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
 
 ## D-041 - Identify A15.5 compute units by IP_KERNEL type, not total IP-layout count
 
-- **Status:** accepted locally on 2026-08-28 as a validator-only Vitis 2020.2
-  compatibility correction; target artifact acceptance remains pending the
-  read-only v2 revalidation and returned raw-evidence review.
+- **Status:** accepted on 2026-08-28. The validator-only Vitis 2020.2
+  compatibility correction passed local fixtures and fixed-SHA target
+  revalidation.
 - **Problem:** the v1 validator required all `IP_LAYOUT.m_ip_data` entries to
   total one. The user-reported Vitis 2020.2 layout contains one legal
   `IP_KERNEL` plus three DDR4 and 32 HBM shell entries, so the total-list test
@@ -844,7 +844,36 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
 - **Revalidation:** use a non-overwriting v2 runner against the recorded XO and
   xclbin SHA256 values. The runner does not invoke `v++`; a target rebuild is
   not required for this metadata-only correction.
-- **Boundary:** local v2 fixture PASS does not accept the user-reported target
-  artifact, target timing, physical HBM, FPGA/board execution, Host runtime, or
-  performance. Those statuses require returned raw evidence and their
+- **Result:** one `IP_KERNEL`, one TABLE_BASE/arg0 connection to used `HBM[0]`,
+  and absence of stale A14 arguments are accepted for the fixed-SHA xclbin. No
+  target rebuild was required.
+- **Boundary:** this decision accepts metadata interpretation only. Physical
+  HBM, FPGA/board execution, Host runtime, and performance still require their
   separately authorized gates.
+
+## D-042 - Freeze the A15.5 target artifact before physical A15 validation
+
+- **Status:** accepted on 2026-08-28 from the final target revalidation-v2
+  status, metadata JSON, hash manifests, and routed-DCP metrics.
+- **Decision:** freeze xclbin SHA256
+  `23ee48c91b3dfb5b68b3372ac49fc6607f203cf01d3b9fcfe04b4ea42be02356`
+  and UUID `1b555645-a9e2-4f5e-95af-6ce4adacbc3c` as the only A15.6 input
+  artifact. Do not rebuild merely to begin device/Host planning.
+- **Accepted target result:** exact VU37P/F37X platform, one CU, TABLE_BASE-only
+  global argument, one `m_axi_gmem -> HBM[0]` connection, 100 MHz routed timing,
+  WNS/TNS `0.000/0.000 ns`, zero failing endpoints, zero DRC errors/critical
+  warnings, zero methodology errors, and 55 retained methodology critical
+  warnings.
+- **Margin rule:** WNS `0.000 ns` means the requested timing gate passes with no
+  reported positive setup margin. The worst path is in the platform static PCIe
+  hierarchy and does not establish an independent kernel timing margin.
+- **Performance rule:** the accepted Bottom/Interaction/Top/Total counters
+  `322/100/744/1174` exclude the four sequential HBM lookups. Do not report
+  1174 cycles as all-HBM end-to-end latency. A later boundary must span all four
+  lookups plus Bottom, Interaction, and Top.
+- **Next gate:** A15.6 requires separate explicit yes/no device authorization
+  before programming, Host/XRT, physical HBM[0], four-slot injection, or board
+  execution.
+- **Boundary:** A15.5 does not accept FPGA programming, Host execution, physical
+  HBM correctness, board function, latency, bandwidth, throughput, power,
+  speedup, or performance.

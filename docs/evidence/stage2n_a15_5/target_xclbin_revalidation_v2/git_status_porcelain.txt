@@ -1,0 +1,8 @@
+?? .ipcache/
+?? a15_5_link_v1_nohup_console.log
+?? a15_5_link_v1_nohup_launch1_refused.log
+?? build/
+?? v++_dlrm_f37x_rtl_kernel_stage2n_a15_v1.log
+?? v++_dlrm_f37x_rtl_kernel_stage2n_a15_v1_41316.backup.log
+?? xcd.log
+?? xrc.log

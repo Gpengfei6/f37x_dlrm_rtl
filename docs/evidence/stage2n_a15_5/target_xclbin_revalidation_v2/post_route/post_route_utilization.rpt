@@ -1,0 +1,104 @@
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.2 (lin64) Build 3064766 Wed Nov 18 09:12:47 MST 2020
+| Date         : Fri Aug 28 17:01:32 2026
+| Host         : localhost.localdomain running 64-bit CentOS Linux release 7.6.1810 (Core)
+| Command      : report_utilization -hierarchical -hierarchical_depth 3 -file /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a15_5_buildonly/results/stage2n_a15_5/target_xclbin_revalidation_v2/post_route/post_route_utilization.rpt
+| Design       : pfm_top_wrapper
+| Device       : xcvu37pfsvh2892-2L
+| Design State : Routed
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++-----------------------------------------------+---------------------------------------------------+----------------+--------------+------------+------------+---------+------+--------+--------+--------+------+------------+
+|                    Instance                   |                       Module                      |  PR Attribute  | Total PPLOCs | Total LUTs | Logic LUTs | LUTRAMs | SRLs |   FFs  | RAMB36 | RAMB18 | URAM | DSP Blocks |
++-----------------------------------------------+---------------------------------------------------+----------------+--------------+------------+------------+---------+------+--------+--------+--------+------+------------+
+| pfm_top_wrapper                               |                                             (top) |              - |          688 |     116412 |     106689 |    6365 | 3358 | 158654 |    215 |     89 |    0 |         43 |
+|   (pfm_top_wrapper)                           |                                             (top) |              - |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|   pfm_top_i                                   |                                           pfm_top |              - |            - |     116412 |     106689 |    6365 | 3358 | 158654 |    215 |     89 |    0 |         43 |
+|     (pfm_top_i)                               |                                           pfm_top |              - |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|     dynamic_region                            |                                       pfm_dynamic | Reconfigurable |          688 |      23386 |      20524 |    1192 | 1670 |  30070 |     19 |     81 |    0 |         39 |
+|       (dynamic_region)                        |                                       pfm_dynamic | Reconfigurable |            - |        379 |        379 |       0 |    0 |      1 |      0 |      0 |    0 |          0 |
+|       axi_vip_ctrl_hbm_mgntpf                 |             pfm_dynamic_axi_vip_ctrl_hbm_mgntpf_0 | Reconfigurable |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       axi_vip_ctrl_mgntpf                     |                 pfm_dynamic_axi_vip_ctrl_mgntpf_0 | Reconfigurable |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       axi_vip_ctrl_userpf                     |                 pfm_dynamic_axi_vip_ctrl_userpf_0 | Reconfigurable |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       axi_vip_data                            |                        pfm_dynamic_axi_vip_data_0 | Reconfigurable |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       axilite_user_input_reg                  |              pfm_dynamic_axilite_user_input_reg_0 | Reconfigurable |            - |        275 |        153 |       0 |  122 |    153 |      0 |      0 |    0 |          0 |
+|       debug_bridge_xsdbm                      |                  pfm_dynamic_debug_bridge_xsdbm_0 | Reconfigurable |            - |         18 |         18 |       0 |    0 |     11 |      0 |      0 |    0 |          0 |
+|       dlrm_a15_1                              |                          pfm_dynamic_dlrm_a15_1_0 | Reconfigurable |            - |      14415 |      14375 |      40 |    0 |  10544 |     17 |     81 |    0 |         39 |
+|       hmss_0                                  |                              pfm_dynamic_hmss_0_0 | Reconfigurable |            - |       6984 |       4400 |    1152 | 1432 |  14788 |      2 |      0 |    0 |          0 |
+|       regslice_pipe_ctrl_hbm_mgntpf           |       pfm_dynamic_regslice_pipe_ctrl_hbm_mgntpf_0 | Reconfigurable |            - |        276 |        166 |       0 |  110 |   1477 |      0 |      0 |    0 |          0 |
+|       slr0                                    |                      pfm_dynamic_slr0_imp_1Q3M93Z | Reconfigurable |            - |        366 |        363 |       0 |    3 |   1156 |      0 |      0 |    0 |          0 |
+|       slr1                                    |                       pfm_dynamic_slr1_imp_IZT2WG | Reconfigurable |            - |        334 |        332 |       0 |    2 |    919 |      0 |      0 |    0 |          0 |
+|       slr2                                    |                       pfm_dynamic_slr2_imp_EEMOLC | Reconfigurable |            - |        340 |        339 |       0 |    1 |   1021 |      0 |      0 |    0 |          0 |
+|     static_region                             |                         static_region_imp_1TEKTPK |         Static |            - |      93026 |      86165 |    5173 | 1688 | 128584 |    196 |      8 |    0 |          4 |
+|       (static_region)                         |                         static_region_imp_1TEKTPK |         Static |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       Monitor_AXI_Master_dma_pcie             |             pfm_top_Monitor_AXI_Master_dma_pcie_0 |         Static |            - |        264 |        264 |       0 |    0 |    733 |      0 |      0 |    0 |          0 |
+|       Monitor_AXI_Master_p2p                  |                  pfm_top_Monitor_AXI_Master_p2p_0 |         Static |            - |        265 |        265 |       0 |    0 |    733 |      0 |      0 |    0 |          0 |
+|       axi_bypass_addr_0                       |                       pfm_top_axi_bypass_addr_0_0 |         Static |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       axi_firewall_ctrl                       |                       pfm_top_axi_firewall_ctrl_0 |         Static |            - |        487 |        486 |       0 |    1 |    638 |      0 |      0 |    0 |          0 |
+|       axi_firewall_ctrl_user                  |                  pfm_top_axi_firewall_ctrl_user_0 |         Static |            - |        491 |        490 |       0 |    1 |    638 |      0 |      0 |    0 |          0 |
+|       axi_firewall_ctrl_user_debug            |            pfm_top_axi_firewall_ctrl_user_debug_0 |         Static |            - |        462 |        461 |       0 |    1 |    532 |      0 |      0 |    0 |          0 |
+|       axi_firewall_data                       |                       pfm_top_axi_firewall_data_0 |         Static |            - |       1746 |       1728 |       0 |   18 |   3907 |      0 |      0 |    0 |          0 |
+|       axi_gpio_axi_rstn                       |                       pfm_top_axi_gpio_axi_rstn_0 |         Static |            - |         29 |         29 |       0 |    0 |     36 |      0 |      0 |    0 |          0 |
+|       axi_hwicap                              |                              pfm_top_axi_hwicap_0 |         Static |            - |        475 |        475 |       0 |    0 |   1205 |      1 |      1 |    0 |          0 |
+|       axi_interconnect_0                      |                      pfm_top_axi_interconnect_0_0 |         Static |            - |       3104 |       3101 |       0 |    3 |   8387 |      0 |      0 |    0 |          0 |
+|       axi_vip_ctrl_mgntpf                     |                     pfm_top_axi_vip_ctrl_mgntpf_0 |         Static |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       axi_vip_ctrl_userpf                     |                     pfm_top_axi_vip_ctrl_userpf_0 |         Static |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       axi_vip_data                            |                            pfm_top_axi_vip_data_0 |         Static |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       axis_register_slice_cc                  |                  pfm_top_axis_register_slice_cc_0 |         Static |            - |        456 |        456 |       0 |    0 |   2594 |      0 |      0 |    0 |          0 |
+|       axis_register_slice_cq                  |                  pfm_top_axis_register_slice_cq_0 |         Static |            - |        411 |        411 |       0 |    0 |   2375 |      0 |      0 |    0 |          0 |
+|       axis_register_slice_rc                  |                  pfm_top_axis_register_slice_rc_0 |         Static |            - |        497 |        497 |       0 |    0 |   2758 |      0 |      0 |    0 |          0 |
+|       axis_register_slice_rq                  |                  pfm_top_axis_register_slice_rq_0 |         Static |            - |        428 |        428 |       0 |    0 |   2433 |      0 |      0 |    0 |          0 |
+|       base_clocking                           |                         base_clocking_imp_1T5B3V7 |         Static |            - |       3484 |       3482 |       0 |    2 |   4533 |      0 |      0 |    0 |          0 |
+|       base_tieoffs                            |                           base_tieoffs_imp_SX3AGZ |         Static |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       brd_mgmt_scheduler                      |                    brd_mgmt_scheduler_imp_12IVW7O |         Static |            - |      10890 |      10142 |     288 |  460 |  13814 |     82 |      4 |    0 |          4 |
+|       dma_pcie                                |                                pfm_top_dma_pcie_0 |         Static |            - |      45210 |      41369 |    3837 |    4 |  36256 |     79 |      0 |    0 |          0 |
+|       feature_rom                             |                             pfm_top_feature_rom_0 |         Static |            - |          4 |          3 |       0 |    1 |      5 |      1 |      0 |    0 |          0 |
+|       feature_rom_ctrl                        |                        pfm_top_feature_rom_ctrl_0 |         Static |            - |         17 |         17 |       0 |    0 |      7 |      0 |      0 |    0 |          0 |
+|       feature_rom_mmu                         |                         pfm_top_feature_rom_mmu_0 |         Static |            - |         44 |         44 |       0 |    0 |     25 |      0 |      0 |    0 |          0 |
+|       flash_programmer                        |                        pfm_top_flash_programmer_0 |         Static |            - |        637 |        555 |      80 |    2 |    746 |      0 |      1 |    0 |          0 |
+|       hbm_and_sdx_init_status                 |                 pfm_top_hbm_and_sdx_init_status_0 |         Static |            - |         30 |         30 |       0 |    0 |     41 |      0 |      0 |    0 |          0 |
+|       interconnect_axilite_mgmt_firewall_ctrl | pfm_top_interconnect_axilite_mgmt_firewall_ctrl_0 |         Static |            - |        344 |        344 |       0 |    0 |    722 |      0 |      0 |    0 |          0 |
+|       interconnect_axilite_static_primary     |     pfm_top_interconnect_axilite_static_primary_0 |         Static |            - |        508 |        508 |       0 |    0 |   1867 |      0 |      0 |    0 |          0 |
+|       interconnect_axilite_static_secondary_a | pfm_top_interconnect_axilite_static_secondary_a_0 |         Static |            - |        249 |        249 |       0 |    0 |    287 |      0 |      0 |    0 |          0 |
+|       interconnect_axilite_static_secondary_b | pfm_top_interconnect_axilite_static_secondary_b_0 |         Static |            - |        375 |        375 |       0 |    0 |    981 |      0 |      0 |    0 |          0 |
+|       interconnect_axilite_static_user        |        pfm_top_interconnect_axilite_static_user_0 |         Static |            - |       5299 |       4406 |     648 |  245 |   8032 |      0 |      0 |    0 |          0 |
+|       interconnect_user_pre_firewall          |          pfm_top_interconnect_user_pre_firewall_0 |         Static |            - |        165 |        165 |       0 |    0 |    363 |      0 |      0 |    0 |          0 |
+|       iob_static                              |                              pfm_top_iob_static_0 |         Static |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       irq_or_gate_maxifirewall                |                pfm_top_irq_or_gate_maxifirewall_0 |         Static |            - |          1 |          1 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       irq_or_gate_mgmtfirewall                |                pfm_top_irq_or_gate_mgmtfirewall_0 |         Static |            - |          1 |          1 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       irq_or_gate_userdebug_firewall          |          pfm_top_irq_or_gate_userdebug_firewall_0 |         Static |            - |          1 |          1 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       irq_or_gate_userfirewall                |                pfm_top_irq_or_gate_userfirewall_0 |         Static |            - |          1 |          1 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       jtag_fallback                           |                           pfm_top_jtag_fallback_0 |         Static |            - |        122 |        122 |       0 |    0 |    125 |      0 |      0 |    0 |          0 |
+|       logic_hbm_init_op                       |                       pfm_top_logic_hbm_init_op_0 |         Static |            - |          1 |          1 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       mailbox_0                               |                               pfm_top_mailbox_0_0 |         Static |            - |        316 |        316 |       0 |    0 |    377 |      8 |      0 |    0 |          0 |
+|       mb_mgmt_irq_concat                      |                      pfm_top_mb_mgmt_irq_concat_0 |         Static |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       mgmt_debug_bridge                       |                       pfm_top_mgmt_debug_bridge_0 |         Static |            - |        579 |        579 |       0 |    0 |    697 |      0 |      0 |    0 |          0 |
+|       mgmt_debug_hub                          |                          pfm_top_mgmt_debug_hub_0 |         Static |            - |        453 |        421 |      32 |    0 |    729 |      0 |      0 |    0 |          0 |
+|       pcie                                    |                                    pfm_top_pcie_0 |         Static |            - |      12427 |      11193 |     288 |  946 |  25909 |     24 |      2 |    0 |          0 |
+|       pf_demux_0                              |                              pfm_top_pf_demux_0_0 |         Static |            - |         50 |         50 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|       pr_isolation_expanded                   |                  pr_isolation_expanded_imp_UWGG4V |         Static |            - |       1918 |       1916 |       0 |    2 |   5113 |      0 |      0 |    0 |          0 |
+|       proc_sys_reset_0                        |                        pfm_top_proc_sys_reset_0_0 |         Static |            - |         13 |         12 |       0 |    1 |     33 |      0 |      0 |    0 |          0 |
+|       scratchpad_ram                          |                          pfm_top_scratchpad_ram_0 |         Static |            - |          4 |          3 |       0 |    1 |      5 |      1 |      0 |    0 |          0 |
+|       scratchpad_ram_ctrl                     |                     pfm_top_scratchpad_ram_ctrl_0 |         Static |            - |         26 |         26 |       0 |    0 |     12 |      0 |      0 |    0 |          0 |
+|       sys_mgmt_wiz                            |                            pfm_top_sys_mgmt_wiz_0 |         Static |            - |        229 |        229 |       0 |    0 |    263 |      0 |      0 |    0 |          0 |
+|       user_debug_bridge                       |                       pfm_top_user_debug_bridge_0 |         Static |            - |        423 |        423 |       0 |    0 |    531 |      0 |      0 |    0 |          0 |
+|       user_debug_hub                          |                          pfm_top_user_debug_hub_0 |         Static |            - |        183 |        183 |       0 |    0 |    136 |      0 |      0 |    0 |          0 |
+|       util_vector_logic_0                     |                     pfm_top_util_vector_logic_0_1 |         Static |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       xlconcat_0                              |                              pfm_top_xlconcat_0_2 |         Static |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       xlconstant_0                            |                            pfm_top_xlconstant_0_1 |         Static |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       xlconstant_1                            |                            pfm_top_xlconstant_1_0 |         Static |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|       xlconstant_2                            |                            pfm_top_xlconstant_2_0 |         Static |            - |          0 |          0 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
++-----------------------------------------------+---------------------------------------------------+----------------+--------------+------------+------------+---------+------+--------+--------+--------+------+------------+
+* Note: The sum of lower-level cells may be larger than their parent cells total, due to cross-hierarchy LUT combining
+
+

@@ -14,9 +14,10 @@ Stage 2N-A15.4 proves the same complete local inference through a
 versioned public AXI4-Lite plus `m_axi_gmem` kernel boundary after one accepted
 A14 v2 lookup engine sequentially supplies all four accepted A13 embedding
 slots from canonical fake-memory rows. Current Stage 2N-A15.5 includes the
-target-flow preparation and a validator-only Vitis 2020.2 compatibility fix.
-The user reports an existing fixed-SHA target XO/xclbin, but the raw artifact
-evidence is not local and remains pending the v2 read-only revalidation flow.
+accepted exact-target XO/xclbin flow and a validator-only Vitis 2020.2
+compatibility fix. The fixed-SHA artifact has passed non-rebuilding v2 metadata
+and routed-timing revalidation. FPGA programming, Host execution, physical HBM,
+board function, and performance remain outside A15.5.
 
 Target environment:
 
@@ -53,7 +54,7 @@ Read the repository in this order before proposing or making changes:
 5. `docs/ARCHITECTURE.md`
 6. `docs/STAGE_HISTORY.md`
 7. the active-stage document,
-   `docs/STAGE2N_A15_5_XCLBIN_VALIDATOR_V2_COMPATIBILITY.md`
+   `docs/STAGE2N_A15_5_TARGET_XCLBIN_FINAL_ACCEPTANCE_V1.md`
 8. the exact RTL, testbench, Host, configuration, and script files named by the
    active-stage documents
 
@@ -75,8 +76,8 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A15.5 — xclbin-validator compatibility; local v2
-self-test PASS, user-reported target artifact pending v2 revalidation**.
+Current stage: **Stage 2N-A15.5 — final target XO/xclbin/timing PASS; physical
+HBM, Host, FPGA/board execution, and performance remain unvalidated**.
 
 Stage 2N-A13 remains the accepted and frozen integrated DLRM baseline. A14.5
 added the runtime 64-bit table-base ABI, A14.6 completed the accepted link-only
@@ -133,28 +134,28 @@ accepts the legal Vitis 2020.2 shell layout only after filtering for exactly one
 and used `HBM[0]`. Its positive fixture and 12 negative fixtures pass. Bash
 syntax remains `NOT_RUN` locally.
 
-The user reports an XO SHA256 of
+The accepted XO SHA256 is
 `a88fd4bba7a534f7068cff838448c5ba7f330e5bec27c8c2697525c9dedee019`
-and xclbin SHA256 of
+and the accepted xclbin SHA256 is
 `23ee48c91b3dfb5b68b3372ac49fc6607f203cf01d3b9fcfe04b4ea42be02356`,
-with Vitis link and zero-slack timing completion. Treat these as user-reported
-facts pending v2 revalidation and raw-evidence review, not as locally proven or
-repository-accepted target evidence. The validator-only fix requires no target
-rebuild.
+with UUID `1b555645-a9e2-4f5e-95af-6ce4adacbc3c`. Target v2 revalidation proves
+one kernel, one TABLE_BASE/arg0 connection to used `HBM[0]`, absence of stale
+A14 arguments, and 100 MHz routed timing with WNS/TNS `0.000/0.000 ns` and zero
+failing endpoints. Fifty-five methodology critical warnings remain recorded;
+the validator-only fix required no target rebuild.
 
 Pending beyond local A15.5 preparation:
 
 - broader multi-sample A15 software-golden regression;
-- v2 read-only revalidation and raw-evidence review of the reported fixed-SHA
-  A15.5 XO/xclbin and routed timing;
 - A15 FPGA-device execution or physical HBM validation;
+- A15 Host/XRT and complete functional board validation;
 - any A15 latency, bandwidth, throughput, power, or performance claim;
 - multi-table, multi-bank, burst, cache, coalescing, scheduling, or INT8 work.
 
-See `docs/STAGE2N_A15_5_XCLBIN_VALIDATOR_V2_COMPATIBILITY.md` for the current
-compatibility rule and status boundary, and the preparation V1 document for the
-frozen package/link contract. Use the A15.4 document for the underlying local
-functional result.
+See `docs/STAGE2N_A15_5_TARGET_XCLBIN_FINAL_ACCEPTANCE_V1.md` for the accepted
+artifact identity and boundary, the compatibility document for the v1-to-v2
+root cause, and the preparation V1 document for the frozen package/link
+contract. Use the A15.4 document for the underlying local functional result.
 
 ## 4. Hardware Environment
 
@@ -370,20 +371,27 @@ This does not prove a physical HBM transaction.
 - Host-runtime integration, multiple samples/tables/banks, performance, power,
   latency, bandwidth, throughput, or speedup.
 
-### Proven by local A15.5 preparation
+### Proven by A15.5 final target acceptance
 
 - exact accepted A15.4 kernel/source identity and 17-file RTL package closure;
 - one TABLE_BASE global pointer at `0x304`, one `m_axi_gmem`, one CU, and one
   `HBM[0]` connectivity contract;
 - positive validator fixtures and rejection of wrong identity, width, offset,
   clock, platform, bank, extra master/mapping, and stale A14 arguments.
+- exact-target XO build/metadata validation and Vitis 2020.2 link/xclbin;
+- fixed xclbin SHA256/UUID and exactly one TABLE_BASE/arg0 connection to used
+  `HBM[0]`;
+- 100 MHz routed timing with WNS/TNS `0.000/0.000 ns`, zero failing endpoints,
+  zero DRC errors/critical warnings, zero methodology errors, and 55 retained
+  methodology critical warnings.
 
-### Not proven by A15.5 preparation
+### Not proven by A15.5
 
 - Bash syntax in the current Windows environment;
-- target XO packaging or metadata validation;
-- Vitis link, xclbin, routed timing, Host execution, physical HBM, FPGA/board
-  execution, or any performance result.
+- Host execution, physical A15 HBM access, FPGA/board functional execution, or
+  any performance result;
+- true all-HBM end-to-end latency: the four sequential lookups occur before the
+  accepted 1174-cycle compute-counter interval.
 
 Use `docs/CURRENT_STATE.md` for the exact current branch, HEAD, blockers, and
 next actions.
@@ -420,9 +428,10 @@ the first protected board attempt found that the formal Host executable had beco
 Do not repeat A14.7 physical lookup merely to reconfirm it.
 
 The local A13/A14 handoff and one complete deterministic inference using all
-four sequential HBM-owned slots are now proven through the A15.4 public local
-kernel boundary. The next engineering direction is separately authorized A15.5
-target packaging/build preparation plus broader functional-golden coverage
-before any target execution or performance gate.
+four sequential HBM-owned slots are proven through the A15.4 public local
+kernel boundary, and A15.5 now accepts the exact-target XO/xclbin/timing
+artifact. The next engineering direction is separately authorized A15.6
+protected device/Host/physical-HBM functional validation using that frozen
+artifact; performance remains a later gate.
 
 First priority is functional equivalence with the software golden model. Multi-table, multi-bank, cache and performance optimization should follow only after this integration path is correct.

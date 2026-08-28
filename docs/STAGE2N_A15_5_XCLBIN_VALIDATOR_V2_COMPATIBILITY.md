@@ -185,3 +185,32 @@ FPGA_DEVICE_ACCESS=NONE
 No conclusion is made about physical HBM lookup correctness, FPGA execution,
 Host runtime, bandwidth, latency, throughput, power, energy, speedup, or any
 performance improvement.
+
+## 8. Final target revalidation result
+
+The fixed-SHA artifact later completed the v2 revalidation successfully. The
+pending status block above is retained as the pre-revalidation state; the
+authoritative final result is:
+
+```text
+A15_5_TARGET_XO_BUILD=PASS
+A15_5_TARGET_XO_VALIDATION=PASS
+A15_5_TARGET_LINK=PASS
+A15_5_XCLBIN=PASS
+A15_5_XCLBIN_VALIDATION=PASS
+A15_5_TARGET_TIMING=PASS
+A15_5_TARGET_REBUILD_REQUIRED=NO
+FAIL_REASON=NONE
+```
+
+The accepted xclbin SHA256 is
+`23ee48c91b3dfb5b68b3372ac49fc6607f203cf01d3b9fcfe04b4ea42be02356`
+and its UUID is `1b555645-a9e2-4f5e-95af-6ce4adacbc3c`. Validator v2 found one
+`IP_KERNEL` among 36 IP-layout entries and one TABLE_BASE/arg0 connection to
+used `HBM[0]`. The 100 MHz routed result has WNS/TNS `0.000/0.000 ns`, zero
+failing endpoints, and 55 retained methodology critical warnings.
+
+See `docs/STAGE2N_A15_5_TARGET_XCLBIN_FINAL_ACCEPTANCE_V1.md` and the curated
+raw evidence under
+`docs/evidence/stage2n_a15_5/target_xclbin_revalidation_v2/`. Physical HBM,
+Host, device/board execution, and performance remain unvalidated or not run.

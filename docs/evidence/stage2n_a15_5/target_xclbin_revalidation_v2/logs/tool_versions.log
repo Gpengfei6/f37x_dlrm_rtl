@@ -1,0 +1,13 @@
+VITIS_SETTINGS=/opt/Xilinx/Vitis/2020.2/settings64.sh
+HOSTNAME=localhost.localdomain
+DATE=2026-08-28T16:56:22+0800
+Vivado v2020.2 (64-bit)
+SW Build 3064766 on Wed Nov 18 09:12:47 MST 2020
+IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+****** xclbinutil v2020.2 (64-bit)
+       XRT Build Version: 2.8.0
+    Build Version Branch: Vitis
+      Build Version Hash: 70b0d7e5db97d08503f97ca713c33ecb01ddca64
+ Build Version Hash Date: Wed, 4 Nov 2020 08:46:44 -0800
+      Build Version Date: Wed, 04 Nov 2020 13:51:01 -0700

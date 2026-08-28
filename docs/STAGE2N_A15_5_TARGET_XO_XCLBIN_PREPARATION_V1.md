@@ -301,3 +301,25 @@ this preparation record, any frozen RTL, the v1 validator/runner, or an existing
 target artifact. Target XO/link/xclbin/timing facts remain user-reported and
 pending read-only v2 revalidation plus returned raw-evidence review. No rebuild
 or relink is required for the compatibility fix.
+
+## 13. Final acceptance closure
+
+The fixed-SHA target artifact subsequently passed the non-rebuilding v2
+revalidation. The earlier `NOT_RUN` fields in this preparation document remain
+the historical local-preparation state and are superseded for target-artifact
+status by:
+
+`docs/STAGE2N_A15_5_TARGET_XCLBIN_FINAL_ACCEPTANCE_V1.md`
+
+Final accepted identities are:
+
+- XO SHA256:
+  `a88fd4bba7a534f7068cff838448c5ba7f330e5bec27c8c2697525c9dedee019`;
+- xclbin SHA256:
+  `23ee48c91b3dfb5b68b3372ac49fc6607f203cf01d3b9fcfe04b4ea42be02356`;
+- xclbin UUID: `1b555645-a9e2-4f5e-95af-6ce4adacbc3c`;
+- target XO/link/xclbin/100 MHz timing: PASS;
+- target rebuild required: NO.
+
+FPGA programming, Host execution, physical HBM, board function, and
+performance remain outside A15.5 and are not promoted by this closure.

@@ -11,3 +11,8 @@
 *.txt text eol=lf
 *.ps1 text eol=crlf
 *.gitkeep text eol=lf
+
+# Preserve byte-exact Vivado/xclbinutil evidence, including tool-formatted
+# trailing spaces, while keeping source/document whitespace checks strict.
+docs/evidence/stage2n_a15_5/target_xclbin_revalidation_v2/*.xclbin.info -text -diff
+docs/evidence/stage2n_a15_5/target_xclbin_revalidation_v2/post_route/*.rpt -text -diff
