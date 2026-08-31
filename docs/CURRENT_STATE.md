@@ -36,8 +36,8 @@ Snapshot date: 2026-08-31
   `85ac9d1c333d5e016341c57de722e222da991d97`
 - A16.1 instrumentation parent HEAD:
   `6155ad8fe2fa9000ebc314536986c83581f8a940`
-- Current engineering stage: **Stage 2N-A16.1 local latency instrumentation
-  XSim PASS; A16.2 has not started**
+- Current engineering stage: **Stage 2N-A16.2 local target/physical-latency
+  preparation PASS; A16.2 target build and board run not started**
 - Accepted and frozen physical-HBM functional baseline: **Stage 2N-A15.6**
 - Accepted and frozen dense/compute arithmetic baseline: **Stage 2N-A13**
 
@@ -50,8 +50,11 @@ artifact passed non-rebuilding v2 revalidation. A15.6 then used that exact
 artifact in a protected F37X run: one physical `HBM[0]` BO supplied four
 sequential embedding lookups and all five independent board golden cases matched
   exactly. A16.1 now adds a separate versioned local top with lookup and FPGA
-  end-to-end counters; it does not change that frozen RTL or xclbin. Performance
-  remains unclaimed; do not infer physical-HBM timing from local XSim.
+  end-to-end counters; it does not change that frozen RTL or xclbin. A16.2 then
+  prepares the reviewed target-build and protected board-measurement flow for a
+  future sequential-HBM latency baseline without running any target tool or
+  device. Performance remains unclaimed; do not infer physical-HBM timing from
+  local XSim.
 
 The primary Windows worktree may contain pre-existing untracked recovery,
 historical evidence, patent, source, and helper files. Preserve them. Never use
@@ -364,6 +367,36 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
   overhead `38` cycles, satisfying `1285 = 73 + 1174 + 38`.
 - Physical HBM latency is `NOT_VALIDATED` and performance is `NOT_CLAIMED`.
 
+### Stage 2N-A16.2
+
+- Prepared, entirely locally, the reviewed target-build and protected
+  board-measurement flow for a future physical sequential-HBM latency baseline,
+  reusing the accepted A15.5 XO/link packaging, A15.6 XRT Host/protected board
+  runner, and the frozen A16.1 RTL/counter ABI.
+- Added versioned A16.2 assets: target config, XO package Tcl, XO/link/Host
+  build runners, protected board runner, post-route report Tcl, Host source,
+  four validators, and a local preparation entry
+  (`scripts/run_stage2n_a16_2_local_preparation_v1.ps1`).
+- The A16 target is `dlrm_f37x_rtl_kernel_stage2n_a16_v1`, CU `dlrm_a16_1`,
+  `s_axi_control` plus exactly one 64-bit-address/128-bit-data `m_axi_gmem`
+  master, `dlrm_a16_1.m_axi_gmem:HBM[0]`, and only `TABLE_BASE` as the kernel
+  pointer argument at `0x304`. The obsolete A14 `LOOKUP_INDEX`/`RESULT0..3`
+  signature is rejected.
+- A16 counters `0x30C`/`0x310` are custom AXI4-Lite registers, not Vitis kernel
+  arguments.
+- Local preparation entry PASS: source validation, ABI validation, protection
+  gate, XO validator self-test (1 positive + 9 negative), xclbin validator
+  self-test (Vitis 2020.2 36-entry layout + 12 negative), board-log validator
+  self-test (1 positive + 6 negative), old-Git compatibility scan, and manual
+  `bash -n` of the four target shell scripts (Git Bash).
+- A16.1 RTL SHA256 `a6eec09c...` and A15.4 RTL SHA256 `c3da5be63...` unchanged;
+  A15.5 xclbin not rebuilt.
+- `TARGET_XO_BUILD=NOT_RUN_TARGET_REQUIRED`,
+  `TARGET_XCLBIN_LINK=NOT_RUN_TARGET_REQUIRED`,
+  `TARGET_TIMING=NOT_RUN_TARGET_REQUIRED`,
+  `A16_2_PHYSICAL_HBM_LATENCY=NOT_VALIDATED`,
+  `A16_2_PERFORMANCE=NOT_CLAIMED`.
+
 ## Verification Summary
 
 | Area | Result | Evidence boundary |
@@ -419,6 +452,12 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 | A15.6 performance | NOT CLAIMED | 1174 cycles is compute-only and excludes lookup, Host and BO-transfer intervals |
 | A16.1 local sequential-latency instrumentation | **XSIM PASS** | Two full invocations, two deterministic runs each; lookup/compute/e2e/overhead = 73/1174/1285/38 with fake AXI memory |
 | A16.1 physical HBM latency / target / performance | NOT VALIDATED / NOT RUN / NOT CLAIMED | New RTL has not been target-built or run on F37X; local lookup cycles are not physical-HBM latency |
+| A16.2 local source preparation | **PASS** | Source closure, one-CU/HBM[0] config, package tokens, stale A14 rejection, old-Git-safe target scripts, no network/device commands, Host ABI tokens, protected-runner tokens, authorization-before-programming |
+| A16.2 XO validator self-test | **PASS** | 1 positive + 9 negative fixtures; wrong kernel/second master/stale A14 args/wrong widths/offset/counter/part all rejected |
+| A16.2 xclbin validator self-test | **PASS** | Vitis 2020.2 36-entry layout (1 IP_KERNEL + 35 shell) positive; 12 negative fixtures |
+| A16.2 board-log validator self-test | **PASS** | 1 positive + 6 negative fixtures; missing/zero/negative/mismatched latency accounting and compute-ABI change rejected |
+| A16.2 protection gate | **PASS** | Explicit target index/BDF/render/xclbin/SHA/UUID required; firewall/render/HBM[0] checks; allowlist; yes/no authorization before programming; no FPGA reset |
+| A16.2 target XO/link/timing/board | NOT RUN / NOT VALIDATED / NOT CLAIMED | Target build, xclbin link, timing, physical HBM latency and performance all require a separately authorized target run |
 
 Primary evidence:
 
@@ -453,6 +492,8 @@ Primary evidence:
 - `docs/evidence/stage2n_a15_6/final_acceptance_v1/`
 - `docs/STAGE2N_A16_1_SEQUENTIAL_HBM_LATENCY_INSTRUMENTATION_V1.md`
 - `docs/evidence/stage2n_a16_1/`
+- `docs/STAGE2N_A16_2_TARGET_AND_PHYSICAL_LATENCY_PREPARATION_V1.md`
+- `docs/evidence/stage2n_a16_2/`
 - `docs/evidence/stage2n_a14_7/local_source_preparation_v1.txt`
 - `docs/STAGE2N_A15_1_HBM_PIPELINE_INTEGRATION_V1.md`
 - `docs/STAGE2N_A15_2_END_TO_END_PIPELINE_XSIM_V1.md`
@@ -489,7 +530,8 @@ Historical target environment recorded by accepted evidence:
 5. The large fixed-SHA XO/xclbin and routed DCP remain outside Git; their small
    final metadata/status/hash/report evidence is curated under `docs/evidence`.
 6. A15.6 physical-board function is no longer blocked. A16.1 local
-   instrumentation passes, but target/physical-HBM latency evidence is absent;
+   instrumentation passes and A16.2 target/physical-latency preparation
+   passes locally, but target/physical-HBM latency evidence is absent;
    multi-bank mapping and parallel lookup remain future work.
 
 These local tool absences do not invalidate the accepted A15.5 artifact or the
@@ -498,10 +540,12 @@ returned A15.6 physical-board evidence.
 ## Next Actions
 1. Preserve the A15.6 single-bank/single-master/four-sequential-lookup
    functional baseline and the accepted A16.1 counter semantics.
-2. Authorize A16.2 separately before target packaging or physical measurement;
-   do not replace the frozen A15.5 xclbin or modify accepted A15 RTL.
-3. If target measurement is authorized, retain the `0x30C/0x310` boundaries and
-   distinguish hardware counters from Host/BO transfer timing.
+2. Transfer the reviewed A16.2 preparation files to the controlled target
+   environment after separate authorization; run the XO-only build, the
+   link-only build, the Host XRT 2020.2 build, and the protected board runner
+   in order, and return retained status/log/evidence for acceptance review.
+3. On the target, retain the `0x30C/0x310` boundaries and distinguish hardware
+   counters from Host/BO transfer timing.
 4. Compare any later multi-bank or parallel design against an equivalently
    instrumented sequential target, not the local fake-AXI value.
 5. Require functional equivalence and comparable target evidence before any
@@ -566,8 +610,9 @@ rows and a complete golden-matched inference. This
 does not convert the standalone A14.7 physical result into physical A15 proof.
 
 A16.1 has now completed the separately versioned local instrumentation step
-described above. The accepted A15.6 single-bank, one-master,
-four-sequential-lookup functional baseline remains frozen. The next gate is a
-separately authorized A16.2 target/physical measurement; multi-table and
-multi-HBM-bank parallelism remain future work and have no accepted speedup
-claim.
+described above. A16.2 has prepared the reviewed target-build and protected
+board-measurement flow for the future physical sequential-HBM latency baseline.
+The accepted A15.6 single-bank, one-master, four-sequential-lookup functional
+baseline remains frozen. The next gate is a separately authorized A16.2 target
+build and physical measurement; multi-table and multi-HBM-bank parallelism
+remain future work and have no accepted speedup claim.

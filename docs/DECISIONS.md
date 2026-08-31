@@ -1000,3 +1000,44 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
   improvement, bandwidth, throughput, speedup, power or performance claim.
 - **Next gate:** A16.2 requires separate authorization before any target build,
   physical measurement or board operation.
+
+## D-047 - Establish the real F37X sequential-HBM latency baseline before any multi-bank comparison
+
+- **Status:** accepted for local A16.2 preparation on 2026-08-31; target build,
+  link and physical latency are `NOT_RUN`/`NOT_VALIDATED`.
+- **Decision:** before any multi-HBM-bank speedup comparison, first establish a
+  real F37X sequential-latency baseline using the accepted A16.1 counters
+  (`0x30C` HBM_LOOKUP_CYCLES, `0x310` FPGA_END_TO_END_CYCLES) through a reviewed
+  target build and protected board run. A16.2 prepares this flow locally and
+  claims nothing beyond local preparation.
+- **Target identity:** kernel `dlrm_f37x_rtl_kernel_stage2n_a16_v1`, CU
+  `dlrm_a16_1`, `s_axi_control` plus exactly one 64-bit-address/128-bit-data
+  `m_axi_gmem` master, `dlrm_a16_1.m_axi_gmem:HBM[0]`, part
+  `xcvu37p-fsvh2892-2L-e`, platform `inspur_f37x_xdma_201920_3`, 100 MHz.
+- **Metadata boundary:** only `TABLE_BASE` (`0x304`, size 8, `void*`,
+  addressQualifier 1, `m_axi_gmem`) is a Vitis kernel argument; `0x30C`/`0x310`
+  are custom AXI4-Lite registers; the obsolete A14 `LOOKUP_INDEX`/`RESULT0..3`
+  signature is rejected. The xclbin validator filters `m_type == IP_KERNEL`
+  rather than requiring a single total IP-layout entry (Vitis 2020.2 xclbins
+  contain shell/platform IPs), and requires one connection with `arg_index==0`
+  to used `HBM[0]`.
+- **Host accounting:** per case, `PIPELINE_OVERHEAD_CYCLES =
+  FPGA_END_TO_END_CYCLES - HBM_LOOKUP_CYCLES - COMPUTE_TOTAL_CYCLES`; the Host
+  verifies `end_to_end >= lookup + compute` before subtraction and computes in
+  signed 64-bit so an invalid result cannot underflow to a huge unsigned value.
+- **Protection:** the board runner requires explicit target index/BDF/render/
+  xclbin/SHA/UUID, never defaults to historical device 2/`9b`/`renderD129`,
+  checks firewall/render/HBM[0]/identity, requires an allowlist when the
+  resident UUID differs, and requires a literal `yes` authorization before
+  programming; it never resets the FPGA.
+- **Reason:** the accepted 1174-cycle compute interval and the XSim 73/1285
+  values are not physical HBM or end-to-end latency. Any later multi-bank or
+  parallel design must be compared against an equivalently instrumented real
+  sequential target baseline, not a fake-AXI value.
+- **Evidence boundary:** A16.2 local preparation proves only local source/ABI/
+  protection gates and validator self-tests. It does not prove XO/xclbin
+  validity, target timing, physical HBM behavior, FPGA or board execution, Host
+  runtime behavior, bandwidth, latency, throughput, power, energy, speedup or
+  any performance improvement.
+- **Next gate:** separate authorization for the target XO build, link, Host
+  build and protected board run; then acceptance review of returned evidence.

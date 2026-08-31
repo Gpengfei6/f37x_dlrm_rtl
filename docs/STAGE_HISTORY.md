@@ -382,3 +382,46 @@ separately authorize A16.2 before any target build or physical measurement.
 The 73-cycle local lookup interval is not physical HBM latency, and A16.1 makes
 no latency-improvement, bandwidth, throughput, speedup, power or performance
 claim. Multi-bank and parallel lookup remain unimplemented.
+
+## Stage 2N-A16.2 — Target build and physical sequential-latency preparation
+
+Date: 2026-08-31
+
+Result: `LOCAL PREPARATION PASS`
+
+A16.2 prepares, entirely locally, the reviewed target-build and protected
+board-measurement flow for the future physical sequential-HBM latency baseline.
+It reuses the accepted A15.5 XO/link packaging and the A15.6 XRT Host/protected
+board-runner model, plus the frozen A16.1 RTL (`a6eec09c...`) and counter ABI.
+The A16 target is `dlrm_f37x_rtl_kernel_stage2n_a16_v1`, CU `dlrm_a16_1`, one
+64-bit-address/128-bit-data `m_axi_gmem` master mapped to `HBM[0]`, and only
+`TABLE_BASE` (`0x304`) as the kernel pointer argument; the obsolete A14
+`LOOKUP_INDEX`/`RESULT0..3` signature is rejected. `0x30C`/`0x310` are custom
+AXI4-Lite registers, not Vitis kernel arguments.
+
+The local preparation entry
+(`scripts/run_stage2n_a16_2_local_preparation_v1.ps1`) passed: source
+validation, ABI validation, protection gate, XO validator self-test (1 positive
++ 9 negative), xclbin validator self-test (Vitis 2020.2 36-entry layout, 1
+IP_KERNEL + 35 shell, + 12 negative), board-log validator self-test (1 positive
++ 6 negative), old-Git compatibility scan of the four target shell scripts, and
+a manual `bash -n` of those scripts via Git Bash. The protected board runner
+requires explicit target index/BDF/render/xclbin/SHA/UUID, checks firewall/
+render/HBM[0]/identity, uses an allowlist when the resident UUID differs, and
+requires a literal `yes` authorization before programming; it never resets the
+FPGA.
+
+`TARGET_XO_BUILD=NOT_RUN_TARGET_REQUIRED`,
+`TARGET_XCLBIN_LINK=NOT_RUN_TARGET_REQUIRED`,
+`TARGET_TIMING=NOT_RUN_TARGET_REQUIRED`,
+`A16_2_PHYSICAL_HBM_LATENCY=NOT_VALIDATED`, and
+`A16_2_PERFORMANCE=NOT_CLAIMED`. The frozen A15.4 RTL, A16.1 RTL and A15.5
+xclbin are unchanged.
+
+Next:
+the user may transfer the reviewed A16.2 files to the controlled target
+environment after separate authorization and run, in order, the XO-only build,
+the link-only build, the Host XRT 2020.2 build, and the protected board runner,
+returning retained status/log/evidence for acceptance review. Establish the
+real sequential-HBM latency baseline before evaluating any multi-bank or
+parallel design. No physical latency or performance claim is made by A16.2.

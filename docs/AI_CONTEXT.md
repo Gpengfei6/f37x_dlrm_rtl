@@ -81,8 +81,8 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A16.1 — local sequential-HBM latency instrumentation
-XSIM PASS; Stage 2N-A16.2 has not started**.
+Current stage: **Stage 2N-A16.2 — local target/physical-latency preparation
+PASS; target build and board run not started**.
 
 Stage 2N-A13 remains the accepted and frozen dense/compute arithmetic baseline;
 A15.6 is the accepted integrated physical-HBM functional baseline. A14.5 added
@@ -178,9 +178,23 @@ exact relation `1285 = 73 + 1174 + 38`. Two complete simulator invocations pass,
 with two deterministic inference runs per invocation. These are fake-AXI timing
 values, not physical F37X HBM latency.
 
-Pending after A16.1 local acceptance:
+A16.2 prepares, entirely locally, the reviewed target-build and protected
+board-measurement flow for the future physical sequential-HBM latency baseline.
+It reuses the accepted A15.5 XO/link packaging and the A15.6 XRT Host/protected
+board-runner model, with the frozen A16.1 RTL and counter ABI. The A16 target is
+`dlrm_f37x_rtl_kernel_stage2n_a16_v1`, CU `dlrm_a16_1`, exactly one
+64-bit-address/128-bit-data `m_axi_gmem` master mapped to `HBM[0]`, and only
+`TABLE_BASE` (`0x304`) as the kernel pointer argument; the obsolete A14
+`LOOKUP_INDEX`/`RESULT0..3` signature is rejected. `0x30C`/`0x310` remain custom
+AXI4-Lite registers, not Vitis kernel arguments. Local source/ABI/protection
+gates and all three validator self-tests (1+9 XO, Vitis 2020.2 36-entry + 12
+xclbin, 1+6 board-log) pass; target XO/link/timing and physical HBM latency
+remain `NOT_RUN`/`NOT_VALIDATED`.
 
-- separately authorized target packaging/measurement of the A16 counters;
+Pending after A16.2 local preparation:
+
+- separately authorized target XO build, link, Host XRT build and protected
+  board execution of the A16 counters;
 - a physical sequential-HBM latency baseline;
 - multi-table, multi-bank, burst, cache, coalescing, scheduling, or INT8 work.
 - any latency, bandwidth, throughput, power, speedup or performance claim.
@@ -191,7 +205,9 @@ for the Host, guard, golden, evidence, and non-claim contract, and
 boundary. The authoritative status is now
 `docs/STAGE2N_A15_6_ALL_HBM_BOARD_FINAL_ACCEPTANCE_V1.md`; use the A15.5 final
 acceptance for the frozen artifact identity. Use the A16.1 document only for
-local counter semantics and XSim evidence.
+local counter semantics and XSim evidence, and the A16.2 document
+(`docs/STAGE2N_A16_2_TARGET_AND_PHYSICAL_LATENCY_PREPARATION_V1.md`) for the
+target-build and protected-measurement preparation contract.
 
 ## 4. Hardware Environment
 
