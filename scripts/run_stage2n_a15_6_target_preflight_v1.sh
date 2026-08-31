@@ -5,7 +5,9 @@
 
 set -Eeuo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SELF_SCRIPT="${BASH_SOURCE[0]}"
+SCRIPT_DIR="$(cd "$(dirname "${SELF_SCRIPT}")" && pwd)"
+SELF_SCRIPT="${SCRIPT_DIR}/$(basename "${SELF_SCRIPT}")"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 cd "${REPO_ROOT}"
 
@@ -309,7 +311,7 @@ cp "${HOST_STATUS}" "${HOST_STATUS_COPY}"
 A15_6_HOST_BUILD="PASS"
 
 sha256sum "${RTL}" "${PREFLIGHT_VALIDATOR}" "${SOURCE_VALIDATOR}" \
-    "${GOLDEN_BUILDER}" "${HOST_BUILD_SCRIPT}" "${BASH_SOURCE[0]}" \
+    "${GOLDEN_BUILDER}" "${HOST_BUILD_SCRIPT}" "${SELF_SCRIPT}" \
     > "${SOURCE_HASHES}"
 A15_6_TARGET_PREFLIGHT="PASS"
 READY_FOR_PROTECTED_BOARD_EXECUTION="YES"

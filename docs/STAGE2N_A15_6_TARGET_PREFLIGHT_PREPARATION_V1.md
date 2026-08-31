@@ -54,6 +54,16 @@ into the repository root. All seven existing byte-for-byte `cmp` gates remain
 unchanged. This restores deterministic regeneration across Windows, Linux, and
 the F37X server without changing the builder algorithm or any frozen asset.
 
+### Stable script path after XRT setup
+
+The target server run showed that `BASH_SOURCE[0]` cannot be relied upon after
+sourcing the XRT 2020.2 environment while `set -u` remains active. The preflight
+now freezes and normalizes its absolute `SELF_SCRIPT` path at script entry,
+before sourcing any Xilinx/XRT setup, and reuses that value for the final source
+evidence hash. This is a Bash compatibility correction only; strict unset-variable
+checking remains enabled and no functional, RTL, asset, xclbin, ABI, Host, or
+device-flow behavior changes.
+
 ## 2. Frozen identities
 
 | Item | Frozen value |
