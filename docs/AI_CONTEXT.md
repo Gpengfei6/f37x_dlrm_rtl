@@ -19,10 +19,10 @@ XO/xclbin flow and its validator-only Vitis 2020.2 compatibility fix. Stage
   frozen xclbin, one `HBM[0]` BO, one AXI read master and four sequential lookups
   supply all four embedding slots and produce five exact complete-DLRM results.
   Stage 2N-A16.1 adds local sequential-lookup and complete-FPGA interval
-  counters without modifying that frozen RTL. A16.2 target and board PASS
-  values are user-reported, but compact original evidence is not yet local;
-  final acceptance is pending import. Performance, multi-bank mapping and
-  parallel lookup remain unclaimed.
+  counters without modifying that frozen RTL. A16.2 compact target and board
+  evidence is now imported and validated: the exact target, requested 100 MHz
+  timing gate, five physical cases and 112/1174/1289/3 cycle accounting pass.
+  Performance, multi-bank mapping and parallel lookup remain unclaimed.
 
 Target environment:
 
@@ -83,8 +83,7 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A16.2 — target/board PASS reported; final acceptance
-pending compact raw-evidence import**.
+Current stage: **Stage 2N-A16.2 — final acceptance PASS; A16.3 not started**.
 
 Stage 2N-A13 remains the accepted and frozen dense/compute arithmetic baseline;
 A15.6 is the accepted integrated physical-HBM functional baseline. A14.5 added
@@ -192,24 +191,26 @@ AXI4-Lite registers, not Vitis kernel arguments. Local source/ABI/protection
 gates and all three validator self-tests (1+9 XO, Vitis 2020.2 36-entry + 12
 xclbin, 1+6 board-log) pass.
 
-The user later reported exact-target XO/link/timing and protected five-case
-board PASS, with fixed lookup/compute/e2e/residual values
+The imported evidence validates exact-target XO/link/timing and protected
+five-case board PASS, with fixed lookup/compute/e2e/residual values
 `112/1174/1289/3`. A source audit explains the difference from XSim
 `73/1174/1285/38`: the testbench adds status/mask accesses, ARREADY delay and
 repeated-START/error-handling traffic before the first AR handshake, which
 belongs to the end-to-end interval but not the lookup interval. No counter bug
-was found. Because the original status/log/metadata/post-route evidence is not
-yet in this checkout, these values remain user-reported and
-`A16_2_FINAL_ACCEPTANCE=PENDING_EVIDENCE_IMPORT`.
+was found. The original compact status/log/metadata/post-route evidence is
+curated under `docs/evidence/stage2n_a16_2/final_acceptance_v1/`, and the
+offline validator passes all 31 manifest entries.
+`A16_2_FINAL_ACCEPTANCE=PASS`.
 
-Pending for A16.2 final acceptance:
+Accepted A16.2 sequential baseline:
 
-- local import and offline validation of the compact original XO/link/Host/
-  board evidence already reported by the user;
-- promotion of 112-cycle lookup and 1289-cycle FPGA interval to the accepted
-  sequential baseline only after that validation;
+- lookup/compute/complete-FPGA/residual = `112/1174/1289/3` cycles;
+- five exact complete-DLRM results and protected cleanup/safety markers pass;
+- requested 100 MHz timing passes with WNS/TNS `0.000/0.000 ns` and zero
+  failing endpoints;
+- performance remains `NOT_CLAIMED`;
 - multi-table, multi-bank, burst, cache, coalescing, scheduling, or INT8 work.
-- any latency, bandwidth, throughput, power, speedup or performance claim.
+- A16.3 has not started.
 
 See `docs/STAGE2N_A15_6_PROTECTED_ALL_HBM_BOARD_VALIDATION_PREPARATION_V1.md`
 for the Host, guard, golden, evidence, and non-claim contract, and
@@ -220,7 +221,7 @@ acceptance for the frozen artifact identity. Use the A16.1 document only for
 local counter semantics and XSim evidence. Use
 `docs/STAGE2N_A16_2_TARGET_AND_PHYSICAL_LATENCY_PREPARATION_V1.md` for the
 preparation contract and `docs/STAGE2N_A16_2_FINAL_ACCEPTANCE_V1.md` for the
-current pending-evidence decision and latency reconciliation.
+final accepted evidence and latency reconciliation.
 
 ## 4. Hardware Environment
 

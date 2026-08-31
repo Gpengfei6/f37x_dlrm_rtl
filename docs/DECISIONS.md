@@ -1044,9 +1044,10 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
 
 ## D-048 - Reconcile inclusive latency intervals and require raw evidence before A16.2 acceptance
 
-- **Status:** source reconciliation accepted on 2026-08-31; A16.2 final
-  acceptance remains `PENDING_EVIDENCE_IMPORT`.
-- **Reported result:** the user reports target XO/link/timing and protected
+- **Status:** source reconciliation accepted on 2026-08-31; its raw-evidence
+  gate was subsequently satisfied by D-049.
+- **Reported result at this decision point:** the user reported target
+  XO/link/timing and protected
   five-case board PASS with lookup/compute/e2e/residual values
   `112/1174/1289/3`. The compact original status/log/metadata/post-route files
   are not present in this checkout, so the report is not yet promoted to an
@@ -1070,3 +1071,30 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
   build trees. Until it passes, `READY_FOR_A16_3_ARCHITECTURE=NO`.
 - **Performance boundary:** the reported physical cycle values are not a
   bandwidth, throughput, speedup, power, energy or performance claim.
+
+## D-049 - Accept A16.2 as the physical sequential-latency comparison baseline
+
+- **Status:** accepted on 2026-08-31 after compact raw-evidence import and
+  offline validation.
+- **Decision:** accept the exact A16 target build, requested 100 MHz timing gate,
+  protected five-case F37X run, and lookup/compute/complete-FPGA/residual values
+  `112/1174/1289/3` as the sequential comparison baseline under the frozen A16.1
+  event definitions.
+- **Artifact identity:** XO SHA256 `ea0fe950339ada07eaacd181c495dcb1f07251ed20e7d1cef44479bc36cec94a`;
+  xclbin SHA256 `5f0d6fefab1549d2e1969df3d8775409bbfac33cb46d07e7abde99abdf04b8b4`;
+  UUID `f18571de-4a43-46bd-8ab9-a89dd4b11f8e`; kernel/CU
+  `dlrm_f37x_rtl_kernel_stage2n_a16_v1:dlrm_a16_1`; one
+  `m_axi_gmem -> HBM[0]` connection.
+- **Evidence:** 30 compact raw files were imported without XO/xclbin/DCP or
+  build trees. The SHA256 manifest contains 31 validated entries under
+  `docs/evidence/stage2n_a16_2/final_acceptance_v1/`; the marker parser uses
+  fail-closed last-occurrence semantics for progressive runner logs.
+- **Timing and function:** WNS/TNS `0.000/0.000 ns`, zero failing endpoints;
+  all five expected results `-393/-392/-93/-689/-519`, mask `0xF`, counters,
+  cleanup and protected-runner safety markers pass.
+- **Evidence boundary:** this accepts the observed sequential physical lookup
+  and complete-FPGA intervals for the fixed workload. It does not accept a
+  bandwidth, throughput, latency-improvement, speedup, power, energy or general
+  performance claim.
+- **Next gate:** A16.3 remains not started and requires a separate architecture
+  boundary and explicit authorization before multi-bank or parallel work.

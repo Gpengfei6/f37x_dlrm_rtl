@@ -1,0 +1,2461 @@
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.2 (lin64) Build 3064766 Wed Nov 18 09:12:47 MST 2020
+| Date         : Mon Aug 31 17:14:45 2026
+| Host         : localhost.localdomain running 64-bit CentOS Linux release 7.6.1810 (Core)
+| Command      : report_drc -file /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a16_2_buildonly/results/stage2n_a16_2/target_link_v1/post_route/post_route_drc.rpt
+| Design       : pfm_top_wrapper
+| Device       : xcvu37p-fsvh2892-2L-e
+| Speed File   : -2L
+| Design State : Fully Routed
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Report DRC
+
+Table of Contents
+-----------------
+1. REPORT SUMMARY
+2. REPORT DETAILS
+
+1. REPORT SUMMARY
+-----------------
+            Netlist: netlist
+          Floorplan: checkpoint_pfm_top_wrapper_routed
+      Design limits: <entire design considered>
+           Ruledeck: default
+             Max violations: <unlimited>
+             Violations found: 477
++-----------+----------+--------------------------------------------------------------------------+------------+
+| Rule      | Severity | Description                                                              | Violations |
++-----------+----------+--------------------------------------------------------------------------+------------+
+| DPIP-2    | Warning  | Input pipelining                                                         | 76         |
+| DPOP-3    | Warning  | PREG Output pipelining                                                   | 40         |
+| DPOP-4    | Warning  | MREG Output pipelining                                                   | 8          |
+| FLBA-1    | Warning  | Area group tile alignment                                                | 1          |
+| FLBO-1    | Warning  | Pblock overlap                                                           | 8          |
+| LOCE-1    | Warning  | Pblock ranges contradict LOC constraints on logic assigned to the Pblock | 3          |
+| NTCN-8    | Warning  | Net segment not driven by buffer                                         | 16         |
+| REQP-1774 | Warning  | RAMB36E2_WRITE_WIDTH_A_18_doesnt_use_WEA32                               | 2          |
+| RPBF-3    | Warning  | IO port buffering is incomplete                                          | 297        |
+| RTSTAT-10 | Warning  | No routable loads                                                        | 1          |
+| HDPRA-53  | Advisory | Edge with Location Constraints                                           | 1          |
+| HDPRA-55  | Advisory | Narrow Gap with Location Constraints                                     | 1          |
+| HDPRA-57  | Advisory | Gap with Location Constraints                                            | 1          |
+| REQP-1858 | Advisory | RAMB36E2_writefirst_collision_advisory                                   | 22         |
++-----------+----------+--------------------------------------------------------------------------+------------+
+
+2. REPORT DETAILS
+-----------------
+DPIP-2#1 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_interaction/accumulator_reg0 input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_interaction/accumulator_reg0/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#2 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_interaction/accumulator_reg0 input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_interaction/accumulator_reg0/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#3 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[0].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[0].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#4 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[0].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[0].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#5 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[10].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[10].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#6 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[10].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[10].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#7 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[11].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[11].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#8 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[11].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[11].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#9 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[12].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[12].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#10 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[12].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[12].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#11 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[13].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[13].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#12 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[13].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[13].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#13 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[14].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[14].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#14 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[14].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[14].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#15 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[15].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[15].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#16 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[15].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[15].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#17 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[1].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[1].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#18 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[1].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[1].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#19 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[2].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[2].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#20 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[2].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[2].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#21 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[3].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[3].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#22 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[3].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[3].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#23 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[4].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[4].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#24 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[4].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[4].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#25 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[5].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[5].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#26 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[5].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[5].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#27 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[6].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[6].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#28 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[6].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[6].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#29 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[7].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[7].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#30 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[7].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[7].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#31 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[8].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[8].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#32 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[8].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[8].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#33 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[9].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[9].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#34 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[9].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[9].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#35 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_feature_interaction_engine/accumulator_reg0 input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_feature_interaction_engine/accumulator_reg0/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#36 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_feature_interaction_engine/accumulator_reg0 input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_feature_interaction_engine/accumulator_reg0/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#37 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[0].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[0].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#38 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[0].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[0].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#39 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[10].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[10].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#40 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[10].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[10].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#41 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[11].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[11].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#42 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[11].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[11].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#43 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[12].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[12].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#44 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[12].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[12].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#45 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[13].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[13].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#46 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[13].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[13].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#47 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[14].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[14].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#48 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[14].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[14].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#49 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[15].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[15].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#50 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[15].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[15].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#51 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[1].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[1].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#52 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[1].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[1].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#53 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[2].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[2].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#54 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[2].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[2].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#55 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[3].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[3].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#56 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[3].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[3].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#57 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[4].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[4].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#58 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[4].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[4].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#59 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[5].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[5].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#60 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[5].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[5].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#61 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[6].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[6].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#62 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[6].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[6].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#63 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[7].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[7].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#64 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[7].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[7].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#65 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[8].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[8].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#66 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[8].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[8].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#67 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[9].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[9].u_mac_lane/product_pipeline_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#68 Warning
+Input pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[9].u_mac_lane/product_pipeline_reg input pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[9].u_mac_lane/product_pipeline_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#69 Warning
+Input pipelining  
+DSP pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.Doing_mul64.Virtex_MUL64.dsp_module_I2/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1 input pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.Doing_mul64.Virtex_MUL64.dsp_module_I2/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#70 Warning
+Input pipelining  
+DSP pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.Doing_mul64.Virtex_MUL64.dsp_module_I2/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1 input pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.Doing_mul64.Virtex_MUL64.dsp_module_I2/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#71 Warning
+Input pipelining  
+DSP pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.Doing_mul64.Virtex_MUL64.dsp_module_I3/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1 input pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.Doing_mul64.Virtex_MUL64.dsp_module_I3/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#72 Warning
+Input pipelining  
+DSP pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.Doing_mul64.Virtex_MUL64.dsp_module_I3/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1 input pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.Doing_mul64.Virtex_MUL64.dsp_module_I3/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#73 Warning
+Input pipelining  
+DSP pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.Doing_mul64.Virtex_MUL64.dsp_module_I4/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1 input pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.Doing_mul64.Virtex_MUL64.dsp_module_I4/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#74 Warning
+Input pipelining  
+DSP pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.Doing_mul64.Virtex_MUL64.dsp_module_I4/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1 input pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.Doing_mul64.Virtex_MUL64.dsp_module_I4/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#75 Warning
+Input pipelining  
+DSP pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.dsp_module_I1/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1 input pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.dsp_module_I1/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-2#76 Warning
+Input pipelining  
+DSP pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.dsp_module_I1/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1 input pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.dsp_module_I1/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPOP-3#1 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_interaction/accumulator_reg0 output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_interaction/accumulator_reg0/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#2 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[0].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[0].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#3 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[10].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[10].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#4 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[11].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[11].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#5 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[12].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[12].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#6 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[13].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[13].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#7 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[14].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[14].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#8 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[15].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[15].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#9 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[1].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[1].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#10 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[2].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[2].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#11 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[3].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[3].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#12 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[4].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[4].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#13 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[5].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[5].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#14 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[6].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[6].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#15 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[7].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[7].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#16 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[8].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[8].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#17 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[9].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_segmented_mlp/u_dense_layer_engine/u_vector_dot/g_mac_lanes[9].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#18 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_feature_interaction_engine/accumulator_reg0 output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_feature_interaction_engine/accumulator_reg0/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#19 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/provider_weight_req_address output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/provider_weight_req_address/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#20 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[0].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[0].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#21 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[10].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[10].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#22 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[11].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[11].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#23 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[12].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[12].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#24 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[13].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[13].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#25 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[14].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[14].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#26 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[15].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[15].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#27 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[1].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[1].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#28 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[2].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[2].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#29 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[3].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[3].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#30 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[4].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[4].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#31 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[5].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[5].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#32 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[6].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[6].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#33 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[7].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[7].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#34 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[8].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[8].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#35 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[9].u_mac_lane/product_pipeline_reg output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/u_vector_dot/g_mac_lanes[9].u_mac_lane/product_pipeline_reg/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#36 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/validation_ok2 output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/validation_ok2/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#37 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/validation_ok2__0 output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/validation_ok2__0/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#38 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/validation_ok2__1 output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/validation_ok2__1/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#39 Warning
+PREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/validation_ok2__2 output pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/validation_ok2__2/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-3#40 Warning
+PREG Output pipelining  
+DSP pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.Doing_mul64.Virtex_MUL64.dsp_module_I3/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1 output pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.Doing_mul64.Virtex_MUL64.dsp_module_I3/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+Related violations: <none>
+
+DPOP-4#1 Warning
+MREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_interaction/accumulator_reg0 multiplier stage pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_pipeline_adapter/u_all_hbm_pipeline/u_a13_pipeline/u_canonical_pipeline/u_interaction/accumulator_reg0/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-4#2 Warning
+MREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_feature_interaction_engine/accumulator_reg0 multiplier stage pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_feature_interaction_engine/accumulator_reg0/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-4#3 Warning
+MREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/provider_weight_req_address multiplier stage pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/u_dense_layer_engine/provider_weight_req_address/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-4#4 Warning
+MREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/validation_ok2 multiplier stage pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/validation_ok2/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-4#5 Warning
+MREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/validation_ok2__0 multiplier stage pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/validation_ok2__0/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-4#6 Warning
+MREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/validation_ok2__1 multiplier stage pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/validation_ok2__1/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-4#7 Warning
+MREG Output pipelining  
+DSP pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/validation_ok2__2 multiplier stage pfm_top_i/dynamic_region/dlrm_a16_1/inst/u_stage2n_a2/u_verified_mlp_kernel/u_mlp_sequence_controller/validation_ok2__2/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-4#8 Warning
+MREG Output pipelining  
+DSP pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.dsp_module_I1/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1 multiplier stage pfm_top_i/static_region/brd_mgmt_scheduler/board_management/microblaze_board_control/U0/MicroBlaze_Core_I/Performance.Core/Data_Flow_I/MUL_Unit_I/Use_HW_MUL.Using_DSP48_Architectures.dsp_module_I1/Using_DSP48E1.DSP48E1_I1/Using_FPGA.DSP48E1_I1/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+FLBA-1#1 Warning
+Area group tile alignment  - PBlock:base_region
+base_region area group IOB_X0Y182:IOB_X0Y182 doesn't align with tile
+Related violations: <none>
+
+FLBO-1#1 Warning
+Pblock overlap  - PBlock:SLR0
+SLR0 overlaps with pblock_dynamic_SLR0:11.77%.
+Related violations: <none>
+
+FLBO-1#2 Warning
+Pblock overlap  - PBlock:base_region
+base_region overlaps with pblock_dynamic_region: 5.63%, pblock_dynamic_SLR0: 4.69%, pblock_dynamic_SLR2: 8.43%, pblock_ddr4_mem02: 5.63%.
+Related violations: <none>
+
+FLBO-1#3 Warning
+Pblock overlap  - PBlock:pblock_ddr4_mem00
+pblock_ddr4_mem00 overlaps with pblock_dynamic_SLR0:99.55%.
+Related violations: <none>
+
+FLBO-1#4 Warning
+Pblock overlap  - PBlock:pblock_ddr4_mem02
+pblock_ddr4_mem02 overlaps with base_region:18.28%.
+Related violations: <none>
+
+FLBO-1#5 Warning
+Pblock overlap  - PBlock:pblock_dynamic_SLR0
+pblock_dynamic_SLR0 overlaps with pblock_dynamic_region:95.77%, pblock_dynamic_SLR1: 0.43%, pblock_dynamic_SLR2: 0.43%, SLR0: 1.82%, base_region: 2.57%.
+Related violations: <none>
+
+FLBO-1#6 Warning
+Pblock overlap  - PBlock:pblock_dynamic_SLR1
+pblock_dynamic_SLR1 overlaps with pblock_dynamic_region:97.62%, pblock_dynamic_SLR0: 0.45%, pblock_dynamic_SLR2: 0.45%.
+Related violations: <none>
+
+FLBO-1#7 Warning
+Pblock overlap  - PBlock:pblock_dynamic_SLR2
+pblock_dynamic_SLR2 overlaps with pblock_dynamic_region:97.62%, pblock_dynamic_SLR0: 0.45%, pblock_dynamic_SLR1: 0.45%, base_region: 4.84%.
+Related violations: <none>
+
+FLBO-1#8 Warning
+Pblock overlap  - PBlock:pblock_dynamic_region
+pblock_dynamic_region overlaps with base_region: 1.09%.
+Related violations: <none>
+
+LOCE-1#1 Warning
+Pblock ranges contradict LOC constraints on logic assigned to the Pblock  - PBlock:SLR0
+Pblock SLR0's ranges fail to contain LOC constraints on assigned instance pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[3].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_7_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_7_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst (and 7 other instances).
+Related violations: <none>
+
+LOCE-1#2 Warning
+Pblock ranges contradict LOC constraints on logic assigned to the Pblock  - PBlock:SLR2
+Pblock SLR2's ranges fail to contain LOC constraints on assigned instance pfm_top_i/static_region/iob_static/inst/perst_n_ibuf/IBUFCTRL_INST (in pfm_top_i/static_region/iob_static/inst/perst_n_ibuf macro) (and 1 other instances).
+Related violations: <none>
+
+LOCE-1#3 Warning
+Pblock ranges contradict LOC constraints on logic assigned to the Pblock  - PBlock:base_region
+Pblock base_region's ranges fail to contain LOC constraints on assigned instance pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[3].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_7_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_7_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst (and 9 other instances).
+Related violations: <none>
+
+NTCN-8#1 Warning
+Net segment not driven by buffer  
+Net (segment) pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[24].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/txoutclk_out[0] is assigned constraint CLOCK_DELAY_GROUP 'group_i0' but is not the net segment directly connected to the driving clock buffer. Instead the driver is GTYE4_CHANNEL cell pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[24].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[0].GTYE4_CHANNEL_PRIM_INST. In order to have your clock network properly constrained, the CLOCK_DELAY_GROUP constraint must be applied to the net segment directly driven by a clock buffer that requires its clock tree to be balanced. Please check your constraints.
+Related violations: <none>
+
+NTCN-8#2 Warning
+Net segment not driven by buffer  
+Net (segment) pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[24].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/txoutclk_out[1] is assigned constraint CLOCK_DELAY_GROUP 'group_i0' but is not the net segment directly connected to the driving clock buffer. Instead the driver is GTYE4_CHANNEL cell pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[24].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[1].GTYE4_CHANNEL_PRIM_INST. In order to have your clock network properly constrained, the CLOCK_DELAY_GROUP constraint must be applied to the net segment directly driven by a clock buffer that requires its clock tree to be balanced. Please check your constraints.
+Related violations: <none>
+
+NTCN-8#3 Warning
+Net segment not driven by buffer  
+Net (segment) pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[24].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/txoutclk_out[2] is assigned constraint CLOCK_DELAY_GROUP 'group_i0' but is not the net segment directly connected to the driving clock buffer. Instead the driver is GTYE4_CHANNEL cell pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[24].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[2].GTYE4_CHANNEL_PRIM_INST. In order to have your clock network properly constrained, the CLOCK_DELAY_GROUP constraint must be applied to the net segment directly driven by a clock buffer that requires its clock tree to be balanced. Please check your constraints.
+Related violations: <none>
+
+NTCN-8#4 Warning
+Net segment not driven by buffer  
+Net (segment) pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[24].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/txoutclk_out[3] is assigned constraint CLOCK_DELAY_GROUP 'group_i0' but is not the net segment directly connected to the driving clock buffer. Instead the driver is GTYE4_CHANNEL cell pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[24].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[3].GTYE4_CHANNEL_PRIM_INST. In order to have your clock network properly constrained, the CLOCK_DELAY_GROUP constraint must be applied to the net segment directly driven by a clock buffer that requires its clock tree to be balanced. Please check your constraints.
+Related violations: <none>
+
+NTCN-8#5 Warning
+Net segment not driven by buffer  
+Net (segment) pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[25].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/txoutclk_out[0] is assigned constraint CLOCK_DELAY_GROUP 'group_i0' but is not the net segment directly connected to the driving clock buffer. Instead the driver is GTYE4_CHANNEL cell pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[25].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[0].GTYE4_CHANNEL_PRIM_INST. In order to have your clock network properly constrained, the CLOCK_DELAY_GROUP constraint must be applied to the net segment directly driven by a clock buffer that requires its clock tree to be balanced. Please check your constraints.
+Related violations: <none>
+
+NTCN-8#6 Warning
+Net segment not driven by buffer  
+Net (segment) pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[25].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/txoutclk_out[1] is assigned constraint CLOCK_DELAY_GROUP 'group_i0' but is not the net segment directly connected to the driving clock buffer. Instead the driver is GTYE4_CHANNEL cell pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[25].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[1].GTYE4_CHANNEL_PRIM_INST. In order to have your clock network properly constrained, the CLOCK_DELAY_GROUP constraint must be applied to the net segment directly driven by a clock buffer that requires its clock tree to be balanced. Please check your constraints.
+Related violations: <none>
+
+NTCN-8#7 Warning
+Net segment not driven by buffer  
+Net (segment) pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[25].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/txoutclk_out[2] is assigned constraint CLOCK_DELAY_GROUP 'group_i0' but is not the net segment directly connected to the driving clock buffer. Instead the driver is GTYE4_CHANNEL cell pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[25].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[2].GTYE4_CHANNEL_PRIM_INST. In order to have your clock network properly constrained, the CLOCK_DELAY_GROUP constraint must be applied to the net segment directly driven by a clock buffer that requires its clock tree to be balanced. Please check your constraints.
+Related violations: <none>
+
+NTCN-8#8 Warning
+Net segment not driven by buffer  
+Net (segment) pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[25].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/txoutclk_out[3] is assigned constraint CLOCK_DELAY_GROUP 'group_i0' but is not the net segment directly connected to the driving clock buffer. Instead the driver is GTYE4_CHANNEL cell pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[25].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[3].GTYE4_CHANNEL_PRIM_INST. In order to have your clock network properly constrained, the CLOCK_DELAY_GROUP constraint must be applied to the net segment directly driven by a clock buffer that requires its clock tree to be balanced. Please check your constraints.
+Related violations: <none>
+
+NTCN-8#9 Warning
+Net segment not driven by buffer  
+Net (segment) pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[26].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/txoutclk_out[0] is assigned constraint CLOCK_DELAY_GROUP 'group_i0' but is not the net segment directly connected to the driving clock buffer. Instead the driver is GTYE4_CHANNEL cell pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[26].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[0].GTYE4_CHANNEL_PRIM_INST. In order to have your clock network properly constrained, the CLOCK_DELAY_GROUP constraint must be applied to the net segment directly driven by a clock buffer that requires its clock tree to be balanced. Please check your constraints.
+Related violations: <none>
+
+NTCN-8#10 Warning
+Net segment not driven by buffer  
+Net (segment) pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[26].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/txoutclk_out[1] is assigned constraint CLOCK_DELAY_GROUP 'group_i0' but is not the net segment directly connected to the driving clock buffer. Instead the driver is GTYE4_CHANNEL cell pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[26].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[1].GTYE4_CHANNEL_PRIM_INST. In order to have your clock network properly constrained, the CLOCK_DELAY_GROUP constraint must be applied to the net segment directly driven by a clock buffer that requires its clock tree to be balanced. Please check your constraints.
+Related violations: <none>
+
+NTCN-8#11 Warning
+Net segment not driven by buffer  
+Net (segment) pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[26].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/txoutclk_out[2] is assigned constraint CLOCK_DELAY_GROUP 'group_i0' but is not the net segment directly connected to the driving clock buffer. Instead the driver is GTYE4_CHANNEL cell pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[26].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[2].GTYE4_CHANNEL_PRIM_INST. In order to have your clock network properly constrained, the CLOCK_DELAY_GROUP constraint must be applied to the net segment directly driven by a clock buffer that requires its clock tree to be balanced. Please check your constraints.
+Related violations: <none>
+
+NTCN-8#12 Warning
+Net segment not driven by buffer  
+Net (segment) pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[26].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/txoutclk_out[3] is assigned constraint CLOCK_DELAY_GROUP 'group_i0' but is not the net segment directly connected to the driving clock buffer. Instead the driver is GTYE4_CHANNEL cell pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[26].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[3].GTYE4_CHANNEL_PRIM_INST. In order to have your clock network properly constrained, the CLOCK_DELAY_GROUP constraint must be applied to the net segment directly driven by a clock buffer that requires its clock tree to be balanced. Please check your constraints.
+Related violations: <none>
+
+NTCN-8#13 Warning
+Net segment not driven by buffer  
+Net (segment) pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[27].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/txoutclk_out[0] is assigned constraint CLOCK_DELAY_GROUP 'group_i0' but is not the net segment directly connected to the driving clock buffer. Instead the driver is GTYE4_CHANNEL cell pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[27].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[0].GTYE4_CHANNEL_PRIM_INST. In order to have your clock network properly constrained, the CLOCK_DELAY_GROUP constraint must be applied to the net segment directly driven by a clock buffer that requires its clock tree to be balanced. Please check your constraints.
+Related violations: <none>
+
+NTCN-8#14 Warning
+Net segment not driven by buffer  
+Net (segment) pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[27].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/txoutclk_out[1] is assigned constraint CLOCK_DELAY_GROUP 'group_i0' but is not the net segment directly connected to the driving clock buffer. Instead the driver is GTYE4_CHANNEL cell pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[27].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[1].GTYE4_CHANNEL_PRIM_INST. In order to have your clock network properly constrained, the CLOCK_DELAY_GROUP constraint must be applied to the net segment directly driven by a clock buffer that requires its clock tree to be balanced. Please check your constraints.
+Related violations: <none>
+
+NTCN-8#15 Warning
+Net segment not driven by buffer  
+Net (segment) pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[27].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/txoutclk_out[2] is assigned constraint CLOCK_DELAY_GROUP 'group_i0' but is not the net segment directly connected to the driving clock buffer. Instead the driver is GTYE4_CHANNEL cell pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[27].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[2].GTYE4_CHANNEL_PRIM_INST. In order to have your clock network properly constrained, the CLOCK_DELAY_GROUP constraint must be applied to the net segment directly driven by a clock buffer that requires its clock tree to be balanced. Please check your constraints.
+Related violations: <none>
+
+NTCN-8#16 Warning
+Net segment not driven by buffer  
+Net (segment) pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[27].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/txoutclk_out[3] is assigned constraint CLOCK_DELAY_GROUP 'group_i0' but is not the net segment directly connected to the driving clock buffer. Instead the driver is GTYE4_CHANNEL cell pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[27].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[3].GTYE4_CHANNEL_PRIM_INST. In order to have your clock network properly constrained, the CLOCK_DELAY_GROUP constraint must be applied to the net segment directly driven by a clock buffer that requires its clock tree to be balanced. Please check your constraints.
+Related violations: <none>
+
+REQP-1774#1 Warning
+RAMB36E2_WRITE_WIDTH_A_18_doesnt_use_WEA32  
+The RAMB36E2 cell pfm_top_i/static_region/brd_mgmt_scheduler/board_management/register_map_bram/U0/inst_blk_mem_gen/gnbram.gnative_mem_map_bmg.native_mem_map_blk_mem_gen/valid.cstr/ramloop[0].ram.r/prim_noinit.ram/DEVICE_8SERIES.WITH_BMM_INFO.SP.SIMPLE_PRIM36.SERIES8_SP_NO_ECC_ATTR.ram has WRITE_WIDTH_A set to 18. The WEA[3:2] pins should not be connected to active signal.
+Related violations: <none>
+
+REQP-1774#2 Warning
+RAMB36E2_WRITE_WIDTH_A_18_doesnt_use_WEA32  
+The RAMB36E2 cell pfm_top_i/static_region/brd_mgmt_scheduler/board_management/register_map_bram/U0/inst_blk_mem_gen/gnbram.gnative_mem_map_bmg.native_mem_map_blk_mem_gen/valid.cstr/ramloop[1].ram.r/prim_noinit.ram/DEVICE_8SERIES.WITH_BMM_INFO.SP.SIMPLE_PRIM36.SERIES8_SP_NO_ECC_ATTR.ram has WRITE_WIDTH_A set to 18. The WEA[3:2] pins should not be connected to active signal.
+Related violations: <none>
+
+RPBF-3#1 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dm_n[0] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#2 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dm_n[1] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#3 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dm_n[2] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#4 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dm_n[3] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#5 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dm_n[4] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#6 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dm_n[5] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#7 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dm_n[6] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#8 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dm_n[7] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#9 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dm_n[8] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#10 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[0] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#11 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[10] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#12 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[11] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#13 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[12] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#14 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[13] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#15 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[14] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#16 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[15] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#17 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[16] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#18 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[17] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#19 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[18] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#20 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[19] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#21 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[1] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#22 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[20] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#23 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[21] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#24 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[22] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#25 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[23] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#26 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[24] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#27 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[25] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#28 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[26] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#29 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[27] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#30 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[28] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#31 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[29] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#32 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[2] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#33 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[30] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#34 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[31] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#35 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[32] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#36 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[33] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#37 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[34] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#38 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[35] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#39 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[36] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#40 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[37] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#41 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[38] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#42 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[39] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#43 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[3] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#44 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[40] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#45 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[41] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#46 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[42] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#47 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[43] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#48 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[44] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#49 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[45] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#50 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[46] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#51 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[47] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#52 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[48] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#53 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[49] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#54 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[4] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#55 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[50] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#56 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[51] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#57 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[52] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#58 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[53] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#59 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[54] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#60 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[55] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#61 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[56] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#62 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[57] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#63 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[58] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#64 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[59] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#65 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[5] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#66 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[60] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#67 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[61] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#68 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[62] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#69 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[63] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#70 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[64] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#71 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[65] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#72 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[66] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#73 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[67] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#74 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[68] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#75 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[69] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#76 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[6] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#77 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[70] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#78 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[71] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#79 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[7] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#80 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[8] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#81 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dq[9] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#82 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_c[0] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#83 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_c[1] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#84 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_c[2] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#85 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_c[3] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#86 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_c[4] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#87 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_c[5] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#88 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_c[6] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#89 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_c[7] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#90 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_c[8] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#91 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_t[0] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#92 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_t[1] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#93 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_t[2] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#94 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_t[3] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#95 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_t[4] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#96 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_t[5] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#97 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_t[6] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#98 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_t[7] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#99 Warning
+IO port buffering is incomplete  
+Device port c0_ddr4_dqs_t[8] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#100 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dm_n[0] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#101 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dm_n[1] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#102 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dm_n[2] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#103 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dm_n[3] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#104 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dm_n[4] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#105 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dm_n[5] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#106 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dm_n[6] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#107 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dm_n[7] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#108 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dm_n[8] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#109 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[0] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#110 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[10] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#111 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[11] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#112 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[12] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#113 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[13] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#114 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[14] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#115 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[15] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#116 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[16] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#117 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[17] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#118 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[18] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#119 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[19] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#120 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[1] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#121 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[20] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#122 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[21] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#123 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[22] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#124 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[23] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#125 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[24] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#126 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[25] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#127 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[26] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#128 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[27] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#129 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[28] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#130 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[29] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#131 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[2] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#132 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[30] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#133 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[31] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#134 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[32] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#135 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[33] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#136 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[34] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#137 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[35] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#138 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[36] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#139 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[37] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#140 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[38] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#141 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[39] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#142 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[3] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#143 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[40] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#144 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[41] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#145 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[42] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#146 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[43] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#147 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[44] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#148 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[45] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#149 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[46] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#150 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[47] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#151 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[48] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#152 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[49] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#153 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[4] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#154 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[50] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#155 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[51] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#156 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[52] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#157 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[53] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#158 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[54] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#159 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[55] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#160 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[56] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#161 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[57] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#162 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[58] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#163 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[59] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#164 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[5] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#165 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[60] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#166 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[61] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#167 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[62] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#168 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[63] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#169 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[64] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#170 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[65] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#171 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[66] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#172 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[67] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#173 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[68] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#174 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[69] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#175 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[6] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#176 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[70] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#177 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[71] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#178 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[7] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#179 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[8] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#180 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dq[9] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#181 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_c[0] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#182 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_c[1] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#183 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_c[2] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#184 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_c[3] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#185 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_c[4] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#186 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_c[5] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#187 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_c[6] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#188 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_c[7] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#189 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_c[8] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#190 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_t[0] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#191 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_t[1] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#192 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_t[2] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#193 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_t[3] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#194 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_t[4] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#195 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_t[5] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#196 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_t[6] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#197 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_t[7] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#198 Warning
+IO port buffering is incomplete  
+Device port c1_ddr4_dqs_t[8] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#199 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dm_n[0] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#200 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dm_n[1] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#201 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dm_n[2] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#202 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dm_n[3] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#203 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dm_n[4] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#204 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dm_n[5] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#205 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dm_n[6] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#206 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dm_n[7] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#207 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dm_n[8] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#208 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[0] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#209 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[10] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#210 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[11] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#211 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[12] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#212 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[13] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#213 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[14] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#214 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[15] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#215 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[16] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#216 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[17] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#217 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[18] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#218 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[19] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#219 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[1] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#220 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[20] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#221 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[21] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#222 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[22] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#223 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[23] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#224 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[24] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#225 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[25] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#226 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[26] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#227 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[27] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#228 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[28] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#229 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[29] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#230 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[2] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#231 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[30] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#232 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[31] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#233 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[32] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#234 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[33] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#235 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[34] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#236 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[35] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#237 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[36] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#238 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[37] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#239 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[38] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#240 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[39] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#241 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[3] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#242 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[40] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#243 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[41] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#244 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[42] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#245 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[43] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#246 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[44] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#247 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[45] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#248 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[46] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#249 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[47] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#250 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[48] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#251 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[49] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#252 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[4] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#253 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[50] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#254 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[51] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#255 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[52] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#256 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[53] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#257 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[54] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#258 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[55] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#259 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[56] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#260 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[57] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#261 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[58] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#262 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[59] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#263 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[5] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#264 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[60] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#265 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[61] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#266 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[62] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#267 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[63] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#268 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[64] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#269 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[65] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#270 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[66] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#271 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[67] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#272 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[68] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#273 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[69] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#274 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[6] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#275 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[70] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#276 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[71] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#277 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[7] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#278 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[8] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#279 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dq[9] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#280 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_c[0] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#281 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_c[1] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#282 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_c[2] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#283 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_c[3] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#284 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_c[4] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#285 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_c[5] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#286 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_c[6] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#287 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_c[7] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#288 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_c[8] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#289 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_t[0] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#290 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_t[1] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#291 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_t[2] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#292 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_t[3] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#293 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_t[4] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#294 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_t[5] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#295 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_t[6] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#296 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_t[7] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#297 Warning
+IO port buffering is incomplete  
+Device port c2_ddr4_dqs_t[8] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RTSTAT-10#1 Warning
+No routable loads  
+616 net(s) have no routable loads. The problem bus(es) and/or net(s) are pfm_top_i/dynamic_region/debug_bridge_xsdbm/inst/xsdbm/inst/BSCANID.u_xsdbm_id/ZERO_SLAVES.bscanid_en_i,
+pfm_top_i/dynamic_region/debug_bridge_xsdbm/inst/xsdbm/inst/BSCANID.u_xsdbm_id/ZERO_SLAVES.capture_i,
+pfm_top_i/dynamic_region/debug_bridge_xsdbm/inst/xsdbm/inst/BSCANID.u_xsdbm_id/ZERO_SLAVES.drck_i,
+pfm_top_i/dynamic_region/debug_bridge_xsdbm/inst/xsdbm/inst/BSCANID.u_xsdbm_id/ZERO_SLAVES.reset_i,
+pfm_top_i/dynamic_region/debug_bridge_xsdbm/inst/xsdbm/inst/BSCANID.u_xsdbm_id/ZERO_SLAVES.runtest_i,
+pfm_top_i/static_region/mgmt_debug_hub/inst/xsdbm/inst/BSCANID.u_xsdbm_id/EXT_BSCAN.reset_i,
+pfm_top_i/static_region/mgmt_debug_hub/inst/xsdbm/inst/BSCANID.u_xsdbm_id/EXT_BSCAN.runtest_i,
+pfm_top_i/static_region/mgmt_debug_hub/inst/xsdbm/inst/BSCANID.u_xsdbm_id/EXT_BSCAN.tck_i,
+pfm_top_i/static_region/mgmt_debug_hub/inst/xsdbm/inst/BSCANID.u_xsdbm_id/EXT_BSCAN.tms_i,
+pfm_top_i/static_region/user_debug_hub/inst/xsdbm/inst/BSCANID.u_xsdbm_id/ZERO_SLAVES.bscanid_en_i,
+pfm_top_i/static_region/user_debug_hub/inst/xsdbm/inst/BSCANID.u_xsdbm_id/ZERO_SLAVES.capture_i,
+pfm_top_i/static_region/user_debug_hub/inst/xsdbm/inst/BSCANID.u_xsdbm_id/ZERO_SLAVES.drck_i,
+pfm_top_i/static_region/user_debug_hub/inst/xsdbm/inst/BSCANID.u_xsdbm_id/ZERO_SLAVES.reset_i,
+pfm_top_i/static_region/user_debug_hub/inst/xsdbm/inst/BSCANID.u_xsdbm_id/ZERO_SLAVES.runtest_i,
+pfm_top_i/static_region/user_debug_hub/inst/xsdbm/inst/BSCANID.u_xsdbm_id/ZERO_SLAVES.sel_i
+ (the first 15 of 247 listed).
+Related violations: <none>
+
+HDPRA-53#1 Advisory
+Edge with Location Constraints  
+Static Logic contains edges with location constraints that may impact implementation results.  It is best to create an EXCLUDE_PLACEMENT static pblock to cover the edge which prevents unnecessary logic from getting placed in narrow gap.  TAG='53_RE_S_RP1'.  Sites on edge: SLICE_X222Y599, SLICE_X223Y599, SLICE_X224Y599, SLICE_X225Y599,
+SLICE_X226Y599, SLICE_X227Y599, SLICE_X228Y599, SLICE_X229Y598,
+SLICE_X229Y599, SLICE_X230Y598, SLICE_X230Y599, SLICE_X231Y598,
+SLICE_X231Y599, SLICE_X232Y598, SLICE_X232Y599
+ (the first 15 of 6300 listed)
+Related violations: <none>
+
+HDPRA-55#1 Advisory
+Narrow Gap with Location Constraints  
+RP pblock 'pblock_dynamic_region' contains a narrow gap with location constraints that may impact implementation results.  If possible, it is best to avoid gaps within a RP. If that cannot be done, it is best to PROHIBIT the CLBs inside the gap to avoid congestion.  If additional logic is needed nearby, instead add a static EXCLUDE_PLACEMENT pblock that covers the gap and add only essential logic to this pblock.  TAG='55_G79_RP1_S'.   Sites in gap: SLICE_X117Y525, SLICE_X117Y526, SLICE_X117Y527, SLICE_X117Y528,
+SLICE_X117Y529, SLICE_X117Y530, SLICE_X117Y531, SLICE_X117Y532,
+SLICE_X117Y533, SLICE_X117Y534, SLICE_X117Y535, SLICE_X117Y536,
+SLICE_X117Y537, SLICE_X117Y538, SLICE_X117Y539
+ (the first 15 of 180 listed)
+Related violations: <none>
+
+HDPRA-57#1 Advisory
+Gap with Location Constraints  
+RP pblock 'pblock_dynamic_region' contains a gap with location constraints that likely will impact implementation results.  If possible, it is best to avoid gaps within an RP. If that cannot be done, nested pblock may be required in the pblock to minimize crossings. Also, you may need to add a static EXCLUDE_PLACEMENT pblock that covers the gap and add contains only essential logic to this pblock.  TAG='57_G139_RP1_S'.   Sites in gap: SLICE_X206Y598, SLICE_X206Y599, SLICE_X207Y599, SLICE_X208Y599,
+SLICE_X209Y599, SLICE_X210Y599, SLICE_X211Y599, SLICE_X212Y599,
+SLICE_X213Y599, SLICE_X214Y599, SLICE_X215Y599, SLICE_X216Y599,
+SLICE_X217Y599, SLICE_X218Y599, SLICE_X219Y599
+ (the first 15 of 900 listed)
+Related violations: <none>
+
+REQP-1858#1 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/RAM32K.bram_comp_inst/bram_16k_0_int/ECC_RAM.RAMB36E2[0].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#2 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/RAM32K.bram_comp_inst/bram_16k_0_int/ECC_RAM.RAMB36E2[1].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#3 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/RAM32K.bram_comp_inst/bram_16k_0_int/ECC_RAM.RAMB36E2[2].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#4 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/RAM32K.bram_comp_inst/bram_16k_0_int/ECC_RAM.RAMB36E2[3].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#5 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/RAM32K.bram_comp_inst/bram_16k_0_int/ECC_RAM.RAMB36E2[4].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#6 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/RAM32K.bram_comp_inst/bram_16k_0_int/ECC_RAM.RAMB36E2[5].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#7 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/RAM32K.bram_comp_inst/bram_16k_1_int/ECC_RAM.RAMB36E2[0].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#8 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/RAM32K.bram_comp_inst/bram_16k_1_int/ECC_RAM.RAMB36E2[1].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#9 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/RAM32K.bram_comp_inst/bram_16k_1_int/ECC_RAM.RAMB36E2[2].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#10 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/RAM32K.bram_comp_inst/bram_16k_1_int/ECC_RAM.RAMB36E2[3].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#11 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/RAM32K.bram_comp_inst/bram_16k_1_int/ECC_RAM.RAMB36E2[4].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#12 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/RAM32K.bram_comp_inst/bram_16k_1_int/ECC_RAM.RAMB36E2[5].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#13 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/bram_post_inst/bram_16k_int/ECC_RAM.RAMB36E2[0].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#14 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/bram_post_inst/bram_16k_int/ECC_RAM.RAMB36E2[1].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#15 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/bram_post_inst/bram_16k_int/ECC_RAM.RAMB36E2[2].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#16 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/bram_post_inst/bram_16k_int/ECC_RAM.RAMB36E2[3].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#17 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/bram_post_inst/bram_16k_int/ECC_RAM.RAMB36E2[4].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#18 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/bram_post_inst/bram_16k_int/ECC_RAM.RAMB36E2[5].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#19 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/bram_repl_inst/bram_rep_int_0/ECC_RAM.RAMB36E2[0].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#20 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/bram_repl_inst/bram_rep_int_0/ECC_RAM.RAMB36E2[1].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#21 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/bram_repl_inst/bram_rep_int_0/ECC_RAM.RAMB36E2[2].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+REQP-1858#22 Advisory
+RAMB36E2_writefirst_collision_advisory  
+Synchronous clocking is detected for BRAM (pfm_top_i/static_region/pcie/inst/pcie_4_0_pipe_inst/pcie_4_0_bram_inst/bram_repl_inst/bram_rep_int_0/ECC_RAM.RAMB36E2[3].ramb36e2_inst) in SDP mode with WRITE_FIRST write-mode. It is strongly suggested to change this mode to NO_CHANGE for best power characteristics. However, both WRITE_FIRST and NO_CHANGE may exhibit address collisions if the same address appears on both read and write ports resulting in unknown or corrupted read data. It is suggested to confirm via simulation that an address collision never occurs and if so it is suggested to try and avoid this situation. If address collisions cannot be avoided, the write-mode may be set to READ_FIRST which guarantees that the read data is the prior contents of the memory at the cost of additional power in the design. See the FPGA Memory Resources User Guide for additional information.
+Related violations: <none>
+
+

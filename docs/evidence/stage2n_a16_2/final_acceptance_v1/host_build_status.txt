@@ -1,0 +1,12 @@
+A16_2_HOST_XRT_BUILD=PASS
+A16_2_XRT2020_2_API_PROBE=PASS
+EXPECTED_XRT_VERSION=2.9.210507
+CXX_STANDARD=gnu++11
+SOURCE=/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a16_2_buildonly/host/stage2n_a16_2_physical_latency_v1.cpp
+SOURCE_SHA256=d2c4036bcaccba702d70fe772a436501568c593dd5b92bc08edb7d7502dafc99
+BINARY=/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a16_2_buildonly/build/stage2n_a16_2/host_v1/stage2n_a16_2_physical_latency_v1
+BINARY_SHA256=de0abefc0b4dbadf74dd69e6875db9051a18ab34d8ab1a6a747073cb436d6f1b
+HOST_EXECUTION=NOT_RUN
+FPGA_PROGRAMMING=NOT_RUN
+PHYSICAL_HBM=NOT_RUN
+FPGA_DEVICE_ACCESS=NONE

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root versionMajor="1" versionMinor="9">
+  <kernel name="dlrm_f37x_rtl_kernel_stage2n_a16_v1" language="ip" vlnv="user.org:user:dlrm_f37x_rtl_kernel_stage2n_a16_v1:2.18" attributes="" preferredWorkGroupSizeMultiple="0" workGroupSize="1" hwControlProtocol="user_managed">
+    <ports>
+      <port name="m_axi_gmem" mode="master" range="0xFFFFFFFF" dataWidth="128" portType="addressable" base="0x0"/>
+      <port name="s_axi_control" mode="slave" range="0x1000" dataWidth="32" portType="addressable" base="0x0"/>
+    </ports>
+    <args>
+      <arg name="TABLE_BASE" addressQualifier="1" id="0" port="m_axi_gmem" size="0x8" offset="0x304" hostOffset="0x0" hostSize="0x8" type="void*"/>
+    </args>
+  </kernel>
+</root>

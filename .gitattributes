@@ -16,3 +16,4 @@
 # trailing spaces, while keeping source/document whitespace checks strict.
 docs/evidence/stage2n_a15_5/target_xclbin_revalidation_v2/*.xclbin.info -text -diff
 docs/evidence/stage2n_a15_5/target_xclbin_revalidation_v2/post_route/*.rpt -text -diff
+docs/evidence/stage2n_a16_2/final_acceptance_v1/** -text -diff -eol

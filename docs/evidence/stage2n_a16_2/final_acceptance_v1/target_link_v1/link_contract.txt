@@ -1,0 +1,7 @@
+KERNEL=dlrm_f37x_rtl_kernel_stage2n_a16_v1
+COMPUTE_UNIT=dlrm_a16_1
+PLATFORM_VBNV=inspur_f37x_xdma_201920_3
+TARGET_PART=xcvu37p-fsvh2892-2L-e
+KERNEL_FREQUENCY_MHZ=100
+CONNECTIVITY=dlrm_a16_1.m_axi_gmem:HBM[0]
+M_AXI_MASTER_COUNT=1

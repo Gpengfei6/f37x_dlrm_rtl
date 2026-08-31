@@ -24,17 +24,18 @@ Stage: `Stage 2N-A16.2` (LOCAL PREPARATION ONLY)
 
 ### Post-preparation evidence status
 
-The user later reported target XO/link/timing PASS and a protected five-case
-physical run with lookup/compute/end-to-end/residual values
-`112/1174/1289/3`. Those values reconcile with the frozen counter boundaries,
-but the compact original status/log/metadata/post-route files have not yet been
-downloaded into this checkout. The authoritative follow-up is
-`docs/STAGE2N_A16_2_FINAL_ACCEPTANCE_V1.md` and currently records:
+The target XO/link/timing and protected five-case physical run subsequently
+passed with lookup/compute/end-to-end/residual values `112/1174/1289/3`.
+Those values reconcile with the frozen counter boundaries, and the compact
+original status/log/metadata/post-route files are now curated and validated
+locally. The authoritative follow-up is
+`docs/STAGE2N_A16_2_FINAL_ACCEPTANCE_V1.md` and records:
 
 ```text
-A16_2_FINAL_ACCEPTANCE=PENDING_EVIDENCE_IMPORT
+A16_2_FINAL_ACCEPTANCE=PASS
 A16_2_LATENCY_ACCOUNTING_RECONCILIATION=EXPLAINED
-READY_FOR_A16_3_ARCHITECTURE=NO_PENDING_EVIDENCE_IMPORT
+READY_FOR_A16_3_ARCHITECTURE=YES_ACCEPTED_SEQUENTIAL_BASELINE
+A16_3_STARTED=NO
 ```
 
 The original preparation-time `NOT_RUN` entries above are retained as the
