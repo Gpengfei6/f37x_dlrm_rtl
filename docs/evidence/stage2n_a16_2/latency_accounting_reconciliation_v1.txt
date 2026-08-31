@@ -1,0 +1,67 @@
+A16_2_LATENCY_ACCOUNTING_RECONCILIATION=EXPLAINED
+ANALYSIS_DATE=2026-08-31
+ANALYSIS_TYPE=LOCAL_SOURCE_AND_REPORTED_VALUE_RECONCILIATION
+RAW_TARGET_EVIDENCE_IMPORTED=NO
+FINAL_ACCEPTANCE=PENDING_EVIDENCE_IMPORT
+
+FROZEN_RTL=rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a16_v1.sv
+FROZEN_RTL_SHA256=a6eec09c4ebfe358751f7dfc31c2e77d509cd55d4fc8953f465a2227c3e7f7a5
+XSIM_HBM_LOOKUP_CYCLES=73
+XSIM_COMPUTE_TOTAL_CYCLES=1174
+XSIM_FPGA_END_TO_END_CYCLES=1285
+XSIM_ACCOUNTING_RESIDUAL_CYCLES=38
+USER_REPORTED_PHYSICAL_HBM_LOOKUP_CYCLES=112
+USER_REPORTED_PHYSICAL_COMPUTE_TOTAL_CYCLES=1174
+USER_REPORTED_PHYSICAL_FPGA_END_TO_END_CYCLES=1289
+USER_REPORTED_PHYSICAL_ACCOUNTING_RESIDUAL_CYCLES=3
+DELTA_HBM_LOOKUP_CYCLES=39
+DELTA_COMPUTE_TOTAL_CYCLES=0
+DELTA_FPGA_END_TO_END_CYCLES=4
+DELTA_ACCOUNTING_RESIDUAL_CYCLES=-35
+
+EVENT_S=accepted A15 START write
+EVENT_A=first m_axi_gmem AR handshake
+EVENT_D=fourth embedding-slot injection / sequence done
+EVENT_C=accepted A13 automatic pipeline START
+EVENT_F=first final result visible
+
+COUNTER_SEMANTICS=start edge counts as one; stop edge is included
+FPGA_END_TO_END_CYCLES=F-S+1
+HBM_LOOKUP_CYCLES=D-A+1
+COMPUTE_TOTAL_CYCLES=F-C+1
+ACCOUNTING_RESIDUAL_CYCLES=(A-S)+(C-D)-1
+
+The residual is an algebraic interval remainder. It is not an independently
+instrumented pipeline stage and must not be interpreted as physical HBM
+latency, Host time, or a performance result.
+
+The A16.1 testbench deliberately performs AXI-Lite observation and stress
+transactions between accepted A15 START and the first AR handshake: it reads
+the A15 status after START, reads the embedding mask while ARVALID is held,
+holds ARREADY low for four rising edges, and on slot 0 issues a repeated START,
+reads the resulting error, and acknowledges that error before releasing
+ARREADY. Those cycles are inside FPGA_END_TO_END_CYCLES but before the start of
+HBM_LOOKUP_CYCLES. The physical Host does not inject that testbench-only
+pre-first-AR stress sequence; after START it polls for the final result.
+
+After the first AR handshake, the local fake-memory service routine also uses
+deliberate ARREADY/RVALID delays and AXI-Lite mask polling. The physical target
+instead contains the real shell, interconnect, HBM controller, and HBM service
+interval. Therefore a longer physical HBM interval and a shorter interval
+remainder can coexist. Numerically, +39 lookup cycles and -35 remainder cycles
+produce the observed +4 end-to-end cycles while the accepted compute interval
+remains exactly 1174 cycles.
+
+SOURCE_ANCHOR_COUNTER=rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a16_v1.sv:3
+SOURCE_ANCHOR_EVENTS=rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a16_v1.sv:876
+SOURCE_ANCHOR_A13_TOTAL=rtl/pipeline/dlrm_internal_pipeline_controller_stage2n_a13_v1.sv:115
+SOURCE_ANCHOR_A15_SEQUENCE=rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a15_v1.sv:910
+SOURCE_ANCHOR_INJECTION=rtl/pipeline/dlrm_hbm_pipeline_integration_stage2n_a15_v2.sv:281
+SOURCE_ANCHOR_TB_STIMULUS=tb/tb_dlrm_f37x_rtl_kernel_stage2n_a16_v1.sv:492
+SOURCE_ANCHOR_TB_START=tb/tb_dlrm_f37x_rtl_kernel_stage2n_a16_v1.sv:727
+SOURCE_ANCHOR_HOST_START=host/stage2n_a16_2_physical_latency_v1.cpp:540
+
+COUNTER_SEMANTIC_BUG_FOUND=NO
+FROZEN_RTL_MODIFIED=NO
+PERFORMANCE=NOT_CLAIMED
+READY_FOR_A16_3_ARCHITECTURE=NO_PENDING_EVIDENCE_IMPORT

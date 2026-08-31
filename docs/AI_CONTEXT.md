@@ -19,8 +19,10 @@ XO/xclbin flow and its validator-only Vitis 2020.2 compatibility fix. Stage
   frozen xclbin, one `HBM[0]` BO, one AXI read master and four sequential lookups
   supply all four embedding slots and produce five exact complete-DLRM results.
   Stage 2N-A16.1 adds local sequential-lookup and complete-FPGA interval
-  counters without modifying that frozen RTL. Physical latency, performance,
-  multi-bank mapping and parallel lookup remain unclaimed.
+  counters without modifying that frozen RTL. A16.2 target and board PASS
+  values are user-reported, but compact original evidence is not yet local;
+  final acceptance is pending import. Performance, multi-bank mapping and
+  parallel lookup remain unclaimed.
 
 Target environment:
 
@@ -57,7 +59,7 @@ Read the repository in this order before proposing or making changes:
 5. `docs/ARCHITECTURE.md`
 6. `docs/STAGE_HISTORY.md`
 7. the current-stage document,
-   `docs/STAGE2N_A16_1_SEQUENTIAL_HBM_LATENCY_INSTRUMENTATION_V1.md`
+   `docs/STAGE2N_A16_2_FINAL_ACCEPTANCE_V1.md`
 8. the A15.6 final-acceptance document,
    `docs/STAGE2N_A15_6_ALL_HBM_BOARD_FINAL_ACCEPTANCE_V1.md`
 9. the exact RTL, testbench, Host, configuration, and script files named by the
@@ -81,8 +83,8 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A16.2 — local target/physical-latency preparation
-PASS; target build and board run not started**.
+Current stage: **Stage 2N-A16.2 — target/board PASS reported; final acceptance
+pending compact raw-evidence import**.
 
 Stage 2N-A13 remains the accepted and frozen dense/compute arithmetic baseline;
 A15.6 is the accepted integrated physical-HBM functional baseline. A14.5 added
@@ -178,8 +180,8 @@ exact relation `1285 = 73 + 1174 + 38`. Two complete simulator invocations pass,
 with two deterministic inference runs per invocation. These are fake-AXI timing
 values, not physical F37X HBM latency.
 
-A16.2 prepares, entirely locally, the reviewed target-build and protected
-board-measurement flow for the future physical sequential-HBM latency baseline.
+A16.2 prepared, entirely locally, the reviewed target-build and protected
+board-measurement flow for the physical sequential-HBM latency baseline.
 It reuses the accepted A15.5 XO/link packaging and the A15.6 XRT Host/protected
 board-runner model, with the frozen A16.1 RTL and counter ABI. The A16 target is
 `dlrm_f37x_rtl_kernel_stage2n_a16_v1`, CU `dlrm_a16_1`, exactly one
@@ -188,14 +190,24 @@ board-runner model, with the frozen A16.1 RTL and counter ABI. The A16 target is
 `LOOKUP_INDEX`/`RESULT0..3` signature is rejected. `0x30C`/`0x310` remain custom
 AXI4-Lite registers, not Vitis kernel arguments. Local source/ABI/protection
 gates and all three validator self-tests (1+9 XO, Vitis 2020.2 36-entry + 12
-xclbin, 1+6 board-log) pass; target XO/link/timing and physical HBM latency
-remain `NOT_RUN`/`NOT_VALIDATED`.
+xclbin, 1+6 board-log) pass.
 
-Pending after A16.2 local preparation:
+The user later reported exact-target XO/link/timing and protected five-case
+board PASS, with fixed lookup/compute/e2e/residual values
+`112/1174/1289/3`. A source audit explains the difference from XSim
+`73/1174/1285/38`: the testbench adds status/mask accesses, ARREADY delay and
+repeated-START/error-handling traffic before the first AR handshake, which
+belongs to the end-to-end interval but not the lookup interval. No counter bug
+was found. Because the original status/log/metadata/post-route evidence is not
+yet in this checkout, these values remain user-reported and
+`A16_2_FINAL_ACCEPTANCE=PENDING_EVIDENCE_IMPORT`.
 
-- separately authorized target XO build, link, Host XRT build and protected
-  board execution of the A16 counters;
-- a physical sequential-HBM latency baseline;
+Pending for A16.2 final acceptance:
+
+- local import and offline validation of the compact original XO/link/Host/
+  board evidence already reported by the user;
+- promotion of 112-cycle lookup and 1289-cycle FPGA interval to the accepted
+  sequential baseline only after that validation;
 - multi-table, multi-bank, burst, cache, coalescing, scheduling, or INT8 work.
 - any latency, bandwidth, throughput, power, speedup or performance claim.
 
@@ -205,9 +217,10 @@ for the Host, guard, golden, evidence, and non-claim contract, and
 boundary. The authoritative status is now
 `docs/STAGE2N_A15_6_ALL_HBM_BOARD_FINAL_ACCEPTANCE_V1.md`; use the A15.5 final
 acceptance for the frozen artifact identity. Use the A16.1 document only for
-local counter semantics and XSim evidence, and the A16.2 document
-(`docs/STAGE2N_A16_2_TARGET_AND_PHYSICAL_LATENCY_PREPARATION_V1.md`) for the
-target-build and protected-measurement preparation contract.
+local counter semantics and XSim evidence. Use
+`docs/STAGE2N_A16_2_TARGET_AND_PHYSICAL_LATENCY_PREPARATION_V1.md` for the
+preparation contract and `docs/STAGE2N_A16_2_FINAL_ACCEPTANCE_V1.md` for the
+current pending-evidence decision and latency reconciliation.
 
 ## 4. Hardware Environment
 

@@ -1041,3 +1041,32 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
   any performance improvement.
 - **Next gate:** separate authorization for the target XO build, link, Host
   build and protected board run; then acceptance review of returned evidence.
+
+## D-048 - Reconcile inclusive latency intervals and require raw evidence before A16.2 acceptance
+
+- **Status:** source reconciliation accepted on 2026-08-31; A16.2 final
+  acceptance remains `PENDING_EVIDENCE_IMPORT`.
+- **Reported result:** the user reports target XO/link/timing and protected
+  five-case board PASS with lookup/compute/e2e/residual values
+  `112/1174/1289/3`. The compact original status/log/metadata/post-route files
+  are not present in this checkout, so the report is not yet promoted to an
+  accepted physical baseline.
+- **Interval algebra:** with `S` accepted A15 START, `A` first AR handshake,
+  `D` fourth-slot injection, `C` accepted compute START and `F` first result
+  visibility, the inclusive counters are `F-S+1`, `D-A+1` and `F-C+1`.
+  Therefore the Host residual is `(A-S)+(C-D)-1`; it is not an independently
+  instrumented pipeline stage.
+- **Reconciliation:** A16.1 XSim deliberately places AXI-Lite status/mask
+  reads, a four-edge ARREADY stall and repeated-START/error handling before its
+  first AR handshake. Those cycles increase XSim end-to-end but not lookup.
+  The target Host does not reproduce that testbench-only stress sequence, while
+  the real shell/interconnect/HBM service lies inside the lookup interval. Thus
+  lookup `+39`, residual `-35`, compute `0` and e2e `+4` are consistent; no
+  counter semantic bug is identified.
+- **Terminology:** retain the emitted `PIPELINE_OVERHEAD_CYCLES` marker for ABI
+  compatibility, but describe it in analysis as an accounting residual.
+- **Evidence gate:** use the non-overwriting local importer and offline
+  validator; import only compact original evidence, never XO/xclbin/DCP or
+  build trees. Until it passes, `READY_FOR_A16_3_ARCHITECTURE=NO`.
+- **Performance boundary:** the reported physical cycle values are not a
+  bandwidth, throughput, speedup, power, energy or performance claim.

@@ -1,6 +1,6 @@
 # Stage 2N History
 
-This table is an AI-readable index of Stage 2N-A1 through A15.6. It does not turn
+This table is an AI-readable index of Stage 2N-A1 through A16.2. It does not turn
 historical claims into current verification. Follow each evidence link and use
 the status language exactly.
 
@@ -37,6 +37,8 @@ hybrid CPU-embedding/FPGA-dense inference path.
 | Stage 2N-A15.4 | Expose the accepted all-HBM local pipeline through a public F37X-style kernel boundary | Added a versioned AXI4-Lite plus one `m_axi_gmem` top, preserved the entire A13 ABI, added disjoint `0x300/0x304/0x308` control, and automatically chained the accepted A15.3 load-all sequence into accepted A13 START | Starting/authorization HEAD `7d0c351`; `docs/STAGE2N_A15_4_F37X_KERNEL_ALL_HBM_PIPELINE_XSIM_V1.md`; retained local status/logs | **LOCAL XSIM PASS**: exact TABLE_BASE+rows37–40 addresses/vectors, 4/4/4/4 lookup/AR/R/injections, mask `0xF`, result 36, counters 322/100/744/1174, zero warning/error/fatal/assertion records. No target build/link, XO/xclbin, FPGA/physical HBM, board, or performance claim |
 | Stage 2N-A15.5 | Package and link the accepted A15.4 public kernel for the exact F37X target and correct Vitis 2020.2 offline validation | Built/validated the exact-target XO, linked one CU to HBM[0], generated the fixed-SHA xclbin, corrected the v1 shell-IP false negative, and revalidated metadata/timing without rebuild | Source-build commit `30cbf64`; validator/revalidation commit `2ce2d44`; `docs/STAGE2N_A15_5_TARGET_XCLBIN_FINAL_ACCEPTANCE_V1.md`; curated raw evidence under `docs/evidence/stage2n_a15_5/` | **FINAL TARGET XO/XCLBIN/TIMING PASS**: unique kernel/CU, TABLE_BASE/arg0 to used HBM[0], xclbin SHA/UUID frozen, 100 MHz WNS/TNS 0.000/0.000 ns, zero failing endpoints. No Host, physical A15 HBM, FPGA/board, or performance result |
 | Stage 2N-A15.6 | Validate the complete all-HBM pipeline on a real F37X using the frozen A15.5 artifact | Added a low-level XRT Host, guarded one-device/HBM[0] runner, five deterministic trained-model payloads and fail-closed evidence validation; then ran the protected flow on device index 2 | Board-execution source `85ac9d1`; `docs/STAGE2N_A15_6_ALL_HBM_BOARD_FINAL_ACCEPTANCE_V1.md`; compact returned evidence under `docs/evidence/stage2n_a15_6/final_acceptance_v1/` | **FINAL PHYSICAL-HBM BOARD FUNCTION PASS**: frozen xclbin programmed; one 4096-byte HBM[0] BO at valid paddr 0; four sequential lookups; five exact complete-DLRM results; masks/counters/cleanup PASS. Performance NOT CLAIMED |
+| Stage 2N-A16.1 | Instrument sequential lookup and complete FPGA intervals | Added two read-only inclusive 32-bit saturating counters at `0x30C/0x310` in a versioned top while retaining the A13 compute-counter ABI | Commit `585ec44`; `docs/STAGE2N_A16_1_SEQUENTIAL_HBM_LATENCY_INSTRUMENTATION_V1.md`; local XSim evidence | **LOCAL XSIM PASS**: fake-AXI lookup/compute/e2e/residual `73/1174/1285/38`; not physical HBM latency or performance |
+| Stage 2N-A16.2 | Build the exact A16 target and establish a physical sequential-latency baseline | Local target/Host/board flow preparation passes; user reports target build, 100 MHz timing and five exact physical cases with `112/1174/1289/3` accounting | Preparation commit `a1fdc71`; `docs/STAGE2N_A16_2_FINAL_ACCEPTANCE_V1.md`; compact original evidence not yet local | **PENDING EVIDENCE IMPORT**: source reconciliation EXPLAINED and no counter bug found; target/board PASS remains user-reported until offline import validation |
 
 ## Current Milestone Interpretation
 
@@ -81,6 +83,10 @@ hybrid CPU-embedding/FPGA-dense inference path.
   BO/TABLE_BASE path, all five complete-DLRM cases and cleanup pass. The
   1174-cycle interval remains compute-only; multi-bank, parallel lookup and all
   performance claims remain unaccepted.
+- A16.1 is accepted for local counter semantics and fake-AXI timing only.
+- A16.2 target/board values are user-reported and source-reconciled, but final
+  acceptance and A16.3 readiness remain blocked until compact original evidence
+  is imported and validated locally.
 
 ## Superseded and Historical Files
 
@@ -387,10 +393,11 @@ claim. Multi-bank and parallel lookup remain unimplemented.
 
 Date: 2026-08-31
 
-Result: `LOCAL PREPARATION PASS`
+Result: `LOCAL PREPARATION PASS; FINAL ACCEPTANCE PENDING EVIDENCE IMPORT`
 
-A16.2 prepares, entirely locally, the reviewed target-build and protected
-board-measurement flow for the future physical sequential-HBM latency baseline.
+A16.2 prepared, entirely locally, the reviewed target-build and protected
+board-measurement flow later used for the user-reported physical sequential-HBM
+latency run.
 It reuses the accepted A15.5 XO/link packaging and the A15.6 XRT Host/protected
 board-runner model, plus the frozen A16.1 RTL (`a6eec09c...`) and counter ABI.
 The A16 target is `dlrm_f37x_rtl_kernel_stage2n_a16_v1`, CU `dlrm_a16_1`, one
@@ -419,9 +426,11 @@ FPGA.
 xclbin are unchanged.
 
 Next:
-the user may transfer the reviewed A16.2 files to the controlled target
-environment after separate authorization and run, in order, the XO-only build,
-the link-only build, the Host XRT 2020.2 build, and the protected board runner,
-returning retained status/log/evidence for acceptance review. Establish the
-real sequential-HBM latency baseline before evaluating any multi-bank or
-parallel design. No physical latency or performance claim is made by A16.2.
+the user reports that the reviewed XO/link/Host/board sequence completed with
+five exact results and lookup/compute/e2e/residual values `112/1174/1289/3`.
+The local source audit explains the partition change from the XSim values
+`73/1174/1285/38`: simulation-only pre-first-AR status/stall/repeated-START
+traffic inflates the XSim residual, while real target service extends the HBM
+interval. No counter bug was found. Compact original evidence is not present
+locally, so `A16_2_FINAL_ACCEPTANCE=PENDING_EVIDENCE_IMPORT` and A16.3 must not
+start from these values as an accepted baseline. Performance remains unclaimed.
