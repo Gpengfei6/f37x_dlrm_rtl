@@ -355,3 +355,30 @@ preserve this single-bank/single-master/sequential functional baseline. A16 may
 separately define lookup and end-to-end timing, measure the sequential baseline
 and only then consider multi-bank or parallel lookup. No performance claim is
 accepted by A15.6.
+
+## Stage 2N-A16.1 — Sequential HBM lookup latency instrumentation
+
+Date: 2026-08-31
+
+Result: `LOCAL XSIM PASS`
+
+A16.1 adds a versioned local kernel top while leaving the accepted A15.4 RTL
+SHA256 and A15.5 xclbin unchanged. Two read-only 32-bit saturating counters are
+added: `0x30C` measures first AXI AR handshake through fourth-slot injection,
+and `0x310` measures accepted A15 START through first final-result visibility.
+The accepted A13 Bottom/Interaction/Top/compute-Total counters at
+`0x218/0x21C/0x220/0x224` retain their original meanings.
+
+Two complete Vivado/XSim 2022.1 invocations pass, each with two identical
+no-reset restart runs. The deterministic local fake-AXI result is lookup 73,
+compute Total 1174, FPGA end-to-end 1285 and pipeline/control overhead 38
+cycles, with exact accounting `1285 = 73 + 1174 + 38`. Final result 36,
+four-slot ordering, error/busy/backpressure/clear behavior, ABI preservation
+and a directed same-RTL saturation test all pass with zero reported warnings,
+errors, fatals or assertion failures.
+
+Next:
+separately authorize A16.2 before any target build or physical measurement.
+The 73-cycle local lookup interval is not physical HBM latency, and A16.1 makes
+no latency-improvement, bandwidth, throughput, speedup, power or performance
+claim. Multi-bank and parallel lookup remain unimplemented.

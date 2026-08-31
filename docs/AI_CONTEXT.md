@@ -16,9 +16,11 @@ A14 v2 lookup engine sequentially supplies all four accepted A13 embedding
 slots from canonical fake-memory rows. Stage 2N-A15.5 accepts the exact-target
 XO/xclbin flow and its validator-only Vitis 2020.2 compatibility fix. Stage
 2N-A15.6 is now the accepted real-board physical-HBM functional baseline: the
-frozen xclbin, one `HBM[0]` BO, one AXI read master and four sequential lookups
-supply all four embedding slots and produce five exact complete-DLRM results.
-Performance, multi-bank mapping and parallel lookup remain unclaimed.
+  frozen xclbin, one `HBM[0]` BO, one AXI read master and four sequential lookups
+  supply all four embedding slots and produce five exact complete-DLRM results.
+  Stage 2N-A16.1 adds local sequential-lookup and complete-FPGA interval
+  counters without modifying that frozen RTL. Physical latency, performance,
+  multi-bank mapping and parallel lookup remain unclaimed.
 
 Target environment:
 
@@ -54,9 +56,11 @@ Read the repository in this order before proposing or making changes:
 4. `docs/CURRENT_STATE.md`
 5. `docs/ARCHITECTURE.md`
 6. `docs/STAGE_HISTORY.md`
-7. the current final-acceptance document,
+7. the current-stage document,
+   `docs/STAGE2N_A16_1_SEQUENTIAL_HBM_LATENCY_INSTRUMENTATION_V1.md`
+8. the A15.6 final-acceptance document,
    `docs/STAGE2N_A15_6_ALL_HBM_BOARD_FINAL_ACCEPTANCE_V1.md`
-8. the exact RTL, testbench, Host, configuration, and script files named by the
+9. the exact RTL, testbench, Host, configuration, and script files named by the
    active-stage documents
 
 Also read `AGENTS.md` in full. Its rules are mandatory and cannot be replaced by
@@ -77,8 +81,8 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A15.6 — real F37X physical-HBM functional baseline
-FINAL PASS; Stage 2N-A16 has not started**.
+Current stage: **Stage 2N-A16.1 — local sequential-HBM latency instrumentation
+XSIM PASS; Stage 2N-A16.2 has not started**.
 
 Stage 2N-A13 remains the accepted and frozen dense/compute arithmetic baseline;
 A15.6 is the accepted integrated physical-HBM functional baseline. A14.5 added
@@ -166,10 +170,18 @@ FPGA, invoking `v++`, or rebuilding XO/xclbin. Its local static gates passed;
 the user-controlled target checks then completed xclbin metadata extraction and
 Host XRT 2020.2 build/API validation before protected execution.
 
-Pending after A15.6 Final Acceptance:
+A16.1 adds a new versioned local top around the unchanged A15 composition. It
+preserves `0x218/0x21C/0x220/0x224` and `0x300/0x304/0x308`, and adds read-only
+`HBM_LOOKUP_CYCLES` at `0x30C` plus `FPGA_END_TO_END_CYCLES` at `0x310`.
+Local XSim reports lookup/compute/e2e/overhead values `73/1174/1285/38` and the
+exact relation `1285 = 73 + 1174 + 38`. Two complete simulator invocations pass,
+with two deterministic inference runs per invocation. These are fake-AXI timing
+values, not physical F37X HBM latency.
 
-- explicit lookup and end-to-end latency instrumentation;
-- a measured sequential A15.6 performance baseline;
+Pending after A16.1 local acceptance:
+
+- separately authorized target packaging/measurement of the A16 counters;
+- a physical sequential-HBM latency baseline;
 - multi-table, multi-bank, burst, cache, coalescing, scheduling, or INT8 work.
 - any latency, bandwidth, throughput, power, speedup or performance claim.
 
@@ -178,7 +190,8 @@ for the Host, guard, golden, evidence, and non-claim contract, and
 `docs/STAGE2N_A15_6_TARGET_PREFLIGHT_PREPARATION_V1.md` for the preflight
 boundary. The authoritative status is now
 `docs/STAGE2N_A15_6_ALL_HBM_BOARD_FINAL_ACCEPTANCE_V1.md`; use the A15.5 final
-acceptance for the frozen artifact identity.
+acceptance for the frozen artifact identity. Use the A16.1 document only for
+local counter semantics and XSim evidence.
 
 ## 4. Hardware Environment
 

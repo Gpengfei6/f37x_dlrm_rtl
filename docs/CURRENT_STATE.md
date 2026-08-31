@@ -34,8 +34,10 @@ Snapshot date: 2026-08-31
   `14cb37721b918e644c8cae689791628247a00eec`
 - A15.6 accepted board-execution source HEAD:
   `85ac9d1c333d5e016341c57de722e222da991d97`
-- Current engineering stage: **Stage 2N-A15.6 Final Acceptance PASS; Stage
-  2N-A16 has not started**
+- A16.1 instrumentation parent HEAD:
+  `6155ad8fe2fa9000ebc314536986c83581f8a940`
+- Current engineering stage: **Stage 2N-A16.1 local latency instrumentation
+  XSim PASS; A16.2 has not started**
 - Accepted and frozen physical-HBM functional baseline: **Stage 2N-A15.6**
 - Accepted and frozen dense/compute arithmetic baseline: **Stage 2N-A13**
 
@@ -47,8 +49,9 @@ versioned Vitis 2020.2 xclbin-layout compatibility fix. The fixed-SHA target
 artifact passed non-rebuilding v2 revalidation. A15.6 then used that exact
 artifact in a protected F37X run: one physical `HBM[0]` BO supplied four
 sequential embedding lookups and all five independent board golden cases matched
-exactly. Frozen RTL and xclbin identities did not change. Performance remains
-unclaimed; do not infer multi-bank or latency scope from stage numbering alone.
+  exactly. A16.1 now adds a separate versioned local top with lookup and FPGA
+  end-to-end counters; it does not change that frozen RTL or xclbin. Performance
+  remains unclaimed; do not infer physical-HBM timing from local XSim.
 
 The primary Windows worktree may contain pre-existing untracked recovery,
 historical evidence, patent, source, and helper files. Preserve them. Never use
@@ -345,6 +348,22 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
   build/API PASS before the protected execution. Old-Git, deterministic path
   and post-XRT `BASH_SOURCE` compatibility fixes changed no frozen artifact.
 
+### Stage 2N-A16.1
+
+- Added a versioned A16 top; accepted A15.4 RTL SHA256
+  `c3da5be63d4cf195df124e572887b6aa96a464522883c6cdc95c4bd56ff4e8a1`
+  remains unchanged and the A15.5 xclbin was not rebuilt.
+- Added read-only 32-bit saturating counters at `0x30C` for first-AR-handshake
+  through fourth-slot injection and `0x310` for accepted A15 START through
+  first final-result visibility. The accepted A13 `0x218`–`0x224` semantics
+  remain unchanged.
+- Two complete XSim invocations pass; each includes two identical no-reset
+  restart runs, directed saturation, error/busy/backpressure/clear checks, four
+  ordered slots, final result 36 and old counters `322/100/744/1174`.
+- Local fake-AXI values are lookup `73`, FPGA end-to-end `1285`, and internal
+  overhead `38` cycles, satisfying `1285 = 73 + 1174 + 38`.
+- Physical HBM latency is `NOT_VALIDATED` and performance is `NOT_CLAIMED`.
+
 ## Verification Summary
 
 | Area | Result | Evidence boundary |
@@ -398,6 +417,8 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 | A15.6 Host build and protected execution | **PASS** | Exact device/BDF/render and frozen xclbin guards passed; literal user authorization preceded programming |
 | A15.6 physical HBM and complete board function | **FINAL PASS** | One 4096-byte HBM[0] BO at valid paddr 0; four sequential lookups; five exact full-DLRM results; masks/counters/cleanup PASS |
 | A15.6 performance | NOT CLAIMED | 1174 cycles is compute-only and excludes lookup, Host and BO-transfer intervals |
+| A16.1 local sequential-latency instrumentation | **XSIM PASS** | Two full invocations, two deterministic runs each; lookup/compute/e2e/overhead = 73/1174/1285/38 with fake AXI memory |
+| A16.1 physical HBM latency / target / performance | NOT VALIDATED / NOT RUN / NOT CLAIMED | New RTL has not been target-built or run on F37X; local lookup cycles are not physical-HBM latency |
 
 Primary evidence:
 
@@ -430,6 +451,8 @@ Primary evidence:
 - `docs/evidence/stage2n_a15_6/local_preparation_v1/`
 - `docs/STAGE2N_A15_6_ALL_HBM_BOARD_FINAL_ACCEPTANCE_V1.md`
 - `docs/evidence/stage2n_a15_6/final_acceptance_v1/`
+- `docs/STAGE2N_A16_1_SEQUENTIAL_HBM_LATENCY_INSTRUMENTATION_V1.md`
+- `docs/evidence/stage2n_a16_1/`
 - `docs/evidence/stage2n_a14_7/local_source_preparation_v1.txt`
 - `docs/STAGE2N_A15_1_HBM_PIPELINE_INTEGRATION_V1.md`
 - `docs/STAGE2N_A15_2_END_TO_END_PIPELINE_XSIM_V1.md`
@@ -465,20 +488,22 @@ Historical target environment recorded by accepted evidence:
    not present in this main working tree.
 5. The large fixed-SHA XO/xclbin and routed DCP remain outside Git; their small
    final metadata/status/hash/report evidence is curated under `docs/evidence`.
-6. A15.6 physical-board function is no longer blocked. Performance
-   instrumentation, multi-bank mapping and parallel lookup remain future work.
+6. A15.6 physical-board function is no longer blocked. A16.1 local
+   instrumentation passes, but target/physical-HBM latency evidence is absent;
+   multi-bank mapping and parallel lookup remain future work.
 
 These local tool absences do not invalidate the accepted A15.5 artifact or the
 returned A15.6 physical-board evidence.
 
 ## Next Actions
-1. Freeze the A15.6 single-bank/single-master/four-sequential-lookup functional
-   baseline, its five golden cases and compact evidence.
-2. Begin A16 only after separate authorization; do not alter the accepted A15.6
-   RTL, xclbin, ABI or golden assets during planning.
-3. Define end-to-end and lookup timing boundaries before adding counters.
-4. Measure the sequential A15.6 baseline before considering multi-bank mapping
-   or parallel lookup.
+1. Preserve the A15.6 single-bank/single-master/four-sequential-lookup
+   functional baseline and the accepted A16.1 counter semantics.
+2. Authorize A16.2 separately before target packaging or physical measurement;
+   do not replace the frozen A15.5 xclbin or modify accepted A15 RTL.
+3. If target measurement is authorized, retain the `0x30C/0x310` boundaries and
+   distinguish hardware counters from Host/BO transfer timing.
+4. Compare any later multi-bank or parallel design against an equivalently
+   instrumented sequential target, not the local fake-AXI value.
 5. Require functional equivalence and comparable target evidence before any
    speedup, bandwidth, throughput, power or performance claim.
 ## Non-Goals of the Current Stage
@@ -540,8 +565,9 @@ a public AXI4-Lite plus `m_axi_gmem` boundary for four sequential fake-memory
 rows and a complete golden-matched inference. This
 does not convert the standalone A14.7 physical result into physical A15 proof.
 
-Current next gate: separately authorize A16 preparation for end-to-end latency
-accounting and explicit HBM lookup interval measurement. The accepted A15.6
-single-bank, one-master, four-sequential-lookup functional baseline must remain
-frozen. Multi-table and multi-HBM-bank parallelism remain future work and have
-no accepted speedup claim.
+A16.1 has now completed the separately versioned local instrumentation step
+described above. The accepted A15.6 single-bank, one-master,
+four-sequential-lookup functional baseline remains frozen. The next gate is a
+separately authorized A16.2 target/physical measurement; multi-table and
+multi-HBM-bank parallelism remain future work and have no accepted speedup
+claim.
