@@ -911,8 +911,9 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
 
 ## D-044 - Separate A15.6 target preflight from protected board execution
 
-- **Status:** accepted for local source preparation on 2026-08-31; target
-  preflight remains `NOT_RUN`.
+- **Status:** accepted for local source preparation on 2026-08-31. At this
+  decision point the target preflight had not yet run; D-045 records the later
+  completed protected-board acceptance.
 - **Decision:** add one versioned target-preflight entry that validates Git,
   the XRT 2020.2 Host build, the already-built fixed-SHA xclbin and HBM[0]
   metadata, deterministic golden assets, the frozen ABI, and the protected
@@ -933,6 +934,39 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
   legacy XRT API/build convention, exact ABI, five-case golden contract,
   fixed-artifact gates, and prohibited-command absence pass. Bash syntax and
   the target preflight itself remain `NOT_RUN` on Windows.
-- **Next gate:** the user transfers the reviewed bundle, performs a fast-forward
-  only import, and runs the device-free preflight. Protected board execution
-  requires a separate request after its complete status is reviewed.
+- **Historical next gate:** transfer, fast-forward-only import and device-free
+  preflight preceded separately authorized protected execution. That gate is
+  complete; use D-045 for the accepted state.
+
+## D-045 - Freeze A15.6 as the physical single-bank sequential baseline
+
+- **Status:** accepted from returned real-board evidence on 2026-08-31.
+- **Decision:** freeze the A15.6 architecture consisting of one physical
+  `HBM[0]` bank, one AXI read master and four sequential logical lookups as the
+  functional board baseline before latency instrumentation or multi-bank
+  parallelization.
+- **Artifact identity:** retain A15.4 RTL SHA256
+  `c3da5be63d4cf195df124e572887b6aa96a464522883c6cdc95c4bd56ff4e8a1`
+  and A15.5 xclbin SHA256
+  `23ee48c91b3dfb5b68b3372ac49fc6607f203cf01d3b9fcfe04b4ea42be02356`,
+  UUID `1b555645-a9e2-4f5e-95af-6ce4adacbc3c`, kernel
+  `dlrm_f37x_rtl_kernel_stage2n_a15_v1` and CU `dlrm_a15_1`.
+- **Functional evidence:** on device index 2/BDF `0000:9b:00.1`, a 4096-byte
+  BO in `HBM[0]` at valid physical address zero supplied all four embedding
+  slots. The five expected/actual results match exactly; every loaded mask is
+  `0xF`, every compute-counter set is `322/100/744/1174`, and cleanup passes.
+- **Safety:** the prior resident design was idle and was replaced only after
+  explicit allowlist checks and literal user confirmation. FPGA reset was not
+  run and no other device was accessed.
+- **Evidence:** archive SHA256
+  `e903865a26153c5121ab84fe9f5735faa73df4bd73522cf079d1c9d0ae4a0c18`;
+  board JSON SHA256
+  `a6d228b78ff1889ccb7a532e22997a6f6f669a024f802e0798271c625b7fe7da`;
+  imported JSON passes the existing offline evidence validator.
+- **Performance boundary:** `1174` cycles covers the accepted compute interval
+  only. It excludes the four HBM lookups, Host orchestration and BO transfer.
+  A15.6 makes no latency, bandwidth, throughput, speedup, power or performance
+  claim.
+- **Next gate:** A16 should first define lookup and complete-inference timing,
+  measure the sequential baseline and then evaluate multi-bank/parallel lookup
+  against the frozen A15.6 function and golden results.

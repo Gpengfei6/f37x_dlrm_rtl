@@ -1,0 +1,331 @@
+{
+  "artifact": {
+    "compute_unit": "dlrm_a15_1",
+    "kernel": "dlrm_f37x_rtl_kernel_stage2n_a15_v1",
+    "xclbin_path": "/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a15_5_buildonly/build/stage2n_a15_5/link_v1/hw/dlrm_f37x_rtl_kernel_stage2n_a15_v1.xclbin",
+    "xclbin_sha256": "23ee48c91b3dfb5b68b3372ac49fc6607f203cf01d3b9fcfe04b4ea42be02356",
+    "xclbin_uuid": "1b555645-a9e2-4f5e-95af-6ce4adacbc3c"
+  },
+  "board_functional": "PASS",
+  "cases": [
+    {
+      "actual_result": -393,
+      "complete_dlrm_result": "PASS",
+      "completion": "PASS",
+      "counters": {
+        "bottom": 322,
+        "interaction": 100,
+        "top": 744,
+        "total": 1174
+      },
+      "embedding_loaded_mask": "0xF",
+      "expected_result": -393,
+      "name": "baseline",
+      "payload_sha256": "c319aeef84dc1cf4c73d16ab7c498bb31f37460f339cf849616952bb676d00cb",
+      "row37_to_row40": {
+        "37": [
+          -228,
+          270,
+          342,
+          22,
+          -301,
+          51,
+          453,
+          427
+        ],
+        "38": [
+          -67,
+          -338,
+          131,
+          150,
+          -60,
+          -240,
+          -118,
+          -71
+        ],
+        "39": [
+          258,
+          24,
+          186,
+          424,
+          181,
+          241,
+          254,
+          306
+        ],
+        "40": [
+          268,
+          272,
+          167,
+          -333,
+          163,
+          315,
+          -170,
+          268
+        ]
+      },
+      "table_base_readback": "PASS"
+    },
+    {
+      "actual_result": -392,
+      "complete_dlrm_result": "PASS",
+      "completion": "PASS",
+      "counters": {
+        "bottom": 322,
+        "interaction": 100,
+        "top": 744,
+        "total": 1174
+      },
+      "embedding_loaded_mask": "0xF",
+      "expected_result": -392,
+      "name": "slot0_sensitivity",
+      "payload_sha256": "5b7e39bd29ba27fdf6732cc441cdb7bea09d6abef07a78098a9d87af4b032717",
+      "row37_to_row40": {
+        "37": [
+          1820,
+          270,
+          342,
+          22,
+          -301,
+          51,
+          453,
+          427
+        ],
+        "38": [
+          -67,
+          -338,
+          131,
+          150,
+          -60,
+          -240,
+          -118,
+          -71
+        ],
+        "39": [
+          258,
+          24,
+          186,
+          424,
+          181,
+          241,
+          254,
+          306
+        ],
+        "40": [
+          268,
+          272,
+          167,
+          -333,
+          163,
+          315,
+          -170,
+          268
+        ]
+      },
+      "table_base_readback": "PASS"
+    },
+    {
+      "actual_result": -93,
+      "complete_dlrm_result": "PASS",
+      "completion": "PASS",
+      "counters": {
+        "bottom": 322,
+        "interaction": 100,
+        "top": 744,
+        "total": 1174
+      },
+      "embedding_loaded_mask": "0xF",
+      "expected_result": -93,
+      "name": "slot1_sensitivity",
+      "payload_sha256": "b37a4ff8e18ca29020a2e0b261f7b57f879b250025e309a8f4a0336df1b95f14",
+      "row37_to_row40": {
+        "37": [
+          -228,
+          270,
+          342,
+          22,
+          -301,
+          51,
+          453,
+          427
+        ],
+        "38": [
+          1981,
+          -338,
+          131,
+          150,
+          -60,
+          -240,
+          -118,
+          -71
+        ],
+        "39": [
+          258,
+          24,
+          186,
+          424,
+          181,
+          241,
+          254,
+          306
+        ],
+        "40": [
+          268,
+          272,
+          167,
+          -333,
+          163,
+          315,
+          -170,
+          268
+        ]
+      },
+      "table_base_readback": "PASS"
+    },
+    {
+      "actual_result": -689,
+      "complete_dlrm_result": "PASS",
+      "completion": "PASS",
+      "counters": {
+        "bottom": 322,
+        "interaction": 100,
+        "top": 744,
+        "total": 1174
+      },
+      "embedding_loaded_mask": "0xF",
+      "expected_result": -689,
+      "name": "slot2_sensitivity",
+      "payload_sha256": "d0d0385e61590d0256e6b50e781a32718b9921066a4190ee8a38feba8638de12",
+      "row37_to_row40": {
+        "37": [
+          -228,
+          270,
+          342,
+          22,
+          -301,
+          51,
+          453,
+          427
+        ],
+        "38": [
+          -67,
+          -338,
+          131,
+          150,
+          -60,
+          -240,
+          -118,
+          -71
+        ],
+        "39": [
+          2306,
+          24,
+          186,
+          424,
+          181,
+          241,
+          254,
+          306
+        ],
+        "40": [
+          268,
+          272,
+          167,
+          -333,
+          163,
+          315,
+          -170,
+          268
+        ]
+      },
+      "table_base_readback": "PASS"
+    },
+    {
+      "actual_result": -519,
+      "complete_dlrm_result": "PASS",
+      "completion": "PASS",
+      "counters": {
+        "bottom": 322,
+        "interaction": 100,
+        "top": 744,
+        "total": 1174
+      },
+      "embedding_loaded_mask": "0xF",
+      "expected_result": -519,
+      "name": "slot3_sensitivity",
+      "payload_sha256": "3914dcd2721ecf1263c37a9e909fc40475b5a08a90269d4c3b7542686f1ed216",
+      "row37_to_row40": {
+        "37": [
+          -228,
+          270,
+          342,
+          22,
+          -301,
+          51,
+          453,
+          427
+        ],
+        "38": [
+          -67,
+          -338,
+          131,
+          150,
+          -60,
+          -240,
+          -118,
+          -71
+        ],
+        "39": [
+          258,
+          24,
+          186,
+          424,
+          181,
+          241,
+          254,
+          306
+        ],
+        "40": [
+          2316,
+          272,
+          167,
+          -333,
+          163,
+          315,
+          -170,
+          268
+        ]
+      },
+      "table_base_readback": "PASS"
+    }
+  ],
+  "cleanup": {
+    "bo_release": "PASS",
+    "device_close": "PASS",
+    "global_hbm_cleanup": "NOT_RUN"
+  },
+  "device": {
+    "bdf": "0000:9b:00.1",
+    "index": 2,
+    "other_device_access": "NONE"
+  },
+  "git_branch": "work/stage2n-a15-hbm-pipeline-integration",
+  "git_head": "85ac9d1c333d5e016341c57de722e222da991d97",
+  "hostname": "localhost.localdomain",
+  "memory": {
+    "bank": "HBM[0]",
+    "bo_physical_address": 0,
+    "bo_size_bytes": 4096,
+    "memory_index": 0,
+    "payload_transfer": "PASS",
+    "physical_hbm": "PASS",
+    "table_base_programming": "PASS"
+  },
+  "performance": "NOT_CLAIMED",
+  "programming": {
+    "fpga": "PASS",
+    "reset": "NOT_RUN"
+  },
+  "schema": "STAGE2N_A15_6_BOARD_EVIDENCE_V1",
+  "timestamp_utc": "2026-08-31T02:26:26Z"
+}

@@ -36,11 +36,12 @@ hybrid CPU-embedding/FPGA-dense inference path.
 | Stage 2N-A15.3 | Supply all four A13 embedding slots through one sequential lookup engine | Added a versioned controller wrapper that requests canonical rows 37–40, retains each response until A13 accepts it, injects slots 0–3, rejects Host embedding writes, and runs the accepted full pipeline after the mask reaches `4'hF` | Baseline `b3031d4`; `docs/STAGE2N_A15_3_ALL_HBM_EMBEDDING_PIPELINE_XSIM_V1.md`; retained local status/logs | **LOCAL XSIM PASS**: 4 logical requests/AR/R/injections, all four exact vectors, independent 18-value Interaction golden, result 36, cycles 322/100/744/1174, and zero warnings/errors/fatals. No target build/link, xclbin, FPGA/physical HBM, multi-bank, board, or performance claim |
 | Stage 2N-A15.4 | Expose the accepted all-HBM local pipeline through a public F37X-style kernel boundary | Added a versioned AXI4-Lite plus one `m_axi_gmem` top, preserved the entire A13 ABI, added disjoint `0x300/0x304/0x308` control, and automatically chained the accepted A15.3 load-all sequence into accepted A13 START | Starting/authorization HEAD `7d0c351`; `docs/STAGE2N_A15_4_F37X_KERNEL_ALL_HBM_PIPELINE_XSIM_V1.md`; retained local status/logs | **LOCAL XSIM PASS**: exact TABLE_BASE+rows37–40 addresses/vectors, 4/4/4/4 lookup/AR/R/injections, mask `0xF`, result 36, counters 322/100/744/1174, zero warning/error/fatal/assertion records. No target build/link, XO/xclbin, FPGA/physical HBM, board, or performance claim |
 | Stage 2N-A15.5 | Package and link the accepted A15.4 public kernel for the exact F37X target and correct Vitis 2020.2 offline validation | Built/validated the exact-target XO, linked one CU to HBM[0], generated the fixed-SHA xclbin, corrected the v1 shell-IP false negative, and revalidated metadata/timing without rebuild | Source-build commit `30cbf64`; validator/revalidation commit `2ce2d44`; `docs/STAGE2N_A15_5_TARGET_XCLBIN_FINAL_ACCEPTANCE_V1.md`; curated raw evidence under `docs/evidence/stage2n_a15_5/` | **FINAL TARGET XO/XCLBIN/TIMING PASS**: unique kernel/CU, TABLE_BASE/arg0 to used HBM[0], xclbin SHA/UUID frozen, 100 MHz WNS/TNS 0.000/0.000 ns, zero failing endpoints. No Host, physical A15 HBM, FPGA/board, or performance result |
-| Stage 2N-A15.6 | Prepare protected physical-HBM full-pipeline functional validation using the frozen A15.5 artifact | Added a low-level XRT Host, guarded one-device/HBM[0] runner, five deterministic trained-model payloads, fail-closed evidence validation, and a separate device-free target preflight | Preparation `ee3dcaa`; `docs/STAGE2N_A15_6_PROTECTED_ALL_HBM_BOARD_VALIDATION_PREPARATION_V1.md`; target-preflight preparation document; local evidence under `docs/evidence/stage2n_a15_6/` | **LOCAL AND TARGET-PREFLIGHT SOURCE PREPARATION PASS**: source/assets, five golden cases, evidence fixtures, XRT/ABI/artifact/preflight static gates pass. Target preflight, Host compilation, FPGA programming, physical HBM, board function and performance are NOT RUN/NOT CLAIMED |
+| Stage 2N-A15.6 | Validate the complete all-HBM pipeline on a real F37X using the frozen A15.5 artifact | Added a low-level XRT Host, guarded one-device/HBM[0] runner, five deterministic trained-model payloads and fail-closed evidence validation; then ran the protected flow on device index 2 | Board-execution source `85ac9d1`; `docs/STAGE2N_A15_6_ALL_HBM_BOARD_FINAL_ACCEPTANCE_V1.md`; compact returned evidence under `docs/evidence/stage2n_a15_6/final_acceptance_v1/` | **FINAL PHYSICAL-HBM BOARD FUNCTION PASS**: frozen xclbin programmed; one 4096-byte HBM[0] BO at valid paddr 0; four sequential lookups; five exact complete-DLRM results; masks/counters/cleanup PASS. Performance NOT CLAIMED |
 
 ## Current Milestone Interpretation
 
-- A13 is the last accepted integrated and board-validated DLRM pipeline.
+- A15.6 is the latest accepted integrated physical-HBM board-functional DLRM
+  baseline; A13 remains the frozen dense/compute arithmetic baseline.
 - A14/A14.5 are newer source work but have a narrower scope: standalone
   embedding lookup and its runtime table-base ABI.
 - A14 does not supersede A13 as an integrated inference top.
@@ -75,11 +76,11 @@ hybrid CPU-embedding/FPGA-dense inference path.
   mapping, and 100 MHz routed timing. The validator-v1 failure was a shell-IP
   counting false negative; fixed-SHA v2 revalidation passed without rebuild.
   Host, physical A15 HBM, FPGA/board function, and performance remain unproven.
-- A15.6 is accepted only as local protected-board preparation. Its five golden
-  cases distinguish all four HBM-derived slots and its safety/evidence fixtures
-  pass. A separate device-free target-preflight source is also locally accepted,
-  but its target run, Host binary, device action, physical HBM transaction,
-  board function, cleanup, and performance remain unaccepted.
+- A15.6 is the accepted real-board functional baseline for one `HBM[0]` bank,
+  one AXI read master and four sequential lookups. The frozen xclbin, physical
+  BO/TABLE_BASE path, all five complete-DLRM cases and cleanup pass. The
+  1174-cycle interval remains compute-only; multi-bank, parallel lookup and all
+  performance claims remain unaccepted.
 
 ## Superseded and Historical Files
 
@@ -321,6 +322,36 @@ a separate versioned, device-free preflight and static validator are prepared.
 They validate Git ancestry/clean tracked state, frozen RTL, XRT 2020.2 Host
 build readiness, fixed xclbin SHA/UUID/kernel/CU/HBM[0] metadata, all seven
 tracked model/table/manifest assets, the A15/A13 ABI, and the protected runner.
-Local source validation passes. Bash syntax and the target preflight remain
-`NOT_RUN`; the next action is a user-controlled Git-bundle fast-forward and
-preflight run, not board execution.
+At that preparation point, Bash syntax and the target preflight had not yet run;
+the subsequent Final Acceptance below supersedes that preparation status.
+
+## Stage 2N-A15.6 — All-HBM board Final Acceptance
+
+Date: 2026-08-31
+
+Result: `FINAL PASS`
+
+The user-controlled target flow completed on F37X device index 2, BDF
+`0000:9b:00.1`, render node `/dev/dri/renderD129`, platform
+`inspur_f37x_xdma_201920_3` and XRT `2.9.210507`. It consumed the frozen xclbin
+SHA256 `23ee48c91b3dfb5b68b3372ac49fc6607f203cf01d3b9fcfe04b4ea42be02356`
+and UUID `1b555645-a9e2-4f5e-95af-6ce4adacbc3c` without rebuild.
+
+One 4096-byte BO was allocated in physical `HBM[0]` at valid paddr `0x0`.
+Payload transfer, TABLE_BASE programming/readback, four sequential lookups,
+slots 0–3, Bottom, Interaction and Top all completed. Expected/actual results
+were `-393/-393`, `-392/-392`, `-93/-93`, `-689/-689`, and `-519/-519`.
+Every mask was `0xF` and every counter set was `322/100/744/1174`. BO release
+and device close passed; FPGA reset and other-device access did not occur.
+
+The locally recalculated archive SHA256 is
+`e903865a26153c5121ab84fe9f5735faa73df4bd73522cf079d1c9d0ae4a0c18`;
+the board JSON SHA256 is
+`a6d228b78ff1889ccb7a532e22997a6f6f669a024f802e0798271c625b7fe7da`.
+The imported JSON passes the existing offline validator.
+
+Next:
+preserve this single-bank/single-master/sequential functional baseline. A16 may
+separately define lookup and end-to-end timing, measure the sequential baseline
+and only then consider multi-bank or parallel lookup. No performance claim is
+accepted by A15.6.

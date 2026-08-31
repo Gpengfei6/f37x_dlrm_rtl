@@ -1,6 +1,6 @@
 # Current State
 
-Snapshot date: 2026-08-28
+Snapshot date: 2026-08-31
 
 ## Repository State
 
@@ -32,20 +32,23 @@ Snapshot date: 2026-08-28
   `2ce2d443cd55d00b492e154aa57091f39d14934e`
 - A15.6 local-preparation parent HEAD:
   `14cb37721b918e644c8cae689791628247a00eec`
-- Current engineering stage: **Stage 2N-A15.6 local preparation and target-
-  preflight source preparation PASS; target preflight and protected board
-  execution are not run**
-- Accepted and frozen functional baseline: **Stage 2N-A13**
+- A15.6 accepted board-execution source HEAD:
+  `85ac9d1c333d5e016341c57de722e222da991d97`
+- Current engineering stage: **Stage 2N-A15.6 Final Acceptance PASS; Stage
+  2N-A16 has not started**
+- Accepted and frozen physical-HBM functional baseline: **Stage 2N-A15.6**
+- Accepted and frozen dense/compute arithmetic baseline: **Stage 2N-A13**
 
 The branch contains the accepted A13/A14 history plus the versioned A15.1 local
 integration wrapper, A15.2 end-to-end proof, A15.3 four-slot sequential lookup
 proof, A15.4 versioned public AXI4-Lite plus `m_axi_gmem` kernel boundary, and
 A15.5 versioned target package/link preparation with offline validators and a
 versioned Vitis 2020.2 xclbin-layout compatibility fix. The fixed-SHA target
-artifact has passed non-rebuilding v2 revalidation. A15.6 now adds a protected
-Host/runner/evidence package and five independently computed board golden cases
-without changing the frozen RTL or rebuilding the xclbin.
-Do not infer physical-HBM or target validation scope from stage numbering alone.
+artifact passed non-rebuilding v2 revalidation. A15.6 then used that exact
+artifact in a protected F37X run: one physical `HBM[0]` BO supplied four
+sequential embedding lookups and all five independent board golden cases matched
+exactly. Frozen RTL and xclbin identities did not change. Performance remains
+unclaimed; do not infer multi-bank or latency scope from stage numbering alone.
 
 The primary Windows worktree may contain pre-existing untracked recovery,
 historical evidence, patent, source, and helper files. Preserve them. Never use
@@ -318,7 +321,7 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
   `23ee48c91b3dfb5b68b3372ac49fc6607f203cf01d3b9fcfe04b4ea42be02356`
   and UUID `1b555645-a9e2-4f5e-95af-6ce4adacbc3c`; no XO/xclbin rebuild occurred.
 - Added a versioned low-level XRT 2020.2 Host and protected runner for one
-  explicit F37X BDF and one 1,024-byte BO in linked `HBM[0]`. The runner is
+  explicit F37X BDF and one BO in linked `HBM[0]`. The runner is
   fail-closed and requires exact artifact identity, device mapping, idle/owner/
   firewall/HBM-use guards, and a literal `yes` before any device-changing step.
 - Added one baseline and four slot-sensitivity table payloads. The independent
@@ -326,16 +329,21 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
   every HBM-derived slot affects the final result and the four perturbation
   results are pairwise distinct.
 - Local source/asset validation, evidence assembly, the positive evidence
-  fixture, and eight negative/rejection fixtures pass. Bash syntax and target
-  XRT Host compilation are correctly retained as `NOT_RUN` locally.
-- `A15_6_LOCAL_PREPARATION=PASS` and
-  `READY_FOR_PROTECTED_BOARD_EXECUTION=YES`. FPGA programming, Host execution,
-  physical HBM, board function, and performance remain `NOT_RUN` or
-  `NOT_CLAIMED`; this is not board acceptance.
-- Added a separate device-free target-preflight entry and validator. Local
-  source checks confirm its Git, XRT-Host, frozen-xclbin, golden, ABI and
-  protection gates and reject device/programming/link commands. The actual
-  user-controlled target preflight remains `NOT_RUN`.
+  fixture, and eight negative/rejection fixtures pass. The target XRT 2020.2
+  Host build/API probe and protected execution subsequently passed.
+- The real run selected device index 2, BDF `0000:9b:00.1`, render node
+  `/dev/dri/renderD129`, allocated a 4096-byte BO in `HBM[0]` at valid physical
+  address `0x0`, programmed the frozen xclbin, transferred each payload and
+  released the BO/device cleanly without reset or other-device access.
+- All five results match: `-393`, `-392`, `-93`, `-689`, and `-519`; every case
+  has loaded mask `0xF` and counters `322/100/744/1174`.
+- `A15_6_PHYSICAL_HBM=PASS`, `A15_6_BOARD_FUNCTIONAL=PASS`, and
+  `A15_6_FINAL_ACCEPTANCE=PASS`. `A15_6_PERFORMANCE=NOT_CLAIMED` because the
+  1174-cycle interval excludes the four HBM lookups and Host/BO activity.
+- Added a separate device-free target-preflight entry and validator. The
+  user-controlled target checks reached xclbin metadata extraction and XRT Host
+  build/API PASS before the protected execution. Old-Git, deterministic path
+  and post-XRT `BASH_SOURCE` compatibility fixes changed no frozen artifact.
 
 ## Verification Summary
 
@@ -386,8 +394,10 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 | A15.5 physical HBM/board/performance | NOT VALIDATED / NOT RUN / NOT CLAIMED | No device access or performance activity occurred |
 | A15.6 local protected-board preparation | **PASS** | Frozen-artifact/source/asset gates, five independent golden cases, positive evidence assembly/validation, and eight negative fixtures pass; frozen RTL unchanged and xclbin not rebuilt |
 | A15.6 target-preflight source preparation | **LOCAL PASS** | Versioned device-free preflight and static validator prepared; no device query/open, BO, Host run, FPGA programming, v++, Vivado, or xclbin rebuild command |
-| A15.6 target preflight | NOT RUN | Must be run manually in the established A15.5 build-only repository; local source preparation is not target evidence |
-| A15.6 Host build/device/physical HBM/board/performance | NOT RUN / NOT CLAIMED | Target XRT environment and separate explicit device authorization are required; no local network, server, or FPGA access occurred |
+| A15.6 target preflight | **TARGET PASS** | User-controlled target checks completed xclbin CONNECTIVITY/MEM_TOPOLOGY/IP_LAYOUT extraction plus XRT 2020.2 Host build/API probe; compatibility fixes did not change RTL/xclbin |
+| A15.6 Host build and protected execution | **PASS** | Exact device/BDF/render and frozen xclbin guards passed; literal user authorization preceded programming |
+| A15.6 physical HBM and complete board function | **FINAL PASS** | One 4096-byte HBM[0] BO at valid paddr 0; four sequential lookups; five exact full-DLRM results; masks/counters/cleanup PASS |
+| A15.6 performance | NOT CLAIMED | 1174 cycles is compute-only and excludes lookup, Host and BO-transfer intervals |
 
 Primary evidence:
 
@@ -418,6 +428,8 @@ Primary evidence:
 - `docs/STAGE2N_A15_6_PROTECTED_ALL_HBM_BOARD_VALIDATION_PREPARATION_V1.md`
 - `docs/STAGE2N_A15_6_TARGET_PREFLIGHT_PREPARATION_V1.md`
 - `docs/evidence/stage2n_a15_6/local_preparation_v1/`
+- `docs/STAGE2N_A15_6_ALL_HBM_BOARD_FINAL_ACCEPTANCE_V1.md`
+- `docs/evidence/stage2n_a15_6/final_acceptance_v1/`
 - `docs/evidence/stage2n_a14_7/local_source_preparation_v1.txt`
 - `docs/STAGE2N_A15_1_HBM_PIPELINE_INTEGRATION_V1.md`
 - `docs/STAGE2N_A15_2_END_TO_END_PIPELINE_XSIM_V1.md`
@@ -453,26 +465,22 @@ Historical target environment recorded by accepted evidence:
    not present in this main working tree.
 5. The large fixed-SHA XO/xclbin and routed DCP remain outside Git; their small
    final metadata/status/hash/report evidence is curated under `docs/evidence`.
-6. A15.6 target preflight, target XRT Host compilation, protected execution,
-   four physical-HBM reads through the complete pipeline, cleanup, and returned
-   evidence remain unexecuted.
+6. A15.6 physical-board function is no longer blocked. Performance
+   instrumentation, multi-bank mapping and parallel lookup remain future work.
 
-These are target-execution requirements, not failures of the completed A15.4
-local XSim result, A15.5 target artifact, or A15.6 local preparation.
+These local tool absences do not invalidate the accepted A15.5 artifact or the
+returned A15.6 physical-board evidence.
 
 ## Next Actions
-1. Preserve the accepted A13, A14.5, A14.6, and A14.7 identities and evidence;
-   do not rerun physical A14.7 merely to reconfirm it.
-2. Preserve the accepted A15.4 public-kernel local proof and exact-file commit.
-3. Transfer the reviewed Git bundle, fast-forward the established A15.5 build-
-   only repository while preserving untracked artifacts, and run only the
-   device-free A15.6 target preflight.
-4. Review the returned preflight status before requesting separate explicit
-   authorization for the protected target Host flow.
-5. Return the complete A15.6 board evidence package for a separate acceptance
-   review; do not infer PASS from runner preparation or from partial output.
-6. Keep performance work separate until all five functional golden cases,
-   cleanup, and evidence validation pass on the protected target.
+1. Freeze the A15.6 single-bank/single-master/four-sequential-lookup functional
+   baseline, its five golden cases and compact evidence.
+2. Begin A16 only after separate authorization; do not alter the accepted A15.6
+   RTL, xclbin, ABI or golden assets during planning.
+3. Define end-to-end and lookup timing boundaries before adding counters.
+4. Measure the sequential A15.6 baseline before considering multi-bank mapping
+   or parallel lookup.
+5. Require functional equivalence and comparable target evidence before any
+   speedup, bandwidth, throughput, power or performance claim.
 ## Non-Goals of the Current Stage
 
 - modifying accepted A13 RTL;
@@ -532,8 +540,8 @@ a public AXI4-Lite plus `m_axi_gmem` boundary for four sequential fake-memory
 rows and a complete golden-matched inference. This
 does not convert the standalone A14.7 physical result into physical A15 proof.
 
-Current next gate: user-run, device-free A15.6 target preflight in the existing
-A15.5 build-only repository. Protected Host/XRT execution for physical
-`HBM[0]`, four sequential lookups, five software-golden cases, cleanup, and
-complete DLRM functional board validation remains a later separately authorized
-gate. Multi-table and multi-HBM-bank parallelism remain future work.
+Current next gate: separately authorize A16 preparation for end-to-end latency
+accounting and explicit HBM lookup interval measurement. The accepted A15.6
+single-bank, one-master, four-sequential-lookup functional baseline must remain
+frozen. Multi-table and multi-HBM-bank parallelism remain future work and have
+no accepted speedup claim.
