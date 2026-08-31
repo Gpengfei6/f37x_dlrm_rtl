@@ -363,8 +363,30 @@ Other explicit limitations:
 
 ## 12. Next action
 
-The user may manually inspect the fixed xclbin path, set the explicit device
-index, review the displayed guard and execute the versioned runner in the
-controlled F37X environment. Codex does not perform that execution. The result
-must be returned for a separate acceptance review before CURRENT_STATE may mark
-physical HBM or board function PASS.
+The user first transfers the reviewed source through the Git-bundle workflow
+and runs only the device-free target preflight. After its complete status is
+returned and reviewed, a separate request may authorize the protected runner in
+the controlled F37X environment. Codex does not perform either target action.
+No physical HBM or board state may be marked PASS from source preparation or
+target-preflight preparation alone.
+
+## 13. Target-preflight separation
+
+The next step is now explicitly split into two gates:
+
+1. `A15_6_TARGET_PREFLIGHT`: a device-free user-run check in the established
+   A15.5 build-only repository; and
+2. `A15_6_PROTECTED_BOARD_EXECUTION`: a later separately authorized operation
+   that may program/open the guarded FPGA and run the Host.
+
+The versioned preflight entry is
+`scripts/run_stage2n_a15_6_target_preflight_v1.sh`. It checks Git ancestry and
+tracked cleanliness, the frozen RTL, XRT 2020.2 Host compilation, the existing
+fixed-SHA xclbin and offline HBM[0] metadata, deterministic golden assets, and
+the protection gate. It does not query a device, open XRT, allocate a BO, run
+the Host, program/reset the FPGA, invoke `v++`, or rebuild XO/xclbin.
+
+Local source validation of that preflight is PASS, but the actual target
+preflight remains `NOT_RUN`. See
+`docs/STAGE2N_A15_6_TARGET_PREFLIGHT_PREPARATION_V1.md` for the transfer,
+evidence, and command boundary.

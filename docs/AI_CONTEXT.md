@@ -16,9 +16,10 @@ A14 v2 lookup engine sequentially supplies all four accepted A13 embedding
 slots from canonical fake-memory rows. Stage 2N-A15.5 accepts the exact-target
 XO/xclbin flow and its validator-only Vitis 2020.2 compatibility fix. Current
 Stage 2N-A15.6 locally prepares a protected XRT Host, guarded runner, five
-software-golden HBM tables, and fail-closed evidence validation for that frozen
-artifact. FPGA programming, Host execution, physical HBM, board function, and
-performance remain outside the completed local preparation.
+software-golden HBM tables, fail-closed evidence validation, and a separate
+device-free target-preflight source package for that frozen artifact. The
+actual target preflight, FPGA programming, Host execution, physical HBM, board
+function, and performance remain outside the completed local preparation.
 
 Target environment:
 
@@ -55,7 +56,7 @@ Read the repository in this order before proposing or making changes:
 5. `docs/ARCHITECTURE.md`
 6. `docs/STAGE_HISTORY.md`
 7. the active-stage document,
-   `docs/STAGE2N_A15_6_PROTECTED_ALL_HBM_BOARD_VALIDATION_PREPARATION_V1.md`
+   `docs/STAGE2N_A15_6_TARGET_PREFLIGHT_PREPARATION_V1.md`
 8. the exact RTL, testbench, Host, configuration, and script files named by the
    active-stage documents
 
@@ -77,8 +78,9 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A15.6 — protected all-HBM functional-board validation
-preparation PASS; Host/device/physical-HBM/board execution remains NOT RUN**.
+Current stage: **Stage 2N-A15.6 — local functional-board and target-preflight
+source preparation PASS; actual target preflight and board execution remain
+NOT RUN**.
 
 Stage 2N-A13 remains the accepted and frozen integrated DLRM baseline. A14.5
 added the runtime 64-bit table-base ABI, A14.6 completed the accepted link-only
@@ -154,9 +156,16 @@ effect on the final result. Local source/asset validation, positive evidence
 assembly/validation, and eight negative fixtures pass. Bash syntax and target
 Host compilation remain `NOT_RUN` in the Windows preparation environment.
 
-Pending beyond local A15.6 preparation:
+The target-preflight source is a separate device-free gate. It checks the
+existing build-only repository, fixed xclbin metadata, target XRT 2020.2 Host
+compilation, deterministic assets and the protected runner without querying or
+opening a device, allocating a BO, executing the Host, programming/resetting the
+FPGA, invoking `v++`, or rebuilding XO/xclbin. Its local static validation is
+PASS; the user-controlled target run is `NOT_RUN`.
 
-- target XRT 2020.2 Host compilation;
+Pending beyond local A15.6 and target-preflight source preparation:
+
+- user-controlled target preflight and target XRT 2020.2 Host compilation;
 - separately authorized protected FPGA programming/Host execution;
 - five-case physical `HBM[0]` and complete functional board validation;
 - returned cleanup and evidence-package acceptance;
@@ -164,9 +173,10 @@ Pending beyond local A15.6 preparation:
 - multi-table, multi-bank, burst, cache, coalescing, scheduling, or INT8 work.
 
 See `docs/STAGE2N_A15_6_PROTECTED_ALL_HBM_BOARD_VALIDATION_PREPARATION_V1.md`
-for the active Host, guard, golden, evidence, and non-claim contract. Use the
-A15.5 final acceptance for the frozen artifact identity and the A15.4 document
-for the underlying local functional result.
+for the Host, guard, golden, evidence, and non-claim contract, and
+`docs/STAGE2N_A15_6_TARGET_PREFLIGHT_PREPARATION_V1.md` for the active transfer
+and target-preflight boundary. Use the A15.5 final acceptance for the frozen
+artifact identity and the A15.4 document for the local functional result.
 
 ## 4. Hardware Environment
 
@@ -424,6 +434,21 @@ This does not prove a physical HBM transaction.
   complete board function, or post-run cleanup;
 - latency, bandwidth, throughput, power, energy, speedup, or performance.
 
+### Proven by A15.6 target-preflight source preparation
+
+- the versioned preflight contains only Git/toolchain/build/artifact/golden/
+  protection checks and creates non-overwriting status evidence;
+- local static validation confirms the frozen ABI and legacy XRT 2020.2 Host
+  API/build convention;
+- device query/open, BO allocation, Host execution, FPGA programming/reset,
+  `v++`, Vivado, and XO/xclbin rebuild commands are absent.
+
+### Not proven by target-preflight source preparation
+
+- that the target toolchain, Host compile or fixed xclbin checks pass on the
+  user-controlled server;
+- any FPGA, physical HBM, board or performance behavior.
+
 Use `docs/CURRENT_STATE.md` for the exact current branch, HEAD, blockers, and
 next actions.
 
@@ -461,9 +486,9 @@ Do not repeat A14.7 physical lookup merely to reconfirm it.
 The local A13/A14 handoff and one complete deterministic inference using all
 four sequential HBM-owned slots are proven through the A15.4 public local
 kernel boundary, and A15.5 accepts the exact-target XO/xclbin/timing artifact.
-A15.6 local preparation is complete. The next engineering direction is a
-separately authorized manual protected device/Host/physical-HBM execution using
-that frozen artifact, followed by returned-evidence acceptance; performance
-remains a later gate.
+A15.6 local and target-preflight source preparation are complete. The next
+engineering action is the user-run device-free target preflight. Protected
+device/Host/physical-HBM execution remains a later separately authorized gate,
+followed by returned-evidence acceptance; performance remains later still.
 
 First priority is functional equivalence with the software golden model. Multi-table, multi-bank, cache and performance optimization should follow only after this integration path is correct.

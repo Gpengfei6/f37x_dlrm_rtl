@@ -32,8 +32,9 @@ Snapshot date: 2026-08-28
   `2ce2d443cd55d00b492e154aa57091f39d14934e`
 - A15.6 local-preparation parent HEAD:
   `14cb37721b918e644c8cae689791628247a00eec`
-- Current engineering stage: **Stage 2N-A15.6 protected all-HBM functional-board
-  validation preparation PASS; protected device/Host execution is not run**
+- Current engineering stage: **Stage 2N-A15.6 local preparation and target-
+  preflight source preparation PASS; target preflight and protected board
+  execution are not run**
 - Accepted and frozen functional baseline: **Stage 2N-A13**
 
 The branch contains the accepted A13/A14 history plus the versioned A15.1 local
@@ -331,6 +332,10 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
   `READY_FOR_PROTECTED_BOARD_EXECUTION=YES`. FPGA programming, Host execution,
   physical HBM, board function, and performance remain `NOT_RUN` or
   `NOT_CLAIMED`; this is not board acceptance.
+- Added a separate device-free target-preflight entry and validator. Local
+  source checks confirm its Git, XRT-Host, frozen-xclbin, golden, ABI and
+  protection gates and reject device/programming/link commands. The actual
+  user-controlled target preflight remains `NOT_RUN`.
 
 ## Verification Summary
 
@@ -380,6 +385,8 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
 | A15.5 target XO/link/xclbin/timing | **FINAL PASS** | Fixed-SHA XO/xclbin, one TABLE_BASE/arg0-to-used-HBM[0] mapping, validator v2, and 100 MHz routed timing accepted; WNS/TNS 0.000/0.000 ns, zero failing endpoints, no rebuild |
 | A15.5 physical HBM/board/performance | NOT VALIDATED / NOT RUN / NOT CLAIMED | No device access or performance activity occurred |
 | A15.6 local protected-board preparation | **PASS** | Frozen-artifact/source/asset gates, five independent golden cases, positive evidence assembly/validation, and eight negative fixtures pass; frozen RTL unchanged and xclbin not rebuilt |
+| A15.6 target-preflight source preparation | **LOCAL PASS** | Versioned device-free preflight and static validator prepared; no device query/open, BO, Host run, FPGA programming, v++, Vivado, or xclbin rebuild command |
+| A15.6 target preflight | NOT RUN | Must be run manually in the established A15.5 build-only repository; local source preparation is not target evidence |
 | A15.6 Host build/device/physical HBM/board/performance | NOT RUN / NOT CLAIMED | Target XRT environment and separate explicit device authorization are required; no local network, server, or FPGA access occurred |
 
 Primary evidence:
@@ -409,6 +416,7 @@ Primary evidence:
 - `docs/STAGE2N_A15_5_TARGET_XCLBIN_FINAL_ACCEPTANCE_V1.md`
 - `docs/evidence/stage2n_a15_5/target_xclbin_revalidation_v2/`
 - `docs/STAGE2N_A15_6_PROTECTED_ALL_HBM_BOARD_VALIDATION_PREPARATION_V1.md`
+- `docs/STAGE2N_A15_6_TARGET_PREFLIGHT_PREPARATION_V1.md`
 - `docs/evidence/stage2n_a15_6/local_preparation_v1/`
 - `docs/evidence/stage2n_a14_7/local_source_preparation_v1.txt`
 - `docs/STAGE2N_A15_1_HBM_PIPELINE_INTEGRATION_V1.md`
@@ -445,9 +453,9 @@ Historical target environment recorded by accepted evidence:
    not present in this main working tree.
 5. The large fixed-SHA XO/xclbin and routed DCP remain outside Git; their small
    final metadata/status/hash/report evidence is curated under `docs/evidence`.
-6. A15.6 target XRT Host compilation, protected execution, four physical-HBM
-   reads through the complete pipeline, cleanup, and returned evidence remain
-   unexecuted.
+6. A15.6 target preflight, target XRT Host compilation, protected execution,
+   four physical-HBM reads through the complete pipeline, cleanup, and returned
+   evidence remain unexecuted.
 
 These are target-execution requirements, not failures of the completed A15.4
 local XSim result, A15.5 target artifact, or A15.6 local preparation.
@@ -456,11 +464,14 @@ local XSim result, A15.5 target artifact, or A15.6 local preparation.
 1. Preserve the accepted A13, A14.5, A14.6, and A14.7 identities and evidence;
    do not rerun physical A14.7 merely to reconfirm it.
 2. Preserve the accepted A15.4 public-kernel local proof and exact-file commit.
-3. Review and, only under separate explicit device authorization, manually run
-   the A15.6 protected target Host flow against the frozen xclbin SHA256/UUID.
-4. Return the complete A15.6 evidence package for a separate acceptance review;
-   do not infer PASS from runner preparation or from partial output.
-5. Keep performance work separate until all five functional golden cases,
+3. Transfer the reviewed Git bundle, fast-forward the established A15.5 build-
+   only repository while preserving untracked artifacts, and run only the
+   device-free A15.6 target preflight.
+4. Review the returned preflight status before requesting separate explicit
+   authorization for the protected target Host flow.
+5. Return the complete A15.6 board evidence package for a separate acceptance
+   review; do not infer PASS from runner preparation or from partial output.
+6. Keep performance work separate until all five functional golden cases,
    cleanup, and evidence validation pass on the protected target.
 ## Non-Goals of the Current Stage
 
@@ -521,8 +532,8 @@ a public AXI4-Lite plus `m_axi_gmem` boundary for four sequential fake-memory
 rows and a complete golden-matched inference. This
 does not convert the standalone A14.7 physical result into physical A15 proof.
 
-Current next gate: separately authorized manual execution of the prepared A15.6
-protected Host/XRT flow for physical `HBM[0]`, four sequential lookups, five
-software-golden cases, cleanup, and complete DLRM functional board validation
-using the frozen A15.5 xclbin. Multi-table and multi-HBM-bank parallelism remain
-future work and are not implied by the A15.4 four-slot sequence.
+Current next gate: user-run, device-free A15.6 target preflight in the existing
+A15.5 build-only repository. Protected Host/XRT execution for physical
+`HBM[0]`, four sequential lookups, five software-golden cases, cleanup, and
+complete DLRM functional board validation remains a later separately authorized
+gate. Multi-table and multi-HBM-bank parallelism remain future work.

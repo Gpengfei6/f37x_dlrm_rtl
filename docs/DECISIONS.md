@@ -908,3 +908,31 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
 - **Next gate:** a separately authorized user-controlled target execution must
   run all five cases, verify exact results and cleanup, and return a complete
   evidence package before A15.6 board acceptance can be considered.
+
+## D-044 - Separate A15.6 target preflight from protected board execution
+
+- **Status:** accepted for local source preparation on 2026-08-31; target
+  preflight remains `NOT_RUN`.
+- **Decision:** add one versioned target-preflight entry that validates Git,
+  the XRT 2020.2 Host build, the already-built fixed-SHA xclbin and HBM[0]
+  metadata, deterministic golden assets, the frozen ABI, and the protected
+  runner. Keep device discovery/programming/Host execution in the later
+  protected board runner.
+- **Target repository:** fast-forward the existing
+  `/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a15_5_buildonly`
+  repository from a verified Git bundle. Preserve all untracked build/results/
+  logs/.ipcache outputs and the accepted xclbin.
+- **Safety rule:** the preflight may not query or open an FPGA, allocate a BO,
+  execute the Host, program/reset a device, invoke `v++` or Vivado, or rebuild
+  XO/xclbin. It records `FPGA_DEVICE_ACCESS=NONE` and all board states as
+  `NOT_RUN`/`NOT_VALIDATED`.
+- **Reason:** compiler/artifact/golden readiness should fail before any separate
+  board authorization or device-changing action. A preflight PASS is not a
+  physical-HBM or board PASS.
+- **Local evidence:** Python syntax and static validation of the preflight,
+  legacy XRT API/build convention, exact ABI, five-case golden contract,
+  fixed-artifact gates, and prohibited-command absence pass. Bash syntax and
+  the target preflight itself remain `NOT_RUN` on Windows.
+- **Next gate:** the user transfers the reviewed bundle, performs a fast-forward
+  only import, and runs the device-free preflight. Protected board execution
+  requires a separate request after its complete status is reviewed.
