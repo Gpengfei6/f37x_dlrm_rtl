@@ -63,22 +63,63 @@ def sha256(path):
     return digest.hexdigest()
 
 
-def parse_markers(path):
+def parse_marker_lines(lines):
+    """Parse progressive KEY=VALUE logs using the last valid assignment.
+
+    Protected target runners append precheck, Host-validation, and final status
+    sections to one log.  A later assignment therefore supersedes an earlier
+    provisional value for the same key.
+    """
     markers = {}
-    for raw in path.read_text(encoding="utf-8", errors="replace").splitlines():
+    for raw in lines:
         if "=" not in raw:
             continue
         key, value = raw.split("=", 1)
         key = key.strip()
         if key and re.match(r"^[A-Za-z0-9_]+$", key):
-            markers.setdefault(key, value.strip())
+            markers[key] = value.strip()
     return markers
+
+
+def parse_markers(path):
+    return parse_marker_lines(
+        path.read_text(encoding="utf-8", errors="replace").splitlines())
 
 
 def exact(markers, key, value, context):
     require(markers.get(key) == str(value),
             "{}: {} expected {!r}, got {!r}".format(
                 context, key, str(value), markers.get(key)))
+
+
+def run_marker_parser_self_test():
+    provisional_then_pass = parse_marker_lines(
+        ("KEY=NOT_VALIDATED\nKEY=PASS\n").splitlines())
+    exact(provisional_then_pass, "KEY", "PASS",
+          "marker self-test provisional_then_pass")
+
+    pass_then_fail = parse_marker_lines(
+        ("KEY=PASS\nKEY=FAIL\n").splitlines())
+    exact(pass_then_fail, "KEY", "FAIL", "marker self-test pass_then_fail")
+    try:
+        exact(pass_then_fail, "KEY", "PASS",
+              "marker self-test pass_then_fail acceptance")
+    except ValidationError:
+        pass
+    else:
+        raise ValidationError(
+            "marker self-test accepted an earlier PASS followed by FAIL")
+
+    single_pass = parse_marker_lines(("KEY=PASS\n").splitlines())
+    exact(single_pass, "KEY", "PASS", "marker self-test single_pass")
+
+    missing = parse_marker_lines(("OTHER=PASS\n").splitlines())
+    try:
+        exact(missing, "KEY", "PASS", "marker self-test missing_marker")
+    except ValidationError:
+        pass
+    else:
+        raise ValidationError("marker self-test missing_marker was not rejected")
 
 
 def required_file(root, relative):
@@ -269,12 +310,27 @@ def validate(root, repo):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--evidence-root", required=True, type=Path)
+    parser.add_argument("--evidence-root", type=Path)
     parser.add_argument("--repo", default=Path(__file__).resolve().parents[1], type=Path)
+    parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
-    root = args.evidence_root.resolve()
+
+    if args.self_test:
+        try:
+            run_marker_parser_self_test()
+        except ValidationError as error:
+            raise SystemExit(
+                "A16.2 marker parser self-test failed: {}".format(error))
+        print("A16_2_MARKER_PARSER_SELF_TEST=PASS")
+        print("A16_2_MARKER_PARSER_SELF_TEST_CASES=4")
+        print("A16_2_MARKER_SEMANTICS=LAST_VALID_OCCURRENCE")
+        return
+
     repo = args.repo.resolve()
     try:
+        require(args.evidence_root is not None,
+                "--evidence-root is required unless --self-test is used")
+        root = args.evidence_root.resolve()
         require(root.is_dir(), "evidence root is missing")
         manifest_count = validate(root, repo)
     except (OSError, ValueError, ValidationError) as error:
