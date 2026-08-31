@@ -158,21 +158,21 @@ for required in "${RTL}" "${CONFIG}" "${LINK_SCRIPT}" "${XCLBIN_VALIDATOR}" \
     }
 done
 
-CURRENT_BRANCH="$(git -C "${REPO_ROOT}" symbolic-ref --short HEAD 2>/dev/null || true)"
-CURRENT_HEAD="$(git -C "${REPO_ROOT}" rev-parse HEAD 2>/dev/null || true)"
+CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+CURRENT_HEAD="$(git rev-parse HEAD 2>/dev/null || true)"
 [[ "${CURRENT_BRANCH}" == "${EXPECTED_BRANCH}" ]] || {
     echo "ERROR: wrong branch: ${CURRENT_BRANCH}" >&2
     exit 4
 }
-git -C "${REPO_ROOT}" merge-base --is-ancestor "${SOURCE_BASELINE}" HEAD || {
+git merge-base --is-ancestor "${SOURCE_BASELINE}" HEAD || {
     echo "ERROR: A15.6 source baseline is not an ancestor of HEAD" >&2
     exit 4
 }
-git -C "${REPO_ROOT}" diff --quiet || {
+git diff --quiet || {
     echo "ERROR: tracked worktree must be clean" >&2
     exit 4
 }
-git -C "${REPO_ROOT}" diff --cached --quiet || {
+git diff --cached --quiet || {
     echo "ERROR: index must be clean" >&2
     exit 4
 }
@@ -184,7 +184,7 @@ actual_rtl_sha256="$(sha256sum "${RTL}" | awk '{print $1}')"
 
 mkdir -p "${RESULT_ROOT}" "${GENERATED_ASSETS}"
 trap unexpected_error ERR
-git -C "${REPO_ROOT}" status --porcelain > "${GIT_STATUS_FILE}"
+git status --porcelain > "${GIT_STATUS_FILE}"
 write_status
 
 set +u

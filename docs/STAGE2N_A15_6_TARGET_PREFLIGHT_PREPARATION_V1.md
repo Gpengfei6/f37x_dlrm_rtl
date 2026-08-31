@@ -28,6 +28,20 @@ XCLBIN_REBUILT=NO
 The user-controlled target preflight must pass before a separately authorized
 protected board execution may be considered.
 
+### Old-Git compatibility correction
+
+The first user-controlled target attempt exposed an older F37X server Git that
+does not accept `git -C <repo> ...` and does not support
+`git symbolic-ref --short HEAD`. The preflight already changes into the exact
+repository before running Git gates, so all runtime Git commands now execute
+repository-locally. Branch detection uses the server-validated
+`git rev-parse --abbrev-ref HEAD`, while HEAD detection remains
+`git rev-parse HEAD`. The protected board runner uses the same compatible
+branch query so it cannot fail at the next gate for the same reason.
+
+This correction does not change RTL, Host functionality, board-run behavior,
+the frozen XO/xclbin, ABI, golden assets, or any device-access boundary.
+
 ## 2. Frozen identities
 
 | Item | Frozen value |
@@ -231,15 +245,16 @@ BUNDLE=/home/chaosuan/gpf/gpf_f37x_dlrm/transfer/stage2n_a15_6_target_preflight_
 BRANCH=work/stage2n-a15-hbm-pipeline-integration
 TRANSFER_REF=refs/remotes/a15_6_transfer/stage2n-a15-hbm-pipeline-integration
 
-git -C "${REPO}" bundle verify "${BUNDLE}"
-test "$(git -C "${REPO}" symbolic-ref --short HEAD)" = "${BRANCH}"
-git -C "${REPO}" diff --quiet
-git -C "${REPO}" diff --cached --quiet
-git -C "${REPO}" fetch "${BUNDLE}" "refs/heads/${BRANCH}:${TRANSFER_REF}"
-git -C "${REPO}" merge-base --is-ancestor HEAD "${TRANSFER_REF}"
-git -C "${REPO}" merge --ff-only "${TRANSFER_REF}"
-git -C "${REPO}" merge-base --is-ancestor ee3dcaa7f3d90458f3b770318001f3b16d04eccf HEAD
-git -C "${REPO}" status --short
+cd "${REPO}"
+git bundle verify "${BUNDLE}"
+test "$(git rev-parse --abbrev-ref HEAD)" = "${BRANCH}"
+git diff --quiet
+git diff --cached --quiet
+git fetch "${BUNDLE}" "refs/heads/${BRANCH}:${TRANSFER_REF}"
+git merge-base --is-ancestor HEAD "${TRANSFER_REF}"
+git merge --ff-only "${TRANSFER_REF}"
+git merge-base --is-ancestor ee3dcaa7f3d90458f3b770318001f3b16d04eccf HEAD
+git status --short
 ```
 
 The final status intentionally shows retained untracked build/results/log files;

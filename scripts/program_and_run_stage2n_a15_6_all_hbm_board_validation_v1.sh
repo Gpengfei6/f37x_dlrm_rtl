@@ -131,7 +131,7 @@ for tool in xbutil xclbinutil git sha256sum python3 awk grep fuser lsof readlink
     command -v "${tool}" >/dev/null 2>&1 || fail "required tool missing: ${tool}"
 done
 
-CURRENT_BRANCH="$(git symbolic-ref --short HEAD 2>/dev/null || true)"
+CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
 CURRENT_HEAD="$(git rev-parse HEAD 2>/dev/null || true)"
 [[ "${CURRENT_BRANCH}" == "${EXPECTED_BRANCH}" ]] || fail "wrong branch: ${CURRENT_BRANCH}"
 

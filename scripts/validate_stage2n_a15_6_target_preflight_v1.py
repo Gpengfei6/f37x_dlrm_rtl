@@ -87,6 +87,19 @@ def validate_repo(repo):
     template_text = read(template)
     validate_no_device_actions(preflight_text)
 
+    require("git -C" not in preflight_text,
+            "preflight must use repository-local Git commands for old Git")
+    require("symbolic-ref --short" not in preflight_text,
+            "preflight uses unsupported old-Git branch detection")
+    require("git rev-parse --abbrev-ref HEAD" in preflight_text,
+            "preflight old-Git-compatible branch detection missing")
+    require("git -C" not in runner_text,
+            "protected runner must use repository-local Git commands")
+    require("symbolic-ref --short" not in runner_text,
+            "protected runner uses unsupported old-Git branch detection")
+    require("git rev-parse --abbrev-ref HEAD" in runner_text,
+            "protected runner old-Git-compatible branch detection missing")
+
     for token in (
         EXPECTED_REPO, EXPECTED_BRANCH, EXPECTED_BASELINE, EXPECTED_RTL_SHA256,
         EXPECTED_XCLBIN_SHA256, EXPECTED_UUID, EXPECTED_KERNEL, EXPECTED_CU,
