@@ -42,6 +42,18 @@ branch query so it cannot fail at the next gate for the same reason.
 This correction does not change RTL, Host functionality, board-run behavior,
 the frozen XO/xclbin, ABI, golden assets, or any device-access boundary.
 
+### Deterministic golden source-path correction
+
+The target preflight initially passed the absolute server path of the source
+model package to the golden builder. That path was consequently serialized into
+the regenerated manifest and made its bytes environment-dependent. The script
+now keeps the absolute path for required-input validation but passes the stable
+repository-relative path
+`models/stage2m/stage2m_trained_hybrid_dlrm.f37xhd` to the builder after changing
+into the repository root. All seven existing byte-for-byte `cmp` gates remain
+unchanged. This restores deterministic regeneration across Windows, Linux, and
+the F37X server without changing the builder algorithm or any frozen asset.
+
 ## 2. Frozen identities
 
 | Item | Frozen value |

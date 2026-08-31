@@ -33,7 +33,8 @@ XCLBIN_VALIDATOR="${REPO_ROOT}/scripts/validate_stage2n_a15_5_xclbin_v2.py"
 SOURCE_VALIDATOR="${REPO_ROOT}/scripts/validate_stage2n_a15_6_sources_v1.py"
 PREFLIGHT_VALIDATOR="${REPO_ROOT}/scripts/validate_stage2n_a15_6_target_preflight_v1.py"
 GOLDEN_BUILDER="${REPO_ROOT}/python/build_stage2n_a15_6_board_assets_v1.py"
-SOURCE_PACKAGE="${REPO_ROOT}/models/stage2m/stage2m_trained_hybrid_dlrm.f37xhd"
+SOURCE_PACKAGE_REL="models/stage2m/stage2m_trained_hybrid_dlrm.f37xhd"
+SOURCE_PACKAGE="${REPO_ROOT}/${SOURCE_PACKAGE_REL}"
 ASSET_ROOT="${REPO_ROOT}/models/stage2n_a15_6"
 HOST_BUILD_SCRIPT="${REPO_ROOT}/scripts/build_stage2n_a15_6_host_v1.sh"
 HOST_BUILD_DIR="${REPO_ROOT}/build/stage2n_a15_6/host_v1"
@@ -220,7 +221,7 @@ grep -Fxq "A15_6_SOURCE_VALIDATION=PASS" "${SOURCE_LOG}" ||
 A15_6_PROTECTION_GATE="PASS"
 write_status
 
-python3 "${GOLDEN_BUILDER}" --source-package "${SOURCE_PACKAGE}" \
+python3 "${GOLDEN_BUILDER}" --source-package "${SOURCE_PACKAGE_REL}" \
     --output-dir "${GENERATED_ASSETS}" --status "${GOLDEN_STATUS}" \
     > "${GOLDEN_LOG}" 2>&1 || fail 7 "deterministic golden regeneration failed"
 for asset in \
