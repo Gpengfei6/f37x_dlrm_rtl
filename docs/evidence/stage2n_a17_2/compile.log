@@ -1,0 +1,83 @@
+﻿INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/common/rv_fifo.sv" into library work
+INFO: [VRFC 10-311] analyzing module rv_fifo
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/common/runtime_relu_quant.sv" into library work
+INFO: [VRFC 10-311] analyzing module runtime_relu_quant
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/compute/mac_lane.sv" into library work
+INFO: [VRFC 10-311] analyzing module mac_lane
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/memory/banked_activation_buffer.sv" into library work
+INFO: [VRFC 10-311] analyzing module banked_activation_buffer
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/memory/local_weight_provider.sv" into library work
+INFO: [VRFC 10-311] analyzing module local_weight_provider
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/compute/vector_dot_product_core.sv" into library work
+INFO: [VRFC 10-311] analyzing module vector_dot_product_core
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/compute/dense_layer_engine.sv" into library work
+INFO: [VRFC 10-311] analyzing module dense_layer_engine
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/control/mlp_sequence_controller.sv" into library work
+INFO: [VRFC 10-311] analyzing module mlp_sequence_controller
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/top/dlrm_f37x_rtl_kernel.sv" into library work
+INFO: [VRFC 10-311] analyzing module dlrm_f37x_rtl_kernel
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/interaction/dlrm_feature_interaction_engine.sv" into library work
+INFO: [VRFC 10-311] analyzing module dlrm_feature_interaction_engine
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a2.sv" into library work
+INFO: [VRFC 10-311] analyzing module dlrm_f37x_rtl_kernel_stage2n_a2
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/control/mlp_sequence_controller_segmented.sv" into library work
+INFO: [VRFC 10-311] analyzing module mlp_sequence_controller_segmented
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/pipeline/dlrm_internal_pipeline_controller.sv" into library work
+INFO: [VRFC 10-311] analyzing module dlrm_internal_pipeline_controller
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/pipeline/dlrm_internal_pipeline_controller_stage2n_a13_v1.sv" into library work
+INFO: [VRFC 10-311] analyzing module dlrm_internal_pipeline_controller_stage2n_a13_v1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/hbm/dlrm_hbm_embedding_lookup_stage2n_a14_v2.sv" into library work
+INFO: [VRFC 10-311] analyzing module dlrm_hbm_embedding_lookup_stage2n_a14_v2
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a16_v1.sv" into library work
+INFO: [VRFC 10-311] analyzing module dlrm_saturating_interval_counter_stage2n_a16_v1
+INFO: [VRFC 10-311] analyzing module dlrm_f37x_rtl_kernel_stage2n_a16_v1
+INFO: [VRFC 10-311] analyzing module dlrm_internal_pipeline_axi_lite_adapter_stage2n_a16_v1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/hbm/dlrm_hbm_parallel_lookup_stage2n_a17_v1.sv" into library work
+INFO: [VRFC 10-311] analyzing module dlrm_hbm_parallel_lookup_stage2n_a17_v1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/pipeline/dlrm_hbm_pipeline_integration_stage2n_a17_v1.sv" into library work
+INFO: [VRFC 10-311] analyzing module dlrm_hbm_pipeline_integration_stage2n_a17_v1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a17_v1.sv" into library work
+INFO: [VRFC 10-311] analyzing module dlrm_f37x_rtl_kernel_stage2n_a17_v1
+INFO: [VRFC 10-311] analyzing module dlrm_internal_pipeline_axi_lite_adapter_stage2n_a17_v1
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/FpgaWork/f37x_dlrm_rtl/tb/tb_dlrm_f37x_rtl_kernel_stage2n_a17_v1.sv" into library work
+INFO: [VRFC 10-311] analyzing module tb_dlrm_f37x_rtl_kernel_stage2n_a17_v1
+
+===== xelab =====
+Vivado Simulator v2022.1
+Copyright 1986-1999, 2001-2022 Xilinx, Inc. All Rights Reserved.
+Running: D:/vivado2022/vivado2022forwins/Vivado/2022.1/bin/unwrapped/win64.o/xelab.exe tb_dlrm_f37x_rtl_kernel_stage2n_a17_v1 -s a17_2_public_kernel_test --timescale 1ns/1ps 
+Multi-threading is on. Using 18 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module work.banked_activation_buffer(BANK_DE...
+Compiling module work.local_weight_provider_default
+Compiling module work.mac_lane_default
+Compiling module work.vector_dot_product_core(DIM_WIDT...
+Compiling module work.runtime_relu_quant(SHIFT_WIDTH=6...
+Compiling module work.rv_fifo(DATA_WIDTH=35,DEPTH=2)
+Compiling module work.dense_layer_engine_default
+Compiling module work.mlp_sequence_controller_default
+Compiling module work.dlrm_f37x_rtl_kernel
+Compiling module work.dlrm_feature_interaction_engine_...
+Compiling module work.dlrm_f37x_rtl_kernel_stage2n_a2
+Compiling module work.dlrm_saturating_interval_counter...
+Compiling module work.dlrm_hbm_embedding_lookup_stage2...
+Compiling module work.dlrm_hbm_parallel_lookup_stage2n...
+Compiling module work.banked_activation_buffer(MAX_DIM...
+Compiling module work.local_weight_provider(MAX_WEIGHT...
+Compiling module work.vector_dot_product_core(MAX_IN_D...
+Compiling module work.rv_fifo(DATA_WIDTH=31,DEPTH=2)
+Compiling module work.dense_layer_engine(MAX_IN_DIM=64...
+Compiling module work.mlp_sequence_controller_segmente...
+Compiling module work.dlrm_internal_pipeline_controlle...
+Compiling module work.dlrm_internal_pipeline_controlle...
+Compiling module work.dlrm_hbm_pipeline_integration_st...
+Compiling module work.dlrm_internal_pipeline_axi_lite_...
+Compiling module work.dlrm_f37x_rtl_kernel_stage2n_a17...
+Compiling module work.dlrm_saturating_interval_counter...
+Compiling module work.tb_dlrm_f37x_rtl_kernel_stage2n_...
+Built simulation snapshot a17_2_public_kernel_test

@@ -1,6 +1,6 @@
 # Stage 2N History
 
-This table is an AI-readable index of Stage 2N-A1 through A17.1. It does not turn
+This table is an AI-readable index of Stage 2N-A1 through A17.3. It does not turn
 historical claims into current verification. Follow each evidence link and use
 the status language exactly.
 
@@ -40,6 +40,7 @@ hybrid CPU-embedding/FPGA-dense inference path.
 | Stage 2N-A16.1 | Instrument sequential lookup and complete FPGA intervals | Added two read-only inclusive 32-bit saturating counters at `0x30C/0x310` in a versioned top while retaining the A13 compute-counter ABI | Commit `585ec44`; `docs/STAGE2N_A16_1_SEQUENTIAL_HBM_LATENCY_INSTRUMENTATION_V1.md`; local XSim evidence | **LOCAL XSIM PASS**: fake-AXI lookup/compute/e2e/residual `73/1174/1285/38`; not physical HBM latency or performance |
 | Stage 2N-A16.2 | Build the exact A16 target and establish a physical sequential-latency baseline | Exact target/100 MHz timing and five protected physical cases pass with `112/1174/1289/3` accounting; compact originals imported and validated | Preparation commit `a1fdc71`; validator fix `eb71ded`; `docs/STAGE2N_A16_2_FINAL_ACCEPTANCE_V1.md`; curated evidence under `docs/evidence/stage2n_a16_2/final_acceptance_v1/` | **FINAL PASS**: exact XO/xclbin identities, one CU/HBM[0], zero failing endpoints, five exact results, cleanup/safety markers and 31-entry SHA manifest accepted; reconciliation EXPLAINED; performance NOT CLAIMED |
 | Stage 2N-A17.1 | Establish a local four-port parallel lookup and A13 integration baseline | Instantiated four unchanged A14 v2 engines, independently gathered four single-beat responses, ordered slots 0–3 through the unchanged A13 configuration port, added fresh-group/error-drain guards and two self-checking benches | Starting HEAD `ec062ba6`; `docs/STAGE2N_A17_1_PARALLEL_LOOKUP_LOCAL_V1.md`; compact evidence under `docs/evidence/stage2n_a17_1/local_xsim_v1/` | **LOCAL XSIM PASS**: 73 controller cases including all 24 response orders; two complete computations result 36, counters 322/100/744/1174, six zero tool RCs and zero warnings. No public A17 kernel, target build, physical multi-bank HBM or performance claim |
+| Stage 2N-A17.2/A17.3 | Expose A17.1 through four public AXI masters and regress in XSim | Added versioned public kernel `dlrm_f37x_rtl_kernel_stage2n_a17_v1` with `m_axi_gmem0..3`, four captured bases and A16 counter ABI; public-port TB covers simultaneous AR, reorder 2/0/3/1, stall, RRESP drain and no-reset restart | Parent HEAD `e4ce2ab`; `docs/STAGE2N_A17_2_PUBLIC_KERNEL_XSIM_V1.md`; compact evidence under `docs/evidence/stage2n_a17_2/` | **LOCAL XSIM PASS**: xvlog/xelab/xsim RC 0, zero warnings, result 36, A13 counters 322/100/744/1174. No XO, xclbin, physical HBM, board or performance claim |
 
 ## Current Milestone Interpretation
 
@@ -87,8 +88,9 @@ hybrid CPU-embedding/FPGA-dense inference path.
 - A16.1 is accepted for local counter semantics and fake-AXI timing only.
 - A16.2 is the accepted real F37X sequential-latency comparison baseline. The
   compact originals and 31-entry manifest validate locally. A17.1 subsequently
-  passes local four-port control/integration XSim; public-kernel and physical
-  multi-bank work remain unvalidated.
+  passes local four-port control/integration XSim. A17.2/A17.3 then pass
+  public four-master kernel XSim. Target packaging and physical multi-bank
+  work remain unvalidated.
 
 ## Superseded and Historical Files
 

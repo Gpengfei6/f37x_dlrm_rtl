@@ -23,8 +23,9 @@ XO/xclbin flow and its validator-only Vitis 2020.2 compatibility fix. Stage
   evidence is now imported and validated: the exact target, requested 100 MHz
   timing gate, five physical cases and 112/1174/1289/3 cycle accounting pass.
   A17.1 then adds a local four-port parallel lookup controller and connects it
-  to the unchanged A13 pipeline. Its two independent XSim benches pass, but no
-  public A17 kernel or physical multi-bank result exists. Performance remains
+  to the unchanged A13 pipeline. A17.2/A17.3 expose that composition through a
+  versioned public kernel with four AXI masters; the public-port XSim
+  regression passes. No physical multi-bank result exists. Performance remains
   unclaimed.
 
 Target environment:
@@ -62,7 +63,7 @@ Read the repository in this order before proposing or making changes:
 5. `docs/ARCHITECTURE.md`
 6. `docs/STAGE_HISTORY.md`
 7. the current-stage document,
-   `docs/STAGE2N_A17_1_PARALLEL_LOOKUP_LOCAL_V1.md`
+   `docs/STAGE2N_A17_2_PUBLIC_KERNEL_XSIM_V1.md`
 8. the A16.2 final-acceptance document,
    `docs/STAGE2N_A16_2_FINAL_ACCEPTANCE_V1.md`
 9. the A15.6 final-acceptance document,
@@ -88,8 +89,7 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A17.1 — local four-port parallel lookup and A13
-integration XSim PASS**.
+Current stage: **Stage 2N-A17.3 — public four-master kernel XSim PASS**.
 
 Stage 2N-A13 remains the accepted and frozen dense/compute arithmetic baseline;
 A15.6 is the accepted integrated physical-HBM functional baseline. A14.5 added
@@ -106,6 +106,13 @@ orders, simultaneous returns and per-slot address/response faults. The
 integration bench passes two no-reset computations with result 36 and counters
 322/100/744/1174. These are fake-memory XSim results, not four packaged Vitis
 masters, physical HBM banks, latency improvement or speedup.
+
+A17.2/A17.3 wrap that controller in a versioned public kernel with four
+explicit `m_axi_gmem0..3` masters, four captured table bases and the A16
+counter ABI. The public-port XSim regression passes with golden result 36 and
+unchanged A13 counters 322/100/744/1174. Fake-memory lookup/e2e cycles are not
+physical HBM latency. Target packaging and physical HBM[0..3] mapping remain
+separate user-controlled steps.
 
 A15.1 adds one new versioned wrapper. It instantiates the accepted A14 v2 lookup
 and accepted A13 cycle-counter controller without editing either file. Its
@@ -226,8 +233,9 @@ Accepted A16.2 sequential baseline:
   failing endpoints;
 - performance remains `NOT_CLAIMED`;
 - multi-table, multi-bank, burst, cache, coalescing, scheduling, or INT8 work.
-- A17.1 local parallel lookup is accepted; its public-kernel and physical-bank
-  stages have not started.
+- A17.1 local parallel lookup is accepted; A17.2/A17.3 public four-master
+  kernel XSim is accepted. Target build and physical-bank stages have not
+  started.
 
 See `docs/STAGE2N_A15_6_PROTECTED_ALL_HBM_BOARD_VALIDATION_PREPARATION_V1.md`
 for the Host, guard, golden, evidence, and non-claim contract, and

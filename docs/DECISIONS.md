@@ -1122,5 +1122,29 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
   masters or four physical HBM banks. Target build, timing, physical latency,
   throughput, bandwidth, speedup, power and energy remain unvalidated or
   unclaimed.
-- **Next:** add a separately versioned public A17 kernel and trained-model
-  public-port regression with A16-equivalent event boundaries.
+- **Next:** A17.2/A17.3 later added a separately versioned public four-master
+  kernel and public-port XSim regression. Target packaging remains a later
+  user-controlled step.
+
+## D-051 - Expose A17.1 through four public AXI masters and regress in XSim
+
+- **Status:** accepted as the Stage 2N-A17.2/A17.3 local public-kernel baseline
+  on 2026-09-08.
+- **Decision:** add a versioned public top
+  `dlrm_f37x_rtl_kernel_stage2n_a17_v1` with `s_axi_control` plus four
+  independent 64-bit/128-bit read masters `m_axi_gmem0..3`. Preserve the A13
+  map through `0x224`, A15 control at `0x300`, port-0 base at `0x304/0x308`,
+  A16 counters at `0x30C/0x310`, and add bases 1–3 at `0x318/0x31C`,
+  `0x320/0x324` and `0x328/0x32C`. Instantiate the unchanged A17.1 integration
+  rather than the sequential A15 controller.
+- **Regression:** local Vivado/XSim 2022.1 compile, elaboration and public-port
+  simulation pass. Coverage includes simultaneous four-port `ARVALID`, R order
+  2/0/3/1, an independent channel stall, `RRESP` error drain plus CLEAR, and a
+  no-reset START/DONE restart. Result 36 and A13 counters 322/100/744/1174 are
+  preserved.
+- **Boundary:** four public AXI ports are a packaging prerequisite, not four
+  physical HBM banks. Target build, xclbin, board execution, bandwidth,
+  latency, throughput, speedup, power and energy remain unvalidated or
+  unclaimed.
+- **Next:** user-controlled A17 target packaging/link if later authorized.
+  Do not enter A18 from this evidence.
