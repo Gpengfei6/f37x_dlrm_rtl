@@ -22,7 +22,10 @@ XO/xclbin flow and its validator-only Vitis 2020.2 compatibility fix. Stage
   counters without modifying that frozen RTL. A16.2 compact target and board
   evidence is now imported and validated: the exact target, requested 100 MHz
   timing gate, five physical cases and 112/1174/1289/3 cycle accounting pass.
-  Performance, multi-bank mapping and parallel lookup remain unclaimed.
+  A17.1 then adds a local four-port parallel lookup controller and connects it
+  to the unchanged A13 pipeline. Its two independent XSim benches pass, but no
+  public A17 kernel or physical multi-bank result exists. Performance remains
+  unclaimed.
 
 Target environment:
 
@@ -35,10 +38,10 @@ Target environment:
 Main research direction:
 
 1. retain the accepted configurable Bottom–Interaction–Top inference pipeline;
-2. integrate four sequential logical embedding lookups without changing the
-   accepted A13 arithmetic, START gate, or cycle-counter ABI;
-3. establish functional equivalence before considering multiple banks, request
-   coalescing, scheduling, or performance claims.
+2. use four independent A14 v2 engines to gather four logical embedding rows
+   while preserving accepted A13 arithmetic and counter behavior;
+3. expose and validate the local design through a separately versioned public
+   kernel before any physical multi-bank or performance claim.
 
 Important distinction: A13 is the accepted integrated DLRM pipeline baseline,
 whose embedding lookup is performed by the CPU. A14.7 separately proved one
@@ -59,10 +62,12 @@ Read the repository in this order before proposing or making changes:
 5. `docs/ARCHITECTURE.md`
 6. `docs/STAGE_HISTORY.md`
 7. the current-stage document,
+   `docs/STAGE2N_A17_1_PARALLEL_LOOKUP_LOCAL_V1.md`
+8. the A16.2 final-acceptance document,
    `docs/STAGE2N_A16_2_FINAL_ACCEPTANCE_V1.md`
-8. the A15.6 final-acceptance document,
+9. the A15.6 final-acceptance document,
    `docs/STAGE2N_A15_6_ALL_HBM_BOARD_FINAL_ACCEPTANCE_V1.md`
-9. the exact RTL, testbench, Host, configuration, and script files named by the
+10. the exact RTL, testbench, Host, configuration, and script files named by the
    active-stage documents
 
 Also read `AGENTS.md` in full. Its rules are mandatory and cannot be replaced by
@@ -83,13 +88,24 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A16.2 — final acceptance PASS; A16.3 not started**.
+Current stage: **Stage 2N-A17.1 — local four-port parallel lookup and A13
+integration XSim PASS**.
 
 Stage 2N-A13 remains the accepted and frozen dense/compute arithmetic baseline;
 A15.6 is the accepted integrated physical-HBM functional baseline. A14.5 added
 the runtime 64-bit table-base ABI, A14.6 completed the accepted link-only F37X
 build, and A14.7 completed one protected standalone physical HBM[0] lookup.
 Those stages remain separate evidence boundaries.
+
+A17.1 instantiates four unchanged A14 v2 read engines behind independent local
+AXI port arrays. It gathers all four responses before ordered injection into
+the unchanged A13 configuration port, drains all four single-beat responses
+before publishing an error, and requires a fresh completed group for every
+compute START. The controller bench passes 73 cases, including all 24 return
+orders, simultaneous returns and per-slot address/response faults. The
+integration bench passes two no-reset computations with result 36 and counters
+322/100/744/1174. These are fake-memory XSim results, not four packaged Vitis
+masters, physical HBM banks, latency improvement or speedup.
 
 A15.1 adds one new versioned wrapper. It instantiates the accepted A14 v2 lookup
 and accepted A13 cycle-counter controller without editing either file. Its
@@ -210,7 +226,8 @@ Accepted A16.2 sequential baseline:
   failing endpoints;
 - performance remains `NOT_CLAIMED`;
 - multi-table, multi-bank, burst, cache, coalescing, scheduling, or INT8 work.
-- A16.3 has not started.
+- A17.1 local parallel lookup is accepted; its public-kernel and physical-bank
+  stages have not started.
 
 See `docs/STAGE2N_A15_6_PROTECTED_ALL_HBM_BOARD_VALIDATION_PREPARATION_V1.md`
 for the Host, guard, golden, evidence, and non-claim contract, and

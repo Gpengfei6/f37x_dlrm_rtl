@@ -1098,3 +1098,29 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
   performance claim.
 - **Next gate:** A16.3 remains not started and requires a separate architecture
   boundary and explicit authorization before multi-bank or parallel work.
+
+## D-050 - Use independent four-port gather before ordered A13 injection
+
+- **Status:** accepted as the Stage 2N-A17.1 local architecture on 2026-09-08.
+- **Decision:** instantiate four unchanged A14 v2 single-outstanding read
+  engines. Snapshot four bases and indexes on one load handshake, launch each
+  request independently, retain all responses, and inject slots 0–3 through the
+  unchanged single A13 configuration port only after all four succeed.
+- **Failure rule:** a failed group performs no A13 writes. Consume all four
+  engine responses before exposing the retained error; acknowledge the error
+  before admitting another group. Missing RLAST is only detected as a
+  single-beat protocol fault; this design does not recover an unrestricted
+  malformed multi-beat stream.
+- **Freshness rule:** each successful group grants exactly one compute START.
+  New load acceptance clears that token, so the retained A13 loaded mask cannot
+  authorize a stale rerun.
+- **Evidence:** local Vivado/XSim 2022.1 passes 73 controller cases and two full
+  A13 computations with result 36 and counters 322/100/744/1174. All six tool
+  return codes are zero, both warning counts are zero, and frozen executable
+  assets match starting HEAD `ec062ba6`.
+- **Boundary:** packed local port arrays do not prove four packaged Vitis AXI
+  masters or four physical HBM banks. Target build, timing, physical latency,
+  throughput, bandwidth, speedup, power and energy remain unvalidated or
+  unclaimed.
+- **Next:** add a separately versioned public A17 kernel and trained-model
+  public-port regression with A16-equivalent event boundaries.

@@ -1,11 +1,11 @@
 # Current State
 
-Snapshot date: 2026-08-31
+Snapshot date: 2026-09-08
 
 ## Repository State
 
 - Repository: `D:\FpgaWork\f37x_dlrm_rtl`
-- Branch: `work/stage2n-a15-hbm-pipeline-integration`
+- Branch: `work/stage2n-a16-multibank-parallel`
 - A14.5 accepted target-XO tested HEAD:
   `4096614419170404d5dcb334432f5f322c4f92d5`
 - A14.6 accepted link-only tested HEAD:
@@ -38,8 +38,9 @@ Snapshot date: 2026-08-31
   `6155ad8fe2fa9000ebc314536986c83581f8a940`
 - A16.2 preparation HEAD:
   `a1fdc71097f9969c8e982926a1ce1615a0c3254e`
-- Current engineering stage: **Stage 2N-A16.2 final acceptance PASS; A16.3 not
-  started**
+- A17.1 local starting HEAD: `ec062ba6c8a0a22c29b28abc73e0b94668e03fd7`
+- Current engineering stage: **Stage 2N-A17.1 local four-port parallel lookup
+  and A13 integration XSim PASS**
 - Accepted and frozen physical-HBM functional baseline: **Stage 2N-A15.6**
 - Accepted and frozen dense/compute arithmetic baseline: **Stage 2N-A13**
 
@@ -56,8 +57,12 @@ sequential embedding lookups and all five independent board golden cases matched
   prepared the reviewed target-build and protected board-measurement flow. The
   compact original evidence has now been imported and validated locally. The
   exact-target build, requested 100 MHz gate, protected five-case board run and
-  physical sequential latency baseline are accepted. Performance remains
-  unclaimed, and A16.3 has not started.
+  physical sequential latency baseline are accepted. A17.1 now locally
+  instantiates four unchanged A14 v2 engines, gathers independent responses,
+  injects slots 0–3 through the unchanged A13 configuration port and preserves
+  result 36 and compute counters 322/100/744/1174 across two runs. Its 73-case
+  lookup test and integration test pass locally. Performance, public A17 kernel,
+  target build and physical multi-bank behavior remain unclaimed or not run.
 
 The primary Windows worktree may contain pre-existing untracked recovery,
 historical evidence, patent, source, and helper files. Preserve them. Never use
@@ -413,7 +418,8 @@ historical evidence, patent, source, and helper files. Preserve them. Never use
   reports 31 valid manifest entries. Therefore
   `A16_2_FINAL_ACCEPTANCE=PASS` and
   `READY_FOR_A16_3_ARCHITECTURE=YES_ACCEPTED_SEQUENTIAL_BASELINE`.
-- `A16_2_PERFORMANCE=NOT_CLAIMED`; A16.3 remains `NOT_STARTED`.
+- `A16_2_PERFORMANCE=NOT_CLAIMED`; at A16.2 closure, its then-next A16.3 label
+  remained `NOT_STARTED`. The subsequent user-directed work is recorded as A17.1.
 
 ## Verification Summary
 
@@ -551,7 +557,8 @@ Historical target environment recorded by accepted evidence:
    final metadata/status/hash/report evidence is curated under `docs/evidence`.
 6. A15.6 physical-board function, A16.1 local instrumentation and A16.2 final
    target/physical-latency acceptance pass. A16.2 is the accepted real F37X
-   sequential-latency comparison baseline. A16.3 has not started.
+   sequential-latency comparison baseline. A17.1 local XSim passes; its public
+   kernel, target build and physical multi-bank validation have not started.
 
 These local tool absences do not invalidate the accepted A15.5 artifact or the
 returned A15.6 physical-board evidence.
@@ -561,17 +568,20 @@ returned A15.6 physical-board evidence.
    functional baseline and the accepted A16.1 counter semantics.
 2. Preserve the accepted A16.2 fixed artifact identities, counter boundaries,
    five-case workload and 112/1174/1289/3 sequential baseline.
-3. Do not start A16.3 without a separate architecture boundary and explicit
-   authorization.
-4. Compare any later multi-bank or parallel design against an equivalently
+3. Preserve the accepted A17.1 local four-port controller/integration behavior,
+   its `results/stage2n_a17_1/final_v2/` evidence and tracked compact summary.
+4. Add a separately versioned public A17 kernel with four explicit AXI masters,
+   four captured table bases and A16-equivalent counter boundaries; validate it
+   with trained-model public-port regression before target packaging.
+5. Compare any later physical multi-bank design against an equivalently
    instrumented sequential target, not the local fake-AXI value.
-5. Require functional equivalence and comparable target evidence before any
+6. Require functional equivalence and comparable target evidence before any
    speedup, bandwidth, throughput, power or performance claim.
 ## Non-Goals of the Current Stage
 
 - modifying accepted A13 RTL;
 - changing fixed-point arithmetic or the trained-model golden outputs;
-- multi-bank HBM mapping;
+- physical multi-bank HBM mapping or a public four-master kernel;
 - burst or multiple-outstanding optimization;
 - coalescing, caching, prefetching, or scheduling RTL;
 - performance or speedup claims;
