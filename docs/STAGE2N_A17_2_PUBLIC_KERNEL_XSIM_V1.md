@@ -143,3 +143,32 @@ The accepted physical comparison point remains the A16.2 single-master,
 HBM[0], sequential baseline: lookup/compute/end-to-end/residual
 `112/1174/1289/3` cycles at the requested 100 MHz. No A17 performance claim is
 made from fake-memory simulation.
+
+## A17.2 Final Acceptance State
+
+Accepted source and evidence commit:
+
+`beff282629a02300965a1fb0fbf2cb1e835903e7` (`beff282`)
+
+| Public-kernel gate | Result |
+|---|---|
+| four AXI master | **PASS** (`m_axi_gmem0..3`, independent AR/R) |
+| unordered response | **PASS** (R order 2, 0, 3, 1; no deadlock) |
+| stall isolation | **PASS** (port 1 held; ports 0/2/3 completed) |
+| error drain | **PASS** (`RRESP=SLVERR`, group drain, CLEAR recovery) |
+| restart | **PASS** (START/DONE then START/DONE, no DUT reset) |
+
+The AXI-Lite map `0x300` through `0x32C` is frozen. `0x300` remains the A15
+START/CLEAR window; `0x304`/`0x308` remain BASE0; `0x30C`/`0x310` remain the
+A16 inclusive counters; `0x314` remains reserved; `0x318` through `0x32C`
+remain BASE1–BASE3 low/high. There is no BASE4 register.
+
+Post-validation naming audit of the A17.2 files only (kernel, public TB, and
+A17.2 runners) found no `a15_table_base` signal, no A15.2 sequential path, and
+no A16.1 PASS marker. Remaining `ADDR_A15_*`, `A15_CMD_*`, and `a15_state*`
+identifiers name the preserved `0x300` sequencer window. They are not a
+functional A15.2/A16.1 lookup path and were left unchanged so the accepted
+XSim result at `beff282` is not disturbed.
+
+This record does not start A17.4 target HBM mapping, A18, XO/xclbin generation,
+or board execution.
