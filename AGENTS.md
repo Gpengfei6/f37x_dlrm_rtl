@@ -991,4 +991,40 @@ Evidence boundary:
 NOT RUN. It cannot prove physical hit rate, complete T=8 DLRM, or
 speedup.
 
+## Stage 2N-A18.9 Local Four-Line Cache, Pair Fold, and XSim Authorization
+
+Purpose:
+Deepen the local T>4 datapath without programming or resetting the
+FPGA: four-line FIFO cache, pairwise saturating fold to four INT16
+slots, and local Vivado 2022.1 XSim of those blocks.
+
+Authorized:
+
+1. `rtl/hbm/dlrm_hbm_bank_line_cache_stage2n_a18_9_v1.sv`
+2. `rtl/hbm/dlrm_t8_pair_fold_stage2n_a18_9_v1.sv`
+3. `rtl/hbm/dlrm_hbm_t8_folded_lookup_stage2n_a18_9_v1.sv`
+4. Matching TBs under `tb/`
+5. `scripts/check/check_stage2n_a18_9_folded_lookup_v1.py`
+6. `scripts/run_stage2n_a18_9_local_xsim_v1.ps1`
+7. `docs/STAGE2N_A18_9_FOLDED_LOOKUP_XSIM_V1.md`
+
+Required behavior:
+
+- Four-line FIFO; warm ident unique-index replay issues no extra AR.
+- `slot[i] = sat_add(vec[i], vec[i+4])`; saturate to INT16.
+- Do not instantiate A13. Do not change A13 slot count.
+- Do not instantiate these modules in
+  `dlrm_f37x_rtl_kernel_stage2n_a18_v1`.
+
+Restrictions:
+
+- No `xbutil program`, no FPGA reset, no extra-run, no XO/xclbin.
+- Local 2022.1 XSim is not 2020.2.
+- `PERFORMANCE=NOT_CLAIMED`. Fold is not an A13 DLRM golden.
+
+Evidence boundary:
+
+Python check plus local 2022.1 XSim PASS only. Not physical HBM, not
+complete T=8 DLRM, not extra-run, not speedup.
+
 

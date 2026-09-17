@@ -1731,4 +1731,12 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
 - `SUCCESS_CRITERIA`: Python golden PASS; boarded A18 unwired; no
   program/reset; `PERFORMANCE=NOT_CLAIMED`.
 
+## D-090 - A18.9 four-line cache, pair fold, local 2022.1 XSim
+
+- Date: 2026-09-17. User asked to keep advancing without requests.
+- Four-line FIFO cache; warm ident replay AR=0. Pairwise sat-add fold
+  is not an A13 golden.
+- Local XSim mapper/fold/cache4/folded PASS on Vivado 2022.1 only.
+- Extra-run still NOT_RUN. No program. No reset.
+
 
