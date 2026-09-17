@@ -22,6 +22,8 @@ results/*
 !results/dlrm_torch_cuda_summary.csv
 handoff/stage1_validation/*.zip
 handoff/stage2a_validation/*.zip
+# Full Vivado timing dump (~76 MB); WNS is in post_route_metrics.txt
+docs/evidence/stage2n_a18_2/link_001/post_route/post_route_timing_summary.rpt
 server_logs/
 .vscode/
 local_results/

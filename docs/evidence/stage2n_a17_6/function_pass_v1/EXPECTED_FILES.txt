@@ -1,0 +1,20 @@
+A17.6 function-run originals. Do not modify the server copy.
+
+SERVER=/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a17_6_buildonly/results/stage2n_a17_6/protected_v1/20260910_102244
+LOCAL=docs/evidence/stage2n_a17_6/function_pass_v1/20260910_102244
+
+Required from the run directory:
+  host.log
+  runner.log
+  pre_device_query.txt
+  a17_6_mem_map.txt
+  connectivity.json
+  mem_topology.json
+  ip_layout.json
+  dlrm_f37x_rtl_kernel_stage2n_a17_v1.xclbin.info
+
+Required from the Host rebuild:
+  ../host_build_status.txt
+
+Not copied: xclbin binary, ELF binary, post_host_query (this run did not write one).
+Do not program, reset, or rebuild to create extra files.

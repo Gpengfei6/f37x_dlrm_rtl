@@ -1,0 +1,46 @@
+A17.6 methodology content review versus frozen A16.2
+Date: 2026-09-10
+
+METHODOLOGY_CONTENT_REVIEW=PASS
+COUNT_EQUAL=YES
+COUNT_EQUAL_IS_NOT_EQUIVALENCE=1
+AUTO_SCRIPT=A17_6_METHODOLOGY_DIFF=REVIEW
+AUTO_SCRIPT_REASON=five criticals classified A17_OR_KERNEL_CLOCK because they mention clkwiz_kernel; that class is a review trigger, not an automatic PASS
+
+BASELINE=docs/evidence/stage2n_a16_2/final_acceptance_v1/target_link_v1/post_route/post_route_methodology.rpt
+CANDIDATE=docs/evidence/stage2n_a17_6/link_004_post_route_methodology.rpt
+CANDIDATE_SHA256=e6ca1668f9d47fa8a4c7af022573a0ddf06ab4f01ee80f0e2217207f8b7da8df
+CANDIDATE_BYTES=166263
+CANDIDATE_HEADER=Vivado 2020.2; Date Wed Sep 9 17:48:29 2026; report_methodology for a17_6_link_004; device xcvu37p-fsvh2892-2L-e; Fully Routed
+
+CRITICAL_COUNT_A16_2=55
+CRITICAL_COUNT_A17=55
+CRITICAL_RULES=TIMING-1,TIMING-3,TIMING-4,TIMING-14,TIMING-27,TIMING-54
+ONLY_BASELINE_RULES=NONE
+ONLY_CANDIDATE_RULES=NONE
+A17_RTL_NAME_HITS_IN_CRITICALS=NONE
+
+Classification of the 55 A17 criticals:
+- PLATFORM_STATIC=47 : PCIe / scheduler / sysclks / static_region; all present in A16.2
+- KERNEL_CLOCK_WIZARD=5 : clkwiz_kernel / clkwiz_kernel2 under static_region/base_clocking
+    TIMING-1#1 MMCME4 CLKOUT0 waveform 10 {0 5} vs expected 3.333 {0 1.667}
+    TIMING-4#3 clkwiz_kernel/inst/clk_in1
+    TIMING-4#4 clkwiz_kernel2/inst/clk_in1
+    TIMING-27#3 clkwiz_kernel/inst/clk_in1 hierarchical pin
+    TIMING-27#4 clkwiz_kernel2/inst/clk_in1 hierarchical pin
+    These five are also in A16.2 with the same object paths. They are the Vitis
+    platform kernel-clock MMCM, not dlrm_f37x / u_hbm_lookup / A17 RTL.
+- OTHER=3 : HBM_REF_CLK_0 (TIMING-4#1, TIMING-27#1) and one TIMING-54 scoped
+    group. Object paths match A16.2. Kept as OTHER, not treated as A17-new.
+
+Four TIMING-54 bodies differ only by Vivado "constraint position N"
+(71/72/266/269 vs 80/81/275/278). After stripping that index, 55/55 critical
+bodies match A16.2. That is content equivalence, not count equivalence.
+
+A17_NEW_CRITICAL_OBJECT_PATHS=0
+UNCLASSIFIED_NEW_ITEMS=0
+CLEARING_ALL_WARNINGS=NOT_A_GOAL
+WORST_PATH_DOES_NOT_SUBSTITUTE_OTHER_CHECKS=1
+BOARD=NOT_RUN
+PROGRAM=NOT_AUTHORIZED
+PERFORMANCE=NOT_CLAIMED

@@ -1,0 +1,23 @@
+A18.2 local extract is ready. Server copy is a user-run script.
+
+Local verified extract:
+
+  D:\FpgaWork\f37x_dlrm_rtl\handoff\f37x_dlrm_rtl_stage2n_a18_2_buildonly
+
+Hashes of the 28 manifest files match. Local check from that directory:
+
+  A18_2_SOURCE_INTEGRITY=PASS
+  SOURCE_FILES=28
+  TARGET_XO=NOT_RUN
+
+Do not scp that Windows folder. Upload the ZIP and unzip on Linux.
+
+In a NEW Windows PowerShell (repo root, not inside SSH):
+
+  powershell -NoProfile -File handoff\copy_a18_2_build_v1.ps1
+
+Then on Linux, after the 2020.2 shell is initialized:
+
+  cd /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly
+  python3 scripts/run_stage2n_a18_2_build_v1.py check
+  python3 scripts/run_stage2n_a18_2_build_v1.py xo --output runs/a18_2_xo_001 --confirm-build

@@ -1,0 +1,49 @@
+A17.6 original-evidence archive acceptance
+Date: 2026-09-10
+SOURCE=copied originals; server directory left unchanged
+LOCAL=docs/evidence/stage2n_a17_6/function_pass_v1/
+RUN=20260910_102244
+CHECKER=scripts/check/check_stage2n_a17_6_archived_evidence_v1.py
+A17_6_ORIGINAL_EVIDENCE_ARCHIVE=PASS
+A17_6_ORIGINAL_EVIDENCE_ACCEPTANCE=PASS
+
+Three layers:
+  FUNCTION=PASS
+  ORIGINAL_LOG_ARCHIVE=PASS
+  EXECUTION_ARTIFACT_IDENTITY=NOT_FULLY_ACCEPTED
+  COMPARABLE_PERFORMANCE=NOT_RUN
+  PERFORMANCE=NOT_CLAIMED
+
+Host rebuild identity in archived status is a compile record, not a
+runtime-verified process hash:
+  SOURCE_SHA256=7073b4d976e54f73887c21714a3a4d8bdf65cdf3a272e620fb54c09963ee55ce
+  BINARY_SHA256=9ba376589f56d99efca6e42328d347a6539ba1c40bba56d21ab690d87e7f20fc
+  RUNTIME_PRE_EXEC_ELF_HASH=MISSING
+
+See docs/evidence/stage2n_a17_6/host_identity_gap_v1.txt
+Retrieved current ELF/source match this compile-record pair
+(docs/evidence/stage2n_a17_6/host_identity_retrieval_v1/). That later hash
+does not fill RUNTIME_PRE_EXEC_ELF_HASH. Next: user-authorized locked
+function re-check; do not rebuild Host for the match. Comparable latency waits.
+
+PROGRAMMING=SKIPPED_ALREADY_LOADED
+OBSERVED_LOOKUP_COMPUTE_E2E_RESIDUAL=33/1174/1210/3
+RESIDUAL=COUNTER_INTERVAL_DIFFERENCE
+
+SHA256:
+  131e580a981a02fa21883b7f2bcba78bf97ac0014d03c3d5c4b5b3da1c8e1ae1  host.log
+  580dc0d3e27c1e4a9d69c832e5fca31a78b8eee368c827cb4ee43897d690418f  runner.log
+  f4e1608feb3f94da7855eb83379e61f1cd935e37c662ff6f0c1e6cbb9e8a9de9  pre_device_query.txt
+  bcf6a0afc734fdc6dc4c3b81bd6e6e44c910de4e4cd1bc43a6295d38b5383479  a17_6_mem_map.txt
+  f0227c24ac2b8a02567e9e21ffc157e2731617a3267d49b85f6d989e11639275  connectivity.json
+  eae7a971453ce63ad3fa3bf7d7324d87e0ecf867cf9030bc0c81d68ed9278128  mem_topology.json
+  9f91849d82f23fccfe595bd39ad0c9ae411a3b53f97f4e4ed73d7fab6f455004  ip_layout.json
+  c7a3b37fe16cbcca5cea3068e10e35c3d41f448a5061d061daaa9b6f175da4a6  xclbin.info
+  4cc14f60c2b5e3bc94aa2f5ff30b7d87a1b75fb204cb16b1b75184e2b0c08445  host_build_status.txt
+
+Server original remains:
+  results/stage2n_a17_6/protected_v1/20260910_102244
+20260910_100942 failure originals are now under
+docs/evidence/stage2n_a17_6/host_identity_retrieval_v1/fail_20260910_100942/.
+Do not backfill a missing pre-exec hash from a later file fingerprint.
+

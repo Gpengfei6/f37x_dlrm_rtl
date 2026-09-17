@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root versionMajor="1" versionMinor="9">
+  <kernel name="dlrm_f37x_rtl_kernel_stage2n_a18_v1" language="ip" vlnv="user.org:user:dlrm_f37x_rtl_kernel_stage2n_a18_v1:2.181" attributes="" preferredWorkGroupSizeMultiple="0" workGroupSize="1" hwControlProtocol="user_managed">
+    <ports>
+      <port name="m_axi_gmem0" mode="master" range="0xFFFFFFFF" dataWidth="128" portType="addressable" base="0x0"/>
+      <port name="m_axi_gmem1" mode="master" range="0xFFFFFFFF" dataWidth="128" portType="addressable" base="0x0"/>
+      <port name="m_axi_gmem2" mode="master" range="0xFFFFFFFF" dataWidth="128" portType="addressable" base="0x0"/>
+      <port name="m_axi_gmem3" mode="master" range="0xFFFFFFFF" dataWidth="128" portType="addressable" base="0x0"/>
+      <port name="s_axi_control" mode="slave" range="0x1000" dataWidth="32" portType="addressable" base="0x0"/>
+    </ports>
+    <args>
+      <arg name="TABLE_BASE0" addressQualifier="1" id="0" port="m_axi_gmem0" size="0x8" offset="0x304" hostOffset="0x0" hostSize="0x8" type="void*"/>
+      <arg name="TABLE_BASE1" addressQualifier="1" id="1" port="m_axi_gmem1" size="0x8" offset="0x318" hostOffset="0x0" hostSize="0x8" type="void*"/>
+      <arg name="TABLE_BASE2" addressQualifier="1" id="2" port="m_axi_gmem2" size="0x8" offset="0x320" hostOffset="0x0" hostSize="0x8" type="void*"/>
+      <arg name="TABLE_BASE3" addressQualifier="1" id="3" port="m_axi_gmem3" size="0x8" offset="0x328" hostOffset="0x0" hostSize="0x8" type="void*"/>
+    </args>
+  </kernel>
+</root>

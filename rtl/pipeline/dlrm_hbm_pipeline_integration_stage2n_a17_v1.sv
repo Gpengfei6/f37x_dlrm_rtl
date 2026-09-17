@@ -152,14 +152,20 @@ module dlrm_hbm_pipeline_integration_stage2n_a17_v1 #(
   logic controller_load_ready, controller_all_loaded;
   logic [3:0] controller_error_mask, controller_committed_mask;
   logic [3:0][31:0] lookup_indexes;
-  logic fresh_group, compute_idle;
+  logic fresh_group, compute_idle, compute_idle_q, start_gate;
   assign lookup_indexes = {32'd40, 32'd39, 32'd38, 32'd37};
   assign compute_idle = !busy && !result_valid && !pipeline_error_valid;
-  assign load_all_req_ready = !rst && controller_load_ready && compute_idle;
   assign hbm_all_loaded = controller_all_loaded && (&embedding_loaded_mask);
-  assign pipeline_start_ready = !rst && a13_pipeline_start_ready &&
-      hbm_all_loaded && fresh_group && !load_all_req_valid && compute_idle;
-  assign a13_pipeline_start_valid = pipeline_start_valid && pipeline_start_ready;
+  // Registered idle plus A15-style valid/ready split: do not AND
+  // a13_pipeline_start_ready into start valid, and do not combinationally
+  // feed A13 result_fifo outputs into the lookup load port. Target link 003
+  // failed write_bitstream with LUTLP-1 through mlp_act_load_valid and
+  // u_hbm_lookup/fresh_group.
+  assign start_gate =
+      !rst && hbm_all_loaded && fresh_group && !load_all_req_valid && compute_idle_q;
+  assign load_all_req_ready = !rst && controller_load_ready && compute_idle_q;
+  assign pipeline_start_ready = a13_pipeline_start_ready && start_gate;
+  assign a13_pipeline_start_valid = pipeline_start_valid && start_gate;
   assign hbm_inject_pending = a13_embedding_cfg_valid;
   assign hbm_inject_slot = a13_embedding_cfg_index;
   assign hbm_inject_data = a13_embedding_cfg_data;
@@ -170,9 +176,11 @@ module dlrm_hbm_pipeline_integration_stage2n_a17_v1 #(
   always_ff @(posedge clk) begin
     if (rst) begin
       fresh_group <= 1'b0;
+      compute_idle_q <= 1'b0;
       hbm_inject_done <= 1'b0;
       host_embedding_cfg_rejected <= 1'b0;
     end else begin
+      compute_idle_q <= compute_idle;
       hbm_inject_done <= a13_embedding_cfg_valid && a13_embedding_cfg_ready;
       host_embedding_cfg_rejected <= host_embedding_cfg_valid && host_embedding_cfg_ready;
       // One START token per newly completed group, never from the stale A13 mask.
@@ -182,7 +190,7 @@ module dlrm_hbm_pipeline_integration_stage2n_a17_v1 #(
     end
   end
   dlrm_hbm_parallel_lookup_stage2n_a17_v1 #(.ROWS(HBM_ROWS)) u_hbm_lookup (
-    .clk(clk), .rst(rst), .load_valid(load_all_req_valid && compute_idle),
+    .clk(clk), .rst(rst), .load_valid(load_all_req_valid && compute_idle_q),
     .load_ready(controller_load_ready), .table_base_addr(table_base_addr),
     .lookup_index(lookup_indexes), .busy(hbm_sequence_busy),
     .all_loaded(controller_all_loaded), .done(hbm_sequence_done),

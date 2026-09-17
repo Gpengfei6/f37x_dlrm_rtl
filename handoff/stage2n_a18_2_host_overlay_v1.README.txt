@@ -1,0 +1,14 @@
+A18.2 Host overlay (apply after reviewed xclbin only)
+
+ZIP=handoff/stage2n_a18_2_host_overlay_v1.zip
+ZIP_SHA256=d76248a1d8b020d7d81580f1a06a8aa73f3230e071c6215503d77efd2a8c6118
+
+Do not unzip this onto the A17.6 tree. Do not program. Do not run the Host
+as part of the XO step.
+
+After a reviewed A18.2 xclbin, overlay onto the A18.2 extract, then:
+
+  A18_2_ALLOW_HOST_REBUILD=yes bash scripts/build_stage2n_a18_2_host_v1.sh
+
+BOARD=NOT_RUN
+PERFORMANCE=NOT_CLAIMED

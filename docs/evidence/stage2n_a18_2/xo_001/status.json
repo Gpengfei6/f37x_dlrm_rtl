@@ -1,0 +1,16 @@
+{
+  "artifacts": {
+    "xo/dlrm_f37x_rtl_kernel_stage2n_a18_v1.xo": "8d3f920aed2e4349d3d2cd6ea773d565b60deeae34e9a2880a58039dd23c84fd",
+    "xo/dlrm_f37x_stage2n_a18_ip_v1/component.xml": "6f7109759a68f61034a7bba7c3cf5a8221b3a9b568958403d83655b1722dc9ff",
+    "xo/kernel.xml": "fd00e4dc27963cddad264302e3048fcf29654d82d07381e73114cf07855c24be"
+  },
+  "board": "NOT_RUN",
+  "kernel": "dlrm_f37x_rtl_kernel_stage2n_a18_v1",
+  "part": "xcvu37p-fsvh2892-2L-e",
+  "performance": "NOT_CLAIMED",
+  "phase": "xo",
+  "physical_mapping": "NOT_RUN",
+  "result": "PASS",
+  "source_manifest_sha256": "e59524bfb085adbeb2b8101b8072163f9c9c35154f89118b4faa2cdd1944c86d",
+  "target_link": "NOT_RUN"
+}

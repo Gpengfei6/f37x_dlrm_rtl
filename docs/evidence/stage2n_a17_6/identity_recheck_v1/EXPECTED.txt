@@ -1,0 +1,18 @@
+A17.6 identity-gated function re-check.
+Do not overwrite function_pass_v1, frozen identities, host/*.cpp, or 102244.
+
+Locked execute parameters (from RETRIEVAL_ACCEPTANCE.txt, not hand transcription):
+  A17_6_EXPECTED_HOST_ELF_SHA256=9ba376589f56d99efca6e42328d347a6539ba1c40bba56d21ab690d87e7f20fc
+  A17_6_EXPECTED_HOST_SOURCE_SHA256=7073b4d976e54f73887c21714a3a4d8bdf65cdf3a272e620fb54c09963ee55ce
+
+XCLBIN SHA256=b8d2034906451cc755b6c01a50c94a4b841998c3e2794c6e417dd1ab952e46ae
+UUID=622c839f-55f4-47c1-92e9-95ee5595ffa4
+
+This execute:
+  - reuses the retrieved ELF/source; does not rebuild Host
+  - does not deploy the Windows third Host source
+  - runs only if resident UUID matches link_004
+  - sets A17_6_FORCE_NO_PROGRAM=yes so UUID mismatch stops without xbutil program
+  - uses a new results/stage2n_a17_6/protected_v1/<stamp> directory
+  - does not backfill the 20260910_102244 pre-exec hash
+  - PERFORMANCE=NOT_CLAIMED

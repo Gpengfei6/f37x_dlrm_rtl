@@ -1,0 +1,19 @@
+A17 process-restart repeatability slice.
+Accepted campaign 20260910_141722:
+docs/evidence/stage2n_a17_6/repeatability_v1/ACCEPTANCE.txt
+1 warmup + 11 measured invocations of the accepted Host.
+Not steady-state. Not A16. Not a speedup. FORCE_NO_PROGRAM.
+
+ELF (from identity_recheck ACCEPTANCE.txt):
+9ba376589f56d99efca6e42328d347a6539ba1c40bba56d21ab690d87e7f20fc
+SOURCE:
+7073b4d976e54f73887c21714a3a4d8bdf65cdf3a272e620fb54c09963ee55ce
+UUID:
+622c839f-55f4-47c1-92e9-95ee5595ffa4
+XCLBIN:
+b8d2034906451cc755b6c01a50c94a4b841998c3e2794c6e417dd1ab952e46ae
+
+CASE0..CASE4: 11 measured samples each.
+REPEAT_BASELINE: separate 11-sample series; do not merge into CASE0.
+Warmup logs kept, excluded from min/median/max.
+Keep lookup 55 and any other valid observation.

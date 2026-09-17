@@ -1,5 +1,9 @@
 # FPGA DLRM Project AI Context
 
+> Current update — 2026-09-17: A18.2 default-index board PASS archived.
+> New-window entry `docs/NEW_WINDOW_HANDOFF_V1.md`. A18.3 Host not created.
+> PERFORMANCE=NOT_CLAIMED. No speedup. A17 restore is not authorized.
+
 This file is the repository entry point for AI assistants. It summarizes the
 current engineering state; it does not replace `AGENTS.md`, the fixed-point
 contract, source code, or stage evidence.
@@ -25,8 +29,25 @@ XO/xclbin flow and its validator-only Vitis 2020.2 compatibility fix. Stage
   A17.1 then adds a local four-port parallel lookup controller and connects it
   to the unchanged A13 pipeline. A17.2/A17.3 expose that composition through a
   versioned public kernel with four AXI masters; the public-port XSim
-  regression passes. No physical multi-bank result exists. Performance remains
-  unclaimed.
+  regression passes. A17.4 is local four-bank mapping preparation only. A17.5A
+  is a packaging audit plus an unvalidated connectivity proposal. A17.5B is
+  physical-test readiness (Host/BO/evidence templates) only. A17.5C is an
+  execution checklist, not a board run. Paper files V1–V3 and the
+  integration review are local writing only. V3 is not evidence closure.
+  Class C comparable A16/A17 latency is incomplete. Performance remains
+  unclaimed. A17.6 XO `a17_6_xo_002` and link `a17_6_link_004` are
+  user-returned PASS. Fixed four-slot four-bank physical function is closed
+  as PASS from the returned `20260910_102244` log summary: four HBM paths
+  took part in complete DLRM inference. Observed `33/1174/1210/3`.
+  Programming `SKIPPED_ALREADY_LOADED`. Originals archived under
+  `docs/evidence/stage2n_a17_6/function_pass_v1/`. Identity-gated re-check
+  `20260910_122124` confirmed function and logged ELF `9ba37658…` before
+  Host; execution identity is PASS_THIS_RUN_ONLY for that run. The 102244
+  pre-exec hash is still missing. CASE4 lookup 55 is recorded.
+  Process-restart campaign `20260910_141722` is accepted: 11 measured
+  samples per case; lookup median 33; measured tails 37/38/50/52/65.
+  Not steady-state. Not a speedup. A16 remains NOT_RUN.
+  PERFORMANCE=NOT_CLAIMED.
 
 Target environment:
 
@@ -62,8 +83,13 @@ Read the repository in this order before proposing or making changes:
 4. `docs/CURRENT_STATE.md`
 5. `docs/ARCHITECTURE.md`
 6. `docs/STAGE_HISTORY.md`
-7. the current-stage document,
-   `docs/STAGE2N_A17_2_PUBLIC_KERNEL_XSIM_V1.md`
+7.    the current-stage documents:
+   `docs/NEW_WINDOW_HANDOFF_V1.md` (new-chat entry),
+   `docs/STAGE2N_A18_2_BOARD_FUNCTION_ACCEPTANCE_V1.md` (default-index board),
+   `docs/STAGE2N_A18_3_NONDEFAULT_INDEX_HOST_PREP_V1.md` (next local Host),
+   `docs/STAGE2N_A18_2_TARGET_PACKAGING_HOST_PREP_V1.md` (hashed A18.2 prep),
+   `docs/STAGE2N_A18_VARIABLE_INDEX_RTL_V1.md` (local A18.1 XSim), and
+   `docs/STAGE2N_A17_PAPER_CHAPTER_MULTIBANK_LOOKUP_V3.md`
 8. the A16.2 final-acceptance document,
    `docs/STAGE2N_A16_2_FINAL_ACCEPTANCE_V1.md`
 9. the A15.6 final-acceptance document,
@@ -89,7 +115,13 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A17.3 — public four-master kernel XSim PASS**.
+Current stage: **Stage 2N-A18.2 first board function PASS on default indexes
+37–40; originals archived; A18.3 local prep without C++ Host; A18.1 local
+2022.1 XSim PASS; A16.2 / A17.6 N=11 both accepted; PERFORMANCE=NOT_CLAIMED;
+speedup not computed**. Start at `docs/NEW_WINDOW_HANDOFF_V1.md`. Card last
+programmed to A18 UUID `32a9c911-af15-47fc-90c8-0bfe3894a3ef`. A17 restore
+is not authorized. XSim result 36 is not a five-case board golden.
+Non-default MMIO indexes remain unboarded.
 
 Stage 2N-A13 remains the accepted and frozen dense/compute arithmetic baseline;
 A15.6 is the accepted integrated physical-HBM functional baseline. A14.5 added
@@ -111,8 +143,35 @@ A17.2/A17.3 wrap that controller in a versioned public kernel with four
 explicit `m_axi_gmem0..3` masters, four captured table bases and the A16
 counter ABI. The public-port XSim regression passes with golden result 36 and
 unchanged A13 counters 322/100/744/1174. Fake-memory lookup/e2e cycles are not
-physical HBM latency. Target packaging and physical HBM[0..3] mapping remain
-separate user-controlled steps.
+physical HBM latency. A17.4 records that `m_axi_gmem0..3` are still unmapped
+in any xclbin and proposes `HBM[0..3]` plus four Host BOs. A17.5A audits the
+A16.2 XO/`v++` flow and keeps the four-bank `sp` file under `analysis/` as
+`PROPOSAL ONLY / NOT FOR v++ / UNVALIDATED`. A17.5B documented the four-BO
+`xclRegWrite` path before implementation. A17.5C is a pre-run gate
+(`AUTHORIZED EXECUTION ONLY`). A17.6 then packaged and linked the four-master
+kernel (`a17_6_xo_002` / `a17_6_link_004`) and added the versioned four-BO
+Host with a prepare/execute split. Board execution is still unauthorized.
+The evaluation plan and paper files V1–V3 remain local writing only. Physical
+Results stay empty. Patent remains paused.
+
+A18.1 (2026-09-17) copies the accepted A17 public kernel into
+`dlrm_f37x_rtl_kernel_stage2n_a18_v1`, keeps A17 CLEAR, and adds four
+runtime lookup indexes at `0x330-0x33C` latched on accepted START. Local
+Vivado Simulator v2022.1 recorded `COMPILE/ELAB/SIM=PASS` for cases A–H
+(`results/stage2n_a18/20260917_094207_269`). The official A17.2
+frozen-baseline runner is `NOT_RUN` on this zip tree. A current-tree A17
+public-kernel XSim also passed (`results/stage2n_a17_current_tree/20260917_094348_153`)
+and must not be filed as `A17_2_PUBLIC_KERNEL_XSIM` acceptance.
+
+A18.2 target XO `a18_2_xo_001` and link `a18_2_link_001` are
+user-returned and locally reviewed PASS (UUID
+`32a9c911-af15-47fc-90c8-0bfe3894a3ef`, `HBM[0..3]`, 100 MHz WNS 0.000).
+Indexes stay MMIO `0x330-0x33C`. Host g++ is `A18_2_HOST_XRT_BUILD=PASS`.
+First board execute `20260917_171608` is Host-returned PASS for default
+rows 37–40 and locked goldens `-393/-392/-93/-689/-519`. Copied originals
+are accepted under `docs/evidence/stage2n_a18_2/function_pass_v1/`. Lookup
+33 / e2e 1210 is recorded, not a speedup. Non-default indexes remain
+unboarded.
 
 A15.1 adds one new versioned wrapper. It instantiates the accepted A14 v2 lookup
 and accepted A13 cycle-counter controller without editing either file. Its
@@ -234,8 +293,9 @@ Accepted A16.2 sequential baseline:
 - performance remains `NOT_CLAIMED`;
 - multi-table, multi-bank, burst, cache, coalescing, scheduling, or INT8 work.
 - A17.1 local parallel lookup is accepted; A17.2/A17.3 public four-master
-  kernel XSim is accepted. Target build and physical-bank stages have not
-  started.
+  kernel XSim is accepted; A17.4–A17.5C documents and the evaluation plan are
+  local only. Implementation is paused. Target build and physical-bank stages
+  have not started.
 
 See `docs/STAGE2N_A15_6_PROTECTED_ALL_HBM_BOARD_VALIDATION_PREPARATION_V1.md`
 for the Host, guard, golden, evidence, and non-claim contract, and

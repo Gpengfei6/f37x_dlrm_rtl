@@ -1,0 +1,88 @@
+A17.6 Host identity retrieval acceptance
+Date: 2026-09-10
+SCOPE=copy_and_hash_only
+PROGRAM=NOT_RUN
+HOST_EXECUTE=NOT_RUN
+HOST_REBUILD=NOT_RUN
+RTL_CHANGE=NOT_RUN
+COMMIT=NOT_DONE
+RUNTIME_PRE_EXEC_HASH_BACKFILL=NO
+PERFORMANCE=NOT_CLAIMED
+
+Independent local re-hash of retrieved files (this confirms current retained
+bytes; it does not reconstruct the missing 20260910_102244 pre-exec hash).
+
+RETRIEVED_ELF_SHA256=9ba376589f56d99efca6e42328d347a6539ba1c40bba56d21ab690d87e7f20fc
+RETRIEVED_ELF_BYTES=84488
+RETRIEVED_SOURCE_SHA256=7073b4d976e54f73887c21714a3a4d8bdf65cdf3a272e620fb54c09963ee55ce
+RETRIEVED_SOURCE_BYTES=43490
+ELF_MATCH_CANDIDATE=YES
+SOURCE_MATCH_CANDIDATE=YES
+ELF_IS_PRE_FIX_520d78=NO
+STATUS_BINARY_SHA256=9ba376589f56d99efca6e42328d347a6539ba1c40bba56d21ab690d87e7f20fc
+STATUS_SOURCE_SHA256=7073b4d976e54f73887c21714a3a4d8bdf65cdf3a272e620fb54c09963ee55ce
+REUSE_CANDIDATE=YES
+A17_6_HOST_IDENTITY_RETRIEVAL=MATCH
+
+Windows workspace host/stage2n_a17_6_four_bo_host_v1.cpp remains a third
+source state (SHA256=cffe9a6d0594c3fa87de4cc29dc4214de9d33dcd2ed5cd37064dc5844ed59408,
+44744 bytes). It was not overwritten. Frozen identities and
+function_pass_v1 were not overwritten.
+
+host_build.log retrieved as a 0-byte file (SHA256 of empty content).
+A 0-byte compile log does not mean compile failure. Successful g++ may
+emit no stdout. Keep the original. Combine COMPILER_EXIT_CODE=0, the
+non-empty ELF, and host_build_status.txt.
+Optional compile logs present: compiler_version.log, xrt_version.log,
+xrt_symbol_probe.log.
+
+NEXT_LOCKED_FUNCTION_RECHECK_CANDIDATE:
+  A17_6_EXPECTED_HOST_ELF_SHA256=9ba376589f56d99efca6e42328d347a6539ba1c40bba56d21ab690d87e7f20fc
+  A17_6_EXPECTED_HOST_SOURCE_SHA256=7073b4d976e54f73887c21714a3a4d8bdf65cdf3a272e620fb54c09963ee55ce
+Do not rebuild Host because of this match. Do not start the re-check until
+the user explicitly authorizes one protected execute with those two env vars.
+
+--- 20260910_100942 failure originals (tokens only) ---
+FAIL_100942_HOST_LOG=YES bytes=104
+FAIL_100942_RUNNER_LOG=YES bytes=2115
+
+host.log complete text:
+  STAGE2N_A17_6_FOUR_BO_HOST_V1_FAIL
+  REASON=memory map missing argument 0
+  A17_6_BO_CLEANUP=ATTEMPTED_RAII
+
+runner.log tokens present:
+  INFO: xbutil program succeeded.
+  STAGE2N_A17_6_FOUR_BO_HOST_V1_FAIL
+  REASON=memory map missing argument 0
+  ERROR: A17.6 Host returned 1
+  FPGA_PROGRAMMING=NOT_RUN   (also printed at runner start and after Host fail)
+  A17_6_BOARD=NOT_RUN
+
+runner.log tokens absent:
+  A17_6_HOST_START=1
+  BO0_HANDLE=
+  CASE0_NAME=
+
+FAIL_TOKEN_MEMORY_MAP_MISSING_ARG0=YES
+FAIL_TOKEN_HOST_V1_FAIL=YES
+FAIL_TOKEN_XBUTIL_PROGRAM_SUCCEEDED=YES
+FAIL_TOKEN_HOST_START=NO
+FAIL_TOKEN_BO0_HANDLE=NO
+FAIL_TOKEN_PIPE_CMD_OR_START_CASE=NO
+FAIL_100942_INTERPRETATION=PROGRAM_SUCCEEDED_LOGGED_STATUS_CONTRADICTS
+
+The log reports program success (`INFO: xbutil program succeeded.`).
+Status fields also record `FPGA_PROGRAMMING=NOT_RUN`. That is a historical
+record defect. Do not describe 100942 as "did not program". Do not authorize
+a new program to repair the status field.
+
+SHA256 of retrieved fail originals:
+  f9aa42ee173f0dfe3c1d2c00374679ca2f1affddd30db0f8a324d49efe5705de  host.log
+  c09be9134bb3a3978c6fe78bef30bace9b2ffa7d20b984029d4d942858356d15  runner.log
+  d3997f6933776736ca689f56551341551f9da0caf5141bc7af2e713e5d442c39  pre_device_query.txt
+  bcf6a0afc734fdc6dc4c3b81bd6e6e44c910de4e4cd1bc43a6295d38b5383479  a17_6_mem_map.txt
+  f0227c24ac2b8a02567e9e21ffc157e2731617a3267d49b85f6d989e11639275  connectivity.json
+  eae7a971453ce63ad3fa3bf7d7324d87e0ecf867cf9030bc0c81d68ed9278128  mem_topology.json
+  9f91849d82f23fccfe595bd39ad0c9ae411a3b53f97f4e4ed73d7fab6f455004  ip_layout.json
+  c7a3b37fe16cbcca5cea3068e10e35c3d41f448a5061d061daaa9b6f175da4a6  xclbin.info

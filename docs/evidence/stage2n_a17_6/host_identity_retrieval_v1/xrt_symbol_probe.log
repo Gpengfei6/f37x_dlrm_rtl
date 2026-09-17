@@ -1,0 +1,13 @@
+FOUND_SYMBOL=xclOpen LIBRARY=/opt/xilinx/xrt/lib/libxrt_core.so
+FOUND_SYMBOL=xclClose LIBRARY=/opt/xilinx/xrt/lib/libxrt_core.so
+FOUND_SYMBOL=xclOpenContext LIBRARY=/opt/xilinx/xrt/lib/libxrt_core.so
+FOUND_SYMBOL=xclCloseContext LIBRARY=/opt/xilinx/xrt/lib/libxrt_core.so
+FOUND_SYMBOL=xclIPName2Index LIBRARY=/opt/xilinx/xrt/lib/libxrt_core.so
+FOUND_SYMBOL=xclRegRead LIBRARY=/opt/xilinx/xrt/lib/libxrt_core.so
+FOUND_SYMBOL=xclRegWrite LIBRARY=/opt/xilinx/xrt/lib/libxrt_core.so
+FOUND_SYMBOL=xclAllocBO LIBRARY=/opt/xilinx/xrt/lib/libxrt_core.so
+FOUND_SYMBOL=xclFreeBO LIBRARY=/opt/xilinx/xrt/lib/libxrt_core.so
+FOUND_SYMBOL=xclMapBO LIBRARY=/opt/xilinx/xrt/lib/libxrt_core.so
+FOUND_SYMBOL=xclUnmapBO LIBRARY=/opt/xilinx/xrt/lib/libxrt_core.so
+FOUND_SYMBOL=xclSyncBO LIBRARY=/opt/xilinx/xrt/lib/libxrt_core.so
+FOUND_SYMBOL=xclGetBOProperties LIBRARY=/opt/xilinx/xrt/lib/libxrt_core.so

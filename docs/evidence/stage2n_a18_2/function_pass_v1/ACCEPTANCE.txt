@@ -1,0 +1,74 @@
+A18.2 first protected board function — original-evidence archive accepted (2026-09-17)
+
+SOURCE=copied originals; server directory left unchanged
+LOCAL=docs/evidence/stage2n_a18_2/function_pass_v1/20260917_171608
+RUN=results/stage2n_a18_2/protected_v1/20260917_171608
+A18_2_ORIGINAL_EVIDENCE_ARCHIVE=PASS
+A18_2_FUNCTION=PASS
+A18_2_BOARD_FUNCTION=PASS_DEFAULT_INDEXES_ONLY
+
+TARGET_INDEX=2
+TARGET_BDF=0000:9b:00.1
+TARGET_RENDER=/dev/dri/renderD129
+PRE_PROGRAM_UUID=3a4ebb31-933a-45c2-9ce4-04adce88615c
+A18_2_FPGA_PROGRAMMING=PASS
+XCLBIN_UUID=32a9c911-af15-47fc-90c8-0bfe3894a3ef
+XCLBIN_SHA256=bbb0fa1fcb5c39aea2a307eb8c8324eb406c51711b8ba2ae7830bc5fe3a36ec0
+KERNEL=dlrm_f37x_rtl_kernel_stage2n_a18_v1
+CU=dlrm_a18_1
+PIPE_VERSION=0x00024e18
+LOOKUP_INDEXES=37,38,39,40
+MEMORY_INDICES_BY_ARGUMENT=0,1,2,3
+BO_TAGS=HBM[0],HBM[1],HBM[2],HBM[3]
+XCLBIN_SIGNATURE=TABLE_BASE0,TABLE_BASE1,TABLE_BASE2,TABLE_BASE3
+LOOKUP_INDEX_KERNEL_ARG=ABSENT
+
+HOST_SOURCE_SHA256=0a00e8ab7eab7be90b53905b3e4114921e365e681ecc0aef4a73e9f4565c521f
+HOST_EXECUTE_SHA256=89644eb255bc0fb265f186ab76615f8a63b3dea0d8d117b265e681f5f7a75a32
+HOST_IDENTITY_CHECKED_BEFORE_PROGRAM=YES
+HOST_RUNTIME_PROCESS_HASH=NOT_CLAIMED
+
+CASE0=-393
+CASE1=-392
+CASE2=-93
+CASE3=-689
+CASE4=-519
+REPEAT_BASELINE=-393
+COMPUTE=322/100/744/1174
+LOOKUP=33
+E2E=1210
+OVERHEAD=3
+MASK=0xF
+HOST_EXIT_CODE=0
+STAGE2N_A18_2_FOUR_BO_HOST_V1=PASS
+A18_2_ALL_FIVE_CASES=PASS
+A18_2_REPEAT_BASELINE=PASS
+A18_2_BO_CLEANUP=PASS
+XSIM_RESULT_36_NOT_USED=1
+
+Copied originals match the user-pasted execute log for UUID, indexes,
+goldens, compute/lookup/e2e, programming, and Host PASS tokens.
+connectivity.json SHA matches A17.6 because both dumps are arg0-3 to
+mem0-3 only; ip_layout.json names dlrm_a18_1, not dlrm_a17_1.
+
+This run proves default-index four-BO complete DLRM on the A18 kernel.
+Non-default MMIO indexes were not exercised on the board (Host lock).
+Do not treat lookup 33 / e2e 1210 as a speedup versus A17.6.
+FPGA_RESET=NOT_RUN
+OTHER_DEVICE_ACCESS=NONE
+A18_2_PERFORMANCE=NOT_CLAIMED
+COMPARABLE_PERFORMANCE=NOT_RUN
+
+SHA256 of copied originals:
+  5908a37330bf025a4cc87c3e889374cd30c2ca80b7ad1da6af4d107e019f4cc1  host.log
+  479a11723fc0c0528139865d56213d41e83e73aaafbb1502e0baf476d9aab820  runner.log
+  c9159700a315d1602cbc014d0802eb3910e882f067acec777c11f315c43ebf71  pre_device_query.txt
+  afdc01f780b357771bb38bf8eaccc2c00ed991757ca3fe06aaf4c953709f500b  a18_2_mem_map.txt
+  f0227c24ac2b8a02567e9e21ffc157e2731617a3267d49b85f6d989e11639275  connectivity.json
+  eae7a971453ce63ad3fa3bf7d7324d87e0ecf867cf9030bc0c81d68ed9278128  mem_topology.json
+  291d79bb2db657fd3a4aee0af2b19e2d9adda0f5a1820085a653c3ca2ad1a90c  ip_layout.json
+  f1e5e4b66fb28b81806bffd94adf68a14da91ebd01c216e40893f81805153ff0  dlrm_f37x_rtl_kernel_stage2n_a18_v1.xclbin.info
+
+Server original remains:
+  /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/results/stage2n_a18_2/protected_v1/20260917_171608
+Do not program again. Do not reset.

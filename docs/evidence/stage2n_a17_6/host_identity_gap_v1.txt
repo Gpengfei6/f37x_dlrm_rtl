@@ -1,0 +1,56 @@
+A17.6 Host identity relationship after the 2026-09-10 function run
+Do not treat a later file hash as the missing 20260910_102244 pre-exec hash.
+
+FUNCTION_RESULTS=RETAINED
+FIVE_CASES_AND_REPEAT_BASELINE=PASS
+ORIGINAL_LOG_ARCHIVE=PASS
+20260910_102244_EXECUTION_ARTIFACT_IDENTITY=NOT_FULLY_ACCEPTED
+20260910_102244_RUNTIME_PRE_EXEC_ELF_HASH=MISSING
+20260910_122124_EXECUTION_ARTIFACT_IDENTITY=PASS_THIS_RUN_ONLY
+PERFORMANCE=NOT_CLAIMED
+COMPARABLE_LATENCY=PLAN_ONLY
+
+520d78efe3a4ba81a8cd3a66ee48042d39a14a0a3e4fb390e567bd7afb3bf5cd
+  role: original frozen pre-board Host ELF
+  source: 2ef3a5a69b7104abc3b71e2642c31af72934491ec015c9ca4af1e79918d4800e
+  bytes: 84552
+  result: ARG0_TAG parse bug; did not complete the four-bank function path
+  keep as historical freeze; do not overwrite this fingerprint
+
+9ba376589f56d99efca6e42328d347a6539ba1c40bba56d21ab690d87e7f20fc
+  role: compile-record identity corresponding to the successful 20260910_102244 run
+  source: 7073b4d976e54f73887c21714a3a4d8bdf65cdf3a272e620fb54c09963ee55ce
+  bytes: 84488
+  evidence: archived host_build_status.txt after that run
+  not proven: sha256 of the exact bytes mapped by the executing process
+  do not write this SHA as RUNTIME_VERIFIED
+
+Current Windows Host source
+  another source state (includes A17_6_HOST_MEM_MAP=PASS diagnostics)
+  must not impersonate 7073b4d9... or 2ef3a5a6...
+
+Re-verification candidate:
+  retrieve ELF+source that match 9ba37658... and 7073b4d9... exactly, or
+  make a newly labeled build and re-verify; do not claim the old binary was restored
+
+Retrieval 2026-09-10 (copy/hash only):
+  docs/evidence/stage2n_a17_6/host_identity_retrieval_v1/
+  RETRIEVED_ELF matches 9ba37658... (84488 bytes)
+  RETRIEVED_SOURCE matches 7073b4d9... (43490 bytes)
+  REUSE_CANDIDATE=YES
+  RUNTIME_PRE_EXEC_HASH_BACKFILL=NO
+  20260910_100942 originals present; tokens only in RETRIEVAL_ACCEPTANCE.txt
+  A post-hoc hash of a file still on the server cannot fabricate the missing
+  pre-exec record.
+
+Identity-gated re-check 20260910_122124:
+  docs/evidence/stage2n_a17_6/identity_recheck_v1/
+  FUNCTION=PASS
+  EXECUTION_ARTIFACT_IDENTITY=PASS_THIS_RUN_ONLY
+  HOST_EXECUTE_SHA256=9ba37658... logged before Host start
+  HOST_EXIT_CODE=0
+  PROGRAMMING=SKIPPED_ALREADY_LOADED
+  HOST_RUNTIME_PROCESS_HASH=NOT_CLAIMED
+  does not fill 20260910_102244 RUNTIME_PRE_EXEC_ELF_HASH
+  FUNCTION_RECHECK_CLOSED=YES
+  next=comparable latency plan only; no further identity probes

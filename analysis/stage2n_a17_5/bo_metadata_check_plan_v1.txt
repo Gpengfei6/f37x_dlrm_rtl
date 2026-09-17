@@ -1,0 +1,17 @@
+# A17.5B BO metadata check PLAN ONLY. Not Host source. NOT IMPLEMENTED.
+
+Chain (future A17.5C):
+BO handle -> mem index / group id -> HBM bank tag -> paddr -> BASE write/readback
+
+Future mapping:
+BO0 -> BASE0 -> HBM[0]
+BO1 -> BASE1 -> HBM[1]
+BO2 -> BASE2 -> HBM[2]
+BO3 -> BASE3 -> HBM[3]
+
+Fail closed:
+- four BOs on the same bank
+- Host mem index disagrees with xclbin CONNECTIVITY/MEM_TOPOLOGY
+- BASE register written with the wrong paddr
+- hardcoded mem_index=0 for every BO
+- A16 xclbin / single used HBM bank

@@ -1,7 +1,8 @@
 # Single-F37X all-RTL DLRM research project
 
-> **AI assistant entry point:** Before modifying this repository, read
-> [`docs/AI_CONTEXT.md`](docs/AI_CONTEXT.md), then
+> **AI assistant entry point:** Start with
+> [`docs/NEW_WINDOW_HANDOFF_V1.md`](docs/NEW_WINDOW_HANDOFF_V1.md), then
+> [`docs/AI_CONTEXT.md`](docs/AI_CONTEXT.md),
 > [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) and `AGENTS.md`. Sections
 > below preserve early-stage context; the current-state documents and later
 > final-acceptance evidence take precedence when stage descriptions differ.

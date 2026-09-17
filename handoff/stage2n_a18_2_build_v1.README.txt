@@ -1,0 +1,60 @@
+A18.2 XO/link source bundle
+
+This ZIP is the closed 2020.2 packaging tree for
+dlrm_f37x_rtl_kernel_stage2n_a18_v1 / CU dlrm_a18_1 / HBM[0..3].
+Lookup indexes stay AXI-Lite 0x330-0x33C (not XO pointer arguments).
+
+ZIP_SHA256=54b2418c857dba4664b22fbea01a11837dadc2293f8bd843aa5ce6cd3b4b3f0e
+SOURCE_MANIFEST_SHA256=e59524bfb085adbeb2b8101b8072163f9c9c35154f89118b4faa2cdd1944c86d
+
+Windows PowerShell `python3 ... xo` is not target evidence. That stub
+does not run this runner, this PC has no Vivado 2020.2, and no
+runs/a18_2_xo_001 was created. Do not treat a 2022.1 tool as 2020.2.
+
+Local extract (verified, do not scp this folder):
+
+  handoff/f37x_dlrm_rtl_stage2n_a18_2_buildonly
+
+User-run upload+unzip (Windows PowerShell, not inside SSH):
+
+  powershell -NoProfile -File handoff\copy_a18_2_build_v1.ps1
+
+That script does not run v++. Do not unzip over the accepted A17.6 tree.
+
+Preserve ZIP bytes. Do not run dos2unix over the extract.
+
+Suggested empty extract directory (same parent as A17.6, new name):
+
+  f37x_dlrm_rtl_stage2n_a18_2_buildonly
+
+From that directory, after the existing 2020.2 shell is initialized:
+
+  python3 scripts/run_stage2n_a18_2_build_v1.py check
+
+Expected:
+
+  A18_2_SOURCE_INTEGRITY=PASS
+  SOURCE_FILES=28
+  TARGET_XO=NOT_RUN
+
+Then XO only (directory must not already exist):
+
+  python3 scripts/run_stage2n_a18_2_build_v1.py xo --output runs/a18_2_xo_001 --confirm-build
+
+On failure keep the directory. Return:
+
+  runs/a18_2_xo_001/status.json
+  runs/a18_2_xo_001/vivado_version.log
+  runs/a18_2_xo_001/package.log
+
+On success also return:
+
+  runs/a18_2_xo_001/xo/kernel.xml
+  runs/a18_2_xo_001/xo/dlrm_f37x_stage2n_a18_ip_v1/component.xml
+
+Keep the .xo on the target. Do not start link until this XO is reviewed.
+Do not overlay the Host ZIP until after a reviewed xclbin.
+
+Do not reuse A17 XO, A17 Host, or A17 xclbin.
+PERFORMANCE=NOT_CLAIMED
+BOARD=NOT_RUN

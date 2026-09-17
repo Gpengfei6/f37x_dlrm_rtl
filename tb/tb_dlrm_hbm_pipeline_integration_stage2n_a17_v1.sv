@@ -4,6 +4,18 @@
 // The fake AXI memory is independent of the accepted A14 lookup RTL. The
 // accepted A13 test network is configured exactly as in A15.2, while all four
 // embedding slots are checked bit-for-bit separately from the final result.
+//
+// LUTLP handshake coverage (registered compute_idle_q / A15-style START split):
+// 1. START held until ready and accepted once: start_pipeline keeps valid high
+//    after the first ready and checks start_count.
+// 2. Load during busy: run_compute drives load_all_req_valid for four cycles
+//    after START and requires !load_all_req_ready && busy. The registered
+//    idle snapshot can lag busy by one cycle; this bench and the public kernel
+//    FSM do not issue a new load on that START cycle. Same-cycle START+load is
+//    mutexed by start_gate (!load_all_req_valid).
+// 3. Stale fresh_group after complete/CLEAR/error: run_compute rejects START
+//    on the old token; error-drain then a new load is required before the
+//    second compute. start_count==2 at the end.
 module tb_dlrm_hbm_pipeline_integration_stage2n_a17_v1;
 
   localparam integer MAX_LAYERS = 8;
@@ -79,6 +91,7 @@ module tb_dlrm_hbm_pipeline_integration_stage2n_a17_v1;
 
   logic busy;
   logic done;
+  integer start_count;
   logic [3:0] phase;
   logic [3:0] bottom_result_count;
   logic [4:0] interaction_result_count;
@@ -394,6 +407,7 @@ module tb_dlrm_hbm_pipeline_integration_stage2n_a17_v1;
 
   task automatic start_pipeline;
     integer cycles;
+    integer start_count_before;
     begin
       @(negedge clk);
       bottom_descriptor_base = 0;
@@ -403,6 +417,7 @@ module tb_dlrm_hbm_pipeline_integration_stage2n_a17_v1;
       bottom_initial_buffer_select = 1'b0;
       top_input_buffer_select = 1'b0;
       interaction_shift = 0;
+      start_count_before = start_count;
       pipeline_start_valid = 1'b1;
       cycles = 0;
       while (!pipeline_start_ready && cycles < 200) begin
@@ -411,6 +426,18 @@ module tb_dlrm_hbm_pipeline_integration_stage2n_a17_v1;
       end
       if (!pipeline_start_ready)
         $fatal(1, "pipeline START timeout mask=%h", embedding_loaded_mask);
+      // Keep the request asserted after the first ready. It must be accepted
+      // once; a second START must not sneak through on the registered idle.
+      repeat (6) begin
+        @(posedge clk);
+        #1;
+        if (start_count !== start_count_before + 1)
+          $fatal(1, "START accepted %0d times, expected once",
+              start_count - start_count_before);
+        if (pipeline_start_valid && pipeline_start_ready &&
+            load_all_req_valid && load_all_req_ready)
+          $fatal(1, "START and load both accepted");
+      end
       @(negedge clk);
       pipeline_start_valid = 1'b0;
     end
@@ -512,7 +539,7 @@ module tb_dlrm_hbm_pipeline_integration_stage2n_a17_v1;
   logic [3:0] pending;
   integer ar_count [0:3];
   integer r_count [0:3];
-  integer inject_count, run_count, start_count;
+  integer inject_count, run_count;
   integer fail_bank;
   integer b;
   logic [3:0] ar_enable;
@@ -667,6 +694,10 @@ module tb_dlrm_hbm_pipeline_integration_stage2n_a17_v1;
       $fatal(1,"group/start/inject totals mismatch S=%0d R=%0d I=%0d",start_count,run_count,inject_count);
     for(b=0;b<4;b=b+1)
       if(ar_count[b] !== 4 || r_count[b] !== 4) $fatal(1,"bank%0d transaction totals mismatch",b);
+    $display("A17_LUTLP_START_HELD_ONCE=PASS");
+    $display("A17_LUTLP_LOAD_DURING_COMPUTE=PASS");
+    $display("A17_LUTLP_STALE_FRESH_GROUP=PASS");
+    $display("A17_LUTLP_IDLE_Q_LAG_WINDOW=KERNEL_SEQUENCED_NOT_DRIVEN");
     $display("A17_1_GOLDEN_FINAL_RESULT=%0d",golden_result);
     $display("A17_1_ACTUAL_FINAL_RESULT=%0d",held_result);
     $display("BOTTOM_CYCLES=%0d",bottom_cycle_count);

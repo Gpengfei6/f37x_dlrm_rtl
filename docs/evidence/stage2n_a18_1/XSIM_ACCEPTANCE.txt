@@ -1,0 +1,23 @@
+A18.1 local Vivado Simulator v2022.1 (2026-09-17)
+
+RUN=results/stage2n_a18/20260917_094207_269
+TOOL=Vivado Simulator v2022.1
+COMPILE=PASS
+ELAB=PASS
+SIM=PASS
+CASES=A-H
+IDENTITY_GOLDEN=36
+COMPUTE=322/100/744/1174
+MASK=0xF
+PIPE_VERSION=0x00024E18
+INDEXES_RESET=37,38,39,40
+CLEAR=A17_ONLY
+OOB_NO_ARVALID=YES
+
+This is not 2020.2, not XO/xclbin, not board, not A17_2 frozen-runner PASS.
+PERFORMANCE=NOT_CLAIMED
+
+Official A17.2 runner remains NOT_RUN on the zip LUTLP tree
+(frozen baseline e4ce2ab59b594910003c20fc00174b3a465e9bca).
+Current-tree A17 XSim results/stage2n_a17_current_tree/20260917_094348_153
+COMPILE/ELAB/SIM=PASS is not A17_2_PUBLIC_KERNEL_XSIM acceptance.

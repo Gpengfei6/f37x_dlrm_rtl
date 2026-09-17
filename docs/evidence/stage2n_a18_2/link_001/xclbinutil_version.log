@@ -1,0 +1,7 @@
+ARGV=["/opt/Xilinx/Vitis/2020.2/bin/xclbinutil", "--version"]
+****** xclbinutil v2020.2 (64-bit)
+       XRT Build Version: 2.8.0
+    Build Version Branch: Vitis
+      Build Version Hash: 70b0d7e5db97d08503f97ca713c33ecb01ddca64
+ Build Version Hash Date: Wed, 4 Nov 2020 08:46:44 -0800
+      Build Version Date: Wed, 04 Nov 2020 13:51:01 -0700

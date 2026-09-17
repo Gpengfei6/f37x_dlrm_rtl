@@ -642,3 +642,112 @@ reviewed, it must report `A15_5_TARGET_XO_BUILD=NOT_RUN`,
 xclbin validity, target timing, physical HBM behavior, FPGA or board execution,
 Host runtime behavior, bandwidth, latency, throughput, power, energy, speedup,
 or any performance improvement.
+
+## Stage 2N-A18.1 Local Variable-Index Kernel Authorization
+
+Purpose:
+Allow a local, versioned A17-derived public kernel to expose four runtime
+lookup indexes without modifying accepted A13, A14 v2, A16, or A17 originals.
+
+Authorized:
+
+1. Generate `rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a18_v1.sv` from the
+   accepted A17 kernel (`scripts/generate_stage2n_a18_kernel_from_a17_v1.py`).
+2. Versioned A18 integration
+   `rtl/pipeline/dlrm_hbm_pipeline_integration_stage2n_a18_v1.sv`.
+3. Independent public-port testbench
+   `tb/tb_dlrm_f37x_rtl_kernel_stage2n_a18_v1.sv`.
+4. Local XSim runners and existence check under `scripts/`.
+5. Stage and current-state documentation after local XSim evidence exists.
+
+Required behavior:
+
+- Four slots, four AXI masters, 128-bit packing, A13 numeric contract.
+- Indexes `0x330-0x33C`; reset 37–40; latch with bases on accepted START.
+- Busy index writes ignored; busy BASE still `4'd1`.
+- CLEAR remains A17 (DONE→IDLE and ERROR→RECOVER only).
+- OOB index issues no ARVALID.
+- TB through public registers; cases A–H.
+
+Restrictions:
+
+- Do not modify accepted A13, A14 v2, A16, or A17 originals or retained
+  A17.2 evidence.
+- Do not reconstruct AXI-Lite decode. Do not instantiate
+  `dlrm_internal_pipeline_axi_lite_decode_stage2n_a18_v1`.
+- Do not run `v++`, generate XO/xclbin, access an FPGA, or claim 2020.2
+  from a 2022.1 local tool.
+- Do not treat the official A17.2 frozen-baseline runner as PASS on a tree
+  that differs from `e4ce2ab59b594910003c20fc00174b3a465e9bca`.
+- No network, Git push, server, or board operations.
+- `PERFORMANCE=NOT_CLAIMED`.
+
+Evidence boundary:
+
+A18.1 may report local `COMPILE/ELAB/SIM=PASS` on Vivado 2022.1 only. It
+cannot prove official A17.2 runner PASS, 2020.2, XO/xclbin, physical HBM,
+FPGA/board execution, or any performance result.
+
+## Stage 2N-A18.2 Local Target Packaging and Host ABI Authorization
+
+Purpose:
+Prepare versioned A18 XO/link sources and a four-BO Host that programs
+runtime lookup indexes, without executing Vitis or touching a device.
+
+Authorized:
+
+1. Versioned package Tcl, connectivity cfg, source manifest, artifact
+   validators, and user-executed build runner under `scripts/` and `config/`.
+2. Versioned Host `host/stage2n_a18_2_four_bo_host_v1.cpp` and Host compile
+   script. Default indexes 37–40. Indexes are MMIO, not kernel arguments.
+3. Local software-golden evaluation from frozen A15.6 assets.
+4. Local static tests and current-state documentation.
+
+Restrictions:
+
+- Do not modify accepted A13, A14 v2, A16, or A17 originals.
+- Do not execute `v++`, Vivado packaging, XRT Host compile, `xbutil`, or
+  board programming from this environment.
+- Do not claim 2020.2, XO, xclbin, or board PASS from local checks.
+- Do not add T>4, placement algorithms, cache, or A17 restore.
+- `PERFORMANCE=NOT_CLAIMED`.
+
+Evidence boundary:
+
+`A18_2_LOCAL_PREP_CHECK=PASS` is source/ABI/software-golden only.
+User-returned 2020.2 XO/link and the default-index board execute
+`20260917_171608` were reviewed separately. Non-default indexes remain
+unboarded. `PERFORMANCE=NOT_CLAIMED`.
+
+## Stage 2N-A18.3 Local Non-Default Index Host Preparation Authorization
+
+Purpose:
+Prepare a later versioned Host that programs software-golden index tuples
+without editing the accepted A18.2 Host or xclbin identities.
+
+Authorized:
+
+1. Stage document `docs/STAGE2N_A18_3_NONDEFAULT_INDEX_HOST_PREP_V1.md`.
+2. Local static checker `scripts/check/check_stage2n_a18_3_local_prep_v1.py`.
+3. New-window handoff `docs/NEW_WINDOW_HANDOFF_V1.md` and A18.2 board
+   acceptance markdown.
+4. A later increment may add `host/stage2n_a18_3_index_tuple_host_v1.cpp`
+   that uses the baseline table on all four BOs. That file is not created
+   in the preparation increment.
+
+Restrictions:
+
+- Do not modify accepted A13, A14 v2, A16, A17 originals, or the A18.2
+  Host/xclbin SHA identities.
+- Do not instantiate the leftover A18 AXI-Lite decode draft.
+- Do not run `v++`, program, reset, or treat extras goldens as board PASS.
+- Do not reuse slot-sensitivity tables with non-default indexes.
+- T>4, placement, cache, and A17 restore remain unauthorized.
+- `PERFORMANCE=NOT_CLAIMED`.
+
+Evidence boundary:
+
+`A18_3_LOCAL_PREP_CHECK=PASS` is documentation and lock-check only.
+`A18_3_HOST_CPP=NOT_CREATED` until a later increment.
+`A18_3_BOARD=NOT_RUN`.
+

@@ -1,0 +1,137 @@
+A16.2 process-restart repeatability acceptance
+Date: 2026-09-10
+CAMPAIGN=20260910_163902
+KIND=PROCESS_RESTART_NOT_STEADY_STATE
+SOURCE=copied originals; server directory left unchanged
+LOCAL=docs/evidence/stage2n_a16_2/repeatability_v1/
+CHECKER=scripts/check/summarize_stage2n_a16_2_repeatability_v1.py
+SUMMARY=docs/evidence/stage2n_a16_2/repeatability_v1/20260910_163902/summary.txt
+
+A16_2_REPEATABILITY=PASS_PROCESS_RESTART_SLICE
+ORIGINAL_LOG_ARCHIVE=PASS
+WARMUP_ROUNDS_KEPT=1
+MEASURED_ROUNDS=11
+REPEAT_BASELINE=ABSENT_ON_FROZEN_A16_HOST
+BO_INIT=one_HBM0_BO_reload_full_image_each_case
+LOOKUP_START_A=first_AR_on_single_m_axi_gmem
+HOST_REBUILD=NOT_RUN
+RTL_CHANGE=NOT_RUN
+FPGA_RESET=NOT_RUN
+A17_RESTORE_PROGRAM=NOT_AUTHORIZED
+PERFORMANCE=NOT_CLAIMED
+CLASS_C_COMPARABLE=NOT_COMPLETE
+A16_A17_SPEEDUP=NOT_COMPUTED
+COMMIT=NOT_DONE
+
+This is A16-only process-restart repeatability. Each round is a new Host
+process that reallocates, fills, and syncs one HBM[0] BO and reloads the
+full 1024-byte image for every case. It is not a continuously running
+steady-state measurement. N=11 is a first distribution look. It is not
+full performance acceptance and does not complete Class C.
+
+Locked identities:
+  HOST_EXECUTE_SHA256=de0abefc0b4dbadf74dd69e6875db9051a18ab34d8ab1a6a747073cb436d6f1b
+  HOST_SOURCE_SHA256=d2c4036bcaccba702d70fe772a436501568c593dd5b92bc08edb7d7502dafc99
+  XCLBIN_SHA256=5f0d6fefab1549d2e1969df3d8775409bbfac33cb46d07e7abde99abdf04b8b4
+  UUID=f18571de-4a43-46bd-8ab9-a89dd4b11f8e
+  KERNEL=dlrm_f37x_rtl_kernel_stage2n_a16_v1
+  CU=dlrm_a16_1
+  FROZEN_EXECUTE_SHA256=8370ec2f6128243a5f15e7a83a8c0c432b2cde6bf959504769d71323dc31c3ba
+
+Campaign start (campaign.log):
+  CURRENT_UUID=622c839f-55f4-47c1-92e9-95ee5595ffa4
+  HOST_IDENTITY_CHECKED_BEFORE_PROGRAM=YES
+  WRAPS_FROZEN_EXECUTE=YES
+
+Programming (exactly once, warmup round only):
+  ROUND=0 STAMP=20260910_163904 A16_2_FPGA_PROGRAMMING=PASS
+  INFO: xbutil program succeeded.
+  ROUND=1..11 A16_2_FPGA_PROGRAMMING=SKIPPED_ALREADY_LOADED
+  No FPGA reset. No extra-run. A17 was not restored.
+
+Every round (warmup + 11 measured):
+  STAGE2N_A16_2_PHYSICAL_LATENCY_V1=PASS
+  A16_2_BO_CLEANUP=PASS
+  goldens -393/-392/-93/-689/-519
+  A13 compute 322/100/744/1174
+  residual = e2e - lookup - compute = 3 on every printed case
+  no REPEAT_BASELINE key in any host.log
+  A16_2_RUNNER_SHA256=8370ec2f6128243a5f15e7a83a8c0c432b2cde6bf959504769d71323dc31c3ba
+  A16_2_HOST_SHA256=d2c4036bcaccba702d70fe772a436501568c593dd5b92bc08edb7d7502dafc99
+
+Rounds:
+  ROUND=0  ROLE=WARMUP   STAMP=20260910_163904 RC=0  (kept, excluded from min/median/max)
+  ROUND=1  ROLE=MEASURED STAMP=20260910_163916 RC=0
+  ROUND=2  ROLE=MEASURED STAMP=20260910_163922 RC=0
+  ROUND=3  ROLE=MEASURED STAMP=20260910_163928 RC=0
+  ROUND=4  ROLE=MEASURED STAMP=20260910_163934 RC=0
+  ROUND=5  ROLE=MEASURED STAMP=20260910_163940 RC=0
+  ROUND=6  ROLE=MEASURED STAMP=20260910_163946 RC=0
+  ROUND=7  ROLE=MEASURED STAMP=20260910_163952 RC=0
+  ROUND=8  ROLE=MEASURED STAMP=20260910_163958 RC=0
+  ROUND=9  ROLE=MEASURED STAMP=20260910_164004 RC=0
+  ROUND=10 ROLE=MEASURED STAMP=20260910_164010 RC=0
+  ROUND=11 ROLE=MEASURED STAMP=20260910_164016 RC=0
+
+Measured lookup/compute/e2e (warmup excluded; no REPEAT_BASELINE series):
+
+  CASE0 n=11 lookup 112/114/141  compute 1174/1174/1174  e2e 1289/1291/1318
+    LOOKUP_LIST=119,112,140,141,112,120,112,112,112,114,133
+  CASE1 n=11 lookup 112/112/140  compute 1174/1174/1174  e2e 1289/1289/1317
+    LOOKUP_LIST=112,112,112,112,112,112,135,112,112,112,140
+  CASE2 n=11 lookup 112/112/140  compute 1174/1174/1174  e2e 1289/1289/1317
+    LOOKUP_LIST=112,112,112,112,116,112,140,112,120,129,127
+  CASE3 n=11 lookup 112/132/141  compute 1174/1174/1174  e2e 1289/1309/1318
+    LOOKUP_LIST=112,112,112,140,135,136,132,112,136,141,112
+  CASE4 n=11 lookup 112/112/138  compute 1174/1174/1174  e2e 1289/1289/1315
+    LOOKUP_LIST=112,112,112,112,112,127,138,112,112,119,112
+
+Warmup (excluded): CASE0=112, CASE1=120, CASE2=112, CASE3=112, CASE4=118.
+
+Historical one-shot 20260831_182443 all-five 112/1174/1289/3 remains Class D.
+This campaign shows 112 is the measured floor/mode, not the only A16 lookup
+value. Do not collapse the lists to 112. Do not change RTL to chase 112.
+
+Lookup movement is not CASE4-only. CASE3 median is 132. Tails appear on
+CASE0 through CASE4.
+
+Do not write an A16/A17 speedup from this file. Comparability review:
+  docs/STAGE2N_A16_A17_PROCESS_RESTART_COMPARABILITY_V1.md
+A17 restore program remains unauthorized. Board currently holds A16 UUID
+f18571de-4a43-46bd-8ab9-a89dd4b11f8e.
+
+SHA256 of copied originals:
+  a7fd801b7ea3c05a4d3a3bcc2443ad4d3d705980738fc0dbf7fb9d00ab95b38a  20260910_163902/rounds.txt
+  b0820fb4e2617302683f6e9feb411e035c7d9f11b7e943f8a6a0baef7cc8bb70  20260910_163902/campaign.log
+  8b4533b13a70efc3ed6012ce81de4f3240465979b6699020132888d0d42e1ad0  20260910_163904/host.log
+  e6603bdc769c89985181f98f8b181e18bf682bdbf192b33e00c975bbe445c820  20260910_163904/runner.log
+  f8127aa3319a3d284fa590f293a0664bff638474ed34f1058a9ed86768cc71a9  20260910_163916/host.log
+  666de5827a5681be92ab22f1cd142e04720b7a84a43c57e2cb9677572a9267c7  20260910_163916/runner.log
+  593f64172dd58d4bde99336e5d1354f6644ba12a0a996ed155d017f7f6c0226f  20260910_163922/host.log
+  2ee8b2c99937cf58914161f39a3aa2023b0671709d2d5634c09954bcc083e0fc  20260910_163922/runner.log
+  87aee5c1af56baa9fa26b6bde70d6bc1f9b696472b9bf5b8c3c15a9d7418a2ab  20260910_163928/host.log
+  fb1b3b1e635ff0bf8d7b4237163cdfdd3b0e3e9fbda44871f3332a97c4fc6d92  20260910_163928/runner.log
+  37babcf47a04504b1b42d2693abae613b6c1b7ff4fb07c66ff1c22642fb2beaa  20260910_163934/host.log
+  f06bc4b09d6f147fa4906da221982f709ec1552c1b8981d198bbcf8365a39264  20260910_163934/runner.log
+  22e6df1db236f1967fe1d051c303e3eca3b373a78459559500e26d14253ec6d9  20260910_163940/host.log
+  4229f21e6afd78b6a6f10cbb52e0b23cd2ba7a7e7a269be071ccd76fa8cf738f  20260910_163940/runner.log
+  b1eac8f52310c42a7136b96cc1e53d7f7c7f948fec69d3fde6e5e54ccb7da98e  20260910_163946/host.log
+  9a86f34fb52e99bf64189e093009997e49e6d9cdc4dbb5a893a76c6ee5c915aa  20260910_163946/runner.log
+  e22040956cf74a5899ac9730f69d4f641b9d2cfbff2b3f990efc733ccf05a390  20260910_163952/host.log
+  5e19fefde82b4215d904daa0bf829bb3da5e8001b04820d57e7e0fa9b10c0d6e  20260910_163952/runner.log
+  593f64172dd58d4bde99336e5d1354f6644ba12a0a996ed155d017f7f6c0226f  20260910_163958/host.log
+  86d7d99b5c98add06f4236066ebf6b74242d7ffb646859cc4f81c7dd49a58d03  20260910_163958/runner.log
+  94c3b869e125fa7f4614078bb3545526e744de6c1b29643cce8af470b84cb1b1  20260910_164004/host.log
+  2f2d080df4d2bd618b09b4e90d7bdbb3dc8b6ef3436a2c3dc8829e01c565eb03  20260910_164004/runner.log
+  1a94c9e57e5a94de0caf0246c0b427636fab58dee7db0e1a860c60554463a549  20260910_164010/host.log
+  ef9de55269e49e2b01b7605b8e6e339d857a77ef501b5a4037e74ed98e5a886a  20260910_164010/runner.log
+  ec7a1310b49218db484bc54538d51fff4882b18f467dea831d0693efaf816936  20260910_164016/host.log
+  c539ea46d2fc14518f34d6bdbab204c6fc2ebbc60cf395441e6a062367e3cea2  20260910_164016/runner.log
+
+Server original remains:
+  /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a16_2_buildonly/results/stage2n_a16_2/repeatability_v1/20260910_163902
+  and per-round physical_latency_v1/<stamp>/
+
+Do not extra-run. Do not reset. Do not restore A17 without a new sentence
+naming UUID 622c839f-55f4-47c1-92e9-95ee5595ffa4. Do not rebuild Host.
+Do not start A18. Do not fill paper Results from this slice.

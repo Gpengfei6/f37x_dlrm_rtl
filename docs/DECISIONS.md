@@ -1146,5 +1146,493 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
   physical HBM banks. Target build, xclbin, board execution, bandwidth,
   latency, throughput, speedup, power and energy remain unvalidated or
   unclaimed.
-- **Next:** user-controlled A17 target packaging/link if later authorized.
-  Do not enter A18 from this evidence.
+- **Next:** user-controlled A17 target packaging/link remains unauthorized
+  until A17.5 source preparation. Do not enter A18 from A17.3 XSim evidence.
+
+## D-052 - Record an identity four-bank mapping before A17 packaging
+
+- **Status:** accepted as the Stage 2N-A17.4 local mapping proposal on
+  2026-09-08.
+- **Decision:** keep A16.2 as `dlrm_a16_1.m_axi_gmem -> HBM[0]`. Treat A17
+  public masters `m_axi_gmem0..3` as currently unmapped. Propose one future CU
+  `dlrm_a17_1` with `gmemi -> HBM[i]` and four Host BOs whose paddrs program
+  BASE0–BASE3 through the frozen AXI-Lite map. Runtime remains user-managed
+  `xclRegWrite`; future XO metadata still needs four `TABLE_BASE*` pointer
+  arguments for `v++`.
+- **Evidence:** local source audit, imported A16.2 CONNECTIVITY/MEM_TOPOLOGY
+  dumps, and `scripts/check/check_stage2n_a17_4_hbm_mapping_prep_v1.py`
+  `A17_4_MAPPING_PREP_CHECK=PASS`.
+- **Boundary:** this is not an XO, xclbin, physical four-bank result, or
+  performance claim. No live `config/stage2n_a17*.cfg` is added in A17.4.
+- **Next:** see D-053 for the A17.5A packaging audit. Live `config/`, Host,
+  and board work remain later stages.
+
+## D-053 - Keep A17 connectivity out of live Vitis config until packaging exists
+
+- **Status:** accepted as Stage 2N-A17.5A local packaging audit on 2026-09-08.
+- **Decision:** document the accepted A16.2 XO/`package_xo`/`v++ --link` path
+  without executing it. Store
+  `analysis/stage2n_a17_5/connectivity_a17_multibank_proposal.cfg` with
+  `PROPOSAL ONLY / NOT FOR v++ / UNVALIDATED`. Proposed CU `dlrm_a17_1` maps
+  `m_axi_gmemi` to `HBM[i]`. Host BO0–BO3 to BASE0–BASE3 remains AXI-Lite
+  `xclRegWrite` documentation only.
+- **Not adopted:** copying the proposal into `config/`, writing an A17 package
+  Tcl in this stage, modifying Host, or claiming multi-bank acceleration.
+- **Evidence:** `docs/STAGE2N_A17_5A_TARGET_PACKAGING_AUDIT_V1.md` and
+  `scripts/check/check_stage2n_a17_5a_packaging_prep_v1.py`
+  `A17_5A_PACKAGING_PREP_CHECK=PASS`.
+- **Next:** see D-054 for A17.5B physical-validation preparation. A17.5C
+  remains unauthorized.
+
+## D-054 - Prepare four-BO Host/evidence structure without opening a device
+
+- **Status:** accepted as Stage 2N-A17.5B local physical-validation
+  preparation on 2026-09-08.
+- **Decision:** keep the A16.2 Host as the single-BO baseline. Document the
+  future A17 chain BO handle → mem/group index → HBM tag → paddr → BASE
+  readback for BO0–BO3. Store unpopulated evidence templates under
+  `docs/evidence/stage2n_a17_5/`. Do not implement Host, do not forge
+  mapping or latency values, and do not claim acceleration.
+- **Evidence:** `docs/STAGE2N_A17_5B_PHYSICAL_VALIDATION_PREP_V1.md`,
+  `docs/STAGE2N_A17_5B_HOST_VALIDATION_PREP_V1.md`, and
+  `scripts/check/check_stage2n_a17_5b_physical_prep_v1.py`
+  `A17_5B_PHYSICAL_PREP_CHECK=PASS`.
+- **Next:** see D-055. Physical A17.5C execution remains unauthorized.
+
+## D-055 - Keep A17.5C behind an explicit execution gate
+
+- **Status:** accepted as Stage 2N-A17.5C checklist-only preparation on
+  2026-09-08.
+- **Decision:** write build, runtime, mapping, and success criteria before any
+  target run. Physical multi-bank validation may be announced only when xclbin,
+  device, BO mapping, kernel run, and latency measurement are all PASS on
+  user-returned evidence. Latency not decreasing, or compute remaining the
+  bottleneck, does not by itself prove a mapping failure.
+- **Not adopted:** adding A17 Host/runners, live `config/`, `v++`, XRT, or
+  board access in this stage.
+- **Evidence:** `docs/STAGE2N_A17_5C_EXECUTION_GATE_V1.md`,
+  `analysis/stage2n_a17_5/a17_5c_risk_register.md`, and
+  `scripts/check/check_stage2n_a17_5c_execution_gate_v1.py`
+  `A17_5C_EXECUTION_GATE_CHECK=PASS`.
+- **Next:** A17 implementation is paused. See D-056. Do not expand A17.5C.
+
+## D-056 - Pause A17 implementation and freeze the evaluation plan
+
+- **Status:** accepted on 2026-09-08.
+- **Decision:** stop adding A17 RTL, Host, live `config/`, checkers, or
+  packaging scripts until an authorized F37X run is requested. Record the
+  paper experiment design in `docs/STAGE2N_A17_EVALUATION_PLAN_V1.md` with
+  empty A17 physical Results cells. GPT’s A17.6 physical-validation name is
+  the pending board comparison, not a local PASS.
+- **Allowed claim:** multi-bank-capable architecture and verification
+  framework versus A16.2. **Forbidden claim:** multi-bank HBM acceleration.
+- **Next:** see D-057 (V1 draft) and D-058 (V2 methodology rewrite). A17.6
+  remains unauthorized.
+
+## D-057 - Draft the A17 paper section without claiming acceleration
+
+- **Status:** accepted on 2026-09-08.
+- **Decision:** write `docs/STAGE2N_A17_PAPER_CHAPTER_MULTIBANK_LOOKUP_V1.md`
+  covering motivation, design, RTL structure, layered verification,
+  limitations, and the compute-bound discussion that motivates future A18
+  storage–compute co-design. Do not implement A18. Do not start A17.6.
+- **Claim boundary:** A16.2 is the completed physical baseline. A17.1–A17.5C
+  complete the local architecture and verification framework. A17.6 physical
+  four-bank validation waits authorization.
+- **Next:** see D-058 for the thesis-style V2 rewrite. A17.6 remains
+  unauthorized.
+
+## D-058 - Rewrite the A17 chapter as a methodology section
+
+- **Status:** accepted on 2026-09-08.
+- **Decision:** keep V1 as the engineering-summary source and write
+  `docs/STAGE2N_A17_PAPER_CHAPTER_MULTIBANK_LOOKUP_V2.md` as a thesis-style
+  methodology chapter. Convert motivation into a research question, design
+  into memory-side scalability (not “four AXI ports”), RTL into A13+A14+A17
+  layering, verification into an evidence hierarchy, limitations into an
+  explicit end-to-end compute bound, and discussion into bottleneck
+  migration toward future storage–compute co-design.
+- **Correction:** D-060 records that the V1 path was later overwritten and
+  is no longer an untouched engineering record. V2 remains an independent
+  file. The first engineering draft was recovered only as a snapshot.
+- **Unchanged:** A16.2 `112/1174/1289`; no RTL, Host, config, or evidence
+  edits; no A17.6 or A18 implementation.
+- **Next:** see D-059 then D-060.
+
+## D-059 - Review A16.2 + A17 as a paper outline, not a new experiment
+
+- **Status:** accepted on 2026-09-08.
+- **Decision:** write `docs/STAGE2N_A17_PAPER_INTEGRATION_REVIEW_V1.md`.
+  Map A16.2 to Method 3.1 / Results 4.1, A17 V2 to Method 3.2–3.5, and the
+  evaluation plan to empty Results 4.3–4.4. Keep the paper claim as a
+  multi-bank-capable architecture and verification framework. Do not
+  implement A17.6 or A18, and do not invent Related Work gaps.
+- **Finding:** Method *chapter* is writable; method *effectiveness* is not
+  fully hardware-verified. Related Work is missing; 4.3–4.4 wait for A17.6.
+- **Next:** see D-060. The first V3 request is executed there.
+
+## D-060 - Tighten claims, restore file identity, write V3 as writing-only
+
+- **Status:** accepted on 2026-09-08.
+- **Decision:** apply the five review constraints. (1) Move ≈1.07× / ≈1.10×
+  to Discussion / analytical bounds; do not call this observed bottleneck
+  migration. (2) “Complete Method” means the chapter can be written, not
+  that A17 is fully verified; XSim sample 36 does not replace A16.2’s five
+  board cases. (3) Forbid measured four-bank operation and speedup; allow
+  describing a multi-bank-capable design. (4) Record that the V1 path was
+  overwritten; V2 is an independent file; restore the first engineering
+  draft only as
+  `docs/STAGE2N_A17_PAPER_CHAPTER_MULTIBANK_LOOKUP_V1_ENGINEERING_SNAPSHOT.md`.
+  (5) Separate literature gap from A17.6 hardware gap.
+- **V3:** `docs/STAGE2N_A17_PAPER_CHAPTER_MULTIBANK_LOOKUP_V3.md` is writing
+  integration only. It is not experiment or evidence closure.
+- **Next:** literature review can start without F37X. Commit remains
+  deferred unless the user asks. A17.6 waits authorization.
+
+
+## D-061 — Resume engineering with the A17.6 executable target-build handoff
+
+- Date: 2026-09-09. User asked to defer patents and advance engineering.
+- Scope: new A17.6 package Tcl, four-bank config, manifest, executable Python
+  XO/link entry point and artifact contract regression. No accepted RTL/Host/
+  model/evidence edits, no commit, no server or device access.
+- Replace proposal-only packaging with actual build files. First user-controlled
+  action is XO-only, followed by metadata review and then link-only. Exact
+  target results remain NOT_RUN; four-BO Host is the following increment.
+- Preserve A16.2 112/1174/1289/3 and reuse its frozen post-route report helper.
+  A17 adds setup/hold/pulse and actual kernel-clock checks on those reports.
+- Transfer a self-contained source ZIP with SHA256 manifest; unrelated dirty
+  writing files do not require a commit or replacement of the accepted checkout.
+- Mapping intent or link metadata never proves physical HBM execution or speedup.
+
+## D-062 - Break the A17 START/load LUT loop without waiving bitstream DRC
+
+- **Status:** local RTL fix after user-returned A17.6 link 003 on 2026-09-09.
+- **Observation:** `a17_6_link_003` completed synth/opt/place/route and failed
+  `write_bitstream` with LUTLP-1. The named net was A13
+  `mlp_act_load_valid`; the loop also included `u_hbm_lookup/fresh_group`.
+- **Decision:** do not set `ALLOW_COMBINATORIAL_LOOPS`. Do not edit A13/A14/A16
+  or the A17 public kernel file. In
+  `dlrm_hbm_pipeline_integration_stage2n_a17_v1.sv` only: (1) share one
+  registered idle/fresh-group gate between START valid and ready, matching A15
+  so valid does not AND A13 ready; (2) register `compute_idle` before gating
+  lookup `load_valid` and `load_all_req_ready`.
+- **Stale artifacts:** target XO `a17_6_xo_001` (SHA `1bd10d1f…`) and link
+  directories 001–003 must not be reused.
+- **Follow-up:** user-returned `a17_6_xo_002` / `a17_6_link_004` closed this
+  bitstream gap. See D-063.
+
+## D-063 - Accept A17.6 xo_002 / link_004 as target build PASS only
+
+- **Status:** accepted as user-returned target XO and link evidence on
+  2026-09-09. Not a board or performance result.
+- **Identities:** XO SHA `15ded79f…`; xclbin SHA `b8d20349…`; UUID
+  `622c839f-55f4-47c1-92e9-95ee5595ffa4`; kernel
+  `dlrm_f37x_rtl_kernel_stage2n_a17_v1`; CU `dlrm_a17_1`; arguments 0–3 to
+  memory indices 0–3 / `HBM[0..3]` by tag; part `xcvu37p-fsvh2892-2L-e`;
+  platform `inspur_f37x_xdma_201920_3`; requested 100 MHz; actual kernel clock
+  `clk_out1_pfm_top_clkwiz_kernel_0` 10 ns; WNS/TNS 0.000; failing endpoints 0;
+  DRC/methodology errors 0; methodology critical warnings 55 retained.
+- **Not accepted:** programming, XRT Host, physical four-bank reads, latency,
+  bandwidth, throughput, speedup, power, or any comparison with A16.2 112/1174/1289/3
+  as a multi-bank acceleration result.
+- **Next:** a separately authorized four-BO Host and protected board run. Do
+  not use the A16 single-BO Host on this xclbin.
+
+## D-064 - Four-BO Host is prepare-only; lock A16.2 goldens, not XSim 36
+
+- Date: 2026-09-09. User authorized local four-BO Host implementation and
+  split “development complete” from “allow program”.
+- Board goldens are locked from accepted A15.6 assets and the A16.2 host.log:
+  `-393,-392,-93,-689,-519`. Local XSim result 36 is rejected as a board
+  golden. Five functional cases, four fixed rows 37–40.
+- Host parses CONNECTIVITY/MEM_TOPOLOGY tags rather than copying A16 and
+  changing BO count. Each BO is filled, synced, addressed, and released on
+  its own. `paddr==0` remains legal.
+- A13 `322/100/744/1174` is a regression expectation with printed actuals and
+  deltas. A17 lookup/e2e/residual are recorded and are not required to match
+  A16.2 `112/1289/3`.
+- Default protected action is `prepare`. `execute` requires
+  `A17_6_BOARD_EXECUTION_AUTHORIZED=yes`, `A17_6_ALLOW_PROGRAM=yes`, and
+  `A17_6_CONFIRM=yes`. This increment does not set those variables.
+- Per-BO layout: restore baseline onto all four BOs before every case; slot-i
+  sensitivity mutates only BO i. Goldens remain A15.6/A16.2, not XSim 36.
+- Methodology warnings require a content diff versus A16.2; equal count 55 is
+  not equivalence. The diff is NOT_RUN until the link_004 report is supplied.
+- Paper implementation results may cite xo_002/link_004. Physical four-bank
+  reads, BO ownership, latency, and speedup stay unwritten. Patent paused.
+
+## D-065 - Pre-board review: compile guidance, START-hold XSim, FSM window
+
+- Date: 2026-09-09. User asked for compile and pre-board review only: no
+  program, no Host execution.
+- `prepare` plus `A17_6_BUILD_HOST=yes` is file check and `g++` only. The
+  build script records compiler exit code, ELF magic, and source/ELF SHA256
+  and does not call `xbutil` or open a device. Target compile remains NOT_RUN
+  until user logs arrive.
+- Local START-hold XSim of the existing A17.1 integration bench is PASS.
+  Identifier `before` was renamed because it is a SystemVerilog keyword.
+- The `compute_idle_q` lag cycle can still show `load_all_req_ready` at the
+  wrapper ports. The public kernel never asserts `load_all_req_valid` then:
+  `load_all_req_valid` is `A15_LOAD_REQUEST` only, compute START is
+  `A15_PIPE_START` only, and `PIPE_CMD_START` is blocked by
+  `command_pending_any`. Proof is that FSM, not Host usage. No RTL change.
+- Methodology content review stays NOT_RUN until the link_004 report is
+  copied. First board execute waits for GPT review after this package.
+
+## D-066 - Target Host compile PASS; methodology content equivalent to A16.2
+
+- Date: 2026-09-10. User overlayed the Host zip and ran `prepare` plus
+  `A17_6_BUILD_HOST=yes` on the existing build-only tree.
+- Compile PASS: `COMPILER_EXIT_CODE=0`, ELF 84552 bytes, magic PASS, source
+  SHA256 `2ef3a5a6…` matches local, ELF SHA256 `520d78ef…`. Prepare did not
+  invoke xbutil, open a device, load an xclbin, or execute the Host.
+- Methodology content PASS versus frozen A16.2: 55/55 critical bodies match
+  after stripping Vivado constraint-position indices. Zero criticals name
+  A17 RTL. Five `clkwiz_kernel` items are platform preexisting. Equal count
+  55 was recorded but not used as the pass.
+- First board execute still waits for GPT review. Do not program.
+
+## D-067 - Close A17.6 local prep; freeze identities; execute not authorized
+
+- Date: 2026-09-10. GPT accepted the five pre-board checks and closed the
+  local prep stage. Do not add document versions or repeat those checks.
+- Frozen: Host source SHA256-LF `2ef3a5a6…`, Host ELF `520d78ef…` (84552
+  bytes), xo_002 `15ded79f…`, link_004 xclbin `b8d20349…`, UUID
+  `622c839f-55f4-47c1-92e9-95ee5595ffa4`. Do not rebuild or replace them.
+  Do not change RTL. Do not commit.
+- First board execute remains unauthorized. Pre-board PASS does not skip the
+  live device identity, occupancy, fingerprint, and UUID checks already in
+  the protected entry. Failure stops; no bypass; no automatic reset.
+- Authorized first run, when later granted, is four-slot physical function
+  only: this xclbin, this ELF, four BO/BASE proofs, five goldens plus
+  repeated baseline, actual A13 deltas and A17 lookup/e2e/residual, full
+  log and cleanup. No throughput, bandwidth, power, model expansion, or
+  acceleration claim. Keep the first failure scene. Latency repeats wait
+  for a later evidence review.
+
+## D-068 - Close A17.6 four-slot four-bank physical function as PASS
+
+- Date: 2026-09-10. Closed from the returned log summary of
+  `results/stage2n_a17_6/protected_v1/20260910_102244`. Codex did not access
+  the server. No new target operations.
+- The project moved from “four-way architecture can be built” to “four HBM
+  paths actually take part in complete DLRM inference.”
+- Support: four independent BOs on `HBM[0..3]`; five goldens match and each
+  sensitivity case mutates only its BO; repeated baseline is correct; four
+  slots load (`0xF`) and BOs release; A13 measured counts stay
+  `322/100/744/1174`.
+- Observed this-run board counters `lookup/compute/e2e/residual =
+  33/1174/1210/3`. These are measured observations from the function run.
+  residual=3 is the counter-interval difference `e2e - lookup - compute`,
+  not an independently measured control overhead. Comparable A16.2
+  performance acceptance is not done. Do not compute or claim speedup.
+  `PERFORMANCE=NOT_CLAIMED`.
+- Three layers remain: function PASS; original-evidence archive PASS;
+  comparable performance not started.
+- This execute programming is `SKIPPED_ALREADY_LOADED`. The banner is an
+  allowed-action description and does not prove that program ran.
+- Keep the server directory unchanged. Original-evidence archive and
+  acceptance are PASS under
+  `docs/evidence/stage2n_a17_6/function_pass_v1/`. Execution-artifact
+  identity remains `NOT_FULLY_ACCEPTED`. Next: Host ELF identity gate,
+  then a locked function re-check. Comparable latency waits. Do not
+  overwrite the historical `520d78ef…` freeze. Do not program, reset,
+  rebuild, start A18, write a speedup, or commit.
+
+## D-069 - Host ELF identity gap; gate execute before program
+
+- Date: 2026-09-10. Accept the identity investigation. Five-case function
+  results stand. `9ba37658…` is the compile record for the successful run,
+  not a runtime-verified process hash. Do not promote log archive PASS to
+  execution-artifact identity PASS. A later hash of a file on the server
+  cannot fabricate the missing pre-exec record.
+- Identities: `520d78ef…` is the pre-fix freeze and did not complete the
+  four-bank function path. Current Windows Host source is a third state
+  and must not impersonate `7073b4d9…`.
+- Protected execute now requires explicit
+  `A17_6_EXPECTED_HOST_ELF_SHA256` and `A17_6_EXPECTED_HOST_SOURCE_SHA256`.
+  Expected SHA, on-disk ELF SHA, and build-record BINARY_SHA256 must
+  match before any program. Execute does not rebuild. Logs record path,
+  SHA, size, source SHA, and Host exit code.
+- Retrieval 2026-09-10: current target ELF/source match `9ba37658…` /
+  `7073b4d9…` (`REUSE_CANDIDATE=YES`). Host is not rebuilt. That later
+  hash does not reconstruct the missing 102244 pre-exec record.
+  `host_build.log` being 0 bytes does not mean compile failure.
+  `20260910_100942`: log reports `xbutil program succeeded`; status fields
+  also print `FPGA_PROGRAMMING=NOT_RUN`. Record defect; do not call it
+  "did not program"; do not re-program to repair the field.
+  `A17_6_HOST_START`, `BO0_HANDLE`, and `CASE0_NAME` are absent.
+- Identity-gated re-check `20260910_122124`: FUNCTION=PASS;
+  EXECUTION_ARTIFACT_IDENTITY=PASS_THIS_RUN_ONLY. Trio logged before Host;
+  `HOST_EXIT_CODE=0`; `SKIPPED_ALREADY_LOADED`; no `xbutil program`.
+  CASE4 lookup/e2e `55/1232` recorded; goldens and A13 deltas passed.
+  Does not backfill 102244.
+
+## D-070 - Close A17.6 function re-check; comparable-latency plan only
+
+- Date: 2026-09-10. Accept `20260910_122124` function, original archive, and
+  this-run execution identity. Stop further function re-checks and Host
+  identity probes. Keep `20260910_102244` pre-exec gap. Do not require a
+  `/proc` hash.
+- Lookup is not a single 33-cycle value. CASE4 `55/1174/1232/3` stays in
+  the record. Later campaigns must keep distributions. Do not drop that
+  sample or change RTL to chase 33.
+- Comparable A16.2 vs A17 work is plan-only:
+  `docs/STAGE2N_A17_6_COMPARABLE_LATENCY_PLAN_V1.md`. Historical 112 vs
+  33/55 is descriptive only. Same-condition repeats (N=11) plus an
+  explicit A16 program authorization are required before a comparable
+  performance conclusion. Prior `FORCE_NO_PROGRAM` does not cover
+  switching to UUID `f18571de-…`.
+- A17-only process-restart slice was authorized: 12 existing-Host
+  executes, `FORCE_NO_PROGRAM`, UUID `622c839f-…`. Warmup out of summary;
+  REPEAT_BASELINE not merged into CASE0. Not steady-state; not a speedup;
+  A16 program still unauthorized.
+
+## D-071 - Accept A17 process-restart N=11; Class C still incomplete
+
+- Date: 2026-09-10. Campaign `20260910_141722` is accepted as
+  `PASS_PROCESS_RESTART_SLICE`. Originals:
+  `docs/evidence/stage2n_a17_6/repeatability_v1/ACCEPTANCE.txt`.
+- 1 warmup + 11 measured Host processes; `FORCE_NO_PROGRAM`; no
+  `xbutil program`; ELF `9ba37658…` / source `7073b4d9…` / UUID
+  `622c839f-…`. All goldens and A13 `1174` matched. Compute min/median/max
+  are 1174/1174/1174 on every series.
+- Lookup is a distribution. Measured min/median/max:
+  CASE0 `33/33/33`, CASE1 `33/33/65`, CASE2 `33/33/52`, CASE3 `33/33/38`,
+  CASE4 `33/33/50`, REPEAT_BASELINE `33/33/33`. Keep 37, 38, 50, 52, 65.
+  Keep historical 122124 CASE4=55 even though it did not reappear here.
+  Do not merge REPEAT_BASELINE into CASE0.
+- This slice is not steady-state, not Class C, not an A16/A17 speedup.
+  Programming A16 UUID `f18571de-…` still needs a separate user sentence.
+
+## D-072 - Prepare A16.2 same-caliber process-restart; do not program
+
+- Date: 2026-09-10. A17-N11 remains frozen. Prepare A16-N11 on frozen
+  artifacts only: ELF `de0abefc…`, source `d2c4036b…`, xclbin `5f0d6fef…`,
+  UUID `f18571de-…`. Same warmup + 11 process restarts, CASE0–CASE4 order A.
+- Host differences recorded, not patched: A16 has no in-process
+  `REPEAT_BASELINE`; log keys omit `_ACTUAL`; one `HBM[0]` BO vs four BOs;
+  lookup start A is first AR on one master vs any of four.
+- Do not rebuild Host or edit RTL to add a sixth A16 case or to chase 65.
+  Do not run A16 Host from the A17 overlay. Program remains unauthorized
+  until the user names destination UUID `f18571de-…`.
+- After a future A16-N11, evaluate comparability. Not now. No speedup.
+
+## D-073 - A16-N11 protected execute wrapper; user programs once
+
+- Date: 2026-09-10. User named destination UUID
+  `f18571de-4a43-46bd-8ab9-a89dd4b11f8e`. The campaign wrapper calls the
+  frozen A16 runner
+  `scripts/program_and_run_stage2n_a16_2_physical_latency_v1.sh`
+  (SHA256 `8370ec2f6128243a5f15e7a83a8c0c432b2cde6bf959504769d71323dc31c3ba`)
+  and does not issue `xbutil program` itself. Frozen Host/RTL/xclbin are
+  not edited or rebuilt.
+- Pre-program checks: execute SHA, Host ELF
+  `de0abefc0b4dbadf74dd69e6875db9051a18ab34d8ab1a6a747073cb436d6f1b`,
+  source `d2c4036bcaccba702d70fe772a436501568c593dd5b92bc08edb7d7502dafc99`,
+  xclbin `5f0d6fefab1549d2e1969df3d8775409bbfac33cb46d07e7abde99abdf04b8b4`,
+  and matching Host build-record hashes.
+- Allowlisted source image for one switch: UUID
+  `622c839f-55f4-47c1-92e9-95ee5595ffa4`, CU
+  `dlrm_f37x_rtl_kernel_stage2n_a17_v1:dlrm_a17_1`.
+- 1 warmup + 11 measured; CASE0–CASE4 only; no A16 `REPEAT_BASELINE`.
+  BO condition: one `HBM[0]` full-image reload. Fail-stop. No reset. No
+  extra-run. A17 restore program is outside this authorization.
+- Cursor does not SSH. Local gates:
+  `scripts/check/check_stage2n_a16_2_repeatability_execute_v1.py`.
+
+## D-074 - A16-N11 accepted; comparability reviewed; no speedup
+
+- Date: 2026-09-10. Campaign `20260910_163902` is accepted as
+  `PASS_PROCESS_RESTART_SLICE`. Archive:
+  `docs/evidence/stage2n_a16_2/repeatability_v1/ACCEPTANCE.txt`.
+- Warmup programmed A17→A16 once; rounds 1–11 skipped program. Goldens
+  matched. Compute 1174. Residual 3. No A16 `REPEAT_BASELINE`. Lookup is
+  a distribution: CASE0 `112/114/141`, CASE1 `112/112/140`, CASE2
+  `112/112/140`, CASE3 `112/132/141`, CASE4 `112/112/138`. Keep tails.
+  Historical one-shot all-112 remains Class D, not the whole A16 list.
+- Comparability versus A17-N11 `20260910_141722`: same task, same
+  process-restart protocol, same compute/residual. Remaining differences:
+  sequential vs parallel lookup, one `HBM[0]` full-image reload vs four
+  BOs, A16 has no `REPEAT_BASELINE`, lookup start A is one master vs any
+  of four. See
+  `docs/STAGE2N_A16_A17_PROCESS_RESTART_COMPARABILITY_V1.md`.
+- Class C remains incomplete. Do not write an A16/A17 speedup. Do not
+  extra-run. A17 restore is not authorized. Board now holds A16 UUID
+  `f18571de-4a43-46bd-8ab9-a89dd4b11f8e`.
+
+## D-075 - A18.1 local four-slot runtime indexes; A17 CLEAR kept
+
+- Date: 2026-09-17. Local RTL/XSim only. No commit, XO, xclbin, or board.
+- A18 public kernel is generated from
+  `rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a17_v1.sv`. Do not reconstruct
+  AXI-Lite decode. Leftover
+  `rtl/f37x/dlrm_internal_pipeline_axi_lite_decode_stage2n_a18_v1.sv` is
+  not instantiated.
+- Indexes `0x330-0x33C` reset to 37–40, latch with bases on accepted START.
+  Busy index writes are ignored (no PENDING). Busy BASE still raises `4'd1`.
+  CLEAR remains A17: legal only DONE→IDLE and ERROR→RECOVER. Mid-sequence
+  CLEAR is `4'd3`. OOB index `>= 64` issues no ARVALID.
+- Official A17.2 runner stays `NOT_RUN` on this zip tree (frozen `e4ce2ab`
+  vs LUTLP working tree). Do not revert zip A17. Current-tree A17
+  public-kernel XSim `COMPILE/ELAB/SIM=PASS` is not that runner's PASS.
+- A18 Vivado Simulator v2022.1: `COMPILE/ELAB/SIM=PASS`, identity golden 36,
+  A13 counters 322/100/744/1174, cases A–H. A 2022.1 result is never a
+  2020.2 pass. `PERFORMANCE=NOT_CLAIMED`.
+
+## D-076 - A18.2 local XO/Host preparation; stop before server v++
+
+- Date: 2026-09-17. Local only. No commit, v++, xclbin, or board.
+- Package `dlrm_f37x_rtl_kernel_stage2n_a18_v1` / CU `dlrm_a18_1` /
+  `m_axi_gmem0..3 -> HBM[0..3]` at 100 MHz. Four `TABLE_BASE` pointer
+  arguments only. Lookup indexes stay AXI-Lite MMIO `0x330-0x33C`.
+- Host writes those indexes, defaults 37–40, keeps locked goldens
+  `-393/-392/-93/-689/-519`, rejects A16/A17 CU names. Non-default indexes
+  are refused in this five-case Host.
+- Software goldens from frozen A15.6 assets: default 37–40 match those
+  locked values; extras such as rows 1–4 → `-61` are not board results.
+- `A18_2_LOCAL_PREP_CHECK=PASS`. `A18_2_TARGET_XO=NOT_RUN`. A Windows
+  Store `python3` `xo` invocation is not target evidence. Transfer
+  `handoff/stage2n_a18_2_build_v1.zip` to a new empty 2020.2 extract,
+  then `check` and `xo --confirm-build`. Do not overlay A17.6. Do not
+  run the A17 Host against an A18 xclbin.
+
+## D-077 - A18.2 target XO/link accepted; Host/board still closed
+
+- Date: 2026-09-17. User-returned 2020.2 artifacts, locally reviewed.
+- XO `a18_2_xo_001` SHA `8d3f920aed2e4349…`. Link `a18_2_link_001`
+  xclbin SHA `bbb0fa1f…`, UUID `32a9c911-af15-47fc-90c8-0bfe3894a3ef`.
+  CU `dlrm_a18_1`, `HBM[0..3]` by tag, 100 MHz, WNS 0.000. Pointer args
+  remain `TABLE_BASE0..3`. Lookup indexes stay MMIO.
+- Next user-controlled step is a separately authorized board execute.
+  Programming would replace the A16 UUID currently on the card. Do not
+  treat Host g++ as physical HBM or a performance result.
+
+## D-078 - A18.2 first board function PASS on default indexes 37–40
+
+- Date: 2026-09-17. User-returned protected execute `20260917_171608`.
+- Programmed UUID `32a9c911-af15-47fc-90c8-0bfe3894a3ef` onto index 2 /
+  BDF `0000:9b:00.1`. Pre-program UUID was `3a4ebb31-933a-45c2-9ce4-04adce88615c`.
+- Five cases plus repeat baseline matched `-393/-392/-93/-689/-519`.
+  MMIO indexes 37–40, PIPE_VERSION `0x00024e18`, four BOs on `HBM[0..3]`,
+  compute `322/100/744/1174`, lookup 33 / e2e 1210 / overhead 3.
+- This does not board non-default indexes. Do not write a speedup versus
+  A17.6. `PERFORMANCE=NOT_CLAIMED`.
+- Copied originals under
+  `docs/evidence/stage2n_a18_2/function_pass_v1/20260917_171608/`
+  match the pasted execute log. `A18_2_ORIGINAL_EVIDENCE_ARCHIVE=PASS`.
+  `HOST_RUNTIME_PROCESS_HASH=NOT_CLAIMED`.
+
+## D-079 - GitHub snapshot for new windows; A18.3 Host not created yet
+
+- Date: 2026-09-17. User asked to push GitHub with detailed markdown so a
+  new model or chat can resume without reconstructing chat history.
+- Entry document: `docs/NEW_WINDOW_HANDOFF_V1.md`. Board narrative:
+  `docs/STAGE2N_A18_2_BOARD_FUNCTION_ACCEPTANCE_V1.md`.
+- A18.3 is local preparation only: extras goldens stay software-only;
+  A18.2 Host lock stays; no A18.3 C++ Host in this increment; no board.
+- Do not `git add .`. Omit patents, extract trees, and the 76 MB
+  `post_route_timing_summary.rpt`.
+- `PERFORMANCE=NOT_CLAIMED`.
+

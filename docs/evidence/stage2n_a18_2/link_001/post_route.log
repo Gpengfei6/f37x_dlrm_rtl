@@ -1,0 +1,223 @@
+ARGV=["/opt/Xilinx/Vivado/2020.2/bin/vivado", "-mode", "batch", "-nolog", "-nojournal", "-source", "/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/scripts/report_stage2n_a16_2_vitis_post_route_v1.tcl"]
+
+****** Vivado v2020.2 (64-bit)
+  **** SW Build 3064766 on Wed Nov 18 09:12:47 MST 2020
+  **** IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+    ** Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+
+source /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/scripts/report_stage2n_a16_2_vitis_post_route_v1.tcl
+# proc fail {message} {
+#     error $message
+# }
+# foreach required_env {A16_2_ROUTED_DCP A16_2_REPORT_DIR} {
+#     if {![info exists ::env($required_env)] || $::env($required_env) eq ""} {
+#         fail "Missing required environment variable: $required_env"
+#     }
+# }
+# set dcp_path [file normalize $::env(A16_2_ROUTED_DCP)]
+# set report_dir [file normalize $::env(A16_2_REPORT_DIR)]
+# if {![file isfile $dcp_path]} {
+#     fail "Routed checkpoint does not exist: $dcp_path"
+# }
+# if {[file exists $report_dir]} {
+#     fail "Refusing to overwrite routed report directory: $report_dir"
+# }
+# file mkdir $report_dir
+# open_checkpoint $dcp_path
+Command: open_checkpoint /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/pfm_top_wrapper_routed.dcp
+
+Starting open_checkpoint Task
+
+Time (s): cpu = 00:00:00.12 ; elapsed = 00:00:00.09 . Memory (MB): peak = 2516.543 ; gain = 0.000 ; free physical = 34408 ; free virtual = 226187
+CRITICAL WARNING: [Board 49-67] The board_part definition was not found for inspur.com:f37x:part0:1.3. This can happen sometimes when you use custom board part. You can resolve this issue by setting 'board.repoPaths' parameter, pointing to the location of custom board files. Valid board_part values can be retrieved with the 'get_board_parts' Tcl command.
+CRITICAL WARNING: [Board 49-67] The board_part definition was not found for inspur.com:f37x:part0:1.3. This can happen sometimes when you use custom board part. You can resolve this issue by setting 'board.repoPaths' parameter, pointing to the location of custom board files. Valid board_part values can be retrieved with the 'get_board_parts' Tcl command.
+INFO: [Device 21-403] Loading part xcvu37p-fsvh2892-2L-e
+Netlist sorting complete. Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 3996.992 ; gain = 17.992 ; free physical = 32262 ; free virtual = 224042
+INFO: [Netlist 29-17] Analyzing 6298 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 2 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2020.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'pfm_top_i/static_region/base_clocking/clkwiz_hbm_aclk/clk_in1' is not directly connected to top level port. Synthesis is ignored for IBUF_LOW_PWR but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'pfm_top_i/static_region/base_clocking/clkwiz_kernel/clk_in1' is not directly connected to top level port. Synthesis is ignored for IBUF_LOW_PWR but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'pfm_top_i/static_region/base_clocking/clkwiz_kernel2/clk_in1' is not directly connected to top level port. Synthesis is ignored for IBUF_LOW_PWR but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'pfm_top_i/static_region/base_clocking/clkwiz_pcie/clk_in1' is not directly connected to top level port. Synthesis is ignored for IBUF_LOW_PWR but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'pfm_top_i/static_region/base_clocking/clkwiz_scheduler/clk_in1' is not directly connected to top level port. Synthesis is ignored for IBUF_LOW_PWR but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'pfm_top_i/static_region/base_clocking/clkwiz_sysclks/clk_in1' is not directly connected to top level port. Synthesis is ignored for IBUF_LOW_PWR but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'pfm_top_i/static_region/iob_static/perst_n_out' is not directly connected to top level port. Synthesis is ignored for IBUF_LOW_PWR but preserved for implementation.
+INFO: [Timing 38-478] Restoring timing data from binary archive.
+INFO: [Timing 38-479] Binary timing data restore complete.
+INFO: [Project 1-856] Restoring constraints from binary archive.
+INFO: [Constraints 18-4422] SNAPPING_MODE is set so implementation will use the DERIVED_RANGES which may be different then the GRID_RANGES.
+INFO: [Constraints 18-4421] A LAGUNA range, without usable sites, was added to DERIVED_RANGES for purposes of keeping the Programmable Unit together within the reconfigurable pblock.
+INFO: [Project 1-853] Binary constraint restore complete.
+Reading XDEF placement.
+Reading placer database...
+Reading XDEF routing.
+Read XDEF File: Time (s): cpu = 00:00:17 ; elapsed = 00:00:17 . Memory (MB): peak = 5984.574 ; gain = 406.703 ; free physical = 30473 ; free virtual = 222253
+Restored from archive | CPU: 17.940000 secs | Memory: 322.100235 MB |
+Finished XDEF File Restore: Time (s): cpu = 00:00:18 ; elapsed = 00:00:18 . Memory (MB): peak = 5984.574 ; gain = 406.703 ; free physical = 30469 ; free virtual = 222249
+Netlist sorting complete. Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.04 . Memory (MB): peak = 6246.613 ; gain = 0.000 ; free physical = 30155 ; free virtual = 221937
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 1557 instances were transformed.
+  DSP48E1 => DSP48E2 (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 4 instances
+  DSP48E2 => DSP48E2 (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 32 instances
+  DSP48E2 => DSP48E2 (inverted pins: RSTA, RSTB, RSTC) (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 5 instances
+  DSP48E2 => DSP48E2 (inverted pins: RSTC) (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 2 instances
+  HBM_ONE_STACK_INTF => HBM_ONE_STACK_INTF (HBM_REF_CLK, HBM_SNGLBLI_INTF_APB, HBM_SNGLBLI_INTF_AXI(x16)): 1 instance 
+  IBUF => IBUF (IBUFCTRL, INBUF): 8 instances
+  IOBUF => IOBUF (IBUFCTRL, INBUF, OBUFT): 6 instances
+  LUT6_2 => LUT6_2 (LUT5, LUT6): 158 instances
+  RAM16X1D => RAM32X1D (RAMD32(x2)): 354 instances
+  RAM16X1S => RAM32X1S (RAMS32): 13 instances
+  RAM256X1S => RAM256X1S (MUXF7(x2), MUXF8, RAMS64E(x4)): 9 instances
+  RAM32M => RAM32M (RAMD32(x6), RAMS32(x2)): 32 instances
+  RAM32M16 => RAM32M16 (RAMD32(x14), RAMS32(x2)): 836 instances
+  RAM32X1D => RAM32X1D (RAMD32(x2)): 55 instances
+  RAM64M8 => RAM64M8 (RAMD64E(x8)): 34 instances
+  RAM64X1D => RAM64X1D (RAMD64E(x2)): 8 instances
+
+INFO: [Project 1-604] Checkpoint was created with Vivado v2020.2 (64-bit) build 3064766
+open_checkpoint: Time (s): cpu = 00:02:56 ; elapsed = 00:03:44 . Memory (MB): peak = 6252.609 ; gain = 3742.008 ; free physical = 30148 ; free virtual = 221930
+# report_timing_summary -delay_type min_max -max_paths 100 \
+#     -file [file join $report_dir post_route_timing_summary.rpt]
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2L, Temperature grade: E, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
+WARNING: [Timing 38-172] LUT was found on clock network. Both rising/falling clock edges are propagated from LUT output pin. Use set_clock_sense to specify if that clock should be inverted or not. e.g. set_clock_sense -positive/-negative pfm_top_i/static_region/mgmt_debug_bridge/inst/bs_mux/inst/update_INST_0/O
+WARNING: [Timing 38-436] There are set_bus_skew constraint(s) in this design. Please run report_bus_skew to ensure that bus skew requirements are met.
+WARNING: [Timing 38-453] Line(s) in the report have been truncated to keep line length below 5000 characters.
+report_timing_summary: Time (s): cpu = 00:02:08 ; elapsed = 00:00:36 . Memory (MB): peak = 7209.797 ; gain = 957.188 ; free physical = 29392 ; free virtual = 221246
+# report_timing -delay_type max -max_paths 100 -nworst 1 \
+#     -file [file join $report_dir post_route_worst_setup_paths.rpt]
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2L, Temperature grade: E, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
+INFO: [Timing 38-78] ReportTimingParams: -max_paths 100 -nworst 1 -delay_type max -sort_by slack.
+# report_clocks -file [file join $report_dir post_route_clocks.rpt]
+# report_utilization -hierarchical -hierarchical_depth 3 \
+#     -file [file join $report_dir post_route_utilization.rpt]
+report_utilization: Time (s): cpu = 00:00:28 ; elapsed = 00:00:29 . Memory (MB): peak = 7209.797 ; gain = 0.000 ; free physical = 29349 ; free virtual = 221204
+# report_drc -file [file join $report_dir post_route_drc.rpt]
+Command: report_drc -file /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/post_route/post_route_drc.rpt
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/Xilinx/Vivado/2020.2/data/ip'.
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Coretcl 2-168] The results of DRC are in file /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/post_route/post_route_drc.rpt.
+report_drc completed successfully
+report_drc: Time (s): cpu = 00:02:16 ; elapsed = 00:00:31 . Memory (MB): peak = 7986.781 ; gain = 776.984 ; free physical = 29092 ; free virtual = 220958
+# report_methodology -file [file join $report_dir post_route_methodology.rpt]
+Command: report_methodology -file /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/post_route/post_route_methodology.rpt
+WARNING: [Constraints 18-633] Creating clock pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[24].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[0].GTYE4_CHANNEL_PRIM_INST/TXOUTCLK with 16 sources. [/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/ip_pcie4_uscale_plus_x1y0.xdc:113]
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+WARNING: [Timing 38-3] User defined clock exists on pin pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[24].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[0].GTYE4_CHANNEL_PRIM_INST/TXOUTCLK [See /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/ip_pcie4_uscale_plus_x1y0.xdc:113] and will prevent any subsequent automatic derivation of generated clocks on that pin. If the user defined clock specifies '-add', any existing auto-derived clocks on that pin are retained.
+WARNING: [Timing 38-3] User defined clock exists on pin pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[24].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[1].GTYE4_CHANNEL_PRIM_INST/TXOUTCLK [See /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/ip_pcie4_uscale_plus_x1y0.xdc:113] and will prevent any subsequent automatic derivation of generated clocks on that pin. If the user defined clock specifies '-add', any existing auto-derived clocks on that pin are retained.
+WARNING: [Timing 38-3] User defined clock exists on pin pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[24].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[2].GTYE4_CHANNEL_PRIM_INST/TXOUTCLK [See /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/ip_pcie4_uscale_plus_x1y0.xdc:113] and will prevent any subsequent automatic derivation of generated clocks on that pin. If the user defined clock specifies '-add', any existing auto-derived clocks on that pin are retained.
+WARNING: [Timing 38-3] User defined clock exists on pin pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[24].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[3].GTYE4_CHANNEL_PRIM_INST/TXOUTCLK [See /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/ip_pcie4_uscale_plus_x1y0.xdc:113] and will prevent any subsequent automatic derivation of generated clocks on that pin. If the user defined clock specifies '-add', any existing auto-derived clocks on that pin are retained.
+WARNING: [Timing 38-3] User defined clock exists on pin pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[25].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[0].GTYE4_CHANNEL_PRIM_INST/TXOUTCLK [See /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/ip_pcie4_uscale_plus_x1y0.xdc:113] and will prevent any subsequent automatic derivation of generated clocks on that pin. If the user defined clock specifies '-add', any existing auto-derived clocks on that pin are retained.
+WARNING: [Timing 38-3] User defined clock exists on pin pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[25].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[1].GTYE4_CHANNEL_PRIM_INST/TXOUTCLK [See /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/ip_pcie4_uscale_plus_x1y0.xdc:113] and will prevent any subsequent automatic derivation of generated clocks on that pin. If the user defined clock specifies '-add', any existing auto-derived clocks on that pin are retained.
+WARNING: [Timing 38-3] User defined clock exists on pin pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[25].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[2].GTYE4_CHANNEL_PRIM_INST/TXOUTCLK [See /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/ip_pcie4_uscale_plus_x1y0.xdc:113] and will prevent any subsequent automatic derivation of generated clocks on that pin. If the user defined clock specifies '-add', any existing auto-derived clocks on that pin are retained.
+WARNING: [Timing 38-3] User defined clock exists on pin pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[25].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[3].GTYE4_CHANNEL_PRIM_INST/TXOUTCLK [See /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/ip_pcie4_uscale_plus_x1y0.xdc:113] and will prevent any subsequent automatic derivation of generated clocks on that pin. If the user defined clock specifies '-add', any existing auto-derived clocks on that pin are retained.
+WARNING: [Timing 38-3] User defined clock exists on pin pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[26].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[0].GTYE4_CHANNEL_PRIM_INST/TXOUTCLK [See /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/ip_pcie4_uscale_plus_x1y0.xdc:113] and will prevent any subsequent automatic derivation of generated clocks on that pin. If the user defined clock specifies '-add', any existing auto-derived clocks on that pin are retained.
+WARNING: [Timing 38-3] User defined clock exists on pin pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[26].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[1].GTYE4_CHANNEL_PRIM_INST/TXOUTCLK [See /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/ip_pcie4_uscale_plus_x1y0.xdc:113] and will prevent any subsequent automatic derivation of generated clocks on that pin. If the user defined clock specifies '-add', any existing auto-derived clocks on that pin are retained.
+WARNING: [Timing 38-3] User defined clock exists on pin pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[26].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[2].GTYE4_CHANNEL_PRIM_INST/TXOUTCLK [See /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/ip_pcie4_uscale_plus_x1y0.xdc:113] and will prevent any subsequent automatic derivation of generated clocks on that pin. If the user defined clock specifies '-add', any existing auto-derived clocks on that pin are retained.
+WARNING: [Timing 38-3] User defined clock exists on pin pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[26].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[3].GTYE4_CHANNEL_PRIM_INST/TXOUTCLK [See /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/ip_pcie4_uscale_plus_x1y0.xdc:113] and will prevent any subsequent automatic derivation of generated clocks on that pin. If the user defined clock specifies '-add', any existing auto-derived clocks on that pin are retained.
+WARNING: [Timing 38-3] User defined clock exists on pin pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[27].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[0].GTYE4_CHANNEL_PRIM_INST/TXOUTCLK [See /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/ip_pcie4_uscale_plus_x1y0.xdc:113] and will prevent any subsequent automatic derivation of generated clocks on that pin. If the user defined clock specifies '-add', any existing auto-derived clocks on that pin are retained.
+WARNING: [Timing 38-3] User defined clock exists on pin pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[27].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[1].GTYE4_CHANNEL_PRIM_INST/TXOUTCLK [See /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/ip_pcie4_uscale_plus_x1y0.xdc:113] and will prevent any subsequent automatic derivation of generated clocks on that pin. If the user defined clock specifies '-add', any existing auto-derived clocks on that pin are retained.
+WARNING: [Timing 38-3] User defined clock exists on pin pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[27].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[2].GTYE4_CHANNEL_PRIM_INST/TXOUTCLK [See /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/ip_pcie4_uscale_plus_x1y0.xdc:113] and will prevent any subsequent automatic derivation of generated clocks on that pin. If the user defined clock specifies '-add', any existing auto-derived clocks on that pin are retained.
+WARNING: [Timing 38-3] User defined clock exists on pin pfm_top_i/static_region/pcie/inst/gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/pfm_top_pcie_0_gt_i/inst/gen_gtwizard_gtye4_top.pfm_top_pcie_0_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_channel_container[27].gen_enabled_channel.gtye4_channel_wrapper_inst/channel_inst/gtye4_channel_gen.gen_gtye4_channel_inst[3].GTYE4_CHANNEL_PRIM_INST/TXOUTCLK [See /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/prj/prj.runs/impl_1/ip_pcie4_uscale_plus_x1y0.xdc:113] and will prevent any subsequent automatic derivation of generated clocks on that pin. If the user defined clock specifies '-add', any existing auto-derived clocks on that pin are retained.
+WARNING: [Timing 38-3] User defined clock exists on pin pfm_top_i/static_region/base_clocking/clkwiz_kernel/inst/CLK_CORE_DRP_I/clk_inst/mmcme4_adv_inst/CLKOUT0 [See /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/_x/link/vivado/vpl/output/_user_impl_clk.xdc:3] and will prevent any subsequent automatic derivation of generated clocks on that pin. If the user defined clock specifies '-add', any existing auto-derived clocks on that pin are retained.
+INFO: [DRC 23-133] Running Methodology with 8 threads
+INFO: [Coretcl 2-1520] The results of Report Methodology are in file /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/post_route/post_route_methodology.rpt.
+report_methodology completed successfully
+report_methodology: Time (s): cpu = 00:03:04 ; elapsed = 00:00:49 . Memory (MB): peak = 7986.781 ; gain = 0.000 ; free physical = 29188 ; free virtual = 221055
+# check_timing -verbose -file [file join $report_dir post_route_check_timing.rpt]
+# set worst_path [get_timing_paths -quiet -delay_type max -max_paths 1]
+# if {[llength $worst_path] == 0} {
+#     set wns "NOT_PARSED"
+#     set worst_startpoint "NOT_PARSED"
+#     set worst_endpoint "NOT_PARSED"
+# } else {
+#     set wns [get_property SLACK [lindex $worst_path 0]]
+#     set worst_startpoint [get_property STARTPOINT_PIN [lindex $worst_path 0]]
+#     set worst_endpoint [get_property ENDPOINT_PIN [lindex $worst_path 0]]
+# }
+# set failing_paths [get_timing_paths -quiet -delay_type max \
+#     -max_paths 100000 -nworst 1 -slack_lesser_than 0.0]
+# set failing_endpoints [llength $failing_paths]
+# set tns 0.0
+# foreach path $failing_paths {
+#     set slack [get_property SLACK $path]
+#     if {$slack < 0.0} {
+#         set tns [expr {$tns + $slack}]
+#     }
+# }
+# proc primitive_count {pattern} {
+#     return [llength [get_cells -quiet -hierarchical -filter "REF_NAME =~ $pattern"]]
+# }
+# set lut_count [primitive_count LUT*]
+# set ff_count [primitive_count FD*]
+# set ramb36_count [primitive_count RAMB36*]
+# set ramb18_count [primitive_count RAMB18*]
+# set uram_count [primitive_count URAM*]
+# set dsp_count [primitive_count DSP48*]
+# set latch_count [primitive_count LD*]
+# set drc_error_count 0
+# set drc_critical_count 0
+# if {[llength [info commands get_drc_violations]] != 0} {
+#     foreach violation [get_drc_violations -quiet] {
+#         set severity [get_property SEVERITY $violation]
+#         if {$severity eq "Error"} {
+#             incr drc_error_count
+#         } elseif {$severity eq "Critical Warning"} {
+#             incr drc_critical_count
+#         }
+#     }
+# }
+# set methodology_error_count 0
+# set methodology_critical_count 0
+# if {[llength [info commands get_methodology_violations]] != 0} {
+#     foreach violation [get_methodology_violations -quiet] {
+#         set severity [get_property SEVERITY $violation]
+#         if {$severity eq "Error"} {
+#             incr methodology_error_count
+#         } elseif {$severity eq "Critical Warning"} {
+#             incr methodology_critical_count
+#         }
+#     }
+# }
+# set clock_rows {}
+# foreach clock [get_clocks -quiet] {
+#     lappend clock_rows "[get_property NAME $clock]:[get_property PERIOD $clock]"
+# }
+# set metrics_path [file join $report_dir post_route_metrics.txt]
+# set metrics [open $metrics_path w]
+# puts $metrics "A16_2_VITIS_POST_ROUTE_REPORT=COMPLETE"
+# puts $metrics "ROUTED_DCP=$dcp_path"
+# puts $metrics "TARGET_PART=[get_property PART [current_design]]"
+# puts $metrics "REQUESTED_CLOCK_NS=10.000"
+# puts $metrics "REQUESTED_CLOCK_MHZ=100"
+# puts $metrics "WNS_NS=$wns"
+# puts $metrics "TNS_NS=[format %.3f $tns]"
+# puts $metrics "FAILING_ENDPOINTS=$failing_endpoints"
+# puts $metrics "WORST_STARTPOINT=$worst_startpoint"
+# puts $metrics "WORST_ENDPOINT=$worst_endpoint"
+# puts $metrics "CLOCK_COUNT=[llength $clock_rows]"
+# puts $metrics "CLOCKS=[join $clock_rows ,]"
+# puts $metrics "LUT=$lut_count"
+# puts $metrics "FF=$ff_count"
+# puts $metrics "RAMB36=$ramb36_count"
+# puts $metrics "RAMB18=$ramb18_count"
+# puts $metrics "URAM=$uram_count"
+# puts $metrics "DSP=$dsp_count"
+# puts $metrics "LATCH=$latch_count"
+# puts $metrics "DRC_ERROR_COUNT=$drc_error_count"
+# puts $metrics "DRC_CRITICAL_WARNING_COUNT=$drc_critical_count"
+# puts $metrics "METHODOLOGY_ERROR_COUNT=$methodology_error_count"
+# puts $metrics "METHODOLOGY_CRITICAL_WARNING_COUNT=$methodology_critical_count"
+# close $metrics
+# puts "A16_2_VITIS_POST_ROUTE_REPORT=COMPLETE"
+A16_2_VITIS_POST_ROUTE_REPORT=COMPLETE
+# puts "METRICS=$metrics_path"
+METRICS=/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_link_001/post_route/post_route_metrics.txt
+# close_design
+close_design: Time (s): cpu = 00:00:05 ; elapsed = 00:00:07 . Memory (MB): peak = 7986.781 ; gain = 0.000 ; free physical = 31859 ; free virtual = 223725
+INFO: [Common 17-206] Exiting Vivado at Thu Sep 17 16:46:45 2026...

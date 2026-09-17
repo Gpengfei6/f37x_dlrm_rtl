@@ -1,0 +1,21 @@
+A17.6 Host identity retrieval. Do not overwrite frozen files or host/*.cpp.
+
+CANDIDATE_ELF_SHA256=9ba376589f56d99efca6e42328d347a6539ba1c40bba56d21ab690d87e7f20fc
+CANDIDATE_SOURCE_SHA256=7073b4d976e54f73887c21714a3a4d8bdf65cdf3a272e620fb54c09963ee55ce
+
+Local destination (new; does not replace frozen_identities or function_pass_v1):
+  docs/evidence/stage2n_a17_6/host_identity_retrieval_v1/
+
+Required current-tree copies:
+  current_elf/stage2n_a17_6_four_bo_host_v1
+  current_source/stage2n_a17_6_four_bo_host_v1.cpp
+  host_build_status.txt
+  host_build.log
+  compiler_version.log
+  xrt_version.log
+
+Required failure-run copies:
+  fail_20260910_100942/
+
+Do not program, reset, rebuild, or run the Host.
+A later hash only identifies the file as it exists now.

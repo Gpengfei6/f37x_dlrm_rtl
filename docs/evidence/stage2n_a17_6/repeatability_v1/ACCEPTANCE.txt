@@ -1,0 +1,135 @@
+A17.6 process-restart repeatability acceptance
+Date: 2026-09-10
+CAMPAIGN=20260910_141722
+KIND=PROCESS_RESTART_NOT_STEADY_STATE
+SOURCE=copied originals; server directory left unchanged
+LOCAL=docs/evidence/stage2n_a17_6/repeatability_v1/
+CHECKER=scripts/check/summarize_stage2n_a17_6_repeatability_v1.py
+SUMMARY=docs/evidence/stage2n_a17_6/repeatability_v1/20260910_141722/summary.txt
+
+A17_6_REPEATABILITY=PASS_PROCESS_RESTART_SLICE
+ORIGINAL_LOG_ARCHIVE=PASS
+WARMUP_ROUNDS_KEPT=1
+MEASURED_ROUNDS=11
+REPEAT_BASELINE_SEPARATE_FROM_CASE0=YES
+FUNCTION_RECHECK_CLOSED=YES
+HISTORICAL_102244_PRE_EXEC_HASH=STILL_MISSING
+PROGRAMMING=SKIPPED_ALREADY_LOADED
+FPGA_RESET=NOT_RUN
+A16=NOT_RUN
+PERFORMANCE=NOT_CLAIMED
+CLASS_C_COMPARABLE=NOT_COMPLETE
+A16_SPEEDUP=NOT_COMPUTED
+COMMIT=NOT_DONE
+RTL_CHANGE=NOT_RUN
+HOST_REBUILD=NOT_RUN
+
+This is A17-only process-restart repeatability. Each round is a new Host
+process that reallocates, fills, and syncs four BOs. It is not a continuously
+running steady-state measurement. N=11 is a first distribution look. It is
+not full performance acceptance and does not complete Class C.
+
+Locked identities (same as identity_recheck_v1 ACCEPTANCE.txt):
+  HOST_EXECUTE_SHA256=9ba376589f56d99efca6e42328d347a6539ba1c40bba56d21ab690d87e7f20fc
+  HOST_SOURCE_SHA256=7073b4d976e54f73887c21714a3a4d8bdf65cdf3a272e620fb54c09963ee55ce
+  XCLBIN_SHA256=b8d2034906451cc755b6c01a50c94a4b841998c3e2794c6e417dd1ab952e46ae
+  UUID=622c839f-55f4-47c1-92e9-95ee5595ffa4
+  KERNEL=dlrm_f37x_rtl_kernel_stage2n_a17_v1
+  CU=dlrm_a17_1
+
+Every round (warmup + 11 measured):
+  A17_6_HOST_ELF_IDENTITY=PASS
+  HOST_IDENTITY_CHECKED_BEFORE_PROGRAM=YES
+  A17_6_FORCE_NO_PROGRAM=yes
+  A17_6_PROGRAM=SKIPPED_ALREADY_LOADED
+  CURRENT_UUID matches locked UUID
+  HOST_EXIT_CODE=0
+  STAGE2N_A17_6_FOUR_BO_HOST_V1=PASS
+  A17_6_BO_CLEANUP=PASS
+  goldens -393/-392/-93/-689/-519 plus REPEAT_BASELINE -393
+  A13 compute 322/100/744/1174, all deltas 0
+  residual = e2e - lookup - compute = 3 on every printed case
+  no "INFO: xbutil program succeeded." in any campaign runner.log
+
+Rounds:
+  ROUND=0  ROLE=WARMUP   STAMP=20260910_141723 RC=0  (kept, excluded from min/median/max)
+  ROUND=1  ROLE=MEASURED STAMP=20260910_141726 RC=0
+  ROUND=2  ROLE=MEASURED STAMP=20260910_141730 RC=0
+  ROUND=3  ROLE=MEASURED STAMP=20260910_141734 RC=0
+  ROUND=4  ROLE=MEASURED STAMP=20260910_141737 RC=0
+  ROUND=5  ROLE=MEASURED STAMP=20260910_141741 RC=0
+  ROUND=6  ROLE=MEASURED STAMP=20260910_141745 RC=0
+  ROUND=7  ROLE=MEASURED STAMP=20260910_141748 RC=0
+  ROUND=8  ROLE=MEASURED STAMP=20260910_141752 RC=0
+  ROUND=9  ROLE=MEASURED STAMP=20260910_141756 RC=0
+  ROUND=10 ROLE=MEASURED STAMP=20260910_141800 RC=0
+  ROUND=11 ROLE=MEASURED STAMP=20260910_141803 RC=0
+
+Measured lookup/compute/e2e (warmup excluded; REPEAT_BASELINE not merged):
+
+  CASE0 n=11 lookup 33/33/33   compute 1174/1174/1174  e2e 1210/1210/1210
+    LOOKUP_LIST=33,33,33,33,33,33,33,33,33,33,33
+  CASE1 n=11 lookup 33/33/65   compute 1174/1174/1174  e2e 1210/1210/1242
+    LOOKUP_LIST=33,33,33,65,33,33,33,33,33,33,33
+  CASE2 n=11 lookup 33/33/52   compute 1174/1174/1174  e2e 1210/1210/1229
+    LOOKUP_LIST=33,33,33,33,33,33,33,33,33,33,52
+  CASE3 n=11 lookup 33/33/38   compute 1174/1174/1174  e2e 1210/1210/1215
+    LOOKUP_LIST=33,33,33,33,33,33,33,33,33,38,33
+  CASE4 n=11 lookup 33/33/50   compute 1174/1174/1174  e2e 1210/1210/1227
+    LOOKUP_LIST=33,37,33,33,33,33,50,33,33,33,33
+  REPEAT_BASELINE n=11 lookup 33/33/33  compute 1174/1174/1174  e2e 1210/1210/1210
+    LOOKUP_LIST=33,33,33,33,33,33,33,33,33,33,33
+
+Warmup (excluded) also recorded CASE3 lookup=34 / e2e=1211.
+
+Kept non-33 measured lookup observations:
+  CASE1 ROUND=4  STAMP=20260910_141737 lookup=65 e2e=1242
+  CASE2 ROUND=11 STAMP=20260910_141803 lookup=52 e2e=1229
+  CASE3 ROUND=10 STAMP=20260910_141800 lookup=38 e2e=1215
+  CASE4 ROUND=2  STAMP=20260910_141730 lookup=37 e2e=1214
+  CASE4 ROUND=7  STAMP=20260910_141748 lookup=50 e2e=1227
+
+Historical identity-recheck CASE4 lookup=55 (run 20260910_122124) is still in
+the record. It did not reappear in this CASE4 list. Do not drop 55. Do not
+treat 33 as the only A17 lookup value. Lookup movement is not CASE4-only.
+
+Do not write A16/A17 speedup. Historical A16.2 one-shot 112/1174/1289/3 remains
+Class D. A16 program still needs a separate user sentence naming UUID
+f18571de-4a43-46bd-8ab9-a89dd4b11f8e.
+
+SHA256 of copied originals:
+  10854aa05e3aa556692963165f908e4fc434e117509bf9eda62cc4bcf61e004c  20260910_141722/rounds.txt
+  5d097a6d3171d0a2416c2b854d529dfe3ae1e71b545c421a3b12396534660b9d  20260910_141722/campaign.log
+  ef7735fea01318f0a5a02d23c1628f26990aed3936043967948c6de3ce57bffe  20260910_141723/host.log
+  a87388d0a9cd7480a1d78f08964bdcca662e7b30488b1f91ac6ad31c1cac45e6  20260910_141723/runner.log
+  131e580a981a02fa21883b7f2bcba78bf97ac0014d03c3d5c4b5b3da1c8e1ae1  20260910_141726/host.log
+  4422a96aa07b4ca40adb3cf54f9aea25a0081a2eff5ee995ddfb2cfc676ab4bc  20260910_141726/runner.log
+  ad33f35602d36db349ed4c43a3560e6513e7744e3a4b7057185933eed0b41404  20260910_141730/host.log
+  e63a5d775ea787ef1e689a27b8fec0ef2a894fc3b84584b050826b4896cdd1dd  20260910_141730/runner.log
+  131e580a981a02fa21883b7f2bcba78bf97ac0014d03c3d5c4b5b3da1c8e1ae1  20260910_141734/host.log
+  4ebfc6cdd2e3cb635c4490c15e8893327a05645fcf57c69c1b6023e3fae02ca7  20260910_141734/runner.log
+  eb762f0afdc393e9e21b54cef8b43dd74a081a466ce7c88f1f5bf981efcdb750  20260910_141737/host.log
+  36ed001aac0b28a646a6b918510aad82e8ef6b9d457a9acd0130ecf7d64493c9  20260910_141737/runner.log
+  131e580a981a02fa21883b7f2bcba78bf97ac0014d03c3d5c4b5b3da1c8e1ae1  20260910_141741/host.log
+  39c982b60196593d2135038b180ad41291277a0d0893a05326b2a51abcc4c931  20260910_141741/runner.log
+  131e580a981a02fa21883b7f2bcba78bf97ac0014d03c3d5c4b5b3da1c8e1ae1  20260910_141745/host.log
+  f62ea925185095fd7e08ad819e1ddaa1a509cda30d91806cfeb3c2dc4f6eec8c  20260910_141745/runner.log
+  6f33ed4b251f91a649d40489e7dffd205eedafe9cd8d9d4567aba82a07036276  20260910_141748/host.log
+  055648850340830b8db5cc40a95b99203cf9e0c2dc9fda8ffff4069de5efa890  20260910_141748/runner.log
+  131e580a981a02fa21883b7f2bcba78bf97ac0014d03c3d5c4b5b3da1c8e1ae1  20260910_141752/host.log
+  04605e4b9976e12f54ab6da23e4a5dabca191c24d22e8bdfcc5096ad713fbe49  20260910_141752/runner.log
+  131e580a981a02fa21883b7f2bcba78bf97ac0014d03c3d5c4b5b3da1c8e1ae1  20260910_141756/host.log
+  00327b49b846c70f6da1c1a6cd81987bf41abf96b0aa814b9b74b4b58969c967  20260910_141756/runner.log
+  6613ac3654135d6bd65b1362ce534a1539278219c98943972de5f918d80dbdc9  20260910_141800/host.log
+  8ce57b5964a8d3508e60ae1e1fb40d71fa8be2e8fcdb3b73483aa9a3a20c82a1  20260910_141800/runner.log
+  57fd81b6d70a0a9a40ecd54687cfd544000fb20ff890cc4d43d4fe6707eca6dc  20260910_141803/host.log
+  e836d35a8904b6a1c31ac69c9b96f4492bbbd6dcf6b12db0def192529a250c01  20260910_141803/runner.log
+
+Server original remains:
+  /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a17_6_buildonly/results/stage2n_a17_6/repeatability_v1/20260910_141722
+  and per-round protected_v1/<stamp>/
+
+Next: A16 process-restart campaign is unauthorized until the user names UUID
+f18571de-4a43-46bd-8ab9-a89dd4b11f8e and authorizes xbutil program.
+Do not program, reset, rebuild Host, start A18, write a speedup, or commit.
+Function re-check remains closed. Do not backfill 20260910_102244.

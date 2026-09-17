@@ -1,0 +1,103 @@
+A17.6 four-slot four-bank physical function PASS (log-summary close-out)
+Date: 2026-09-10
+SOURCE=returned log summary plus archived originals
+RESULT_DIR_ON_TARGET=results/stage2n_a17_6/protected_v1/20260910_102244
+A17_6_FIXED_FOUR_SLOT_FOUR_BANK_PHYSICAL_FUNCTION=PASS
+REPO_ORIGINAL_LOG_ARCHIVE=PASS
+NO_NEW_TARGET_OPERATIONS=YES
+PERFORMANCE=NOT_CLAIMED
+COMPARABLE_A16_2_PERFORMANCE=NOT_RUN
+A18=NOT_AUTHORIZED
+COMMIT=NOT_DONE
+
+The project moved from "four-way architecture can be built" to "four HBM
+paths actually take part in complete DLRM inference."
+
+Keep on the server, unchanged:
+  results/stage2n_a17_6/protected_v1/20260910_102244
+Later archival may copy the original log, exit code, device/artifact
+identities, BO/BASE data, and release result, then finish repo evidence
+acceptance. Do not add checkers or new document versions for this close-out.
+
+Scene:
+  20260910_095827  occupancy grep false fail; no program
+  20260910_100942  xbutil program succeeded; Host FAIL
+                   REASON=memory map missing argument 0
+                   cause: ARG0_TAG is 8 chars; frozen Host required key.size>=14
+  20260910_102244  Host parser patched; Host rebuilt; program SKIPPED_ALREADY_LOADED
+
+Device (live-checked):
+  INDEX=2
+  BDF=0000:9b:00.1
+  RENDER=/dev/dri/renderD129
+  CURRENT_UUID=622c839f-55f4-47c1-92e9-95ee5595ffa4
+  PROGRAMMING=SKIPPED_ALREADY_LOADED
+  Banner ACTION_PROGRAM_FPGA_IF_NEEDED=YES is an allowed-action description
+  only; it does not prove that program ran on this execute.
+
+Frozen bitstream (unchanged):
+  XCLBIN_SHA256=b8d2034906451cc755b6c01a50c94a4b841998c3e2794c6e417dd1ab952e46ae
+  UUID=622c839f-55f4-47c1-92e9-95ee5595ffa4
+  KERNEL=dlrm_f37x_rtl_kernel_stage2n_a17_v1
+  CU=dlrm_a17_1
+  PIPE_VERSION_HEX=0x00024e17
+  LIVE_XO_SHA256=15ded79ff75e7a12c464a8b1d65cc863cc6535ead673ba0ba445bb5e69a56be6
+
+Host after ARG0_TAG parser fix (supersedes frozen ELF 520d78ef...):
+  SOURCE_SHA256=7073b4d976e54f73887c21714a3a4d8bdf65cdf3a272e620fb54c09963ee55ce
+  BINARY_SHA256=9ba376589f56d99efca6e42328d347a6539ba1c40bba56d21ab690d87e7f20fc
+  BINARY_BYTES=84488
+  CXX_DUMPVERSION=4.8.5
+  COMPILER_EXIT_CODE=0
+
+Map:
+  MEMORY_INDICES_BY_ARGUMENT=0,1,2,3
+  ARG0..3 tags HBM[0]..HBM[3]
+
+Four independent BOs on HBM[0..3] (paddr==0 legal on HBM[0]):
+  BO0 HBM[0] handle=1 mem=0 paddr=0x0000000000000000 BASE=0x00000000/0x00000000
+  BO1 HBM[1] handle=2 mem=1 paddr=0x0000000010000000 BASE=0x10000000/0x00000000
+  BO2 HBM[2] handle=3 mem=2 paddr=0x0000000020000000 BASE=0x20000000/0x00000000
+  BO3 HBM[3] handle=4 mem=3 paddr=0x0000000030000000 BASE=0x30000000/0x00000000
+  requested_size=1024 properties_size=4096
+
+Per-BO images (sensitivity mutates only the owned BO):
+  CASE0 all four BOs = baseline
+  CASE1 BO0=slot0_sensitivity; BO1..3=baseline
+  CASE2 BO1=slot1_sensitivity; others=baseline
+  CASE3 BO2=slot2_sensitivity; others=baseline
+  CASE4 BO3=slot3_sensitivity; others=baseline
+  REPEAT_BASELINE all four BOs = baseline
+
+Recorded boundary:
+  five goldens plus one baseline repeat all correct
+    -393, -392, -93, -689, -519, repeat -393
+  A13 measured counts have zero delta: 322/100/744/1174
+  this-run observed lookup/compute/e2e/residual = 33/1174/1210/3
+  this-run programming = SKIPPED_ALREADY_LOADED
+  comparable performance vs A16.2 is not done
+  PERFORMANCE=NOT_CLAIMED
+
+33/1174/1210/3 are board-counter observations from this function run.
+They are measured. residual=3 is the counter-interval difference
+e2e - lookup - compute; it is not an independently measured control
+overhead. They are not a comparable A16.2 performance acceptance and
+must not be turned into a speedup.
+
+Three layers:
+  FUNCTION=PASS from the returned log summary
+  ORIGINAL_EVIDENCE_ARCHIVE=PENDING
+  COMPARABLE_PERFORMANCE=NOT_RUN
+
+Next resume, in order: archive original evidence; then comparable A16.2
+versus A17 latency; then public workload and variable indices.
+Do not expand A17 preparation documents.
+
+Host marks:
+  embedding_loaded_mask=0xF
+  A17_6_BO_CLEANUP=PASS
+  A17_6_ALL_FIVE_CASES=PASS
+  A17_6_REPEAT_BASELINE=PASS
+  STAGE2N_A17_6_FOUR_BO_HOST_V1=PASS
+  FPGA_RESET=NOT_RUN
+  OTHER_DEVICE_ACCESS=NONE

@@ -1,0 +1,6 @@
+ARGV=["/opt/Xilinx/Vitis/2020.2/bin/v++", "--version"]
+
+****** v++ v2020.2 (64-bit)
+  **** SW Build (by xbuild) on 2020-11-18-05:13:29
+    ** Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+

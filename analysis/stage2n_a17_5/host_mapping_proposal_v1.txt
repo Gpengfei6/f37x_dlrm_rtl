@@ -1,0 +1,14 @@
+# A17.5A Host mapping PROPOSAL ONLY. Not Host source. NOT IMPLEMENTED.
+
+Current implementation remains A16.2:
+- one BO on HBM[0]
+- xclRegWrite of BASE0 at 0x304 / 0x308
+- CU dlrm_f37x_rtl_kernel_stage2n_a16_v1:dlrm_a16_1
+
+Future A17.5 Host, if later authorized, still uses user-managed AXI-Lite
+xclRegWrite / xclRegRead. It does not switch to OpenCL setArg.
+
+future_bo=BO0  future_base=BASE0  offsets=0x304/0x308  port=m_axi_gmem0  bank=HBM[0]
+future_bo=BO1  future_base=BASE1  offsets=0x318/0x31C  port=m_axi_gmem1  bank=HBM[1]
+future_bo=BO2  future_base=BASE2  offsets=0x320/0x324  port=m_axi_gmem2  bank=HBM[2]
+future_bo=BO3  future_base=BASE3  offsets=0x328/0x32C  port=m_axi_gmem3  bank=HBM[3]

@@ -1,0 +1,33 @@
+{
+  "files": {
+    "config/stage2n_a18_2_target_v1.cfg": "0145cf6b73503352ba235085071713a39507166e72b641724470105f1251e1b7",
+    "docs/STAGE2N_A18_2_TARGET_PACKAGING_HOST_PREP_V1.md": "aabf186731df3da6daf42506183df952c2e1bda022e5d87bf3c9f831bc23f86a",
+    "rtl/common/runtime_relu_quant.sv": "913be0e55f03815b1092ad1a624203327f202b07ce834989e7d79e70ecedfb33",
+    "rtl/common/rv_fifo.sv": "4901f8b4f43565dd401f1d316f81dbfa90b8fbd13ee13eab49267e070f2f7ca5",
+    "rtl/compute/dense_layer_engine.sv": "49130fcfaa28736695ff614d9f00df7cbd7272a924d2c96af77806b8e4534ad6",
+    "rtl/compute/mac_lane.sv": "f3b6364e6e8aef5b7c0365c79605cdbca5a9af4beb3c0705adb7600904c13334",
+    "rtl/compute/vector_dot_product_core.sv": "a6a2c320d4d7be95bd8c5e9a7d0e221f8e8b38dc4e228fef47b8c50968454cdd",
+    "rtl/control/mlp_sequence_controller.sv": "f688f5242a62d6b02476cac4039dd6bb609c27411dc950fe5f6d1a2c5d1f473b",
+    "rtl/control/mlp_sequence_controller_segmented.sv": "8aeee1f38e9e611dfb64aa0e7795629122ab78650270801b2476d927926572b8",
+    "rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a16_v1.sv": "a6eec09c4ebfe358751f7dfc31c2e77d509cd55d4fc8953f465a2227c3e7f7a5",
+    "rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a18_v1.sv": "613686581de9574d96eeb2763ae415b9391ea2f3c6a1ab307ca38516b065d591",
+    "rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a2.sv": "f49bbeeb893ca137418ba4c0f68ecde38ede27df9038278425371a9391f6a988",
+    "rtl/hbm/dlrm_hbm_embedding_lookup_stage2n_a14_v2.sv": "47eca811affac4c7c6e0c40007da92b40ab79df095ff0ef912bea6f05f35fed6",
+    "rtl/hbm/dlrm_hbm_parallel_lookup_stage2n_a17_v1.sv": "8b4fd11a609d0e1b0f32c94b8c497cf5f044532547de678955cbb1077b5723a9",
+    "rtl/interaction/dlrm_feature_interaction_engine.sv": "bea4b184f2649ea43d01971eeea5cd23d8a1ed1781b7d52ff047c7b413bd653b",
+    "rtl/memory/banked_activation_buffer.sv": "2e4e2ced805e5afb08a7b71ae9fd56debf4c439729eccd6fc8a9d602203d6acd",
+    "rtl/memory/local_weight_provider.sv": "b55841911580f7c5930df615b9064d918e48693d72e550b32658940bb7c2ec64",
+    "rtl/pipeline/dlrm_hbm_pipeline_integration_stage2n_a18_v1.sv": "c7d912b1b90215c87a572e6155296cb14640f7aca932b29d7d83181e2983bbcb",
+    "rtl/pipeline/dlrm_internal_pipeline_controller.sv": "3a180664f2a6eb46ffeef5e332d1b1b1072fe4ab8e0b131f76c3e0870711a999",
+    "rtl/pipeline/dlrm_internal_pipeline_controller_stage2n_a13_v1.sv": "e61ef7dfee560e3c354cc9d887ed38bc13384a366a5c67d351d4aa433f15f649",
+    "rtl/top/dlrm_f37x_rtl_kernel.sv": "400c723cd6a370493e991dfe95494e946d79e79577ac1d8c46964a5fa7111ba9",
+    "scripts/package_stage2n_a18_2_rtl_kernel_v1.tcl": "c72cf8a467b7ec1199f2c6c395a375557fcd3b29bbb125f58351db104ded23a3",
+    "scripts/report_stage2n_a16_2_vitis_post_route_v1.tcl": "48f109a9bccfb29db75b155f93a8b24bdf4c123e970186e2dce6c8fd3847bec5",
+    "scripts/run_stage2n_a18_2_build_v1.py": "f98ff0330f5d8f685386787dc02107e90abf2e8138b25d8b4a2c75480652bbcb",
+    "scripts/test_stage2n_a18_2_build_v1.py": "83495f8224cc486d0a6ef9239a0c92f0554ad3a8e12d66438c29ae0912c08651",
+    "scripts/validate_stage2n_a16_2_xclbin_v1.py": "764a6bb8d6a45c32aa7415ee6303edf5efbeffc19369216c62217bc9aeafacf6",
+    "scripts/validate_stage2n_a16_2_xo_v1.py": "9be25c6d8ba74dd77e5ffaa0cbf291d1be61a750fe44e3b823d359a641527b4f",
+    "scripts/validate_stage2n_a18_2_artifacts_v1.py": "c01a2745a2adf808af6ca0ead7c2465e386599551bbdb768e141164372658969"
+  },
+  "schema": "a18_2_source_manifest_v1"
+}

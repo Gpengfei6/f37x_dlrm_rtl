@@ -1,0 +1,15 @@
+# A17.4 / A17.5 Host BO layers. Not implemented Host source.
+# FUTURE / A17.5 validation requirement only.
+#
+# Current implementation layer (must remain true in A17.4):
+# A16.2 Host is a single-BO / single-HBM[0] baseline.
+#
+# Future implementation layer (do not code this into host/ yet):
+future_bo=bo_table0
+future_bo=bo_table1
+future_bo=bo_table2
+future_bo=bo_table3
+future_base=BASE0
+future_base=BASE1
+future_base=BASE2
+future_base=BASE3

@@ -1,0 +1,318 @@
+ARGV=["/opt/Xilinx/Vivado/2020.2/bin/vivado", "-mode", "batch", "-nolog", "-nojournal", "-source", "/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/scripts/package_stage2n_a18_2_rtl_kernel_v1.tcl"]
+
+****** Vivado v2020.2 (64-bit)
+  **** SW Build 3064766 on Wed Nov 18 09:12:47 MST 2020
+  **** IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+    ** Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+
+source /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/scripts/package_stage2n_a18_2_rtl_kernel_v1.tcl
+# set script_path [file normalize [info script]]
+# set script_dir [file dirname $script_path]
+# set root_dir [file normalize [file join $script_dir ..]]
+# if {![info exists ::env(A18_2_XO_DIR)]} { error "A18_2_XO_DIR is required; use the build runner" }
+# set build_dir [file normalize $::env(A18_2_XO_DIR)]
+# set project_dir [file join $build_dir vivado_project]
+# set ip_dir [file join $build_dir dlrm_f37x_stage2n_a18_ip_v1]
+# set top_name "dlrm_f37x_rtl_kernel_stage2n_a18_v1"
+# set target_part_name "xcvu37p-fsvh2892-2L-e"
+# set part_name $target_part_name
+# if {$argc != 0} { error "Target part override is not allowed" }
+# set target_part_used [expr {$part_name eq $target_part_name}]
+# set xo_path [file join $build_dir ${top_name}.xo]
+# set xml_path [file join $build_dir kernel.xml]
+# proc fail {message} {
+#     error $message
+# }
+# proc source_path {root_dir relative_path} {
+#     set resolved [file normalize [file join $root_dir $relative_path]]
+#     if {![file isfile $resolved]} {
+#         fail "Missing required RTL source: $relative_path"
+#     }
+#     return $resolved
+# }
+# proc require_bus_interface {core bus_name expected_mode} {
+#     set interfaces [ipx::get_bus_interfaces $bus_name -of_objects $core]
+#     if {[llength $interfaces] != 1} {
+#         fail "Expected one $bus_name interface, found [llength $interfaces]"
+#     }
+#     set interface [lindex $interfaces 0]
+#     set actual_mode [get_property interface_mode $interface]
+#     if {$actual_mode ne $expected_mode} {
+#         fail "$bus_name mode is $actual_mode, expected $expected_mode"
+#     }
+#     return $interface
+# }
+# proc set_required_bus_parameter {interface name expected_value} {
+#     set parameters [ipx::get_bus_parameters $name -of_objects $interface]
+#     if {[llength $parameters] == 0} {
+#         ipx::add_bus_parameter $name $interface
+#         set parameters [ipx::get_bus_parameters $name -of_objects $interface]
+#     }
+#     if {[llength $parameters] != 1} {
+#         fail "Expected one $name bus parameter, found [llength $parameters]"
+#     }
+#     set parameter [lindex $parameters 0]
+#     set_property value $expected_value $parameter
+#     if {[get_property value $parameter] ne $expected_value} {
+#         fail "$name bus parameter is not $expected_value"
+#     }
+# }
+# proc add_control_register {address_block name offset size access description} {
+#     ipx::add_register $name $address_block
+#     set reg [ipx::get_registers $name -of_objects $address_block]
+#     set_property address_offset $offset $reg
+#     set_property size $size $reg
+#     set_property access $access $reg
+#     set_property description $description $reg
+#     return $reg
+# }
+# proc associate_register_with_bus {reg bus_name} {
+#     set parameters [ipx::get_register_parameters ASSOCIATED_BUSIF \
+#         -of_objects $reg]
+#     if {[llength $parameters] == 0} {
+#         ipx::add_register_parameter ASSOCIATED_BUSIF $reg
+#         set parameters [ipx::get_register_parameters ASSOCIATED_BUSIF \
+#             -of_objects $reg]
+#     }
+#     if {[llength $parameters] != 1} {
+#         fail "Expected one ASSOCIATED_BUSIF register parameter"
+#     }
+#     set parameter [lindex $parameters 0]
+#     set_property value $bus_name $parameter
+#     if {[get_property value $parameter] ne $bus_name} {
+#         fail "TABLE_BASE is not associated with $bus_name"
+#     }
+# }
+# set rtl_files [list \
+#     [source_path $root_dir rtl/common/rv_fifo.sv] \
+#     [source_path $root_dir rtl/common/runtime_relu_quant.sv] \
+#     [source_path $root_dir rtl/compute/mac_lane.sv] \
+#     [source_path $root_dir rtl/memory/banked_activation_buffer.sv] \
+#     [source_path $root_dir rtl/memory/local_weight_provider.sv] \
+#     [source_path $root_dir rtl/compute/vector_dot_product_core.sv] \
+#     [source_path $root_dir rtl/compute/dense_layer_engine.sv] \
+#     [source_path $root_dir rtl/control/mlp_sequence_controller.sv] \
+#     [source_path $root_dir rtl/top/dlrm_f37x_rtl_kernel.sv] \
+#     [source_path $root_dir rtl/interaction/dlrm_feature_interaction_engine.sv] \
+#     [source_path $root_dir rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a2.sv] \
+#     [source_path $root_dir rtl/control/mlp_sequence_controller_segmented.sv] \
+#     [source_path $root_dir rtl/pipeline/dlrm_internal_pipeline_controller.sv] \
+#     [source_path $root_dir rtl/pipeline/dlrm_internal_pipeline_controller_stage2n_a13_v1.sv] \
+#     [source_path $root_dir rtl/hbm/dlrm_hbm_embedding_lookup_stage2n_a14_v2.sv] \
+#     [source_path $root_dir rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a16_v1.sv] \
+#     [source_path $root_dir rtl/hbm/dlrm_hbm_parallel_lookup_stage2n_a17_v1.sv] \
+#     [source_path $root_dir rtl/pipeline/dlrm_hbm_pipeline_integration_stage2n_a18_v1.sv] \
+#     [source_path $root_dir rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a18_v1.sv] \
+# ]
+# puts "============================================================"
+============================================================
+# puts "Stage 2N-A18.2 A18 four-master target XO packaging v1"
+Stage 2N-A18.2 A18 four-master target XO packaging v1
+# puts "ROOT=$root_dir"
+ROOT=/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly
+# puts "TARGET_PART=$target_part_name"
+TARGET_PART=xcvu37p-fsvh2892-2L-e
+# puts "PACKAGING_PART=$part_name"
+PACKAGING_PART=xcvu37p-fsvh2892-2L-e
+# puts "TARGET_PART_USED=$target_part_used"
+TARGET_PART_USED=1
+# puts "KERNEL=$top_name"
+KERNEL=dlrm_f37x_rtl_kernel_stage2n_a18_v1
+# puts "CONTROL_INTERFACE=s_axi_control"
+CONTROL_INTERFACE=s_axi_control
+# puts "MEMORY_INTERFACES=m_axi_gmem0,m_axi_gmem1,m_axi_gmem2,m_axi_gmem3"
+MEMORY_INTERFACES=m_axi_gmem0,m_axi_gmem1,m_axi_gmem2,m_axi_gmem3
+# puts "M_AXI_DATA_WIDTH=128"
+M_AXI_DATA_WIDTH=128
+# puts "M_AXI_ADDR_WIDTH=64"
+M_AXI_ADDR_WIDTH=64
+# puts "TABLE_BASE_OFFSETS=0x304,0x318,0x320,0x328"
+TABLE_BASE_OFFSETS=0x304,0x318,0x320,0x328
+# puts "TABLE_BASE_WIDTH=64"
+TABLE_BASE_WIDTH=64
+# puts "M_AXI_MASTER_COUNT=4"
+M_AXI_MASTER_COUNT=4
+# puts "KERNEL_ARGUMENT_COUNT=4"
+KERNEL_ARGUMENT_COUNT=4
+# puts "XO=$xo_path"
+XO=/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_xo_001/xo/dlrm_f37x_rtl_kernel_stage2n_a18_v1.xo
+# puts "NO_VPP_LINK=1"
+NO_VPP_LINK=1
+# puts "NO_XCLBIN=1"
+NO_XCLBIN=1
+# puts "NO_FPGA_ACCESS=1"
+NO_FPGA_ACCESS=1
+# puts "============================================================"
+============================================================
+# if {[llength [get_parts -quiet $part_name]] == 0} {
+#     fail "Vivado part is unavailable: $part_name"
+# }
+# if {[file exists $build_dir]} {
+#     fail "Refusing to overwrite existing A18.2 XO build directory: $build_dir"
+# }
+# file mkdir $build_dir
+# create_project dlrm_f37x_stage2n_a18_package_v1 $project_dir \
+#     -part $part_name -force
+# set_property target_language Verilog [current_project]
+# add_files -norecurse $rtl_files
+# set_property top $top_name [current_fileset]
+# update_compile_order -fileset sources_1
+# if {[get_property top [current_fileset]] ne $top_name} {
+#     fail "Unexpected project top after source import"
+# }
+# ipx::package_project \
+#     -root_dir $ip_dir \
+#     -vendor user.org \
+#     -library user \
+#     -taxonomy /UserIP \
+#     -import_files \
+#     -set_current true
+WARNING: [IP_Flow 19-5101] Packaging a component with a SystemVerilog top file is not fully supported. Please refer to UG1118 'Creating and Packaging Custom IP'.
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/Xilinx/Vivado/2020.2/data/ip'.
+INFO: [IP_Flow 19-5107] Inferred bus interface 'm_axi_gmem0' of definition 'xilinx.com:interface:aximm:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'm_axi_gmem1' of definition 'xilinx.com:interface:aximm:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'm_axi_gmem2' of definition 'xilinx.com:interface:aximm:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'm_axi_gmem3' of definition 'xilinx.com:interface:aximm:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 's_axi_control' of definition 'xilinx.com:interface:aximm:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'ap_rst_n' of definition 'xilinx.com:signal:reset:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'ap_clk' of definition 'xilinx.com:signal:clock:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-4728] Bus Interface 'ap_rst_n': Added interface parameter 'POLARITY' with value 'ACTIVE_LOW'.
+INFO: [IP_Flow 19-4728] Bus Interface 'ap_clk': Added interface parameter 'ASSOCIATED_RESET' with value 'ap_rst_n'.
+WARNING: [IP_Flow 19-3158] Bus Interface 'm_axi_gmem0': FREQ_HZ bus parameter missing from AXI interface when interface is not associated to a clock.
+WARNING: [IP_Flow 19-3158] Bus Interface 'm_axi_gmem1': FREQ_HZ bus parameter missing from AXI interface when interface is not associated to a clock.
+WARNING: [IP_Flow 19-3158] Bus Interface 'm_axi_gmem2': FREQ_HZ bus parameter missing from AXI interface when interface is not associated to a clock.
+WARNING: [IP_Flow 19-3158] Bus Interface 'm_axi_gmem3': FREQ_HZ bus parameter missing from AXI interface when interface is not associated to a clock.
+WARNING: [IP_Flow 19-3158] Bus Interface 's_axi_control': FREQ_HZ bus parameter missing from AXI interface when interface is not associated to a clock.
+WARNING: [IP_Flow 19-3157] Bus Interface 'ap_rst_n': Bus parameter POLARITY is ACTIVE_LOW but port 'ap_rst_n' is not *resetn - please double check the POLARITY setting.
+WARNING: [IP_Flow 19-5661] Bus Interface 'ap_clk' does not have any bus interfaces associated with it.
+INFO: [IP_Flow 19-2181] Payment Required is not set for this core.
+INFO: [IP_Flow 19-2187] The Product Guide file is missing.
+# set core [ipx::current_core]
+# set_property name $top_name $core
+# set_property display_name \
+#     {F37X A18.2 Four-Master Variable-Index HBM Lookup RTL Kernel} $core
+# set_property description \
+#     {A18 user-managed wrapper with four AXI masters, four runtime table-base pointers, and MMIO lookup indexes at 0x330-0x33C} $core
+# set_property version 2.181 $core
+# ipx::infer_bus_interface ap_clk xilinx.com:signal:clock_rtl:1.0 $core
+INFO: [IP_Flow 19-5107] Inferred bus interface 'ap_clk' of definition 'xilinx.com:signal:clock:1.0' (from TCL Argument).
+# ipx::infer_bus_interface ap_rst_n xilinx.com:signal:reset_rtl:1.0 $core
+INFO: [IP_Flow 19-5107] Inferred bus interface 'ap_rst_n' of definition 'xilinx.com:signal:reset:1.0' (from TCL Argument).
+# set s_axi_control [require_bus_interface $core s_axi_control slave]
+# foreach i {0 1 2 3} {
+#     set bus_name m_axi_gmem$i
+#     set bus [require_bus_interface $core $bus_name master]
+#     set_required_bus_parameter $bus DATA_WIDTH 128
+#     set_required_bus_parameter $bus ADDR_WIDTH 64
+#     ipx::associate_bus_interfaces -busif $bus_name -clock ap_clk $core
+# }
+INFO: [IP_Flow 19-4728] Bus Interface 'ap_clk': Added interface parameter 'ASSOCIATED_BUSIF' with value 'm_axi_gmem0'.
+# ipx::associate_bus_interfaces -busif s_axi_control -clock ap_clk $core
+# ipx::associate_bus_interfaces -clock ap_clk -reset ap_rst_n $core
+# set memory_maps [ipx::get_memory_maps s_axi_control -of_objects $core]
+# if {[llength $memory_maps] != 1} {
+#     fail "Expected one AXI4-Lite memory map, found [llength $memory_maps]"
+# }
+# set address_blocks [ipx::get_address_blocks \
+#     -of_objects [lindex $memory_maps 0]]
+# if {[llength $address_blocks] != 1} {
+#     fail "Expected one AXI4-Lite address block, found [llength $address_blocks]"
+# }
+# set address_block [lindex $address_blocks 0]
+# set_property range 4096 $address_block
+# foreach i {0 1 2 3} offset {0x304 0x318 0x320 0x328} {
+#     set reg [add_control_register $address_block TABLE_BASE$i $offset 64 read-write \
+#         {64-bit byte address of embedding-table row zero}]
+#     associate_register_with_bus $reg m_axi_gmem$i
+# }
+# if {[llength [ipx::get_registers -of_objects $address_block]] != 4} {
+#     fail "A18.2 requires exactly four pointer arguments; lookup indexes stay MMIO"
+# }
+# set_property sdx_kernel true $core
+# set_property sdx_kernel_type rtl $core
+# ipx::update_checksums $core
+# ipx::check_integrity -quiet $core
+# ipx::update_source_project_archive -component $core
+# ipx::save_core $core
+# package_xo \
+#     -force \
+#     -xo_path $xo_path \
+#     -kernel_name $top_name \
+#     -ctrl_protocol user_managed \
+#     -ip_directory $ip_dir \
+#     -output_kernel_xml $xml_path
+WARNING: [Vivado 12-4404] The CPU emulation flow in v++ is only supported when using a packaged XO file that contains C-model files, none were found.
+INFO: [IP_Flow 19-861] XGUI layout file basename "xgui/dlrm_f37x_rtl_kernel_stage2n_a18_v1_v1_0.tcl" does not have the current IP <name>_v<version> format. If the IP name or version was changed recently, recreate this file to update the file format.
+WARNING: [IP_Flow 19-3157] Bus Interface 'ap_rst_n': Bus parameter POLARITY is ACTIVE_LOW but port 'ap_rst_n' is not *resetn - please double check the POLARITY setting.
+INFO: [IP_Flow 19-2181] Payment Required is not set for this core.
+INFO: [IP_Flow 19-2187] The Product Guide file is missing.
+INFO: [Ipptcl 7-1486] check_integrity: Integrity check passed.
+# if {![file isfile $xo_path] || [file size $xo_path] == 0} {
+#     fail "XO was not generated or is empty: $xo_path"
+# }
+# if {![file isfile $xml_path] || [file size $xml_path] == 0} {
+#     fail "kernel.xml was not generated or is empty: $xml_path"
+# }
+# set xml_file [open $xml_path r]
+# set xml_text [read $xml_file]
+# close $xml_file
+# foreach i {0 1 2 3} {
+#     foreach name [list m_axi_gmem$i TABLE_BASE$i] {
+#         if {[string first "name=\"$name\"" $xml_text] < 0} {
+#             fail "kernel.xml is missing $name"
+#         }
+#     }
+# }
+# foreach stale_name {LOOKUP_INDEX LOOKUP_INDEX0 LOOKUP_INDEX1 LOOKUP_INDEX2 LOOKUP_INDEX3 RESULT0 RESULT1 RESULT2 RESULT3} {
+#     if {[regexp "name=\\\"${stale_name}\\\"" $xml_text]} {
+#         fail "kernel.xml contains obsolete A14 argument: $stale_name"
+#     }
+# }
+# puts "============================================================"
+============================================================
+# puts "A18_2_TARGET_XO_PACKAGE=PASS"
+A18_2_TARGET_XO_PACKAGE=PASS
+# puts "KERNEL=$top_name"
+KERNEL=dlrm_f37x_rtl_kernel_stage2n_a18_v1
+# puts "TARGET_PART=$target_part_name"
+TARGET_PART=xcvu37p-fsvh2892-2L-e
+# puts "PACKAGING_PART=$part_name"
+PACKAGING_PART=xcvu37p-fsvh2892-2L-e
+# puts "TARGET_PART_USED=$target_part_used"
+TARGET_PART_USED=1
+# puts "CONTROL_INTERFACE=s_axi_control"
+CONTROL_INTERFACE=s_axi_control
+# puts "MEMORY_INTERFACES=m_axi_gmem0,m_axi_gmem1,m_axi_gmem2,m_axi_gmem3"
+MEMORY_INTERFACES=m_axi_gmem0,m_axi_gmem1,m_axi_gmem2,m_axi_gmem3
+# puts "M_AXI_DATA_WIDTH=128"
+M_AXI_DATA_WIDTH=128
+# puts "M_AXI_ADDR_WIDTH=64"
+M_AXI_ADDR_WIDTH=64
+# puts "TABLE_BASE_OFFSETS=0x304,0x318,0x320,0x328"
+TABLE_BASE_OFFSETS=0x304,0x318,0x320,0x328
+# puts "TABLE_BASE_WIDTH=64"
+TABLE_BASE_WIDTH=64
+# puts "TABLE_BASE_ADDRESS_QUALIFIER=1"
+TABLE_BASE_ADDRESS_QUALIFIER=1
+# puts "M_AXI_MASTER_COUNT=4"
+M_AXI_MASTER_COUNT=4
+# puts "KERNEL_ARGUMENT_COUNT=4"
+KERNEL_ARGUMENT_COUNT=4
+# puts "XO=$xo_path"
+XO=/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_xo_001/xo/dlrm_f37x_rtl_kernel_stage2n_a18_v1.xo
+# puts "XO_SIZE_BYTES=[file size $xo_path]"
+XO_SIZE_BYTES=81791
+# puts "KERNEL_XML=$xml_path"
+KERNEL_XML=/home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/runs/a18_2_xo_001/xo/kernel.xml
+# puts "NO_VPP_LINK=1"
+NO_VPP_LINK=1
+# puts "NO_XCLBIN=1"
+NO_XCLBIN=1
+# puts "NO_FPGA_ACCESS=1"
+NO_FPGA_ACCESS=1
+# puts "============================================================"
+============================================================
+# close_project
+INFO: [Common 17-206] Exiting Vivado at Thu Sep 17 15:10:21 2026...

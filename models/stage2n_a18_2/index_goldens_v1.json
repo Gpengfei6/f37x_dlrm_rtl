@@ -1,0 +1,56 @@
+{
+  "claim_boundary": "Local software goldens from frozen A15.6 assets. Not FPGA, XO, xclbin, or performance evidence.",
+  "default_indexes": [
+    37,
+    38,
+    39,
+    40
+  ],
+  "extras": [
+    {
+      "expected_final_result": -61,
+      "indexes": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "note": "software golden only; not a board result",
+      "table": "stage2n_a15_6_case0_baseline_table_v1.bin"
+    },
+    {
+      "expected_final_result": -60,
+      "indexes": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "note": "software golden only; not a board result",
+      "table": "stage2n_a15_6_case0_baseline_table_v1.bin"
+    },
+    {
+      "expected_final_result": -162,
+      "indexes": [
+        0,
+        63,
+        37,
+        40
+      ],
+      "note": "software golden only; not a board result",
+      "table": "stage2n_a15_6_case0_baseline_table_v1.bin"
+    },
+    {
+      "expected_final_result": -185,
+      "indexes": [
+        63,
+        62,
+        61,
+        60
+      ],
+      "note": "software golden only; not a board result",
+      "table": "stage2n_a15_6_case0_baseline_table_v1.bin"
+    }
+  ],
+  "schema": "a18_2_index_goldens_v1"
+}
