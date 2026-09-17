@@ -1,6 +1,6 @@
 # FPGA DLRM Project AI Context
 
-> Current update — 2026-09-17: A18.9 four-line cache + pair fold; local 2022.1 XSim PASS. Extra-run NOT_RUN. No program. No reset.
+> Current update — 2026-09-17: A18.10 folded-inject XSim PASS; fold-then-A13 software goldens locked. Extra-run NOT_RUN. No program. No reset.
 > PERFORMANCE=NOT_CLAIMED. No speedup.
 
 This file is the repository entry point for AI assistants. It summarizes the
@@ -93,6 +93,7 @@ Read the repository in this order before proposing or making changes:
    `docs/STAGE2N_A18_7_LINE_CACHE_V1.md` (local one-line cache),
    `docs/STAGE2N_A18_8_T8_CACHED_LOOKUP_V1.md` (cache in T=8 lookup),
    `docs/STAGE2N_A18_9_FOLDED_LOOKUP_XSIM_V1.md` (4-line cache, fold, 2022.1 XSim),
+   `docs/STAGE2N_A18_10_FOLDED_INJECT_V1.md` (fold inject handshake + software A13 goldens),
    `docs/STAGE2N_A18_3_EXTRA_RUN_V1.md` (no-program extra-run runner),
    `docs/STAGE2N_A18_2_TARGET_PACKAGING_HOST_PREP_V1.md` (hashed A18.2 prep),
    `docs/STAGE2N_A18_VARIABLE_INDEX_RTL_V1.md` (local A18.1 XSim), and
@@ -122,14 +123,14 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A18.9 folded T=8 lookup (local Vivado 2022.1
-XSim PASS, not 2020.2); A18.3 extra-run runner ready / board NOT_RUN;
-A18.3 five-tuple board PASS `20260917_202130` on GitHub `bcd3f86`;
-PERFORMANCE=NOT_CLAIMED**.
+Current stage: **Stage 2N-A18.10 folded-inject (local Vivado 2022.1
+XSim PASS, not 2020.2) plus fold-then-A13 software goldens; A18.3
+extra-run runner ready / board NOT_RUN; A18.3 five-tuple board PASS
+`20260917_202130` on GitHub `bcd3f86`; PERFORMANCE=NOT_CLAIMED**.
 Start at `docs/NEW_WINDOW_HANDOFF_V1.md`. Card holds A18 UUID
 `32a9c911-af15-47fc-90c8-0bfe3894a3ef`. Five locked MMIO index tuples
 are boarded. Do not program. Do not reset. Do not write a speedup.
-A18.5–A18.9 are not wired into the boarded A18 kernel.
+A18.5–A18.10 are not wired into the boarded A18 kernel.
 
 Stage 2N-A13 remains the accepted and frozen dense/compute arithmetic baseline;
 A15.6 is the accepted integrated physical-HBM functional baseline. A14.5 added
@@ -179,8 +180,8 @@ First board execute `20260917_171608` is Host-returned PASS for default
 rows 37–40. A18.3 five-tuple execute `20260917_202130` is original-evidence
 PASS (`-393/-61/-60/-162/-185`). Lookup 33 / e2e 1210 is recorded, not a
 speedup. A18.4 locks L1 E2/E4/E5 occupancy by construction; it is not FPGA.
-A18.5–A18.9 add local mapper, T=8 lookup, cache, fold, and 2022.1 XSim.
-Extra-run runner is ready; board extra-run is NOT_RUN.
+A18.5–A18.10 add local mapper, T=8 lookup, cache, fold, inject handshake,
+and 2022.1 XSim. Extra-run runner is ready; board extra-run is NOT_RUN.
 
 A15.1 adds one new versioned wrapper. It instantiates the accepted A14 v2 lookup
 and accepted A13 cycle-counter controller without editing either file. Its

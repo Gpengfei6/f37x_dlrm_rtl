@@ -1027,4 +1027,41 @@ Evidence boundary:
 Python check plus local 2022.1 XSim PASS only. Not physical HBM, not
 complete T=8 DLRM, not extra-run, not speedup.
 
+## Stage 2N-A18.10 Local Folded-Inject Handshake and Software A13 Goldens
+
+Purpose:
+Lock fold-then-A13 software goldens on frozen A15.6 assets, and wrap
+A18.9 with an A13-style sequential embedding inject handshake, without
+instantiating A13 or editing the boarded A18 kernel.
+
+Authorized:
+
+1. `rtl/hbm/dlrm_hbm_t8_folded_inject_stage2n_a18_10_v1.sv`
+2. `tb/tb_dlrm_hbm_t8_folded_inject_stage2n_a18_10_v1.sv`
+3. `python/eval_stage2n_a18_10_t8_fold_golden_v1.py`
+4. `scripts/check/check_stage2n_a18_10_folded_inject_v1.py`
+5. `scripts/run_stage2n_a18_10_local_xsim_v1.ps1`
+6. `analysis/stage2n_a18_10/t8_fold_a13_goldens_v1.json`
+7. `docs/STAGE2N_A18_10_FOLDED_INJECT_V1.md`
+
+Required behavior:
+
+- Eight indexes, pairwise `sat_add` fold, four-slot `cfg_*` inject.
+- cfg backpressure holds slot 0. OOB issues no CFG write.
+- Software T=4 rows 37–40 remain `-393`. Folded T=8 finals must not
+  reuse A18.3 board/software goldens.
+- Do not instantiate A13. Do not instantiate this module in
+  `dlrm_f37x_rtl_kernel_stage2n_a18_v1`.
+
+Restrictions:
+
+- No `xbutil program`, no FPGA reset, no extra-run, no XO/xclbin.
+- Local 2022.1 XSim is not 2020.2.
+- `PERFORMANCE=NOT_CLAIMED`. Software fold-then-A13 is not a board result.
+
+Evidence boundary:
+
+Python goldens plus local 2022.1 injector XSim PASS only. Not complete
+T=8 DLRM RTL, not physical HBM, not extra-run, not speedup.
+
 

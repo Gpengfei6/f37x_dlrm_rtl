@@ -1,0 +1,121 @@
+{
+  "cases": [
+    {
+      "expected_final_result": -333,
+      "indexes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "name": "unique_0_7",
+      "note": "software fold-then-A13 only; not a board result",
+      "table": "stage2n_a15_6_case0_baseline_table_v1.bin"
+    },
+    {
+      "expected_final_result": -480,
+      "indexes": [
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44
+      ],
+      "name": "default_ext_37_44",
+      "note": "software fold-then-A13 only; not a board result",
+      "table": "stage2n_a15_6_case0_baseline_table_v1.bin"
+    },
+    {
+      "expected_final_result": -774,
+      "indexes": [
+        37,
+        38,
+        39,
+        40,
+        37,
+        38,
+        39,
+        40
+      ],
+      "name": "doubled_37_40",
+      "note": "software fold-then-A13 only; not a board result",
+      "table": "stage2n_a15_6_case0_baseline_table_v1.bin"
+    },
+    {
+      "expected_final_result": -318,
+      "indexes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "name": "zeros",
+      "note": "software fold-then-A13 only; not a board result",
+      "table": "stage2n_a15_6_case0_baseline_table_v1.bin"
+    },
+    {
+      "expected_final_result": -289,
+      "indexes": [
+        1,
+        2,
+        3,
+        4,
+        10,
+        11,
+        12,
+        13
+      ],
+      "name": "mixed_1_4_10_13",
+      "note": "software fold-then-A13 only; not a board result",
+      "table": "stage2n_a15_6_case0_baseline_table_v1.bin"
+    },
+    {
+      "expected_final_result": -299,
+      "indexes": [
+        63,
+        62,
+        61,
+        60,
+        59,
+        58,
+        57,
+        56
+      ],
+      "name": "high_63_56",
+      "note": "software fold-then-A13 only; not a board result",
+      "table": "stage2n_a15_6_case0_baseline_table_v1.bin"
+    },
+    {
+      "expected_final_result": -223,
+      "indexes": [
+        37,
+        38,
+        39,
+        40,
+        0,
+        0,
+        0,
+        0
+      ],
+      "name": "default_plus_zeros",
+      "note": "software fold-then-A13 only; not a board result",
+      "table": "stage2n_a15_6_case0_baseline_table_v1.bin"
+    }
+  ],
+  "claim_boundary": "Local software goldens: pairwise INT16 sat-add fold of eight baseline-table rows, then the frozen A15.6 A13 numeric path. Not FPGA, XO, xclbin, extra-run, or performance evidence. Not an A18.3 board golden.",
+  "fold": "slot[i] = sat_add(vec[i], vec[i+4]) per INT16 lane",
+  "model": "stage2n_a15_6_model_v1.bin",
+  "schema": "a18_10_t8_fold_a13_goldens_v1",
+  "table": "stage2n_a15_6_case0_baseline_table_v1.bin"
+}

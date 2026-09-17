@@ -65,6 +65,7 @@ hybrid CPU-embedding/FPGA-dense inference path.
 | Stage 2N-A18.7 | One-line per-bank cache | Hit skips AXI AR | `docs/STAGE2N_A18_7_LINE_CACHE_V1.md` | **LOCAL SOURCE PASS**: not in boarded kernel; XSim NOT RUN; PERFORMANCE=NOT_CLAIMED |
 | Stage 2N-A18.8 | Cached T=8 mapped lookup | Mapper + 4 line caches + 4 A14 v2 engines | `docs/STAGE2N_A18_8_T8_CACHED_LOOKUP_V1.md` | **LOCAL PYTHON GOLDEN PASS**: same-line bank0 AR=1; not complete T=8 DLRM; XSim NOT RUN; PERFORMANCE=NOT_CLAIMED |
 | Stage 2N-A18.9 | 4-line cache + pair fold | Warm ident AR=0; slot=sat_add(vec[i],vec[i+4]) | `docs/STAGE2N_A18_9_FOLDED_LOOKUP_XSIM_V1.md`; `docs/evidence/stage2n_a18_9/local_xsim_v1/STATUS.txt` | **LOCAL 2022.1 XSIM PASS**: mapper/fold/cache4/folded; not 2020.2; not FPGA; fold is not A13 golden; PERFORMANCE=NOT_CLAIMED |
+| Stage 2N-A18.10 | Folded inject + software A13 goldens | A18.9 wrap; cfg handshake; fold-then-A13 JSON | `docs/STAGE2N_A18_10_FOLDED_INJECT_V1.md`; `analysis/stage2n_a18_10/t8_fold_a13_goldens_v1.json` | **LOCAL 2022.1 XSIM PASS** plus software goldens; A13 not instantiated; not complete T=8 DLRM RTL; PERFORMANCE=NOT_CLAIMED |
 
 ## Current Milestone Interpretation
 

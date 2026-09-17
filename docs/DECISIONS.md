@@ -1739,4 +1739,13 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
 - Local XSim mapper/fold/cache4/folded PASS on Vivado 2022.1 only.
 - Extra-run still NOT_RUN. No program. No reset.
 
+## D-091 - A18.10 folded inject handshake and software A13 goldens
+
+- Date: 2026-09-17. User asked to keep advancing without requests.
+- Fold-then-A13 software goldens on A15.6 assets. T=4 37–40 stays -393.
+  Folded T=8 finals do not reuse A18.3 goldens.
+- Injector wraps A18.9 with A13 cfg handshake. A13 is not instantiated.
+  Boarded A18 kernel stays unwired. Local 2022.1 XSim PASS.
+- Extra-run still NOT_RUN. No program. No reset.
+
 

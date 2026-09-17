@@ -1,6 +1,6 @@
 # Current State
 
-> Current update — 2026-09-17: A18.9 four-line cache + pair fold; local 2022.1 XSim PASS. Extra-run NOT_RUN. No program. No reset.
+> Current update — 2026-09-17: A18.10 folded-inject XSim PASS; fold-then-A13 software goldens locked. Extra-run NOT_RUN. No program. No reset.
 
 Snapshot date: 2026-09-08
 
@@ -45,7 +45,7 @@ Snapshot date: 2026-09-08
   `e4ce2ab59b594910003c20fc00174b3a465e9bca`
 - A17.4 local mapping-preparation parent HEAD:
   `c0a4fa130f91f88b1ab16409925524846442207a`
-- Current engineering stage: **Stage 2N-A18.9 folded T=8 lookup (local 2022.1 XSim PASS); extra-run NOT_RUN; A18.3 board PASS `bcd3f86`; PERFORMANCE=NOT_CLAIMED**
+- Current engineering stage: **Stage 2N-A18.10 folded-inject (local 2022.1 XSim PASS) + fold-then-A13 software goldens; extra-run NOT_RUN; A18.3 board PASS `bcd3f86`; PERFORMANCE=NOT_CLAIMED**
 - Accepted and frozen physical-HBM functional baseline: **Stage 2N-A15.6**
 - Accepted and frozen dense/compute arithmetic baseline: **Stage 2N-A13**
 
@@ -118,8 +118,8 @@ five-tuple execute `20260917_202130` is original-evidence PASS:
 `-393/-61/-60/-162/-185`, program skipped, compute `322/100/744/1174`.
 See `docs/evidence/stage2n_a18_3/function_pass_v1/ACCEPTANCE.txt`.
 Do not write a speedup versus A16/A17. Do not program. Do not reset.
-A18.3 extra-run runner is ready and remains `NOT_RUN`. A18.5–A18.7 are
-local T>4 mapper, T=8 mapped lookup, and one-line cache; none are
+A18.3 extra-run runner is ready and remains `NOT_RUN`. A18.5–A18.10 are
+local T>4 mapper, lookup, cache, fold, and inject handshake; none are
 wired into the boarded A18 kernel.
 
 The primary Windows worktree may contain pre-existing untracked recovery,
@@ -702,12 +702,13 @@ returned A15.6 physical-board evidence.
     A18.3 five-tuple board function `20260917_202130` is original-evidence
     PASS and is on GitHub as `bcd3f86`. A18.4 records L1 E2/E4/E5 geometry
     only (`docs/STAGE2N_A18_4_L1_GEOMETRY_LOCK_V1.md`). Occupancy is by
-    construction. A18.5–A18.7 add local mapper / T=8 lookup / one-line
-    cache (`docs/STAGE2N_A18_5_T8_BANK_MAPPER_V1.md`,
+    construction. A18.5–A18.10 add local mapper / T=8 lookup / cache /
+    fold / inject handshake (`docs/STAGE2N_A18_5_T8_BANK_MAPPER_V1.md`,
     `docs/STAGE2N_A18_6_T8_MAPPED_LOOKUP_V1.md`,
     `docs/STAGE2N_A18_7_LINE_CACHE_V1.md`,
     `docs/STAGE2N_A18_8_T8_CACHED_LOOKUP_V1.md`,
-    `docs/STAGE2N_A18_9_FOLDED_LOOKUP_XSIM_V1.md`). Extra-run runner is
+    `docs/STAGE2N_A18_9_FOLDED_LOOKUP_XSIM_V1.md`,
+    `docs/STAGE2N_A18_10_FOLDED_INJECT_V1.md`). Extra-run runner is
     `docs/STAGE2N_A18_3_EXTRA_RUN_V1.md` and remains NOT_RUN. Do not
     program. Do not reset. Do not write a speedup.
 
