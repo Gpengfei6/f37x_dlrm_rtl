@@ -26,6 +26,7 @@
 | **A18.5** | **本地 T=8/B=4 映射器（Python PASS，XSim NOT RUN）** | 上板；完整 T=8 DLRM |
 | **A18.6** | **映射器进 T=8 查找数据通路（未接入已烧 A18 顶层）** | 八路 embedding 进冻结 A13 |
 | **A18.7** | **本地一行 cache（未接入已烧 A18 顶层）** | 命中率；带宽 |
+| **A18.8** | **T=8 查找 + 每 bank 一行 cache（Python 金模型 PASS）** | 上板；完整 T=8 DLRM |
 | **A18.3 extra-run** | **runner 已写，板上 NOT_RUN** | T>4；加速比 |
 
 卡上最后一次编程是 A18 UUID `32a9c911-af15-47fc-90c8-0bfe3894a3ef`（设备 index 2，BDF `0000:9b:00.1`，`renderD129`）。A18.3 未再 program。不要复位，不要再烧卡。extra-run 必须用 `scripts/run_stage2n_a18_3_extra_run_v1.sh`，该脚本不含 `xbutil program`。
@@ -122,6 +123,7 @@ A18 板上验收：`docs/STAGE2N_A18_2_BOARD_FUNCTION_ACCEPTANCE_V1.md`（默认
 | D-086 | A18.6 T=8 映射查找 |
 | D-087 | A18.3 extra-run runner（不烧卡、不复位） |
 | D-088 | A18.7 一行 cache |
+| D-089 | 自答下一刀：A18.8 cache 进 T=8 查找；extra-run 现在不跑 |
 
 更早的 A16/A17 N=11、LUTLP、四 BO 功能见 `docs/DECISIONS.md` D-070 起。
 
@@ -131,7 +133,7 @@ A18 板上验收：`docs/STAGE2N_A18_2_BOARD_FUNCTION_ACCEPTANCE_V1.md`（默认
 
 已关闭：A18.2 默认行号；A18.3 五组锁定元组（D-082/`bcd3f86`）；A18.4 L1 几何锁定（占用是构造结果，不是 FPGA）。
 
-已授权、本地源码已落地：A18.5 映射器、A18.6 T=8 查找、A18.7 一行 cache、A18.3 extra-run runner。
+已授权、本地源码已落地：A18.5 映射器、A18.6 T=8 查找、A18.7 一行 cache、A18.8 带 cache 的 T=8 查找、A18.3 extra-run runner。
 
 未授权、需要用户一句话：
 

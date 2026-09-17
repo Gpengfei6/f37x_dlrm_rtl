@@ -1716,4 +1716,19 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
 - Not instantiated in the boarded A18 kernel. XSim NOT RUN.
 - `PERFORMANCE=NOT_CLAIMED`.
 
+## D-089 - Self-directed next slice after GPT unavailable
+
+- Date: 2026-09-17. User asked for self-answers and execution without
+  further questions.
+- `NEXT_SLICE=C` as versioned A18.8 (cache in front of T=8 lookup).
+- `INTO_KERNEL_DEFINITION=A18.6/A18.8 datapath is enough` until a later
+  program grant; do not copy the boarded public kernel.
+- `EXTRA_RUN_NOW=no`: Agent cannot SSH; extra-run does not prove T>4;
+  do not chase lookup 33.
+- `T8_VS_A13=lookup-only this increment`; pooling would change the
+  frozen A13 slot contract and is not this slice.
+- `CACHE_NEXT=wire into A18.8`; keep one line per bank.
+- `SUCCESS_CRITERIA`: Python golden PASS; boarded A18 unwired; no
+  program/reset; `PERFORMANCE=NOT_CLAIMED`.
+
 

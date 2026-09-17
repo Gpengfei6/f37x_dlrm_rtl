@@ -63,6 +63,7 @@ hybrid CPU-embedding/FPGA-dense inference path.
 | Stage 2N-A18.6 | T=8 mapped lookup | Mapper instantiated; 8 indexes through 4 A14 v2 engines | `docs/STAGE2N_A18_6_T8_MAPPED_LOOKUP_V1.md` | **LOCAL SOURCE PASS**: not complete T=8 DLRM; not boarded kernel; XSim NOT RUN; PERFORMANCE=NOT_CLAIMED |
 | Stage 2N-A18.3 extra-run | Same five tuples, no program | Runner ready | `docs/STAGE2N_A18_3_EXTRA_RUN_V1.md` | **RUNNER READY / BOARD NOT_RUN**: never `xbutil program` or reset |
 | Stage 2N-A18.7 | One-line per-bank cache | Hit skips AXI AR | `docs/STAGE2N_A18_7_LINE_CACHE_V1.md` | **LOCAL SOURCE PASS**: not in boarded kernel; XSim NOT RUN; PERFORMANCE=NOT_CLAIMED |
+| Stage 2N-A18.8 | Cached T=8 mapped lookup | Mapper + 4 line caches + 4 A14 v2 engines | `docs/STAGE2N_A18_8_T8_CACHED_LOOKUP_V1.md` | **LOCAL PYTHON GOLDEN PASS**: same-line bank0 AR=1; not complete T=8 DLRM; XSim NOT RUN; PERFORMANCE=NOT_CLAIMED |
 
 ## Current Milestone Interpretation
 

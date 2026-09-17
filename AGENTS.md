@@ -955,4 +955,40 @@ Evidence boundary:
 `A18_7_LINE_CACHE_CHECK=PASS` is source/Python only. XSim NOT RUN. It
 cannot prove physical hit rate, bandwidth, or speedup.
 
+## Stage 2N-A18.8 Local Cached T=8 Lookup Authorization
+
+Purpose:
+Wire the accepted-this-tree A18.7 one-line cache in front of the four
+A14 v2 engines inside a versioned T=8 mapped lookup, without
+programming, resetting, or editing the boarded A18 kernel.
+
+Authorized:
+
+1. `rtl/hbm/dlrm_hbm_t8_cached_lookup_stage2n_a18_8_v1.sv`
+2. `tb/tb_dlrm_hbm_t8_cached_lookup_stage2n_a18_8_v1.sv`
+3. `scripts/check/check_stage2n_a18_8_cached_lookup_v1.py`
+4. `docs/STAGE2N_A18_8_T8_CACHED_LOOKUP_V1.md`
+
+Required behavior:
+
+- Instantiate A18.5 mapper, A18.7 cache (one per bank), A14 v2 engines.
+- Cold unique indexes: AR count equals occupancy.
+- Same index on ident tables 0 and 4: bank 0 issues one AR.
+- Do not instantiate A13. Do not change A13 slot count.
+- Do not instantiate this controller in
+  `dlrm_f37x_rtl_kernel_stage2n_a18_v1`.
+
+Restrictions:
+
+- No `xbutil program`, no FPGA reset, no extra-run, no XO/xclbin.
+- Do not modify accepted A13, A14 v2, A16, A17 originals, or the A18
+  Host/xclbin identities.
+- `PERFORMANCE=NOT_CLAIMED`.
+
+Evidence boundary:
+
+`A18_8_CACHED_LOOKUP_CHECK=PASS` is source/Python golden only. XSim
+NOT RUN. It cannot prove physical hit rate, complete T=8 DLRM, or
+speedup.
+
 

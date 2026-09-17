@@ -1,6 +1,6 @@
 # Current State
 
-> Current update — 2026-09-17: A18.5 mapper, A18.6 T=8 lookup, A18.7 line cache are local source PASS. Extra-run runner ready, board extra-run NOT_RUN. No program. No reset.
+> Current update — 2026-09-17: A18.8 cached T=8 lookup local golden PASS. Extra-run NOT_RUN. No program. No reset.
 
 Snapshot date: 2026-09-08
 
@@ -45,7 +45,7 @@ Snapshot date: 2026-09-08
   `e4ce2ab59b594910003c20fc00174b3a465e9bca`
 - A17.4 local mapping-preparation parent HEAD:
   `c0a4fa130f91f88b1ab16409925524846442207a`
-- Current engineering stage: **Stage 2N-A18.6/A18.7 local T=8 lookup + line cache (Python PASS, XSim NOT RUN); A18.3 extra-run runner ready / board NOT_RUN; A18.3 board PASS `bcd3f86`; PERFORMANCE=NOT_CLAIMED**
+- Current engineering stage: **Stage 2N-A18.8 cached T=8 lookup (Python golden PASS, XSim NOT RUN); extra-run NOT_RUN; A18.3 board PASS `bcd3f86`; PERFORMANCE=NOT_CLAIMED**
 - Accepted and frozen physical-HBM functional baseline: **Stage 2N-A15.6**
 - Accepted and frozen dense/compute arithmetic baseline: **Stage 2N-A13**
 
@@ -705,7 +705,8 @@ returned A15.6 physical-board evidence.
     construction. A18.5–A18.7 add local mapper / T=8 lookup / one-line
     cache (`docs/STAGE2N_A18_5_T8_BANK_MAPPER_V1.md`,
     `docs/STAGE2N_A18_6_T8_MAPPED_LOOKUP_V1.md`,
-    `docs/STAGE2N_A18_7_LINE_CACHE_V1.md`). Extra-run runner is
+    `docs/STAGE2N_A18_7_LINE_CACHE_V1.md`,
+    `docs/STAGE2N_A18_8_T8_CACHED_LOOKUP_V1.md`). Extra-run runner is
     `docs/STAGE2N_A18_3_EXTRA_RUN_V1.md` and remains NOT_RUN. Do not
     program. Do not reset. Do not write a speedup.
 
