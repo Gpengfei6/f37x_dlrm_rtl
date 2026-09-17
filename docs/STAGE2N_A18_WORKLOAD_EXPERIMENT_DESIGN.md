@@ -123,7 +123,9 @@ Class C 规则仍适用：A16/A17 对比必须先对齐 BO 协议与 lookup 起�
 
 本轮只写到这里。下一步若继续本地整理：L1 可用已有 `analysis/embedding_trace` 一类工具生成合成共现，**仍不改 RTL**。L2 需要单独授权的新版本顶层（可变 table/row、T>4 的聚集），不得改冻结 A13/A16/A17 验收文件。
 
-L1 请求分布检查（2026-09-15，仅本地离线）：见 `docs/STAGE2N_A18_L1_WORKLOAD_ANALYZER.md`。现实现里 `ident`/`rr` 等价；`coaccess` 只是跨表相同行索引构造，不是表共现模型。该工具**不**构成共同访问映射进 RTL 的证据，**不**改本文件的验收边界。
+L1 请求分布检查（2026-09-15，仅本地离线）：见 `docs/STAGE2N_A18_L1_WORKLOAD_ANALYZER.md`。
+A18.4 把 E2/E4/E5 占用摘要锁在 `analysis/stage2n_a18_l1/e2_e4_e5_lock_v1.json`。
+现实现里 `ident`/`rr` 等价；`coaccess` 只是跨表相同行索引构造，不是表共现模型。该工具**不**构成共同访问映射进 RTL 的证据，**不**改本文件的验收边界。
 
 ## 7. 真实负载输入契约（设计，未实现采集）
 

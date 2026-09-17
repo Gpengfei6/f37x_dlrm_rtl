@@ -798,3 +798,27 @@ That proves only those five complete-DLRM results on this card and
 xclbin. It cannot prove extra-run, process hash, bandwidth, latency
 improvement, or speedup.
 
+## Stage 2N-A18.4 Local L1 Geometry Lock Authorization
+
+Purpose:
+Record the documented L1 E2/E4/E5 occupancy summaries after A18.3
+boarded T=4 variable indexes, without touching RTL or the FPGA.
+
+Authorized:
+
+1. `scripts/run_stage2n_a18_4_l1_geometry_lock_v1.py`
+2. `analysis/stage2n_a18_l1/e2_e4_e5_lock_v1.json`
+3. `docs/STAGE2N_A18_4_L1_GEOMETRY_LOCK_V1.md`
+
+Restrictions:
+
+- Do not modify accepted A13, A14 v2, A16, A17, or A18 originals.
+- Do not add T>4 RTL, cache, placement into the kernel, or a board run.
+- Occupancy is by construction. `PERFORMANCE=NOT_CLAIMED`.
+- Co-occurrence mapping remains unimplemented.
+
+Evidence boundary:
+
+`A18_4_L1_GEOMETRY_LOCK=PASS` is local geometry only. It cannot prove
+physical HBM, mapping-into-RTL, or any performance result.
+

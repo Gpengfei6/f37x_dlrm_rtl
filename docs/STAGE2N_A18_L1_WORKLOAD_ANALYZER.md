@@ -48,3 +48,12 @@
 | 向量字节数 | **未建模** |
 
 没有这些字段，不能讨论不同表的服务负担，也不能论证共同访问映射。
+
+A18.4 把 E2/E4/E5 占用摘要锁在
+`analysis/stage2n_a18_l1/e2_e4_e5_lock_v1.json`。刷新：
+
+```text
+python scripts/run_stage2n_a18_4_l1_geometry_lock_v1.py --write
+python scripts/run_stage2n_a18_4_l1_geometry_lock_v1.py
+```
+

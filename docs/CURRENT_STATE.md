@@ -1,6 +1,6 @@
 # Current State
 
-> Current update — 2026-09-17: A18.3 five-tuple board function PASS (`20260917_202130`). PERFORMANCE=NOT_CLAIMED.
+> Current update — 2026-09-17: A18.3 five-tuple board PASS archived (`bcd3f86`). A18.4 L1 geometry lock is local-only.
 
 Snapshot date: 2026-09-08
 
@@ -45,7 +45,7 @@ Snapshot date: 2026-09-08
   `e4ce2ab59b594910003c20fc00174b3a465e9bca`
 - A17.4 local mapping-preparation parent HEAD:
   `c0a4fa130f91f88b1ab16409925524846442207a`
-- Current engineering stage: **Stage 2N-A18.3 five-tuple board function PASS `20260917_202130`; A18.2 default-index board PASS archived; GitHub `40a36e7` confirmed; PERFORMANCE=NOT_CLAIMED**
+- Current engineering stage: **Stage 2N-A18.4 L1 geometry lock (local); A18.3 five-tuple board PASS `20260917_202130` on GitHub `bcd3f86`; PERFORMANCE=NOT_CLAIMED**
 - Accepted and frozen physical-HBM functional baseline: **Stage 2N-A15.6**
 - Accepted and frozen dense/compute arithmetic baseline: **Stage 2N-A13**
 
@@ -697,10 +697,9 @@ returned A15.6 physical-board evidence.
     evidence is reviewed PASS
     (`docs/evidence/stage2n_a18_2/link_001_acceptance_summary.txt`).
     A18.3 five-tuple board function `20260917_202130` is original-evidence
-    PASS (`docs/STAGE2N_A18_3_BOARD_FUNCTION_ACCEPTANCE_V1.md`).
-    Do not extra-run to chase 33. Do not write a speedup.
-    Do not run the A17 Host or rebuild XO/xclbin.
-    Card holds A18 UUID `32a9c911-af15-47fc-90c8-0bfe3894a3ef`.
+    PASS and is on GitHub as `bcd3f86`. A18.4 records L1 E2/E4/E5 geometry
+    only (`docs/STAGE2N_A18_4_L1_GEOMETRY_LOCK_V1.md`). Occupancy is by
+    construction. Do not extra-run. Do not write a speedup.
 
 ## Non-Goals of the Current Stage
 

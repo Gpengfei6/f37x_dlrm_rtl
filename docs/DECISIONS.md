@@ -1680,6 +1680,14 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
 - This snapshot is the A18.3 Host, protected runner, compile originals,
   and board originals `20260917_202130`. Do not `git add .`. Omit
   patents, extract trees, overlay zips, and the 76 MB timing report.
-- `PERFORMANCE=NOT_CLAIMED`.
+- `PERFORMANCE=NOT_CLAIMED`. Commit `bcd3f86`.
+
+## D-084 - A18.4 local L1 E2/E4/E5 geometry lock
+
+- Date: 2026-09-17. After A18.3 silicon variable-index PASS, lock the
+  documented L1 occupancy cells. Stripe T=8 is `[2,2,2,2]`; T=16 is
+  `[4,4,4,4]`; forced tables 0/1 on bank 0 is `[3,1,2,2]`.
+- E4 is same-row-index on ident stripe, not a co-occurrence mapper.
+- `PHYSICAL_HBM=NOT_MODELED`. `PERFORMANCE=NOT_CLAIMED`.
 
 

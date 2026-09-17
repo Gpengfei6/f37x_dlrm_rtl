@@ -1,6 +1,6 @@
 # FPGA DLRM Project AI Context
 
-> Current update — 2026-09-17: A18.3 five-tuple board function PASS (`20260917_202130`).
+> Current update — 2026-09-17: A18.3 board PASS on GitHub `bcd3f86`. A18.4 L1 geometry lock is local-only.
 > PERFORMANCE=NOT_CLAIMED. No speedup.
 
 This file is the repository entry point for AI assistants. It summarizes the
@@ -87,6 +87,7 @@ Read the repository in this order before proposing or making changes:
    `docs/STAGE2N_A18_2_BOARD_FUNCTION_ACCEPTANCE_V1.md` (default-index board),
    `docs/STAGE2N_A18_3_NONDEFAULT_INDEX_HOST_PREP_V1.md` (A18.3 Host),
    `docs/STAGE2N_A18_3_BOARD_FUNCTION_ACCEPTANCE_V1.md` (five-tuple board),
+   `docs/STAGE2N_A18_4_L1_GEOMETRY_LOCK_V1.md` (local L1 occupancy lock),
    `docs/STAGE2N_A18_2_TARGET_PACKAGING_HOST_PREP_V1.md` (hashed A18.2 prep),
    `docs/STAGE2N_A18_VARIABLE_INDEX_RTL_V1.md` (local A18.1 XSim), and
    `docs/STAGE2N_A17_PAPER_CHAPTER_MULTIBANK_LOOKUP_V3.md`
@@ -115,11 +116,12 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A18.3 five-tuple board function PASS `20260917_202130`;
-A18.2 default-index board PASS archived; GitHub `40a36e7`;
-PERFORMANCE=NOT_CLAIMED**. Start at `docs/NEW_WINDOW_HANDOFF_V1.md` and
-`docs/STAGE2N_A18_3_BOARD_FUNCTION_ACCEPTANCE_V1.md`. Card holds A18 UUID
+Current stage: **Stage 2N-A18.4 L1 geometry lock (local); A18.3 five-tuple
+board PASS `20260917_202130` on GitHub `bcd3f86`; PERFORMANCE=NOT_CLAIMED**.
+Start at `docs/NEW_WINDOW_HANDOFF_V1.md`. Card holds A18 UUID
 `32a9c911-af15-47fc-90c8-0bfe3894a3ef`. Five locked MMIO index tuples
+are boarded. L1 occupancy is by construction. Do not extra-run. Do not
+write a speedup.
 are boarded. Do not extra-run. Do not write a speedup.
 
 Stage 2N-A13 remains the accepted and frozen dense/compute arithmetic baseline;
@@ -169,7 +171,7 @@ Indexes stay MMIO `0x330-0x33C`. Host g++ is `A18_2_HOST_XRT_BUILD=PASS`.
 First board execute `20260917_171608` is Host-returned PASS for default
 rows 37–40. A18.3 five-tuple execute `20260917_202130` is original-evidence
 PASS (`-393/-61/-60/-162/-185`). Lookup 33 / e2e 1210 is recorded, not a
-speedup.
+speedup. A18.4 locks L1 E2/E4/E5 occupancy by construction; it is not FPGA.
 
 A15.1 adds one new versioned wrapper. It instantiates the accepted A14 v2 lookup
 and accepted A13 cycle-counter controller without editing either file. Its

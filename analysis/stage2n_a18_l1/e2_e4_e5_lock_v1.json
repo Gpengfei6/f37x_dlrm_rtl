@@ -1,0 +1,191 @@
+{
+  "COOCCURRENCE_MAPPING": "NOT_IMPLEMENTED",
+  "IDENT_RR_EQUIVALENT": true,
+  "PERFORMANCE": "NOT_CLAIMED",
+  "PHYSICAL_HBM": "NOT_MODELED",
+  "cells": [
+    {
+      "experiment": "E2",
+      "id": "E2_T8_STRIPE_UNIFORM",
+      "note": "T>B stripe occupancy [2,2,2,2] is by construction",
+      "summary": {
+        "B": 4,
+        "BANK_OCCUPANCY": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "CONFLICT_SUM": 32,
+        "HOTSPOT_SCOPE": "ROW_INDEX_ONLY",
+        "IDLE_CHANNELS": [],
+        "MAPPING": "ident",
+        "MAPPING_FAMILY": "STRIPE_MOD_B",
+        "OVERSUBSCRIBE": true,
+        "PATTERN": "uniform",
+        "PATTERN_KIND": "INDEPENDENT_ROW_INDEX",
+        "PERFORMANCE": "NOT_CLAIMED",
+        "PHYSICAL_HBM": "NOT_MODELED",
+        "PROXY_MAX": 2,
+        "ROUNDS": 8,
+        "SAME_ROW_INDEX_CHANGES_TABLE_SET": false,
+        "SAME_ROW_INDEX_PAIRS": [],
+        "SAME_ROW_INDEX_SAME_BANK": 0,
+        "SEED": 7,
+        "T": 8,
+        "TABLE_BANKS": [
+          0,
+          1,
+          2,
+          3,
+          0,
+          1,
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "experiment": "E2",
+      "id": "E2_T16_STRIPE_UNIFORM",
+      "note": "T=16 stripe occupancy [4,4,4,4] is by construction",
+      "summary": {
+        "B": 4,
+        "BANK_OCCUPANCY": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "CONFLICT_SUM": 48,
+        "HOTSPOT_SCOPE": "ROW_INDEX_ONLY",
+        "IDLE_CHANNELS": [],
+        "MAPPING": "ident",
+        "MAPPING_FAMILY": "STRIPE_MOD_B",
+        "OVERSUBSCRIBE": true,
+        "PATTERN": "uniform",
+        "PATTERN_KIND": "INDEPENDENT_ROW_INDEX",
+        "PERFORMANCE": "NOT_CLAIMED",
+        "PHYSICAL_HBM": "NOT_MODELED",
+        "PROXY_MAX": 4,
+        "ROUNDS": 4,
+        "SAME_ROW_INDEX_CHANGES_TABLE_SET": false,
+        "SAME_ROW_INDEX_PAIRS": [],
+        "SAME_ROW_INDEX_SAME_BANK": 0,
+        "SEED": 7,
+        "T": 16,
+        "TABLE_BANKS": [
+          0,
+          1,
+          2,
+          3,
+          0,
+          1,
+          2,
+          3,
+          0,
+          1,
+          2,
+          3,
+          0,
+          1,
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "experiment": "E4",
+      "id": "E4_T8_STRIPE_SAME_ROW_INDEX",
+      "note": "same numeric row index on pairs; not a co-occurrence mapping",
+      "summary": {
+        "B": 4,
+        "BANK_OCCUPANCY": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "CONFLICT_SUM": 32,
+        "HOTSPOT_SCOPE": "ROW_INDEX_ONLY",
+        "IDLE_CHANNELS": [],
+        "MAPPING": "ident",
+        "MAPPING_FAMILY": "STRIPE_MOD_B",
+        "OVERSUBSCRIBE": true,
+        "PATTERN": "coaccess",
+        "PATTERN_KIND": "SAME_ROW_INDEX",
+        "PERFORMANCE": "NOT_CLAIMED",
+        "PHYSICAL_HBM": "NOT_MODELED",
+        "PROXY_MAX": 2,
+        "ROUNDS": 8,
+        "SAME_ROW_INDEX_CHANGES_TABLE_SET": false,
+        "SAME_ROW_INDEX_PAIRS": [
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            5
+          ]
+        ],
+        "SAME_ROW_INDEX_SAME_BANK": 16,
+        "SEED": 3,
+        "T": 8,
+        "TABLE_BANKS": [
+          0,
+          1,
+          2,
+          3,
+          0,
+          1,
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "experiment": "E5",
+      "id": "E5_T8_FORCE_01_BANK0",
+      "note": "tables 0 and 1 pinned to bank 0; occupancy [3,1,2,2]",
+      "summary": {
+        "B": 4,
+        "BANK_OCCUPANCY": [
+          3,
+          1,
+          2,
+          2
+        ],
+        "CONFLICT_SUM": 16,
+        "HOTSPOT_SCOPE": "ROW_INDEX_ONLY",
+        "IDLE_CHANNELS": [],
+        "MAPPING": "ident",
+        "MAPPING_FAMILY": "STRIPE_MOD_B",
+        "OVERSUBSCRIBE": true,
+        "PATTERN": "forced_conflict",
+        "PATTERN_KIND": "FORCE_TWO_TABLES_TO_BANK0",
+        "PERFORMANCE": "NOT_CLAIMED",
+        "PHYSICAL_HBM": "NOT_MODELED",
+        "PROXY_MAX": 3,
+        "ROUNDS": 4,
+        "SAME_ROW_INDEX_CHANGES_TABLE_SET": false,
+        "SAME_ROW_INDEX_PAIRS": [],
+        "SAME_ROW_INDEX_SAME_BANK": 0,
+        "SEED": 2,
+        "T": 8,
+        "TABLE_BANKS": [
+          0,
+          0,
+          2,
+          3,
+          0,
+          1,
+          2,
+          3
+        ]
+      }
+    }
+  ],
+  "claim_boundary": "L1 geometry only. Occupancy and conflict_count are by construction from T, B, and table_id%B. Not FPGA HBM, not RTL placement, not performance.",
+  "schema": "a18_4_l1_geometry_lock_v1"
+}
