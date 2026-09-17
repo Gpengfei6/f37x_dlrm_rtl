@@ -23,8 +23,12 @@
 | **A18.2** | **板上功能 PASS，默认行号 37–40** | 性能 |
 | **A18.3** | **五组锁定元组板上功能 PASS `20260917_202130`（GitHub `bcd3f86`）** | 加速比；T>4；extra-run |
 | **A18.4** | **L1 E2/E4/E5 几何锁定（占用是构造结果）** | FPGA 时延；放置进 RTL |
+| **A18.5** | **本地 T=8/B=4 映射器（Python PASS，XSim NOT RUN）** | 上板；完整 T=8 DLRM |
+| **A18.6** | **映射器进 T=8 查找数据通路（未接入已烧 A18 顶层）** | 八路 embedding 进冻结 A13 |
+| **A18.7** | **本地一行 cache（未接入已烧 A18 顶层）** | 命中率；带宽 |
+| **A18.3 extra-run** | **runner 已写，板上 NOT_RUN** | T>4；加速比 |
 
-卡上最后一次编程是 A18 UUID `32a9c911-af15-47fc-90c8-0bfe3894a3ef`（设备 index 2，BDF `0000:9b:00.1`，`renderD129`）。A18.3 未再 program。不要 extra-run，不要复位。
+卡上最后一次编程是 A18 UUID `32a9c911-af15-47fc-90c8-0bfe3894a3ef`（设备 index 2，BDF `0000:9b:00.1`，`renderD129`）。A18.3 未再 program。不要复位，不要再烧卡。extra-run 必须用 `scripts/run_stage2n_a18_3_extra_run_v1.sh`，该脚本不含 `xbutil program`。
 
 ---
 
@@ -114,6 +118,10 @@ A18 板上验收：`docs/STAGE2N_A18_2_BOARD_FUNCTION_ACCEPTANCE_V1.md`（默认
 | D-082 | `20260917_202130` 原件归档验收 PASS |
 | D-083 | GitHub 快照：A18.3 五组元组板上功能 `bcd3f86` |
 | D-084 | A18.4 L1 E2/E4/E5 几何锁定 |
+| D-085 | A18.5 T=8 映射器 |
+| D-086 | A18.6 T=8 映射查找 |
+| D-087 | A18.3 extra-run runner（不烧卡、不复位） |
+| D-088 | A18.7 一行 cache |
 
 更早的 A16/A17 N=11、LUTLP、四 BO 功能见 `docs/DECISIONS.md` D-070 起。
 
@@ -123,11 +131,15 @@ A18 板上验收：`docs/STAGE2N_A18_2_BOARD_FUNCTION_ACCEPTANCE_V1.md`（默认
 
 已关闭：A18.2 默认行号；A18.3 五组锁定元组（D-082/`bcd3f86`）；A18.4 L1 几何锁定（占用是构造结果，不是 FPGA）。
 
+已授权、本地源码已落地：A18.5 映射器、A18.6 T=8 查找、A18.7 一行 cache、A18.3 extra-run runner。
+
 未授权、需要用户一句话：
 
-- 再 program / 复位 / extra-run / 跑 A17 Host / 换卡；
-- T>4、放置算法、cache、A17 再烧回；
+- 再 program / 复位 / 跑 A17 Host / 换卡；
+- 把 A18.5–A18.7 打进新 xclbin 并烧卡；
 - 写加速比或 Class C 可比性能。
+
+extra-run 已有 runner，板上仍是 `NOT_RUN`。用户若跑，必须 UUID 已是 `32a9c911-…`，且不用 `xbutil program`。
 
 板上已对齐的五组元组（`20260917_202130`）：
 

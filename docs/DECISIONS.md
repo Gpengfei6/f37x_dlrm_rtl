@@ -1690,4 +1690,30 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
 - E4 is same-row-index on ident stripe, not a co-occurrence mapper.
 - `PHYSICAL_HBM=NOT_MODELED`. `PERFORMANCE=NOT_CLAIMED`.
 
+## D-085 - A18.5 local T=8 / B=4 bank mapper
+
+- Date: 2026-09-17. Combinational ident / coacc-split / force-01 mapper.
+  Occupancy `[2,2,2,2]`, `[1,2,3,2]`, `[3,1,2,2]`.
+- Not instantiated in the boarded A18 kernel. XSim NOT RUN.
+- `PERFORMANCE=NOT_CLAIMED`.
+
+## D-086 - A18.6 local T=8 mapped lookup
+
+- Date: 2026-09-17. Mapper is inside a four-engine T=8 lookup controller.
+  Frozen A13 slot count remains 4. Boarded A18 kernel unchanged.
+- `PERFORMANCE=NOT_CLAIMED`.
+
+## D-087 - A18.3 extra-run runner, no program, no reset
+
+- Date: 2026-09-17. User-executed extra-run of the locked five tuples on
+  UUID `32a9c911-…` only. Runner contains no `xbutil program` / reset.
+- Board extra-run remains `NOT_RUN` until originals are reviewed.
+- Extra-run is not T>4 and not a speedup.
+
+## D-088 - A18.7 local one-line bank cache
+
+- Date: 2026-09-17. One stored index/vector; hit skips AXI AR.
+- Not instantiated in the boarded A18 kernel. XSim NOT RUN.
+- `PERFORMANCE=NOT_CLAIMED`.
+
 

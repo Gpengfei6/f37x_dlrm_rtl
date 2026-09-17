@@ -1,6 +1,6 @@
 # Current State
 
-> Current update — 2026-09-17: A18.3 five-tuple board PASS archived (`bcd3f86`). A18.4 L1 geometry lock is local-only.
+> Current update — 2026-09-17: A18.5 mapper, A18.6 T=8 lookup, A18.7 line cache are local source PASS. Extra-run runner ready, board extra-run NOT_RUN. No program. No reset.
 
 Snapshot date: 2026-09-08
 
@@ -45,7 +45,7 @@ Snapshot date: 2026-09-08
   `e4ce2ab59b594910003c20fc00174b3a465e9bca`
 - A17.4 local mapping-preparation parent HEAD:
   `c0a4fa130f91f88b1ab16409925524846442207a`
-- Current engineering stage: **Stage 2N-A18.4 L1 geometry lock (local); A18.3 five-tuple board PASS `20260917_202130` on GitHub `bcd3f86`; PERFORMANCE=NOT_CLAIMED**
+- Current engineering stage: **Stage 2N-A18.6/A18.7 local T=8 lookup + line cache (Python PASS, XSim NOT RUN); A18.3 extra-run runner ready / board NOT_RUN; A18.3 board PASS `bcd3f86`; PERFORMANCE=NOT_CLAIMED**
 - Accepted and frozen physical-HBM functional baseline: **Stage 2N-A15.6**
 - Accepted and frozen dense/compute arithmetic baseline: **Stage 2N-A13**
 
@@ -117,7 +117,10 @@ A18.3 Host g++ is user-returned PASS (ELF `011a0b8f…`). Protected
 five-tuple execute `20260917_202130` is original-evidence PASS:
 `-393/-61/-60/-162/-185`, program skipped, compute `322/100/744/1174`.
 See `docs/evidence/stage2n_a18_3/function_pass_v1/ACCEPTANCE.txt`.
-Do not write a speedup versus A16/A17. Do not extra-run. Do not reset.
+Do not write a speedup versus A16/A17. Do not program. Do not reset.
+A18.3 extra-run runner is ready and remains `NOT_RUN`. A18.5–A18.7 are
+local T>4 mapper, T=8 mapped lookup, and one-line cache; none are
+wired into the boarded A18 kernel.
 
 The primary Windows worktree may contain pre-existing untracked recovery,
 historical evidence, patent, source, and helper files. Preserve them. Never use
@@ -699,7 +702,12 @@ returned A15.6 physical-board evidence.
     A18.3 five-tuple board function `20260917_202130` is original-evidence
     PASS and is on GitHub as `bcd3f86`. A18.4 records L1 E2/E4/E5 geometry
     only (`docs/STAGE2N_A18_4_L1_GEOMETRY_LOCK_V1.md`). Occupancy is by
-    construction. Do not extra-run. Do not write a speedup.
+    construction. A18.5–A18.7 add local mapper / T=8 lookup / one-line
+    cache (`docs/STAGE2N_A18_5_T8_BANK_MAPPER_V1.md`,
+    `docs/STAGE2N_A18_6_T8_MAPPED_LOOKUP_V1.md`,
+    `docs/STAGE2N_A18_7_LINE_CACHE_V1.md`). Extra-run runner is
+    `docs/STAGE2N_A18_3_EXTRA_RUN_V1.md` and remains NOT_RUN. Do not
+    program. Do not reset. Do not write a speedup.
 
 ## Non-Goals of the Current Stage
 
@@ -710,10 +718,11 @@ returned A15.6 physical-board evidence.
 - treating recorded 33/1210, 55, or the N=11 tails as an A16/A17 speedup;
 - model-scale changes;
 - burst or multiple-outstanding optimization;
-- coalescing, caching, prefetching, or scheduling RTL;
+- coalescing or prefetching inside the boarded A18 kernel;
+- wiring A18.5–A18.7 into a new xclbin without a later program grant;
 - performance or speedup claims;
 - autonomous server, xclbin, or board operations by an AI agent;
-- A18 XO/xclbin rebuild, extra-run, or treating lookup 33 / e2e 1210 as a speedup;
+- A18 XO/xclbin rebuild, FPGA reset, or treating lookup 33 / e2e 1210 as a speedup;
 - treating a 2022.1 local XSim as a 2020.2 or official A17.2-runner PASS.
 
 ## Status Rule

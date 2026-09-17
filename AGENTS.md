@@ -822,3 +822,137 @@ Evidence boundary:
 `A18_4_L1_GEOMETRY_LOCK=PASS` is local geometry only. It cannot prove
 physical HBM, mapping-into-RTL, or any performance result.
 
+## Stage 2N-A18.5 Local T=8 Bank Mapper Authorization
+
+Purpose:
+First local slice of user-authorized T>4 RTL and kernel-side
+placement/co-access mapping, without programming or resetting the
+FPGA, and without editing the boarded A18 kernel.
+
+Authorized:
+
+1. Combinational mapper
+   `rtl/hbm/dlrm_table_bank_mapper_stage2n_a18_5_v1.sv`
+2. Independent TB
+   `tb/tb_dlrm_table_bank_mapper_stage2n_a18_5_v1.sv`
+3. Python checker `scripts/check/check_stage2n_a18_5_mapper_v1.py`
+4. Stage document `docs/STAGE2N_A18_5_T8_BANK_MAPPER_V1.md`
+
+Required behavior:
+
+- T=8, B=4. ident occupancy `[2,2,2,2]`.
+- Coacc-split moves pair seconds off the partner bank.
+- Force tables 0 and 1 onto bank 0, occupancy `[3,1,2,2]`.
+- Do not instantiate the mapper in
+  `dlrm_f37x_rtl_kernel_stage2n_a18_v1`.
+
+Restrictions:
+
+- No `xbutil program`, no FPGA reset, no extra-run, no cache RTL.
+- Do not modify accepted A13, A14 v2, A16, A17 originals, or the A18
+  Host/xclbin identities.
+- Do not add an eighth AXI master or change A13 slot count.
+- `PERFORMANCE=NOT_CLAIMED`.
+
+Evidence boundary:
+
+`A18_5_MAPPER_CHECK=PASS` is source/Python only. Local XSim remains
+NOT RUN until a simulator log is returned. It cannot prove physical
+HBM, complete T=8 DLRM, cache, extra-run, or speedup.
+
+## Stage 2N-A18.6 Local T=8 Mapped Lookup Authorization
+
+Purpose:
+Put the A18.5 placement/co-access mapper into a versioned T=8 lookup
+datapath that reuses four accepted A14 v2 engines, without editing the
+boarded A18 public kernel and without programming or resetting the FPGA.
+
+Authorized:
+
+1. `rtl/hbm/dlrm_hbm_t8_mapped_lookup_stage2n_a18_6_v1.sv`
+2. `tb/tb_dlrm_hbm_t8_mapped_lookup_stage2n_a18_6_v1.sv`
+3. `scripts/check/check_stage2n_a18_6_t8_lookup_v1.py`
+4. `docs/STAGE2N_A18_6_T8_MAPPED_LOOKUP_V1.md`
+
+Required behavior:
+
+- Instantiate the A18.5 mapper. Eight indexes, four engines.
+- Ident / coacc-split / force-01 occupancy drives per-bank issue order.
+- OOB index issues no ARVALID.
+- Do not instantiate A13. Do not change A13 slot count.
+- Do not instantiate this controller in
+  `dlrm_f37x_rtl_kernel_stage2n_a18_v1`.
+
+Restrictions:
+
+- No `xbutil program`, no FPGA reset, no XO/xclbin rebuild.
+- Do not modify accepted A13, A14 v2, A16, A17 originals, or the A18
+  Host/xclbin identities.
+- `PERFORMANCE=NOT_CLAIMED`.
+
+Evidence boundary:
+
+`A18_6_T8_LOOKUP_CHECK=PASS` is source/Python only. XSim NOT RUN. It
+cannot prove complete T=8 DLRM, physical HBM, or speedup.
+
+## Stage 2N-A18.3 Extra-Run Authorization (No Program, No Reset)
+
+Purpose:
+Allow one user-executed extra-run of the locked A18.3 five-tuple Host
+on the already-loaded A18 xclbin.
+
+Authorized:
+
+1. `scripts/run_stage2n_a18_3_extra_run_v1.sh`
+2. `scripts/check/check_stage2n_a18_3_extra_run_v1.py`
+3. User Windows copy `handoff/copy_a18_3_extra_run_v1.ps1`
+
+Restrictions:
+
+- Codex does not SSH, SCP, or execute on the server.
+- The extra-run runner must never call `xbutil program` or `xbutil reset`.
+- If CURRENT_UUID is not `32a9c911-af15-47fc-90c8-0bfe3894a3ef`, fail.
+- Do not modify the A18.2 Host/xclbin identities or the A18.3 Host.
+- Extra-run is not T>4 and not a speedup.
+- `PERFORMANCE=NOT_CLAIMED`.
+
+Evidence boundary:
+
+Local `A18_3_EXTRA_RUN=NOT_RUN` until user-returned originals are
+copied and reviewed. Host PASS of the same five tuples cannot prove
+T>4, mapping, cache, or speedup.
+
+## Stage 2N-A18.7 Local One-Line Cache Authorization
+
+Purpose:
+First local embedding-line cache in front of one accepted A14 v2
+engine, without programming, resetting, or editing the boarded A18
+kernel.
+
+Authorized:
+
+1. `rtl/hbm/dlrm_hbm_bank_line_cache_stage2n_a18_7_v1.sv`
+2. `tb/tb_dlrm_hbm_bank_line_cache_stage2n_a18_7_v1.sv`
+3. `scripts/check/check_stage2n_a18_7_line_cache_v1.py`
+4. `docs/STAGE2N_A18_7_LINE_CACHE_V1.md`
+
+Required behavior:
+
+- One stored index/vector per instance. Hit skips AXI AR.
+- Miss forwards to the engine and fills the line on success.
+- Do not instantiate the cache in
+  `dlrm_f37x_rtl_kernel_stage2n_a18_v1`.
+
+Restrictions:
+
+- No `xbutil program`, no FPGA reset, no XO/xclbin rebuild.
+- Do not modify accepted A13, A14 v2, A16, A17 originals, or the A18
+  Host/xclbin identities.
+- `PERFORMANCE=NOT_CLAIMED`.
+
+Evidence boundary:
+
+`A18_7_LINE_CACHE_CHECK=PASS` is source/Python only. XSim NOT RUN. It
+cannot prove physical hit rate, bandwidth, or speedup.
+
+

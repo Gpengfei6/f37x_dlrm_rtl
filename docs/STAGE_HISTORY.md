@@ -59,6 +59,10 @@ hybrid CPU-embedding/FPGA-dense inference path.
 | Stage 2N-A18.2 | A18 XO/link, Host, first board function | `dlrm_a18_1` / `HBM[0..3]`; MMIO indexes default 37–40; locked goldens `-393…` | `docs/STAGE2N_A18_2_BOARD_FUNCTION_ACCEPTANCE_V1.md`; `docs/evidence/stage2n_a18_2/function_pass_v1/20260917_171608/` | **BOARD FUNCTION PASS (defaults)** plus original archive: UUID `32a9c911-…`, lookup 33 / e2e 1210. PERFORMANCE=NOT_CLAIMED |
 | Stage 2N-A18.3 | Five locked MMIO index tuples on A18 xclbin | Baseline table on all BOs; goldens `-393/-61/-60/-162/-185` | `docs/STAGE2N_A18_3_BOARD_FUNCTION_ACCEPTANCE_V1.md`; `docs/evidence/stage2n_a18_3/function_pass_v1/20260917_202130/` | **BOARD FUNCTION PASS**: program skipped; compute 322/100/744/1174; lookup 33 / e2e 1210 recorded not speedup; GitHub `bcd3f86`; PERFORMANCE=NOT_CLAIMED |
 | Stage 2N-A18.4 | L1 E2/E4/E5 geometry lock | Occupancy by construction; no co-occurrence mapper | `docs/STAGE2N_A18_4_L1_GEOMETRY_LOCK_V1.md`; `analysis/stage2n_a18_l1/e2_e4_e5_lock_v1.json` | **LOCAL GEOMETRY LOCK**: T=8 `[2,2,2,2]`; T=16 `[4,4,4,4]`; forced `[3,1,2,2]`; not FPGA; PERFORMANCE=NOT_CLAIMED |
+| Stage 2N-A18.5 | T=8/B=4 combinational bank mapper | ident / coacc-split / force-01 occupancy | `docs/STAGE2N_A18_5_T8_BANK_MAPPER_V1.md` | **LOCAL SOURCE PASS**: Python check; XSim NOT RUN; boarded A18 unwired; PERFORMANCE=NOT_CLAIMED |
+| Stage 2N-A18.6 | T=8 mapped lookup | Mapper instantiated; 8 indexes through 4 A14 v2 engines | `docs/STAGE2N_A18_6_T8_MAPPED_LOOKUP_V1.md` | **LOCAL SOURCE PASS**: not complete T=8 DLRM; not boarded kernel; XSim NOT RUN; PERFORMANCE=NOT_CLAIMED |
+| Stage 2N-A18.3 extra-run | Same five tuples, no program | Runner ready | `docs/STAGE2N_A18_3_EXTRA_RUN_V1.md` | **RUNNER READY / BOARD NOT_RUN**: never `xbutil program` or reset |
+| Stage 2N-A18.7 | One-line per-bank cache | Hit skips AXI AR | `docs/STAGE2N_A18_7_LINE_CACHE_V1.md` | **LOCAL SOURCE PASS**: not in boarded kernel; XSim NOT RUN; PERFORMANCE=NOT_CLAIMED |
 
 ## Current Milestone Interpretation
 
