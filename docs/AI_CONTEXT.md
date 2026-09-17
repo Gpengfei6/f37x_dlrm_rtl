@@ -1,8 +1,7 @@
 # FPGA DLRM Project AI Context
 
-> Current update — 2026-09-17: A18.2 default-index board PASS archived.
-> New-window entry `docs/NEW_WINDOW_HANDOFF_V1.md`. A18.3 Host not created.
-> PERFORMANCE=NOT_CLAIMED. No speedup. A17 restore is not authorized.
+> Current update — 2026-09-17: A18.3 five-tuple board function PASS (`20260917_202130`).
+> PERFORMANCE=NOT_CLAIMED. No speedup.
 
 This file is the repository entry point for AI assistants. It summarizes the
 current engineering state; it does not replace `AGENTS.md`, the fixed-point
@@ -86,7 +85,8 @@ Read the repository in this order before proposing or making changes:
 7.    the current-stage documents:
    `docs/NEW_WINDOW_HANDOFF_V1.md` (new-chat entry),
    `docs/STAGE2N_A18_2_BOARD_FUNCTION_ACCEPTANCE_V1.md` (default-index board),
-   `docs/STAGE2N_A18_3_NONDEFAULT_INDEX_HOST_PREP_V1.md` (next local Host),
+   `docs/STAGE2N_A18_3_NONDEFAULT_INDEX_HOST_PREP_V1.md` (A18.3 Host),
+   `docs/STAGE2N_A18_3_BOARD_FUNCTION_ACCEPTANCE_V1.md` (five-tuple board),
    `docs/STAGE2N_A18_2_TARGET_PACKAGING_HOST_PREP_V1.md` (hashed A18.2 prep),
    `docs/STAGE2N_A18_VARIABLE_INDEX_RTL_V1.md` (local A18.1 XSim), and
    `docs/STAGE2N_A17_PAPER_CHAPTER_MULTIBANK_LOOKUP_V3.md`
@@ -115,13 +115,12 @@ state in which target timing and board work were blocked. The later
 
 ## 3. Current Stage
 
-Current stage: **Stage 2N-A18.2 first board function PASS on default indexes
-37–40; originals archived; A18.3 local prep without C++ Host; A18.1 local
-2022.1 XSim PASS; A16.2 / A17.6 N=11 both accepted; PERFORMANCE=NOT_CLAIMED;
-speedup not computed**. Start at `docs/NEW_WINDOW_HANDOFF_V1.md`. Card last
-programmed to A18 UUID `32a9c911-af15-47fc-90c8-0bfe3894a3ef`. A17 restore
-is not authorized. XSim result 36 is not a five-case board golden.
-Non-default MMIO indexes remain unboarded.
+Current stage: **Stage 2N-A18.3 five-tuple board function PASS `20260917_202130`;
+A18.2 default-index board PASS archived; GitHub `40a36e7`;
+PERFORMANCE=NOT_CLAIMED**. Start at `docs/NEW_WINDOW_HANDOFF_V1.md` and
+`docs/STAGE2N_A18_3_BOARD_FUNCTION_ACCEPTANCE_V1.md`. Card holds A18 UUID
+`32a9c911-af15-47fc-90c8-0bfe3894a3ef`. Five locked MMIO index tuples
+are boarded. Do not extra-run. Do not write a speedup.
 
 Stage 2N-A13 remains the accepted and frozen dense/compute arithmetic baseline;
 A15.6 is the accepted integrated physical-HBM functional baseline. A14.5 added
@@ -168,10 +167,9 @@ user-returned and locally reviewed PASS (UUID
 `32a9c911-af15-47fc-90c8-0bfe3894a3ef`, `HBM[0..3]`, 100 MHz WNS 0.000).
 Indexes stay MMIO `0x330-0x33C`. Host g++ is `A18_2_HOST_XRT_BUILD=PASS`.
 First board execute `20260917_171608` is Host-returned PASS for default
-rows 37–40 and locked goldens `-393/-392/-93/-689/-519`. Copied originals
-are accepted under `docs/evidence/stage2n_a18_2/function_pass_v1/`. Lookup
-33 / e2e 1210 is recorded, not a speedup. Non-default indexes remain
-unboarded.
+rows 37–40. A18.3 five-tuple execute `20260917_202130` is original-evidence
+PASS (`-393/-61/-60/-162/-185`). Lookup 33 / e2e 1210 is recorded, not a
+speedup.
 
 A15.1 adds one new versioned wrapper. It instantiates the accepted A14 v2 lookup
 and accepted A13 cycle-counter controller without editing either file. Its

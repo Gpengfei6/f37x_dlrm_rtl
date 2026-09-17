@@ -1,9 +1,6 @@
 # Current State
 
-> Current update — 2026-09-17: A18.2 default-index board PASS; originals archived.
-> New-window handoff written. A18.3 is local prep only (no C++ Host yet).
-> PERFORMANCE=NOT_CLAIMED. Not a speedup. Non-default indexes not boarded.
-> A16-N11 and A17-N11 remain accepted. A17 restore is not authorized.
+> Current update — 2026-09-17: A18.3 five-tuple board function PASS (`20260917_202130`). PERFORMANCE=NOT_CLAIMED.
 
 Snapshot date: 2026-09-08
 
@@ -48,7 +45,7 @@ Snapshot date: 2026-09-08
   `e4ce2ab59b594910003c20fc00174b3a465e9bca`
 - A17.4 local mapping-preparation parent HEAD:
   `c0a4fa130f91f88b1ab16409925524846442207a`
-- Current engineering stage: **Stage 2N-A18.2 first board function PASS on default indexes 37–40 with originals archived; A18.3 local prep (Host C++ not created); A18.1 local 2022.1 XSim PASS; A17.6 / A16.2 process-restart N=11 both accepted; PERFORMANCE=NOT_CLAIMED; speedup not computed**
+- Current engineering stage: **Stage 2N-A18.3 five-tuple board function PASS `20260917_202130`; A18.2 default-index board PASS archived; GitHub `40a36e7` confirmed; PERFORMANCE=NOT_CLAIMED**
 - Accepted and frozen physical-HBM functional baseline: **Stage 2N-A15.6**
 - Accepted and frozen dense/compute arithmetic baseline: **Stage 2N-A13**
 
@@ -112,10 +109,15 @@ kernel clock 10 ns). Indexes remain MMIO `0x330-0x33C`. Host g++ is user-returne
 and returned five-case plus repeat-baseline PASS with locked goldens
 `-393/-392/-93/-689/-519`, indexes 37–40, compute `322/100/744/1174`,
 lookup 33 / e2e 1210 / overhead 3. Pre-program UUID was
-`3a4ebb31-933a-45c2-9ce4-04adce88615c`. Non-default indexes were not
-run. Do not write a speedup versus A17. Copied originals
+`3a4ebb31-933a-45c2-9ce4-04adce88615c`. Copied originals
 `20260917_171608` are archived locally and accepted. See
 `docs/evidence/stage2n_a18_2/function_pass_v1/ACCEPTANCE.txt`.
+
+A18.3 Host g++ is user-returned PASS (ELF `011a0b8f…`). Protected
+five-tuple execute `20260917_202130` is original-evidence PASS:
+`-393/-61/-60/-162/-185`, program skipped, compute `322/100/744/1174`.
+See `docs/evidence/stage2n_a18_3/function_pass_v1/ACCEPTANCE.txt`.
+Do not write a speedup versus A16/A17. Do not extra-run. Do not reset.
 
 The primary Windows worktree may contain pre-existing untracked recovery,
 historical evidence, patent, source, and helper files. Preserve them. Never use
@@ -694,10 +696,11 @@ returned A15.6 physical-board evidence.
     (`docs/STAGE2N_A18_VARIABLE_INDEX_RTL_V1.md`). A18.2 target XO/link
     evidence is reviewed PASS
     (`docs/evidence/stage2n_a18_2/link_001_acceptance_summary.txt`).
-    Next optional step is a separately authorized non-default index
-    board run. Do not extra-run to chase 33. Do not write a speedup.
-    Do not run the A17 Host. Card now holds A18 UUID
-    `32a9c911-af15-47fc-90c8-0bfe3894a3ef`.
+    A18.3 five-tuple board function `20260917_202130` is original-evidence
+    PASS (`docs/STAGE2N_A18_3_BOARD_FUNCTION_ACCEPTANCE_V1.md`).
+    Do not extra-run to chase 33. Do not write a speedup.
+    Do not run the A17 Host or rebuild XO/xclbin.
+    Card holds A18 UUID `32a9c911-af15-47fc-90c8-0bfe3894a3ef`.
 
 ## Non-Goals of the Current Stage
 
@@ -711,7 +714,7 @@ returned A15.6 physical-board evidence.
 - coalescing, caching, prefetching, or scheduling RTL;
 - performance or speedup claims;
 - autonomous server, xclbin, or board operations by an AI agent;
-- A18 XO/xclbin generation, Vitis link, or board execution;
+- A18 XO/xclbin rebuild, extra-run, or treating lookup 33 / e2e 1210 as a speedup;
 - treating a 2022.1 local XSim as a 2020.2 or official A17.2-runner PASS.
 
 ## Status Rule

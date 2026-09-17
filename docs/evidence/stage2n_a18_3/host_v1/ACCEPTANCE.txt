@@ -1,0 +1,36 @@
+A18.3 Host XRT compile — original compile records accepted (2026-09-17)
+
+SOURCE=copied originals; server directory left unchanged
+LOCAL=docs/evidence/stage2n_a18_3/host_v1/20260917_compile
+A18_3_ORIGINAL_COMPILE_ARCHIVE=PASS
+A18_3_HOST_XRT_BUILD=PASS
+A18_3_XRT2020_2_API_PROBE=PASS
+EXPECTED_XRT_VERSION=2.9.210507
+CXX_DUMPVERSION=4.8.5
+GXX=/usr/bin/g++
+SOURCE_SHA256=f516896068f6664060cd392b954795f7fb877bdec66935f3163b8e38694dbaa9
+BINARY_SHA256=011a0b8f1630b9cadbba49150f3f28ebfd042cc5c77af840bcc00d27a403187f
+BINARY_BYTES=79632
+COMPILER_EXIT_CODE=0
+HOST_EXECUTION=NOT_RUN
+FPGA_PROGRAMMING=NOT_RUN
+XBUTIL=NOT_INVOKED
+XCLBIN_LOAD=NOT_RUN
+FPGA_DEVICE_ACCESS=NONE
+BOARD=NOT_RUN
+PERFORMANCE=NOT_CLAIMED
+
+Local Windows Host source SHA256 matches SOURCE_SHA256.
+host_build.log is the SHA-256 of empty content (g++ printed nothing).
+See EMPTY_COMPILER_LOG.txt. That is not a missing compile.
+
+SHA256 of copied originals:
+  7b5d88793600101af939fbe316b76ca2fcf4bf5f3bb48596180b110ff02f1dc2  host_build_status.txt
+  e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  host_build.log
+  0fe35040a7b97a5c5910006d6bf7f31010f554f0bb06d8535e04845a7c2b9675  compiler_version.log
+  5423a9547190cc75b736dd999e8b42be84f7615738ecad29d35792a422f0a398  xrt_version.log
+  2b89a12e874d78e20a53176ed7f7ad19568df3af957bc0ab039f1f551efeb06d  EMPTY_COMPILER_LOG.txt
+
+Do not extra-run. Do not program. Do not reset.
+Board function of the five locked tuples is separately accepted:
+`docs/evidence/stage2n_a18_3/function_pass_v1/ACCEPTANCE.txt`.

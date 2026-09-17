@@ -1,10 +1,12 @@
 # Stage 2N-A18.3 — local non-default index Host preparation
 
-Date: 2026-09-17. Status: **local preparation**. No new xclbin, no board
-execute, no edit of the accepted A18.2 Host.
+Date: 2026-09-17. Status: **Host g++ PASS**. Board function of those
+tuples is separately accepted in
+`docs/STAGE2N_A18_3_BOARD_FUNCTION_ACCEPTANCE_V1.md`.
 
-`A18_3_TARGET_XO=NOT_RUN` (reuse A18.2 xclbin if a later board run is
-authorized). `A18_3_BOARD=NOT_RUN`. `PERFORMANCE=NOT_CLAIMED`.
+`A18_3_HOST_XRT_BUILD=PASS` (user-returned).
+`A18_3_BOARD_FUNCTION=PASS_FIVE_LOCKED_TUPLES`.
+`PERFORMANCE=NOT_CLAIMED`.
 
 ## Why A18.2 cannot be “unlocked”
 
@@ -49,15 +51,36 @@ OOB 64 must not be sent as a passing tuple. The RTL issues no AR for
 ## This increment’s files
 
 - This document.
-- `scripts/check/check_stage2n_a18_3_local_prep_v1.py` — static gates:
-  extras JSON present, A18.2 Host lock intact, A18 kernel still has
-  `0x330-0x33C`, no A18.2 Host edit.
-- AGENTS.md A18.3 authorization.
+- `host/stage2n_a18_3_index_tuple_host_v1.cpp`
+- `scripts/build_stage2n_a18_3_host_v1.sh` (g++ only; never runs Host)
+- `scripts/check/check_stage2n_a18_3_local_prep_v1.py`
+- `scripts/test_stage2n_a18_3_host_v1.py`
 
-The C++ Host itself is **not** in this increment. Implementing it is the
-next local coding step after this GitHub snapshot. Board execute of those
-tuples needs a later user sentence plus a versioned runner; it is not
-implied by A18.2 PASS.
+The Host reuses the A18.2 xclbin map header `A18_2_MEM_MAP_V1` and CU
+`dlrm_a18_1`. Usage:
+
+```text
+stage2n_a18_3_index_tuple_host_v1 \
+  <device-index> <bdf> <uuid> <model.bin> <mem-map.txt> <baseline.bin>
+```
+
+Board execute of those tuples was later reviewed as
+`A18_3_BOARD_FUNCTION=PASS_FIVE_LOCKED_TUPLES` in
+`docs/STAGE2N_A18_3_BOARD_FUNCTION_ACCEPTANCE_V1.md`. That is not implied
+by A18.2 PASS or by Host compile PASS alone.
+
+The A18.2 Linux extract does not contain these files until the overlay is
+copied. From Windows PowerShell (not SSH):
+
+```powershell
+powershell -NoProfile -File handoff\copy_a18_3_host_overlay_v1.ps1
+```
+
+Then on Linux, compile only:
+
+```bash
+bash scripts/build_stage2n_a18_3_host_v1.sh
+```
 
 ## Restrictions
 

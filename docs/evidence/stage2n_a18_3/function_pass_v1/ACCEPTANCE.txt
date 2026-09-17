@@ -1,0 +1,82 @@
+A18.3 protected five-tuple board function — original-evidence archive accepted (2026-09-17)
+
+SOURCE=copied originals; server directory left unchanged
+LOCAL=docs/evidence/stage2n_a18_3/function_pass_v1/20260917_202130
+RUN=results/stage2n_a18_3/protected_v1/20260917_202130
+A18_3_ORIGINAL_EVIDENCE_ARCHIVE=PASS
+A18_3_FUNCTION=PASS
+A18_3_BOARD_FUNCTION=PASS_FIVE_LOCKED_TUPLES
+
+TARGET_INDEX=2
+TARGET_BDF=0000:9b:00.1
+TARGET_RENDER=/dev/dri/renderD129
+A18_3_FPGA_PROGRAMMING=SKIPPED_ALREADY_LOADED
+CURRENT_UUID_BEFORE_HOST=32a9c911-af15-47fc-90c8-0bfe3894a3ef
+XCLBIN_UUID=32a9c911-af15-47fc-90c8-0bfe3894a3ef
+XCLBIN_SHA256=bbb0fa1fcb5c39aea2a307eb8c8324eb406c51711b8ba2ae7830bc5fe3a36ec0
+KERNEL=dlrm_f37x_rtl_kernel_stage2n_a18_v1
+CU=dlrm_a18_1
+PIPE_VERSION=0x00024e18
+PER_BO_LAYOUT=baseline_table_on_all_four_banks
+A18_2_FIVE_CASE_HOST=NOT_USED
+MEMORY_INDICES_BY_ARGUMENT=0,1,2,3
+BO_TAGS=HBM[0],HBM[1],HBM[2],HBM[3]
+XCLBIN_SIGNATURE=TABLE_BASE0,TABLE_BASE1,TABLE_BASE2,TABLE_BASE3
+LOOKUP_INDEX_KERNEL_ARG=ABSENT
+
+HOST_SOURCE_SHA256=f516896068f6664060cd392b954795f7fb877bdec66935f3163b8e38694dbaa9
+HOST_EXECUTE_SHA256=011a0b8f1630b9cadbba49150f3f28ebfd042cc5c77af840bcc00d27a403187f
+HOST_IDENTITY_CHECKED_BEFORE_PROGRAM=YES
+HOST_RUNTIME_PROCESS_HASH=NOT_CLAIMED
+
+TUPLE0=37,38,39,40 -> -393
+TUPLE1=1,2,3,4 -> -61
+TUPLE2=0,0,0,0 -> -60
+TUPLE3=0,63,37,40 -> -162
+TUPLE4=63,62,61,60 -> -185
+COMPUTE=322/100/744/1174
+LOOKUP=33
+E2E=1210
+OVERHEAD=3
+MASK=0xF
+HOST_EXIT_CODE=0
+STAGE2N_A18_3_INDEX_TUPLE_HOST_V1=PASS
+A18_3_ALL_FIVE_TUPLES=PASS
+A18_3_BO_CLEANUP=PASS
+XSIM_RESULT_36_NOT_USED=1
+PRE_POST_HBM0_3=0_BYTE
+FIREWALL=GOOD
+CU_POST=IDLE
+
+Copied originals match the user-pasted execute log for UUID, indexes,
+goldens, compute/lookup/e2e, skip-program, and Host PASS tokens.
+connectivity.json / mem_topology.json / ip_layout.json / mem-map /
+xclbin.info SHA256 match the A18.2 `20260917_171608` dumps of the same
+xclbin. Indexes are MMIO, not kernel arguments.
+
+This run proves five locked MMIO index tuples on the accepted A18
+xclbin with the baseline table on all four BOs. It does not prove
+OOB index 64, T>4, cache, extra-run, process hash, or speedup.
+Host log still prints SOFTWARE_GOLDENS_NOT_BOARD_PASS=1 as a Host
+token; board function is accepted from this archive, not from that
+token.
+Do not treat lookup 33 / e2e 1210 as a speedup versus A16.2/A17.6.
+FPGA_RESET=NOT_RUN
+OTHER_DEVICE_ACCESS=NONE
+A18_3_PERFORMANCE=NOT_CLAIMED
+COMPARABLE_PERFORMANCE=NOT_RUN
+
+SHA256 of copied originals:
+  25c1e6a57a20f9f3dce9ca9d7f827e5d4be513607c351f5e622fdef9bb0d6134  host.log
+  a54f2068a2bbdf9f1305a52e80cc8906fd1a34d25c2e1e088f6cfbf3fc37fb7c  runner.log
+  ef2a77c49e47126dd242ca1f35c3b05282c81765643353eb8c4e466b1f2a8db3  pre_device_query.txt
+  92236f64577dc34ffe0474f4036875b33fbe472e3ead63b74f733c12ccc2697a  post_host_query.txt
+  afdc01f780b357771bb38bf8eaccc2c00ed991757ca3fe06aaf4c953709f500b  a18_2_mem_map.txt
+  f0227c24ac2b8a02567e9e21ffc157e2731617a3267d49b85f6d989e11639275  connectivity.json
+  eae7a971453ce63ad3fa3bf7d7324d87e0ecf867cf9030bc0c81d68ed9278128  mem_topology.json
+  291d79bb2db657fd3a4aee0af2b19e2d9adda0f5a1820085a653c3ca2ad1a90c  ip_layout.json
+  f1e5e4b66fb28b81806bffd94adf68a14da91ebd01c216e40893f81805153ff0  dlrm_f37x_rtl_kernel_stage2n_a18_v1.xclbin.info
+
+Server original remains:
+  /home/chaosuan/gpf/gpf_f37x_dlrm/f37x_dlrm_rtl_stage2n_a18_2_buildonly/results/stage2n_a18_3/protected_v1/20260917_202130
+Do not extra-run. Do not program. Do not reset.

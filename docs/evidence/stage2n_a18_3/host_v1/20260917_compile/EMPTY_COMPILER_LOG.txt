@@ -1,0 +1,4 @@
+A18_3_HOST_BUILD_LOG=EMPTY
+NOTE=g++ -Wall -Wextra -Wpedantic produced no diagnostics; tee wrote a zero-byte log.
+COMPILER_EXIT_CODE=0 from host_build_status.txt
+NOT_A_MISSING_FILE=1

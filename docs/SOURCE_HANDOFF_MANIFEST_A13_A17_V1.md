@@ -138,7 +138,8 @@ A17 计算侧同样复用 B 节 A13 模块。
 ## G. A18 可变索引链路（2026-09-17 后补）
 
 四个 master 仍映射 `HBM[0..3]`。行号改为 MMIO `0x330-0x33C`，复位默认仍是 37–40。
-板上第一跑只验收了默认行号。非默认元组见 `docs/STAGE2N_A18_3_NONDEFAULT_INDEX_HOST_PREP_V1.md`。
+板上第一跑只验收了默认行号。五组锁定元组板上功能已验收：
+`docs/STAGE2N_A18_3_BOARD_FUNCTION_ACCEPTANCE_V1.md`（`20260917_202130`）。
 新对话入口：`docs/NEW_WINDOW_HANDOFF_V1.md`。
 
 | 文件 | 用途 | 板上 | 仅本地 | 受保护 |

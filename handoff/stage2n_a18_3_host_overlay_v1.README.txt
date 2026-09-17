@@ -1,0 +1,24 @@
+A18.3 Host overlay (new files only; do not replace A18.2 Host)
+
+ZIP=handoff/stage2n_a18_3_host_overlay_v1.zip
+ZIP_SHA256=7b80a91d1dfd96003107032f91a83ec3099dbf48ad8be2aa5348364f83a7fe73
+
+This zip contains:
+
+  host/stage2n_a18_3_index_tuple_host_v1.cpp
+  scripts/build_stage2n_a18_3_host_v1.sh
+
+Unzip onto the existing A18.2 buildonly tree. It must not overwrite
+host/stage2n_a18_2_four_bo_host_v1.cpp (SHA256
+0a00e8ab7eab7be90b53905b3e4114921e365e681ecc0aef4a73e9f4565c521f).
+
+Windows PowerShell (not inside SSH):
+
+  powershell -NoProfile -File handoff\copy_a18_3_host_overlay_v1.ps1
+
+Then on Linux, compile only:
+
+  bash scripts/build_stage2n_a18_3_host_v1.sh
+
+Do not program. Do not run the Host. BOARD=NOT_RUN.
+PERFORMANCE=NOT_CLAIMED

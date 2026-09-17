@@ -1631,8 +1631,55 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
 - Entry document: `docs/NEW_WINDOW_HANDOFF_V1.md`. Board narrative:
   `docs/STAGE2N_A18_2_BOARD_FUNCTION_ACCEPTANCE_V1.md`.
 - A18.3 is local preparation only: extras goldens stay software-only;
-  A18.2 Host lock stays; no A18.3 C++ Host in this increment; no board.
+  A18.2 Host lock stays; no A18.3 C++ Host **in that snapshot**. Host
+  source arrived in D-080. No board.
 - Do not `git add .`. Omit patents, extract trees, and the 76 MB
   `post_route_timing_summary.rpt`.
 - `PERFORMANCE=NOT_CLAIMED`.
+
+## D-080 - A18.3 index-tuple Host source; board still NOT_RUN
+
+- Date: 2026-09-17. GitHub snapshot `40a36e7540ef170240b1628098377db4f56794ba`
+  on `work/stage2n-a16-multibank-parallel` is the user-confirmed remote.
+- New Host `host/stage2n_a18_3_index_tuple_host_v1.cpp` programs locked
+  tuples `(37,38,39,40)->-393`, `(1,2,3,4)->-61`, `(0,0,0,0)->-60`,
+  `(0,63,37,40)->-162`, `(63,62,61,60)->-185` with baseline tables only.
+- Do not edit the A18.2 Host. Do not treat this source as board PASS.
+  User-returned `A18_3_HOST_XRT_BUILD=PASS`: ELF
+  `011a0b8f1630b9cadbba49150f3f28ebfd042cc5c77af840bcc00d27a403187f`,
+  source `f516896068f6664060cd392b954795f7fb877bdec66935f3163b8e38694dbaa9`,
+  79632 bytes, g++ 4.8.5. `HOST_EXECUTION=NOT_RUN`. `BOARD=NOT_RUN`.
+  `PERFORMANCE=NOT_CLAIMED`.
+
+## D-081 - A18.3 five-tuple board execute authorized; logs not yet returned
+
+- Date: 2026-09-17. User sentence: 授权.
+- One protected execute of the A18.3 Host on the accepted A18 xclbin
+  UUID `32a9c911-af15-47fc-90c8-0bfe3894a3ef`. Baseline table on all
+  four BOs. Locked goldens -393/-61/-60/-162/-185.
+- If CURRENT_UUID already matches, skip `xbutil program`. Program is
+  allowed only of this A18 image when UUID differs. No reset. No
+  extra-run. Do not use the A18.2 five-case Host.
+- `A18_3_BOARD=NOT_RUN` until originals are copied and reviewed.
+  `PERFORMANCE=NOT_CLAIMED`.
+
+## D-082 - A18.3 five-tuple board originals accepted
+
+- Date: 2026-09-17. Copied run `20260917_202130`. Program
+  `SKIPPED_ALREADY_LOADED`. Host ELF `011a0b8f…` on xclbin UUID
+  `32a9c911-…`. Goldens `-393/-61/-60/-162/-185`. Compute
+  `322/100/744/1174`. Lookup 33 / e2e 1210 recorded, not a speedup.
+- `A18_3_ORIGINAL_EVIDENCE_ARCHIVE=PASS`.
+  `A18_3_BOARD_FUNCTION=PASS_FIVE_LOCKED_TUPLES`.
+- Does not prove OOB 64, T>4, extra-run, process hash, or Class C.
+  `PERFORMANCE=NOT_CLAIMED`. Do not extra-run. Do not reset.
+
+## D-083 - GitHub snapshot of accepted A18.3 five-tuple board function
+
+- Date: 2026-09-17. User asked to keep uploading git on major changes.
+- This snapshot is the A18.3 Host, protected runner, compile originals,
+  and board originals `20260917_202130`. Do not `git add .`. Omit
+  patents, extract trees, overlay zips, and the 76 MB timing report.
+- `PERFORMANCE=NOT_CLAIMED`.
+
 

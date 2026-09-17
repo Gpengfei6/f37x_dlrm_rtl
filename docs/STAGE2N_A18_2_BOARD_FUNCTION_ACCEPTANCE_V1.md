@@ -2,7 +2,8 @@
 
 Date: 2026-09-17. Status: **BOARD FUNCTION PASS on default indexes 37–40**.
 Original logs archived. `PERFORMANCE=NOT_CLAIMED`. Not a speedup versus A17.6.
-Non-default MMIO indexes remain `NOT_RUN`.
+Non-default MMIO indexes are out of scope for this A18.2 Host; they were
+later boarded by A18.3 (`docs/STAGE2N_A18_3_BOARD_FUNCTION_ACCEPTANCE_V1.md`).
 
 This document is the narrative acceptance record. Machine tokens and SHA256
 digests of the copied originals are in
@@ -81,9 +82,11 @@ acceptance summary.
 
 ## What this does not close
 
-- Non-default `0x330-0x33C` values. The A18.2 Host refuses them even if
-  `A18_2_ALLOW_NONDEFAULT_INDEXES=yes`, because the five-case payload still
-  mutates row `37+i`. That work is A18.3, new Host, new authorization.
+- Non-default `0x330-0x33C` values **in this A18.2 Host**. The A18.2 Host
+  refuses them even if `A18_2_ALLOW_NONDEFAULT_INDEXES=yes`, because the
+  five-case payload still mutates row `37+i`. A18.3 boarded five locked
+  tuples with a new Host and the same xclbin
+  (`docs/STAGE2N_A18_3_BOARD_FUNCTION_ACCEPTANCE_V1.md`).
 - Repeatability / Class C / comparable A16 vs A18 latency.
 - Physical HBM bandwidth, throughput, power, energy.
 - Official A17.2 frozen-tree XSim (`e4ce2ab`); this zip tree has LUTLP A17.

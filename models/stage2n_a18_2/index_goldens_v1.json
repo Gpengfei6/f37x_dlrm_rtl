@@ -1,5 +1,5 @@
 {
-  "claim_boundary": "Local software goldens from frozen A15.6 assets. Not FPGA, XO, xclbin, or performance evidence.",
+  "claim_boundary": "Software goldens from frozen A15.6 assets. The five tuples in docs/STAGE2N_A18_3_BOARD_FUNCTION_ACCEPTANCE_V1.md later matched board run 20260917_202130. Not performance evidence.",
   "default_indexes": [
     37,
     38,
@@ -15,7 +15,7 @@
         3,
         4
       ],
-      "note": "software golden only; not a board result",
+      "note": "software golden; boarded in 20260917_202130",
       "table": "stage2n_a15_6_case0_baseline_table_v1.bin"
     },
     {
@@ -26,7 +26,7 @@
         0,
         0
       ],
-      "note": "software golden only; not a board result",
+      "note": "software golden; boarded in 20260917_202130",
       "table": "stage2n_a15_6_case0_baseline_table_v1.bin"
     },
     {
@@ -37,7 +37,7 @@
         37,
         40
       ],
-      "note": "software golden only; not a board result",
+      "note": "software golden; boarded in 20260917_202130",
       "table": "stage2n_a15_6_case0_baseline_table_v1.bin"
     },
     {
@@ -48,7 +48,7 @@
         61,
         60
       ],
-      "note": "software golden only; not a board result",
+      "note": "software golden; boarded in 20260917_202130",
       "table": "stage2n_a15_6_case0_baseline_table_v1.bin"
     }
   ],

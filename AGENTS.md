@@ -731,9 +731,10 @@ Authorized:
 2. Local static checker `scripts/check/check_stage2n_a18_3_local_prep_v1.py`.
 3. New-window handoff `docs/NEW_WINDOW_HANDOFF_V1.md` and A18.2 board
    acceptance markdown.
-4. A later increment may add `host/stage2n_a18_3_index_tuple_host_v1.cpp`
-   that uses the baseline table on all four BOs. That file is not created
-   in the preparation increment.
+4. Add versioned Host `host/stage2n_a18_3_index_tuple_host_v1.cpp` that
+   uses the baseline table on all four BOs and locked software-golden
+   index tuples. Build-only script
+   `scripts/build_stage2n_a18_3_host_v1.sh` must not execute the Host.
 
 Restrictions:
 
@@ -747,7 +748,53 @@ Restrictions:
 
 Evidence boundary:
 
-`A18_3_LOCAL_PREP_CHECK=PASS` is documentation and lock-check only.
-`A18_3_HOST_CPP=NOT_CREATED` until a later increment.
-`A18_3_BOARD=NOT_RUN`.
+`A18_3_LOCAL_PREP_CHECK=PASS` is source/lock-check only.
+User-returned `A18_3_HOST_XRT_BUILD=PASS` is compile-only.
+Software extras goldens are not board PASS until the A18.3 execute
+review below.
+
+## Stage 2N-A18.3 Protected Five-Tuple Board Execute Authorization
+
+Purpose:
+Allow one user-executed protected Host run of the five locked
+software-golden index tuples on the accepted A18 xclbin, without
+editing the A18.2 Host or rebuilding XO/xclbin.
+
+Authorized:
+
+1. Versioned runner `scripts/run_stage2n_a18_3_protected_board_v1.sh`.
+2. Identity and prepare checkers
+   `scripts/check/check_stage2n_a18_3_host_elf_identity_v1.py` and
+   `scripts/check/check_stage2n_a18_3_board_prepare_v1.py`.
+3. User Windows copy `handoff/copy_a18_3_protected_board_v1.ps1`.
+4. One `execute` on device index 2 / BDF `0000:9b:00.1` /
+   `/dev/dri/renderD129` using Host ELF
+   `011a0b8f1630b9cadbba49150f3f28ebfd042cc5c77af840bcc00d27a403187f`
+   and the A18.2 xclbin UUID
+   `32a9c911-af15-47fc-90c8-0bfe3894a3ef`.
+5. `xbutil program` of that same A18 xclbin only if CURRENT_UUID
+   differs. If already loaded, skip program.
+6. After user-returned logs: copy originals with
+   `handoff/copy_a18_3_function_evidence_v1.ps1` and a separate review.
+
+Restrictions:
+
+- Codex does not SSH, SCP, or execute on the server.
+- Do not modify accepted A13, A14 v2, A16, A17 originals, or the A18.2
+  Host/xclbin SHA identities.
+- Do not run the A18.2 five-case Host for these tuples.
+- Do not send OOB index 64 as a passing tuple.
+- Do not extra-run, reset, access another device, rebuild XO/xclbin,
+  add T>4, cache, or A17 restore.
+- `PERFORMANCE=NOT_CLAIMED`. Do not write an A16/A17/A18 speedup.
+
+Evidence boundary:
+
+User-returned Host `STAGE2N_A18_3_INDEX_TUPLE_HOST_V1=PASS` plus copied
+originals `20260917_202130` were reviewed:
+`A18_3_ORIGINAL_EVIDENCE_ARCHIVE=PASS`,
+`A18_3_BOARD_FUNCTION=PASS_FIVE_LOCKED_TUPLES`.
+That proves only those five complete-DLRM results on this card and
+xclbin. It cannot prove extra-run, process hash, bandwidth, latency
+improvement, or speedup.
 

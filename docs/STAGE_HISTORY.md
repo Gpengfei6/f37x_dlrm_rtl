@@ -1,6 +1,6 @@
 # Stage 2N History
 
-This table is an AI-readable index of Stage 2N-A1 through A18.2 default-index
+This table is an AI-readable index of Stage 2N-A1 through A18.3 five-tuple
 board function. It does not turn historical claims into current verification.
 New chats should start at `docs/NEW_WINDOW_HANDOFF_V1.md`.
 Follow each evidence link and use the status language exactly.
@@ -56,8 +56,8 @@ hybrid CPU-embedding/FPGA-dense inference path.
 | Stage 2N-A17.6 process-restart | First A17 lookup/e2e distribution without program | 1 warmup + 11 measured Host processes on UUID `622c839f-…`; REPEAT_BASELINE separate | `docs/evidence/stage2n_a17_6/repeatability_v1/ACCEPTANCE.txt` | **PASS_PROCESS_RESTART_SLICE**: median lookup 33; tails 37/38/50/52/65; not Class C |
 | Stage 2N-A16.2 process-restart | Same-caliber A16-N11 on frozen sequential Host/xclbin | 1 warmup + 11 measured; warmup programmed A17→A16 once; CASE0–CASE4; no REPEAT_BASELINE | `docs/evidence/stage2n_a16_2/repeatability_v1/ACCEPTANCE.txt`; `docs/STAGE2N_A16_A17_PROCESS_RESTART_COMPARABILITY_V1.md` | **PASS_PROCESS_RESTART_SLICE**: lookup floor 112, CASE3 median 132, tails to 141; compute 1174; not Class C; speedup not computed; A17 restore not authorized |
 | Stage 2N-A18.1 | Runtime four-slot lookup indexes on a versioned A17 kernel copy | Indexes `0x330-0x33C`, latch on START, A17 CLEAR, OOB no AR; independent public-port TB cases A–H | `docs/STAGE2N_A18_VARIABLE_INDEX_RTL_V1.md`; `results/stage2n_a18/20260917_094207_269` | **LOCAL XSIM PASS (Vivado 2022.1 only)**: golden 36, counters 322/100/744/1174. Not 2020.2, not official A17.2 runner, not XO/xclbin/board, PERFORMANCE=NOT_CLAIMED |
-| Stage 2N-A18.2 | A18 XO/link, Host, first board function | `dlrm_a18_1` / `HBM[0..3]`; MMIO indexes default 37–40; locked goldens `-393…` | `docs/STAGE2N_A18_2_BOARD_FUNCTION_ACCEPTANCE_V1.md`; `docs/evidence/stage2n_a18_2/function_pass_v1/20260917_171608/` | **BOARD FUNCTION PASS (defaults)** plus original archive: UUID `32a9c911-…`, lookup 33 / e2e 1210. Non-default indexes NOT_RUN. PERFORMANCE=NOT_CLAIMED |
-| Stage 2N-A18.3 | Non-default index Host prep | Baseline-table tuples vs software goldens; do not edit A18.2 Host | `docs/STAGE2N_A18_3_NONDEFAULT_INDEX_HOST_PREP_V1.md` | **LOCAL PREP**: extras JSON locked; A18.3 C++ Host NOT_CREATED; board NOT_RUN |
+| Stage 2N-A18.2 | A18 XO/link, Host, first board function | `dlrm_a18_1` / `HBM[0..3]`; MMIO indexes default 37–40; locked goldens `-393…` | `docs/STAGE2N_A18_2_BOARD_FUNCTION_ACCEPTANCE_V1.md`; `docs/evidence/stage2n_a18_2/function_pass_v1/20260917_171608/` | **BOARD FUNCTION PASS (defaults)** plus original archive: UUID `32a9c911-…`, lookup 33 / e2e 1210. PERFORMANCE=NOT_CLAIMED |
+| Stage 2N-A18.3 | Five locked MMIO index tuples on A18 xclbin | Baseline table on all BOs; goldens `-393/-61/-60/-162/-185` | `docs/STAGE2N_A18_3_BOARD_FUNCTION_ACCEPTANCE_V1.md`; `docs/evidence/stage2n_a18_3/function_pass_v1/20260917_202130/` | **BOARD FUNCTION PASS**: program skipped; compute 322/100/744/1174; lookup 33 / e2e 1210 recorded not speedup; PERFORMANCE=NOT_CLAIMED |
 
 ## Current Milestone Interpretation
 
