@@ -1,6 +1,8 @@
 # Current State
 
-> Current research update — 2026-09-24: Batch 11 does not replace the 584-beat reduction tail. Journal and thesis versions of the in-memory, SmartNIC, HBM, and NPU lines stay off this tail. D-093. No RTL. PERFORMANCE=NOT_CLAIMED.
+> Current research update — 2026-09-24: Branch priority is set. A is closed as a paper line (1174→788 by accounting; an II=1 reduction tree would be about 630 and is still ordinary). Next screen is only C, on this INT16 model. D, B, and E stay behind missing candidates, the lookup-versus-584 gap, and a missing frozen table. D-094. No RTL. PERFORMANCE=NOT_CLAIMED.
+
+> Prior research update — 2026-09-24: Batch 11 does not replace the 584-beat reduction tail. Journal and thesis versions of the in-memory, SmartNIC, HBM, and NPU lines stay off this tail. D-093. No RTL. PERFORMANCE=NOT_CLAIMED.
 
 > Prior research update — 2026-09-24: Batch 10 does not replace the 584-beat reduction tail. Remote research tip is `ac836f3` (D-091). The September 21–24 ledger was not on that remote; overlap 1174→788 stays the transferred conclusion, not a new run. D-092. No RTL. PERFORMANCE=NOT_CLAIMED.
 

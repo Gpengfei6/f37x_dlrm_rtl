@@ -1,6 +1,8 @@
 # FPGA DLRM Project AI Context
 
-> Current research update — 2026-09-24: Batch 11 leaves the 584-beat reduction tail in place. D-093. No RTL. PERFORMANCE=NOT_CLAIMED.
+> Current research update — 2026-09-24: A is closed as a paper line. Only the INT16 exact-bound screen (C) is next. D, B, and E are blocked. D-094. No RTL. PERFORMANCE=NOT_CLAIMED.
+
+> Prior research update — 2026-09-24: Batch 11 leaves the 584-beat reduction tail in place. D-093. No RTL. PERFORMANCE=NOT_CLAIMED.
 
 > Prior research update — 2026-09-24: Batch 10 leaves the 584-beat reduction tail in place. Research tip `ac836f3`. D-092. No RTL. PERFORMANCE=NOT_CLAIMED.
 

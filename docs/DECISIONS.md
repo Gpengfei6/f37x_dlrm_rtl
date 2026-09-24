@@ -1811,4 +1811,33 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
   hard tensor blocks; that is the ordinary split already closed in D-092.
   Record: `docs/STAGE2N_TAIL_LITERATURE_BATCH11_V1.md`.
 
+## D-094 - Rank the remaining branches; A is not a paper line
+
+- Date: 2026-09-24. Read the thirteen-batch innovation note against the
+  transferred cycle ledger and checked the citations that actually close a
+  branch. Local simulation golden 36. Board functional golden −393. Do not
+  mix them. `PERFORMANCE=NOT_CLAIMED`. No RTL.
+- A is closed as a contribution. Same 16 PEs, no added multiplier and no
+  added weight port, hide 386 cycles (1174→788; 834 if the result handshake
+  cannot also fetch). An II=1 reduction pipeline, still ordinary, would hide
+  about 544 cycles on the same ledger (1174→630). That figure is accounting,
+  not a new simulation. Boutros's thesis already places elementwise work
+  after the matrix-vector unit. The latched descriptor does not block the
+  split. Do not implement it.
+- Priority after that: (1) one screen of branch C on this INT16 model,
+  expected to die because one remaining product is about \(32767\times127\).
+  The unnamed FPGA early-exit precedent in the thirteen-batch note was not
+  verified, so C is not declared dead by that sentence. (2) D stays behind
+  the missing multi-candidate request. RecJPQPrune (SIGIR 2025,
+  arXiv:2505.00560) is safe top-K for RecJPQ sub-item scores, not a
+  fixed-point interaction-plus-MLP certificate. (3) B stays behind the
+  cycle ledger: lookup 33–65, even times four, is still below 584 reduction
+  beats. (4) E stays behind a frozen real table. ProactivePIM shows
+  weight-sharing embeddings add reconstruction traffic; nMARS and the Lim
+  near-memory compressed table already cover compressed embedding
+  execution. TERINT-GEMV is a ternary language-model codebook, not this
+  embedding table.
+- No branch F. Stopped lines stay stopped. Next work is only the C bound
+  screen. Record: `docs/STAGE2N_BRANCH_PRIORITY_V1.md`.
+
 
