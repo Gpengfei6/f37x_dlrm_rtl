@@ -1840,4 +1840,36 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
 - No branch F. Stopped lines stay stopped. Next work is only the C bound
   screen. Record: `docs/STAGE2N_BRANCH_PRIORITY_V1.md`.
 
+## D-095 - Adopt the branch review: E must beat UCNN on paper, or it does not open
+
+- Date: 2026-09-24. Reviewed the Codex branch-priority note against
+  D-092 and D-094. No new mechanism is established.
+  `PERFORMANCE=NOT_CLAIMED`. No RTL, training, or board work.
+  D-104 and D-106 stay stopped. The same-PE epilogue split stays
+  ordinary microarchitecture, as already recorded in D-092 and D-094.
+- Accepted corrections: 584 beats are all 73 outputs, not Top's 392.
+  The 788/834 and 630 figures are ledger accounting, not measurements.
+  A domain label does not create a mechanism, and an existing paper
+  does not by itself close every nearby question. Lossless decoding,
+  compute-without-decode, and bit-exact outputs are different claims.
+- Priority from here: write whether exact reuse still leaves a cost
+  after UCNN (ISCA 2018, arXiv:1804.06508). If that cost cannot be
+  named, E does not open and no opportunity experiment is run. The
+  26-table diagnostic checkpoint cannot fill in a missing model.
+  FlowTT (arXiv:2609.03459) already shares TT-embedding prefixes on
+  GPU at batch 32,768; it is not this frozen dense table.
+- C is not the next screen. On this INT16 contract with shift 0, one
+  remaining product is about \(32767\times127\). The AEU DOI cited
+  for binary/ternary early termination returned HTTP 406 here.
+  arXiv:2608.06177 is binary-activation early stop with an accuracy
+  drop, so it neither exhausts INT16 nor reopens C.
+- B stays suspended. `ARLEN=0` and a 128-bit interface do not prove
+  zero physical amplification or a 2× amplification. Lookup median 33
+  remains far below 584. D stays suspended until a real
+  within-request candidate set exists. RecJPQPrune does not transfer
+  its additive sub-item bound onto the nonlinear Top MLP, and that
+  difference is not yet a mechanism.
+- If E is rejected, do not switch to C or D automatically. Record:
+  `docs/STAGE2N_BRANCH_PRIORITY_V2.md`.
+
 
