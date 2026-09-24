@@ -1784,4 +1784,31 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
   models and give no shorter digital reduction. No RTL, no board, no
   accepted-RTL edit. Record: `docs/STAGE2N_TAIL_LITERATURE_BATCH10_V1.md`.
 
+## D-093 - Batch 11 does not replace the 8-beat reduction tail
+
+- Date: 2026-09-24. Same locked tail as D-092. Local simulation golden 36.
+  Board functional golden −393. Do not mix them. `PERFORMANCE=NOT_CLAIMED`.
+  No new measurement, no RTL, no board, no accepted-RTL edit.
+- Batch 11 public abstracts, one sentence each, no new line. nMARS stores
+  compressed embedding tables in an in-memory crossbar; the reported Criteo
+  gain is on embedding operations and leaves the bit-exact INT16 contract.
+  Piper streams training-side vocabulary and feature preprocessing; that
+  path is already stopped and is outside the 1174-cycle compute interval.
+  Lim et al. quantize embedding elements about 4× and pool them on the
+  logic die of 3D DRAM, with a hot-vector SRAM; lookup median 33 cannot
+  cover the 584 dense reduction beats, and the hot cache is already
+  stopped. The 2024 FLASH journal still accelerates nine modular
+  cryptographic operations, which this graph does not contain. MeCache
+  caches communication for multi-GPU heterogeneous-graph training.
+  More's architecture/VLSI thesis sizes hard blocks for a future device.
+  Auto-DOK selects kernels to place beside HBM; the 1360 weights already
+  sit in the on-chip provider, and the 584 beats are after the fetch.
+  MaxEmbed raises effective SSD bandwidth for huge tables by replication.
+  Jiang's vector-centric thesis, after fast embedding lookup, moves the
+  DNN to a GPU cluster; splitting the fully connected work across cards
+  is already stopped. Boutros's thesis keeps the NPU as a matrix-vector
+  unit followed by separate elementwise units and maps that overlay onto
+  hard tensor blocks; that is the ordinary split already closed in D-092.
+  Record: `docs/STAGE2N_TAIL_LITERATURE_BATCH11_V1.md`.
+
 
