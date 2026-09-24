@@ -1748,4 +1748,128 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
   Boarded A18 kernel stays unwired. Local 2022.1 XSim PASS.
 - Extra-run still NOT_RUN. No program. No reset.
 
+## D-092 - Batch 10 does not replace the 8-beat reduction tail
+
+- Date: 2026-09-24. Remote tip restored to
+  `work/stage2n-a16-multibank-parallel` at `ac836f3` (D-091). `main` is the
+  older A13 snapshot and is not the research line. The 2026-09-21..24 cycle
+  ledger and decisions D-100..D-108 were never on this remote; the numbers
+  below are the transferred conversation, not a new measurement.
+- Locked tail, local simulation golden 36, board functional golden −393,
+  do not mix them. `PERFORMANCE=NOT_CLAIMED`. Geometry Bottom 8→16→8,
+  interaction 5×8→18, Top 18→32→16→1. Weights 1360, biases 73, five
+  descriptors, `NUM_PE=16`. 1174 = multiply-issue 121 + reduction/quantization
+  584 (73×8) + fetch/bias/command/edges 350 + stage tail 11 + interaction
+  100 + load 8. Lookup median 33, max about 56–65.
+- Same-PE overlap of the next multiply issue into the previous 8 beats was
+  already judged ordinary microarchitecture: the dot core can reuse only 6
+  of those beats, hiding 386 (1174→788; 834 if the result handshake cannot
+  also fetch). The 584 reduction beats stay. No RTL in this decision.
+- Batch 10 public abstracts, one sentence each, no new line. RECom deletes
+  framework bounds checks and the embedding reduction that exists only
+  because one-hot inputs are treated as multi-hot; this graph has neither.
+  LCR/LARU retunes a GPU embedding or KV cache; lookup 33 cannot cover 584,
+  and hot-cache is already stopped. Shi, Kara, and Hagleitner use HBM for
+  analytics scans, joins, and SGD; the 1360 weights already sit in the
+  on-chip provider. CARINA places hot embeddings in DRAM and paces CXL
+  bandwidth; that is table traffic, not the on-chip post. iMARS folds the
+  MLP into an FeFET crossbar, which leaves the bit-exact INT16 contract.
+  HiLFS is an on-FPGA file system for HLS storage. Boutros, More, and Betz
+  ask for hard tensor blocks and a hard network on a future device, not a
+  shorter schedule of this 16-PE tail. Frugal flushes, during training, the
+  embedding parameters another GPU will need, off the foreground port;
+  training prefetch is already retained and does not change inference.
+  Mem-GF avoids storing an item-item similarity matrix for graph filtering.
+  Karimzadeh et al. survey memory-centric computing for billion-parameter
+  models and give no shorter digital reduction. No RTL, no board, no
+  accepted-RTL edit. Record: `docs/STAGE2N_TAIL_LITERATURE_BATCH10_V1.md`.
+
+## D-093 - Batch 11 does not replace the 8-beat reduction tail
+
+- Date: 2026-09-24. Same locked tail as D-092. Local simulation golden 36.
+  Board functional golden −393. Do not mix them. `PERFORMANCE=NOT_CLAIMED`.
+  No new measurement, no RTL, no board, no accepted-RTL edit.
+- Batch 11 public abstracts, one sentence each, no new line. nMARS stores
+  compressed embedding tables in an in-memory crossbar; the reported Criteo
+  gain is on embedding operations and leaves the bit-exact INT16 contract.
+  Piper streams training-side vocabulary and feature preprocessing; that
+  path is already stopped and is outside the 1174-cycle compute interval.
+  Lim et al. quantize embedding elements about 4× and pool them on the
+  logic die of 3D DRAM, with a hot-vector SRAM; lookup median 33 cannot
+  cover the 584 dense reduction beats, and the hot cache is already
+  stopped. The 2024 FLASH journal still accelerates nine modular
+  cryptographic operations, which this graph does not contain. MeCache
+  caches communication for multi-GPU heterogeneous-graph training.
+  More's architecture/VLSI thesis sizes hard blocks for a future device.
+  Auto-DOK selects kernels to place beside HBM; the 1360 weights already
+  sit in the on-chip provider, and the 584 beats are after the fetch.
+  MaxEmbed raises effective SSD bandwidth for huge tables by replication.
+  Jiang's vector-centric thesis, after fast embedding lookup, moves the
+  DNN to a GPU cluster; splitting the fully connected work across cards
+  is already stopped. Boutros's thesis keeps the NPU as a matrix-vector
+  unit followed by separate elementwise units and maps that overlay onto
+  hard tensor blocks; that is the ordinary split already closed in D-092.
+  Record: `docs/STAGE2N_TAIL_LITERATURE_BATCH11_V1.md`.
+
+## D-094 - Rank the remaining branches; A is not a paper line
+
+- Date: 2026-09-24. Read the thirteen-batch innovation note against the
+  transferred cycle ledger and checked the citations that actually close a
+  branch. Local simulation golden 36. Board functional golden −393. Do not
+  mix them. `PERFORMANCE=NOT_CLAIMED`. No RTL.
+- A is closed as a contribution. Same 16 PEs, no added multiplier and no
+  added weight port, hide 386 cycles (1174→788; 834 if the result handshake
+  cannot also fetch). An II=1 reduction pipeline, still ordinary, would hide
+  about 544 cycles on the same ledger (1174→630). That figure is accounting,
+  not a new simulation. Boutros's thesis already places elementwise work
+  after the matrix-vector unit. The latched descriptor does not block the
+  split. Do not implement it.
+- Priority after that: (1) one screen of branch C on this INT16 model,
+  expected to die because one remaining product is about \(32767\times127\).
+  The unnamed FPGA early-exit precedent in the thirteen-batch note was not
+  verified, so C is not declared dead by that sentence. (2) D stays behind
+  the missing multi-candidate request. RecJPQPrune (SIGIR 2025,
+  arXiv:2505.00560) is safe top-K for RecJPQ sub-item scores, not a
+  fixed-point interaction-plus-MLP certificate. (3) B stays behind the
+  cycle ledger: lookup 33–65, even times four, is still below 584 reduction
+  beats. (4) E stays behind a frozen real table. ProactivePIM shows
+  weight-sharing embeddings add reconstruction traffic; nMARS and the Lim
+  near-memory compressed table already cover compressed embedding
+  execution. TERINT-GEMV is a ternary language-model codebook, not this
+  embedding table.
+- No branch F. Stopped lines stay stopped. Next work is only the C bound
+  screen. Record: `docs/STAGE2N_BRANCH_PRIORITY_V1.md`.
+
+## D-095 - Adopt the branch review: E must beat UCNN on paper, or it does not open
+
+- Date: 2026-09-24. Reviewed the Codex branch-priority note against
+  D-092 and D-094. No new mechanism is established.
+  `PERFORMANCE=NOT_CLAIMED`. No RTL, training, or board work.
+  D-104 and D-106 stay stopped. The same-PE epilogue split stays
+  ordinary microarchitecture, as already recorded in D-092 and D-094.
+- Accepted corrections: 584 beats are all 73 outputs, not Top's 392.
+  The 788/834 and 630 figures are ledger accounting, not measurements.
+  A domain label does not create a mechanism, and an existing paper
+  does not by itself close every nearby question. Lossless decoding,
+  compute-without-decode, and bit-exact outputs are different claims.
+- Priority from here: write whether exact reuse still leaves a cost
+  after UCNN (ISCA 2018, arXiv:1804.06508). If that cost cannot be
+  named, E does not open and no opportunity experiment is run. The
+  26-table diagnostic checkpoint cannot fill in a missing model.
+  FlowTT (arXiv:2609.03459) already shares TT-embedding prefixes on
+  GPU at batch 32,768; it is not this frozen dense table.
+- C is not the next screen. On this INT16 contract with shift 0, one
+  remaining product is about \(32767\times127\). The AEU DOI cited
+  for binary/ternary early termination returned HTTP 406 here.
+  arXiv:2608.06177 is binary-activation early stop with an accuracy
+  drop, so it neither exhausts INT16 nor reopens C.
+- B stays suspended. `ARLEN=0` and a 128-bit interface do not prove
+  zero physical amplification or a 2× amplification. Lookup median 33
+  remains far below 584. D stays suspended until a real
+  within-request candidate set exists. RecJPQPrune does not transfer
+  its additive sub-item bound onto the nonlinear Top MLP, and that
+  difference is not yet a mechanism.
+- If E is rejected, do not switch to C or D automatically. Record:
+  `docs/STAGE2N_BRANCH_PRIORITY_V2.md`.
+
 
