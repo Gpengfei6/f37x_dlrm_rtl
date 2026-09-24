@@ -1,6 +1,8 @@
 # FPGA DLRM Project AI Context
 
-> Current update — 2026-09-17: A18.10 folded-inject XSim PASS; fold-then-A13 software goldens locked. Extra-run NOT_RUN. No program. No reset.
+> Current research update — 2026-09-24: Batch 10 leaves the 584-beat reduction tail in place. Research tip `ac836f3`. D-092. No RTL. PERFORMANCE=NOT_CLAIMED.
+
+> Prior update — 2026-09-17: A18.10 folded-inject XSim PASS; fold-then-A13 software goldens locked. Extra-run NOT_RUN. No program. No reset.
 > PERFORMANCE=NOT_CLAIMED. No speedup.
 
 This file is the repository entry point for AI assistants. It summarizes the

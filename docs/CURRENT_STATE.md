@@ -1,6 +1,8 @@
 # Current State
 
-> Current update — 2026-09-17: A18.10 folded-inject XSim PASS; fold-then-A13 software goldens locked. Extra-run NOT_RUN. No program. No reset.
+> Current research update — 2026-09-24: Batch 10 does not replace the 584-beat reduction tail. Remote research tip is `ac836f3` (D-091). The September 21–24 ledger was not on that remote; overlap 1174→788 stays the transferred conclusion, not a new run. D-092. No RTL. PERFORMANCE=NOT_CLAIMED.
+
+> Prior update — 2026-09-17: A18.10 folded-inject XSim PASS; fold-then-A13 software goldens locked. Extra-run NOT_RUN. No program. No reset.
 
 Snapshot date: 2026-09-08
 

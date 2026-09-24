@@ -1748,4 +1748,40 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
   Boarded A18 kernel stays unwired. Local 2022.1 XSim PASS.
 - Extra-run still NOT_RUN. No program. No reset.
 
+## D-092 - Batch 10 does not replace the 8-beat reduction tail
+
+- Date: 2026-09-24. Remote tip restored to
+  `work/stage2n-a16-multibank-parallel` at `ac836f3` (D-091). `main` is the
+  older A13 snapshot and is not the research line. The 2026-09-21..24 cycle
+  ledger and decisions D-100..D-108 were never on this remote; the numbers
+  below are the transferred conversation, not a new measurement.
+- Locked tail, local simulation golden 36, board functional golden −393,
+  do not mix them. `PERFORMANCE=NOT_CLAIMED`. Geometry Bottom 8→16→8,
+  interaction 5×8→18, Top 18→32→16→1. Weights 1360, biases 73, five
+  descriptors, `NUM_PE=16`. 1174 = multiply-issue 121 + reduction/quantization
+  584 (73×8) + fetch/bias/command/edges 350 + stage tail 11 + interaction
+  100 + load 8. Lookup median 33, max about 56–65.
+- Same-PE overlap of the next multiply issue into the previous 8 beats was
+  already judged ordinary microarchitecture: the dot core can reuse only 6
+  of those beats, hiding 386 (1174→788; 834 if the result handshake cannot
+  also fetch). The 584 reduction beats stay. No RTL in this decision.
+- Batch 10 public abstracts, one sentence each, no new line. RECom deletes
+  framework bounds checks and the embedding reduction that exists only
+  because one-hot inputs are treated as multi-hot; this graph has neither.
+  LCR/LARU retunes a GPU embedding or KV cache; lookup 33 cannot cover 584,
+  and hot-cache is already stopped. Shi, Kara, and Hagleitner use HBM for
+  analytics scans, joins, and SGD; the 1360 weights already sit in the
+  on-chip provider. CARINA places hot embeddings in DRAM and paces CXL
+  bandwidth; that is table traffic, not the on-chip post. iMARS folds the
+  MLP into an FeFET crossbar, which leaves the bit-exact INT16 contract.
+  HiLFS is an on-FPGA file system for HLS storage. Boutros, More, and Betz
+  ask for hard tensor blocks and a hard network on a future device, not a
+  shorter schedule of this 16-PE tail. Frugal flushes, during training, the
+  embedding parameters another GPU will need, off the foreground port;
+  training prefetch is already retained and does not change inference.
+  Mem-GF avoids storing an item-item similarity matrix for graph filtering.
+  Karimzadeh et al. survey memory-centric computing for billion-parameter
+  models and give no shorter digital reduction. No RTL, no board, no
+  accepted-RTL edit. Record: `docs/STAGE2N_TAIL_LITERATURE_BATCH10_V1.md`.
+
 
