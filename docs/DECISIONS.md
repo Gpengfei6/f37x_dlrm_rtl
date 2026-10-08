@@ -1872,4 +1872,23 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
 - If E is rejected, do not switch to C or D automatically. Record:
   `docs/STAGE2N_BRANCH_PRIORITY_V2.md`.
 
+## D-096 - Kaggle DOT RTL scaling is an engineering plan, not a new mechanism
+
+- Date: 2026-10-08. Source audit only. No production RTL, no Vivado
+  implementation, no board run, and no use of the in-progress checkpoint
+  accuracy 0.7844 as a final result. PERFORMANCE=NOT_CLAIMED.
+- The locked model is facebookresearch/dlrm commit 6d75c84d. Interaction
+  order is Bottom[0:15] followed by dots (i=1..26, j=0..i-1). That geometry
+  is not implemented. The interaction engine hard-codes 10 pairs and 18
+  results. The pipeline hard-codes 4 embeddings, 8 Bottom results, and two
+  Top load chunks. A18 instantiates MAX_IN_DIM=64, 2048 weights, and 128
+  biases. Descriptor slots are 4; Kaggle needs 7 resident layers.
+- Dense tail masking already follows in_dim. That does not make 512 or 367
+  legal on the production instantiation. INT16×INT16 accumulation already
+  uses 48 bits, which covers the 36-bit bound; the index path does not.
+- Next implementation stage is RTL-C1, as a new module beside the frozen
+  toy interaction engine. RTL-C2 may proceed in parallel only while both
+  stay off the A13 pipeline. Record:
+  `docs/KAGGLE_DOT_RTL_SCALING_AUDIT_20261008_V1.md`.
+
 

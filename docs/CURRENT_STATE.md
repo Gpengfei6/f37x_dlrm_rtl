@@ -1,6 +1,8 @@
 # Current State
 
-> Current research update — 2026-09-24: Codex review adopted with checks. Next writing task is whether exact reuse still costs something after UCNN; if not, E does not open. C is not the next screen. B and D stay suspended. A stays closed. D-095. No RTL. PERFORMANCE=NOT_CLAIMED.
+> Current engineering update — 2026-10-08: Kaggle DOT RTL scaling audit is source-only. Interaction 27×16, dense 512, Top 367, and the Stage A host port all require changes. No production RTL edited. REAL_KAGGLE_RTL=NOT_YET_VALIDATED. Next stage is RTL-C1 on a new module. D-096. PERFORMANCE=NOT_CLAIMED.
+
+> Prior research update — 2026-09-24: Codex review adopted with checks. Next writing task is whether exact reuse still costs something after UCNN; if not, E does not open. C is not the next screen. B and D stay suspended. A stays closed. D-095. No RTL. PERFORMANCE=NOT_CLAIMED.
 
 > Prior research update — 2026-09-24: Batch 11 does not replace the 584-beat reduction tail. Journal and thesis versions of the in-memory, SmartNIC, HBM, and NPU lines stay off this tail. D-093. No RTL. PERFORMANCE=NOT_CLAIMED.
 
