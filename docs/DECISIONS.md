@@ -1872,4 +1872,65 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
 - If E is rejected, do not switch to C or D automatically. Record:
   `docs/STAGE2N_BRANCH_PRIORITY_V2.md`.
 
+## D-096 - Kaggle DOT RTL scaling is an engineering plan, not a new mechanism
+
+- Date: 2026-10-08. Source audit only. No production RTL, no Vivado
+  implementation, no board run, and no use of the in-progress checkpoint
+  accuracy 0.7844 as a final result. PERFORMANCE=NOT_CLAIMED.
+- The locked model is facebookresearch/dlrm commit 6d75c84d. Interaction
+  order is Bottom[0:15] followed by dots (i=1..26, j=0..i-1). That geometry
+  is not implemented. The interaction engine hard-codes 10 pairs and 18
+  results. The pipeline hard-codes 4 embeddings, 8 Bottom results, and two
+  Top load chunks. A18 instantiates MAX_IN_DIM=64, 2048 weights, and 128
+  biases. Descriptor slots are 4; Kaggle needs 7 resident layers.
+- Dense tail masking already follows in_dim. That does not make 512 or 367
+  legal on the production instantiation. INT16×INT16 accumulation already
+  uses 48 bits, which covers the 36-bit bound; the index path does not.
+- Next implementation stage is RTL-C1, as a new module beside the frozen
+  toy interaction engine. RTL-C2 may proceed in parallel only while both
+  stay off the A13 pipeline. Record:
+  `docs/KAGGLE_DOT_RTL_SCALING_AUDIT_20261008_V1.md`.
+
+## D-097 - A18 descriptor depth is 8; interaction literals remain the C1 blocker
+
+- Date: 2026-10-08. Corrects the slot sentence in D-096. The segmented
+  controller defaults to MAX_LAYERS=4, but the A16/A18 adapters default to
+  8 and pass that value through u_a13_pipeline and u_segmented_mlp. Seven
+  Kaggle layer descriptors fit in those 8 slots. The pipeline opens
+  descriptor and weight writes only in STATE_IDLE, so Bottom and Top still
+  have to be resident together; mid-run reuse is not present.
+- A18 weight and bias depths stay 2048 and 128. The toy interaction engine
+  and u_interaction stay fixed at 5 vectors, 10 pairs, and 18 results.
+  630 and 582 cycle logs were not located. That is NOT_LOCATED, not a
+  finding that an off-repository record is invalid.
+- RTL-C1 is a new module,
+  rtl/interaction/dlrm_feature_interaction_kaggle_c1_v1.sv, with its own
+  testbench. The toy interaction file is not edited. No A13/A18 connection
+  and no Vivado implementation.
+
+## D-098 - KDOT interaction simulation was not run
+
+- Date: 2026-10-08. The new interaction output contract is B: Bottom
+  indices 0..15, then 351 dots at indices 16..366. Pair (26,25) is pair
+  index 350 and output index 366. In the tail vector case the dot value
+  is 156; 156 is not the pair index.
+- PATH has no xvlog, xelab, xsim, iverilog, or vvp. The run is recorded
+  as NOT_RUN in docs/evidence/kdot_interaction_c1/status_v1.txt. Python
+  reference self-check passing does not accept the RTL. Dense 512 is not
+  started. Toy RTL hash remains
+  bea4b184f2649ea43d01971eeea5cd23d8a1ed1781b7d52ff047c7b413bd653b.
+
+## D-099 - KDOT XSim package is ready and was not executed here
+
+- Date: 2026-10-08. The portable package is
+  scripts/kdot_interaction_c1/kdot_interaction_c1_src_v1.tar. It includes
+  the KDOT module, its testbench, the Python reference, generated vectors,
+  both file lists, the runner, the README, and the hash manifest. Paths
+  inside the runner are relative to the extracted tree.
+- This environment has no xvlog, xelab, or xsim on PATH, and
+  VIVADO_SETTINGS is unset. The status in
+  docs/evidence/kdot_interaction_c1/status_v1.txt is NOT_RUN. Python
+  reference output is not an XSim pass. Toy regression was not simulated.
+  Dense 512 is not started.
+
 

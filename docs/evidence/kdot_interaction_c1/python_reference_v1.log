@@ -1,0 +1,11 @@
+CONTRACT=B
+BOTTOM_INDEX=0..15
+INTERACTION_INDEX=16..366
+LAST_PAIR=(26,25)
+LAST_PAIR_INDEX=350
+LAST_OUTPUT_INDEX=366
+GOLDEN_VALUE_26_25=156
+GOLDEN_NOTE=156 is the tail-case dot product, not a pair index
+BOTTOM_PASSTHROUGH=raw vector 0 on every shift, including 1, 15, and 47
+TIMEOUT_CYCLES=400000
+wrote /workspace/tb/generated/kaggle_c1_cases_v1.svh

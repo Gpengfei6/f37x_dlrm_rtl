@@ -1,0 +1,2 @@
+rtl/interaction/dlrm_feature_interaction_engine.sv
+tb/tb_dlrm_feature_interaction_engine_v2.sv
