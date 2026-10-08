@@ -206,6 +206,10 @@ def self_check():
     assert interact(cases["positive_extreme_shift0"][1], 0)[16] == INT16_MAX
     assert interact(cases["negative_extreme_shift0"][1], 0)[0] == INT16_MIN
     assert interact(cases["negative_extreme_shift0"][1], 0)[16] == INT16_MAX
+    for name, shift, rows in build_cases():
+        outputs = interact(rows, shift)
+        if outputs[:VECTOR_DIM] != rows[0]:
+            raise AssertionError("bottom passthrough changed: " + name)
 
 
 def main():
@@ -218,6 +222,8 @@ def main():
     print("LAST_OUTPUT_INDEX=366")
     print("GOLDEN_VALUE_26_25=156")
     print("GOLDEN_NOTE=156 is the tail-case dot product, not a pair index")
+    print("BOTTOM_PASSTHROUGH=raw vector 0 on every shift, including 1, 15, and 47")
+    print("TIMEOUT_CYCLES=400000")
     root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     destination = os.path.join(root, "generated", "kaggle_c1_cases_v1.svh")
     write_svh(destination, [

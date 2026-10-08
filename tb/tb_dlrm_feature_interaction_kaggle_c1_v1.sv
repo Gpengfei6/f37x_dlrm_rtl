@@ -261,6 +261,19 @@ module tb_dlrm_feature_interaction_kaggle_c1_v1;
         if (c1_expected[CASE_NEG][0] !== 16'sh8000 ||
             c1_expected[CASE_NEG][16] !== 16'sd32767)
             $fatal(1, "negative extreme golden drifted");
+        begin
+            integer check_case;
+            integer check_element;
+            for (check_case = 0; check_case < C1_CASE_COUNT; check_case = check_case + 1) begin
+                if (c1_shift[check_case] != 0) begin
+                    for (check_element = 0; check_element < VECTOR_DIM; check_element = check_element + 1) begin
+                        if (c1_expected[check_case][check_element] !==
+                            c1_vec[check_case][0][check_element])
+                            $fatal(1, "golden bottom changed under shift, case %0d", check_case);
+                    end
+                end
+            end
+        end
 
         $display("CONTRACT=B");
         $display("BOTTOM_INDEX=0..15");
@@ -276,6 +289,10 @@ module tb_dlrm_feature_interaction_kaggle_c1_v1;
             load_case(case_cursor, 0);
             collect_case(case_cursor, 0);
             $display("PASS always_ready case %0d", case_cursor);
+            if (c1_shift[case_cursor] != 0) begin
+                $display("PASS bottom_passthrough_nonzero_shift case %0d shift %0d",
+                    case_cursor, c1_shift[case_cursor]);
+            end
         end
 
         load_case(CASE_ZERO, 1);

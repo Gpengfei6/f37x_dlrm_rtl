@@ -1,6 +1,6 @@
 # Current State
 
-> Current engineering update — 2026-10-08: KDOT_INTERACTION_C1 source and testbench are ready. Contract B is 367 outputs. Dynamic RTL simulation is NOT_RUN because no xvlog or iverilog is on PATH. Python reference self-check is not RTL acceptance. D-098. KAGGLE_FULL_PIPELINE=NOT_YET_VALIDATED. PERFORMANCE=NOT_CLAIMED.
+> Current engineering update — 2026-10-08: KDOT interaction XSim package is relocatable. xvlog/xelab/xsim are not on PATH, so dynamic RTL status stays NOT_RUN. Dense 512 is not started. D-099. PERFORMANCE=NOT_CLAIMED.
 
 > Prior research update — 2026-09-24: Codex review adopted with checks. Next writing task is whether exact reuse still costs something after UCNN; if not, E does not open. C is not the next screen. B and D stay suspended. A stays closed. D-095. No RTL. PERFORMANCE=NOT_CLAIMED.
 

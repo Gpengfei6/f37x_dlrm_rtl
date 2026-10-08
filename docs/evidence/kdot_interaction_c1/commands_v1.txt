@@ -1,0 +1,4 @@
+pwd=/workspace
+root=/workspace
+PATH=/usr/local/cargo/bin:/exec-daemon:/exec-daemon/tools:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.22.2/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+VIVADO_SETTINGS=unset

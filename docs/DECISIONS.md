@@ -1920,4 +1920,17 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
   started. Toy RTL hash remains
   bea4b184f2649ea43d01971eeea5cd23d8a1ed1781b7d52ff047c7b413bd653b.
 
+## D-099 - KDOT XSim package is ready and was not executed here
+
+- Date: 2026-10-08. The portable package is
+  scripts/kdot_interaction_c1/kdot_interaction_c1_src_v1.tar. It includes
+  the KDOT module, its testbench, the Python reference, generated vectors,
+  both file lists, the runner, the README, and the hash manifest. Paths
+  inside the runner are relative to the extracted tree.
+- This environment has no xvlog, xelab, or xsim on PATH, and
+  VIVADO_SETTINGS is unset. The status in
+  docs/evidence/kdot_interaction_c1/status_v1.txt is NOT_RUN. Python
+  reference output is not an XSim pass. Toy regression was not simulated.
+  Dense 512 is not started.
+
 
