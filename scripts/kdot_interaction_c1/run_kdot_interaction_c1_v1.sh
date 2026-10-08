@@ -11,9 +11,12 @@ ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 OUT="${KDOT_OUT:-${ROOT}/docs/evidence/kdot_interaction_c1}"
 mkdir -p "${OUT}"
 STATUS="${OUT}/status_v1.txt"
-COMPILE_LOG="${OUT}/compile_v1.log"
-SIM_LOG="${OUT}/sim_v1.log"
-TOY_LOG="${OUT}/toy_regression_v1.log"
+XVLOG_LOG="${OUT}/xvlog_v1.log"
+XELAB_LOG="${OUT}/xelab_v1.log"
+XSIM_LOG="${OUT}/xsim_v1.log"
+TOY_XVLOG_LOG="${OUT}/toy_xvlog_v1.log"
+TOY_XELAB_LOG="${OUT}/toy_xelab_v1.log"
+TOY_XSIM_LOG="${OUT}/toy_xsim_v1.log"
 COMMAND_LOG="${OUT}/commands_v1.txt"
 
 cd "${ROOT}"
@@ -25,20 +28,22 @@ write_not_run() {
         echo "PYTHON_REFERENCE=PASS"
         echo "SIMULATOR=ABSENT"
         echo "REASON=${reason}"
-        echo "KDOT_INTERACTION_C1_COMPILE=NOT_RUN"
-        echo "KDOT_INTERACTION_C1_351PAIR=NOT_RUN"
-        echo "KDOT_INTERACTION_C1_ORDER=NOT_RUN"
-        echo "KDOT_INTERACTION_C1_NUMERIC=NOT_RUN"
-        echo "KDOT_INTERACTION_C1_BACKPRESSURE=NOT_RUN"
-        echo "KDOT_INTERACTION_C1_RESET=NOT_RUN"
-        echo "KDOT_INTERACTION_C1_TOY_REGRESSION=NOT_RUN"
-        echo "PRODUCTION_RTL=UNCHANGED"
+        echo "KDOT_C1_XVLOG=NOT_RUN"
+        echo "KDOT_C1_XELAB=NOT_RUN"
+        echo "KDOT_C1_XSIM=NOT_RUN"
+        echo "KDOT_C1_367_OUTPUT=NOT_RUN"
+        echo "KDOT_C1_351_PAIR_ORDER=NOT_RUN"
+        echo "KDOT_C1_NUMERIC=NOT_RUN"
+        echo "KDOT_C1_BACKPRESSURE=NOT_RUN"
+        echo "KDOT_C1_RESET_RESTART=NOT_RUN"
+        echo "TOY_REGRESSION=NOT_RUN"
+        echo "RTL_C1_ACCEPTANCE=NOT_RUN"
         echo "DENSE_512=NOT_STARTED"
-        echo "FULL_KAGGLE_PIPELINE=NOT_VALIDATED"
     } | tee "${STATUS}"
-    printf '%s\n' "${reason}" > "${COMPILE_LOG}"
-    printf '%s\n' "dynamic simulation was not started" > "${SIM_LOG}"
-    printf '%s\n' "toy regression was not started" > "${TOY_LOG}"
+    printf '%s\n' "${reason}" > "${XVLOG_LOG}"
+    printf '%s\n' "${reason}" > "${XELAB_LOG}"
+    printf '%s\n' "${reason}" > "${XSIM_LOG}"
+    printf '%s\n' "toy regression was not started" > "${TOY_XSIM_LOG}"
     {
         echo "pwd=$(pwd)"
         echo "root=${ROOT}"
@@ -61,24 +66,36 @@ if ! command -v xvlog >/dev/null 2>&1 || ! command -v xelab >/dev/null 2>&1 || !
 fi
 
 {
-    echo "command: vivado version probe"
+    echo "pwd=$(pwd)"
+    echo "root=${ROOT}"
+    echo "PATH=${PATH}"
+    echo "VIVADO_SETTINGS=${VIVADO_SETTINGS:-unset}"
     vivado -version || true
-    echo "command: xvlog kdot"
-    xvlog --sv -i "${ROOT}/tb" -f "${ROOT}/scripts/kdot_interaction_c1/filelist_v1.f"
-    echo "command: xelab kdot"
-    xelab -s kdot_interaction_c1_snap tb_dlrm_feature_interaction_kaggle_c1_v1
-    echo "command: xsim kdot"
-    xsim kdot_interaction_c1_snap --runall
-} > "${SIM_LOG}" 2> "${COMPILE_LOG}"
+} > "${COMMAND_LOG}"
 
 set +e
-python3 - "${SIM_LOG}" "${COMPILE_LOG}" "${STATUS}" << 'PY'
+xvlog --sv -i "${ROOT}/tb" -f "${ROOT}/scripts/kdot_interaction_c1/filelist_v1.f" \
+    > "${XVLOG_LOG}" 2>&1
+xvlog_rc=$?
+xelab -s kdot_interaction_c1_snap tb_dlrm_feature_interaction_kaggle_c1_v1 \
+    > "${XELAB_LOG}" 2>&1
+xelab_rc=$?
+if [[ "${xvlog_rc}" -eq 0 && "${xelab_rc}" -eq 0 ]]; then
+    xsim kdot_interaction_c1_snap --runall > "${XSIM_LOG}" 2>&1
+    xsim_rc=$?
+else
+    printf '%s\n' "xsim was not started" > "${XSIM_LOG}"
+    xsim_rc=127
+fi
+set -e
+
+set +e
+python3 - "${XVLOG_LOG}" "${XELAB_LOG}" "${XSIM_LOG}" "${STATUS}" \
+    "${xvlog_rc}" "${xelab_rc}" "${xsim_rc}" << 'PY'
 import sys
-sim = open(sys.argv[1], encoding="utf-8", errors="replace").read()
-comp = open(sys.argv[2], encoding="utf-8", errors="replace").read()
-required = [
-    "PASS always_ready case %d" % i for i in range(13)
-] + [
+xvlog, xelab, xsim = [open(p, encoding="utf-8", errors="replace").read() for p in sys.argv[1:4]]
+status, xvlog_rc, xelab_rc, xsim_rc = sys.argv[4], int(sys.argv[5]), int(sys.argv[6]), int(sys.argv[7])
+required = ["PASS always_ready case %d" % i for i in range(13)] + [
     "PASS bottom_passthrough_nonzero_shift case 6",
     "PASS bottom_passthrough_nonzero_shift case 7",
     "PASS bottom_passthrough_nonzero_shift case 8",
@@ -91,63 +108,64 @@ required = [
     "PASS second_request_new_vectors",
     "PASS reset_restart",
     "PASS bad_shift",
-    "KDOT_INTERACTION_C1_PASS",
     "GOLDEN_VALUE_26_25=156",
+    "KDOT_INTERACTION_C1_PASS",
 ]
-missing = [line for line in required if line not in sim]
-compile_fail = "ERROR:" in comp and "KDOT_INTERACTION_C1_PASS" not in sim
-lines = ["PYTHON_REFERENCE=PASS"]
-if missing or compile_fail or "KDOT_INTERACTION_C1_PASS" not in sim:
-    lines.append("KDOT_INTERACTION_C1_COMPILE=FAIL" if compile_fail else "KDOT_INTERACTION_C1_COMPILE=PASS")
-    for key in (
-        "KDOT_INTERACTION_C1_351PAIR",
-        "KDOT_INTERACTION_C1_ORDER",
-        "KDOT_INTERACTION_C1_NUMERIC",
-        "KDOT_INTERACTION_C1_BACKPRESSURE",
-        "KDOT_INTERACTION_C1_RESET",
-    ):
-        lines.append(key + "=FAIL")
+missing = [line for line in required if line not in xsim]
+dynamic_ok = xvlog_rc == 0 and xelab_rc == 0 and xsim_rc == 0 and not missing
+lines = [
+    "PYTHON_REFERENCE=PASS",
+    "KDOT_C1_XVLOG=" + ("PASS" if xvlog_rc == 0 else "FAIL"),
+    "KDOT_C1_XELAB=" + ("PASS" if xelab_rc == 0 else "FAIL"),
+    "KDOT_C1_XSIM=" + ("PASS" if dynamic_ok else "FAIL"),
+]
+for key in (
+    "KDOT_C1_367_OUTPUT",
+    "KDOT_C1_351_PAIR_ORDER",
+    "KDOT_C1_NUMERIC",
+    "KDOT_C1_BACKPRESSURE",
+    "KDOT_C1_RESET_RESTART",
+):
+    lines.append(key + ("=PASS" if dynamic_ok else "=FAIL"))
+lines.append("RTL_C1_ACCEPTANCE=" + ("PASS" if dynamic_ok else "FAIL"))
+if missing:
     lines.append("MISSING_LOG_LINES=" + " | ".join(missing))
-    ok = False
-else:
-    lines.extend([
-        "KDOT_INTERACTION_C1_COMPILE=PASS",
-        "KDOT_INTERACTION_C1_351PAIR=PASS",
-        "KDOT_INTERACTION_C1_ORDER=PASS",
-        "KDOT_INTERACTION_C1_NUMERIC=PASS",
-        "KDOT_INTERACTION_C1_BACKPRESSURE=PASS",
-        "KDOT_INTERACTION_C1_RESET=PASS",
-    ])
-    ok = True
-open(sys.argv[3], "w", encoding="utf-8").write("\n".join(lines) + "\n")
+lines.append("XVLOG_RC=%d" % xvlog_rc)
+lines.append("XELAB_RC=%d" % xelab_rc)
+lines.append("XSIM_RC=%d" % xsim_rc)
+open(status, "w", encoding="utf-8").write("\n".join(lines) + "\n")
 print("\n".join(lines))
-sys.exit(0 if ok else 1)
+sys.exit(0 if dynamic_ok else 1)
 PY
 kdot_status=$?
 set -e
 if [[ "${kdot_status}" -ne 0 ]]; then
-    echo "KDOT_INTERACTION_C1_TOY_REGRESSION=NOT_RUN" >> "${STATUS}"
+    echo "TOY_REGRESSION=NOT_RUN" >> "${STATUS}"
     echo "DENSE_512=NOT_STARTED" >> "${STATUS}"
-    echo "FULL_KAGGLE_PIPELINE=NOT_VALIDATED" >> "${STATUS}"
     exit "${kdot_status}"
 fi
 
-{
-    echo "command: xvlog toy"
-    xvlog --sv -f "${ROOT}/scripts/kdot_interaction_c1/filelist_toy_v1.f"
-    echo "command: xelab toy"
-    xelab -s kdot_toy_interaction_snap tb_dlrm_feature_interaction_engine_v2
-    echo "command: xsim toy"
-    xsim kdot_toy_interaction_snap --runall
-} > "${TOY_LOG}" 2>> "${COMPILE_LOG}"
-
-if grep -q "tb_dlrm_feature_interaction_engine_v2: PASS" "${TOY_LOG}"; then
-    echo "KDOT_INTERACTION_C1_TOY_REGRESSION=PASS" >> "${STATUS}"
+set +e
+xvlog --sv -f "${ROOT}/scripts/kdot_interaction_c1/filelist_toy_v1.f" \
+    > "${TOY_XVLOG_LOG}" 2>&1
+toy_xvlog_rc=$?
+xelab -s kdot_toy_interaction_snap tb_dlrm_feature_interaction_engine_v2 \
+    > "${TOY_XELAB_LOG}" 2>&1
+toy_xelab_rc=$?
+if [[ "${toy_xvlog_rc}" -eq 0 && "${toy_xelab_rc}" -eq 0 ]]; then
+    xsim kdot_toy_interaction_snap --runall > "${TOY_XSIM_LOG}" 2>&1
+    toy_xsim_rc=$?
 else
-    echo "KDOT_INTERACTION_C1_TOY_REGRESSION=FAIL" >> "${STATUS}"
+    printf '%s\n' "toy xsim was not started" > "${TOY_XSIM_LOG}"
+    toy_xsim_rc=127
+fi
+set -e
+if [[ "${toy_xsim_rc}" -eq 0 ]] && grep -q "tb_dlrm_feature_interaction_engine_v2: PASS" "${TOY_XSIM_LOG}"; then
+    echo "TOY_REGRESSION=PASS" >> "${STATUS}"
+else
+    echo "TOY_REGRESSION=FAIL" >> "${STATUS}"
+    echo "DENSE_512=NOT_STARTED" >> "${STATUS}"
     exit 1
 fi
-echo "PRODUCTION_RTL=UNCHANGED" >> "${STATUS}"
 echo "DENSE_512=NOT_STARTED" >> "${STATUS}"
-echo "FULL_KAGGLE_PIPELINE=NOT_VALIDATED" >> "${STATUS}"
 cat "${STATUS}"

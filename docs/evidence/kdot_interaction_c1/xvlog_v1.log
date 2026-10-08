@@ -1,0 +1,1 @@
+xvlog, xelab, and xsim are not on PATH. Set VIVADO_SETTINGS to the machine's settings64.sh and rerun. Do not treat this file as a passing XSim result.
