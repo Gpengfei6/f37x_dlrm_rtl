@@ -1,0 +1,2 @@
+rtl/interaction/dlrm_feature_interaction_kaggle_c1_v1.sv
+tb/tb_dlrm_feature_interaction_kaggle_c1_v1.sv

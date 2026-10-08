@@ -1908,4 +1908,16 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
   testbench. The toy interaction file is not edited. No A13/A18 connection
   and no Vivado implementation.
 
+## D-098 - KDOT interaction simulation was not run
+
+- Date: 2026-10-08. The new interaction output contract is B: Bottom
+  indices 0..15, then 351 dots at indices 16..366. Pair (26,25) is pair
+  index 350 and output index 366. In the tail vector case the dot value
+  is 156; 156 is not the pair index.
+- PATH has no xvlog, xelab, xsim, iverilog, or vvp. The run is recorded
+  as NOT_RUN in docs/evidence/kdot_interaction_c1/status_v1.txt. Python
+  reference self-check passing does not accept the RTL. Dense 512 is not
+  started. Toy RTL hash remains
+  bea4b184f2649ea43d01971eeea5cd23d8a1ed1781b7d52ff047c7b413bd653b.
+
 

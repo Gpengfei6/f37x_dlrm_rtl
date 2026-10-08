@@ -66,29 +66,64 @@ def _clip_case(rows):
     return clipped
 
 
+def blank():
+    return [[0] * VECTOR_DIM for _ in range(VECTOR_COUNT)]
+
+
+def pair_index(row, column):
+    if not (1 <= row < VECTOR_COUNT and 0 <= column < row):
+        raise ValueError("pair")
+    return row * (row - 1) // 2 + column
+
+
 def build_cases():
-    zero = [[0] * VECTOR_DIM for _ in range(VECTOR_COUNT)]
-    random_rows = []
+    zero = blank()
     generator = random.Random(20261008)
-    for _ in range(VECTOR_COUNT):
-        random_rows.append([
-            generator.randint(-200, 200) for _ in range(VECTOR_DIM)
-        ])
+    random_rows = [
+        [generator.randint(-200, 200) for _ in range(VECTOR_DIM)]
+        for _ in range(VECTOR_COUNT)
+    ]
     positive = [[INT16_MAX] * VECTOR_DIM for _ in range(VECTOR_COUNT)]
     negative = [[INT16_MIN] * VECTOR_DIM for _ in range(VECTOR_COUNT)]
-    tail = [[0] * VECTOR_DIM for _ in range(VECTOR_COUNT)]
+    pos16 = blank()
+    neg16 = blank()
+    for element in range(VECTOR_DIM):
+        pos16[0][element] = 3
+        pos16[1][element] = 20
+        neg16[0][element] = -3
+        neg16[1][element] = 20
+    tie_pos = blank()
+    tie_pos[0][0] = 1
+    tie_pos[1][0] = 1
+    tie_neg = blank()
+    tie_neg[0][0] = -1
+    tie_neg[1][0] = 1
+    tie_pos_wide = blank()
+    tie_pos_wide[0][0] = 128
+    tie_pos_wide[1][0] = 128
+    tie_neg_wide = blank()
+    tie_neg_wide[0][0] = -128
+    tie_neg_wide[1][0] = 128
+    order = blank()
+    for index in range(VECTOR_COUNT):
+        order[index][0] = index + 1
+    tail = blank()
     for index in range(VECTOR_COUNT):
         tail[index][VECTOR_DIM - 1] = index - 13
-    tie = [[0] * VECTOR_DIM for _ in range(VECTOR_COUNT)]
-    tie[0][0] = 1
-    tie[1][0] = 1
     return [
-        ("zero", 0, zero),
-        ("random", 0, random_rows),
-        ("positive_extreme", 0, positive),
-        ("negative_extreme", 0, negative),
-        ("index_tail", 0, tail),
-        ("rounding_tie", 1, tie),
+        ("zero_shift0", 0, zero),
+        ("random_shift0", 0, random_rows),
+        ("positive_extreme_shift0", 0, positive),
+        ("negative_extreme_shift0", 0, negative),
+        ("pos16_products_shift0", 0, pos16),
+        ("neg16_products_shift0", 0, neg16),
+        ("tie_pos_shift1", 1, tie_pos),
+        ("tie_neg_shift1", 1, tie_neg),
+        ("tie_pos_shift15", 15, tie_pos_wide),
+        ("tie_neg_shift15", 15, tie_neg_wide),
+        ("zero_shift47", 47, zero),
+        ("order_identity_shift0", 0, order),
+        ("tail_golden_shift0", 0, tail),
     ]
 
 
@@ -140,25 +175,49 @@ def self_check():
     assert len(pairs) == 351
     assert pairs[0] == (1, 0)
     assert pairs[1] == (2, 0) and pairs[2] == (2, 1)
+    assert pairs[pair_index(19, 4)] == (19, 4)
     assert pairs[-1] == (26, 25)
-    assert sum(1 for i, _ in pairs if i == 26) == 26
+    assert pair_index(26, 25) == 350
+    assert 16 + pair_index(26, 25) == 366
     zero = interact([[0] * 16 for _ in range(27)], 0)
     assert zero == [0] * 367
     assert quantize(1, 1) == 1
     assert quantize(-1, 1) == -1
+    assert quantize(16384, 15) == 1
+    assert quantize(-16384, 15) == -1
     assert quantize(16 * (32767 ** 2), 0) == INT16_MAX
     assert quantize(16 * ((-32768) ** 2), 0) == INT16_MAX
     assert quantize(-16 * (32767 ** 2), 0) == INT16_MIN
-    vectors = [[0] * 16 for _ in range(27)]
-    vectors[26][15] = 3
-    vectors[25][15] = 4
-    outputs = interact(vectors, 0)
-    assert outputs[366] == 12
-    assert outputs[16] == 0
+    cases = {name: (shift, rows) for name, shift, rows in build_cases()}
+    pos16 = interact(cases["pos16_products_shift0"][1], 0)
+    neg16 = interact(cases["neg16_products_shift0"][1], 0)
+    assert pos16[16] == 960
+    assert neg16[16] == -960
+    order = interact(cases["order_identity_shift0"][1], 0)
+    assert order[16] == 2
+    assert order[16 + pair_index(19, 4)] == 20 * 5
+    assert order[366] == 27 * 26
+    tail = interact(cases["tail_golden_shift0"][1], 0)
+    assert tail[366] == 156
+    assert interact(cases["tie_pos_shift1"][1], 1)[16] == 1
+    assert interact(cases["tie_neg_shift1"][1], 1)[16] == -1
+    assert interact(cases["tie_pos_shift15"][1], 15)[16] == 1
+    assert interact(cases["tie_neg_shift15"][1], 15)[16] == -1
+    assert interact(cases["positive_extreme_shift0"][1], 0)[16] == INT16_MAX
+    assert interact(cases["negative_extreme_shift0"][1], 0)[0] == INT16_MIN
+    assert interact(cases["negative_extreme_shift0"][1], 0)[16] == INT16_MAX
 
 
 def main():
     self_check()
+    print("CONTRACT=B")
+    print("BOTTOM_INDEX=0..15")
+    print("INTERACTION_INDEX=16..366")
+    print("LAST_PAIR=(26,25)")
+    print("LAST_PAIR_INDEX=350")
+    print("LAST_OUTPUT_INDEX=366")
+    print("GOLDEN_VALUE_26_25=156")
+    print("GOLDEN_NOTE=156 is the tail-case dot product, not a pair index")
     root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     destination = os.path.join(root, "generated", "kaggle_c1_cases_v1.svh")
     write_svh(destination, [

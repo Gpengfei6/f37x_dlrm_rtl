@@ -1,6 +1,6 @@
 # Current State
 
-> Current engineering update — 2026-10-08: Kaggle interaction RTL-C1 is a new module only. Toy production RTL is unchanged. A18 has 8 descriptor slots, so 7 layers fit; weights stay capped at 2048 and the toy interaction stays at 18 results. No simulator was present, so the C1 RTL test is NOT_RUN. D-097. REAL_KAGGLE_RTL=NOT_YET_VALIDATED. PERFORMANCE=NOT_CLAIMED.
+> Current engineering update — 2026-10-08: KDOT_INTERACTION_C1 source and testbench are ready. Contract B is 367 outputs. Dynamic RTL simulation is NOT_RUN because no xvlog or iverilog is on PATH. Python reference self-check is not RTL acceptance. D-098. KAGGLE_FULL_PIPELINE=NOT_YET_VALIDATED. PERFORMANCE=NOT_CLAIMED.
 
 > Prior research update — 2026-09-24: Codex review adopted with checks. Next writing task is whether exact reuse still costs something after UCNN; if not, E does not open. C is not the next screen. B and D stay suspended. A stays closed. D-095. No RTL. PERFORMANCE=NOT_CLAIMED.
 

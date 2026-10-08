@@ -6,14 +6,17 @@
 // rtl/interaction/dlrm_feature_interaction_engine.sv. That toy engine stays
 // unchanged.
 //
-// Contract, matching facebookresearch/dlrm commit 6d75c84d with
-// arch_interaction_op=dot and arch_interaction_itself=False:
+// Output contract B, matching facebookresearch/dlrm commit 6d75c84d
+// with arch_interaction_op=dot and arch_interaction_itself=False:
 //   * 27 signed INT16 vectors, 16 elements each.
-//   * Vector 0 is the Bottom MLP output.
-//   * Vectors 1..26 are embedding vectors.
-//   * 367 signed INT16 outputs:
-//       output[0..15]   = vector 0, element 0 first
-//       output[16..366] = dot(V[i], V[j]) for i=1..26, j=0..i-1
+//   * Load index 0 is the Bottom MLP output. Indices 1..26 are embeddings.
+//     Arrival order may vary; the index selects the slot.
+//   * 367 signed INT16 outputs, not 351:
+//       index 0..15   = Bottom vector, element 0 first
+//       index 16..366 = dot(V[i], V[j]) for i=1..26, j=0..i-1
+//   * Pair 0 is (1,0). Pair 350 is (26,25). Output 366 is that last pair.
+//   * result_last is high only while index 366 is valid. Backpressure may
+//     hold that beat; it is not a second last beat.
 //   * Each dot is 16 signed INT16 products accumulated in INT48.
 //   * Runtime right shift uses nearest rounding, ties away from zero,
 //     then saturates to signed INT16.
@@ -175,16 +178,17 @@ module dlrm_feature_interaction_kaggle_c1_v1 #(
     always_comb begin
         integer row_i;
         integer covered;
+        integer pair_index_int;
 
         pair_row_value = '0;
         pair_column_value = '0;
         covered = 0;
+        pair_index_int = pair_index_reg;
         for (row_i = 1; row_i < VECTOR_COUNT; row_i = row_i + 1) begin
-            if ((integer'(pair_index_reg) >= covered) &&
-                (integer'(pair_index_reg) < (covered + row_i))) begin
+            if ((pair_index_int >= covered) &&
+                (pair_index_int < (covered + row_i))) begin
                 pair_row_value = row_i[INDEX_WIDTH-1:0];
-                pair_column_value =
-                    INDEX_WIDTH'(integer'(pair_index_reg) - covered);
+                pair_column_value = pair_index_int - covered;
             end
             covered = covered + row_i;
         end
