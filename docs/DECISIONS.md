@@ -1891,4 +1891,21 @@ move to physical-HBM embedding integration with the A13 Interaction/Top-MLP pipe
   stay off the A13 pipeline. Record:
   `docs/KAGGLE_DOT_RTL_SCALING_AUDIT_20261008_V1.md`.
 
+## D-097 - A18 descriptor depth is 8; interaction literals remain the C1 blocker
+
+- Date: 2026-10-08. Corrects the slot sentence in D-096. The segmented
+  controller defaults to MAX_LAYERS=4, but the A16/A18 adapters default to
+  8 and pass that value through u_a13_pipeline and u_segmented_mlp. Seven
+  Kaggle layer descriptors fit in those 8 slots. The pipeline opens
+  descriptor and weight writes only in STATE_IDLE, so Bottom and Top still
+  have to be resident together; mid-run reuse is not present.
+- A18 weight and bias depths stay 2048 and 128. The toy interaction engine
+  and u_interaction stay fixed at 5 vectors, 10 pairs, and 18 results.
+  630 and 582 cycle logs were not located. That is NOT_LOCATED, not a
+  finding that an off-repository record is invalid.
+- RTL-C1 is a new module,
+  rtl/interaction/dlrm_feature_interaction_kaggle_c1_v1.sv, with its own
+  testbench. The toy interaction file is not edited. No A13/A18 connection
+  and no Vivado implementation.
+
 

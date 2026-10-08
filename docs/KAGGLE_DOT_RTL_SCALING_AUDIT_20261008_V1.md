@@ -2,6 +2,8 @@
 
 日期：2026-10-08。范围：源码审计和分阶段计划。没有修改生产 RTL，没有跑综合或 implementation，没有把训练中的 validation accuracy 当成最终精度。`REAL_KAGGLE_RTL=NOT_YET_VALIDATED`。`PERFORMANCE=NOT_CLAIMED`。
 
+复核：`RTL_SOURCE_AUDIT=PASS` 不是独立验收。第 11 节用行号和原文更正了一处结论：A18 生产链的描述符槽是 8 个，不是模块默认值 4。4 槽不够只对未覆写的默认例化成立。当前控制时序仍然要求 Bottom 与 Top 的描述符在同一次启动前同时驻留，但 8 槽装得下 7 层，不必为了层数再把槽扩成 7。
+
 模型几何按锁定的 `facebookresearch/dlrm` commit `6d75c84d834380a365e2f03d4838bee464157516`。Dense 13，26 个稀疏域，嵌入维 16。Bottom `13→512→256→64→16`。交互 27 个向量、351 个非自身点积，顺序为 `i=1..26`、`j=0..i-1`。Top 输入是 `[Bottom_out_0..15, interaction_0..350]`，即 16+351=367。Top `367→512→256→1`。稠密 MAC 474368，交互乘法 5616，稠密偏置 1617。这些是静态工作量，不是 FPGA 已跑通的证据。
 
 训练进度只作状态：`best_validation.pt` 在 step 42000，validation accuracy 0.7844；总步数约 306969。最终 EVAL 未执行。0.7844 不进入任何验收。
@@ -18,7 +20,7 @@
 | 交互 | `rtl/interaction/dlrm_feature_interaction_engine.sv` | 参数默认 5×8，但 `PAIR_COUNT=10`、结果索引 5 位、装入索引 3 位、配对表是 10 项 case | 不满足。改默认参数也不会变成 27×16 |
 | 激活缓冲 | `rtl/memory/banked_activation_buffer.sv` | 深度随 `MAX_DIM`。A18 的 `MAX_IN/OUT=64`，块深为 4 | 512 宽层不满足 |
 | 权重/偏置 | `rtl/memory/local_weight_provider.sv` | 越界即 `weight_rsp_error` / `bias_rsp_error`。A18 上限 2048 / 128 | 不满足 |
-| 层控制器 | `rtl/control/mlp_sequence_controller_segmented.sv` | `MAX_LAYERS=4`。描述符 96 位：输入维 `[10:0]`、输出维 `[21:11]`、权重基址 32 位、偏置基址 32 位、移位 6 位、ReLU 1 位 | 单层 512 能放进 11 位字段；4 个槽装不下 Bottom 4 层加 Top 3 层 |
+| 层控制器 | `rtl/control/mlp_sequence_controller_segmented.sv`，实例 `u_segmented_mlp` | 模块默认 `MAX_LAYERS=4`。A18 经 `u_a13_pipeline` 覆写为 8。描述符 96 位：输入维 `[10:0]`、输出维 `[21:11]`、权重基址 32 位、偏置基址 32 位、移位 6 位、ReLU 1 位 | 11 位字段装得下 512 和 367。A18 的 8 槽装得下 7 层。默认 4 槽装不下 |
 | 流水线 | `rtl/pipeline/dlrm_internal_pipeline_controller.sv` | 4 个 8 维嵌入，Bottom 结果必须正好 8 个，交互结果必须正好 18 个，Top 只装两块（16+2） | 不满足 |
 | A13 外壳 | `rtl/pipeline/dlrm_internal_pipeline_controller_stage2n_a13_v1.sv` | 只加周期计数，计算语义转给上面的流水线 | 随流水线，不满足 |
 | 主机接口 | `rtl/f37x/dlrm_internal_pipeline_axi_lite_adapter_stage2n_a13_v1.sv`，以及 A18 内核 `rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a18_v1.sv` | 嵌入索引 2 位，数据 `8*16` 位。A18 要求 `NUM_PE=16`，`MAX_IN_DIM=64`，`MAX_OUT_DIM=64` | 不满足 |
@@ -35,7 +37,7 @@
 | 嵌入 | `embedding_mem[0:3]`，每条 `8*INPUT_WIDTH`，索引 `[1:0]` | 26 条、每条 16 维 | 4 槽、8 维 |
 | 交互 | 5 向量、维 8、10 对点积、18 个输出 | 27 向量、维 16、351 对、367 个 Top 输入 | 配对表、索引、输出缓冲 |
 | Top 装入 | `interaction_vector[0:17]`，chunk0 取 `[0:15]`，chunk1 取 `[16:17]` | 367 个数，23 个 16 宽块，末块 15 个有效 | 只实现了 18→ 两块 |
-| 描述符槽 | `MAX_LAYERS=4`，索引 2 位 | Bottom 4 层 + Top 3 层 = 7 | 槽位不够，且启动时两段必须同时在表内 |
+| 描述符槽 | 模块默认 4 槽、索引 2 位。A16/A18 适配器默认并下传 8 槽、索引 3 位 | Bottom 4 层 + Top 3 层 = 7，且当前状态机在整次启动前一次装入 | A18 槽位够。中途不能改写。默认例化的 4 槽不够 |
 | 权重存储 | 内核 2048；引擎默认 65536 | 474368 个 INT8 | 第二层 `512*256=131072` 已超过默认 65536 |
 | 偏置存储 | 内核 128；引擎默认 1024 | 1617 个 INT24 | 默认 1024 也不够 |
 | 层宽检查 | A18 的 `MAX_IN_DIM/MAX_OUT_DIM=64` | 367 与 512 | 描述符检查会报 `ERROR_BAD_DIMENSION` |
@@ -52,7 +54,7 @@ Toy 的 1174 是本仓库已记录的小模型计算计数（Bottom 322、交互
 |---|---|---|
 | 27×16、351 点积 | `rtl/interaction/dlrm_feature_interaction_engine.sv` | `PAIR_COUNT`、case 表、`result_index[4:0]`、`vector_load_index[2:0]`、`result_last==(index==17)`、Bottom 发到下标 7 都是字面量 |
 | 交互接入与 Top 装入 | `rtl/pipeline/dlrm_internal_pipeline_controller.sv` | 4 嵌入、8 个 Bottom 结果、18 个交互结果、两块 Top 装入 |
-| 7 个描述符 | `rtl/control/mlp_sequence_controller_segmented.sv` | 数组深度 4 |
+| 描述符同时驻留 | `mlp_sequence_controller_segmented.sv` 的 `u_segmented_mlp` | A18 深度是 8，够 7 层。缺口是配置窗只在流水线 `STATE_IDLE` 打开，Bottom 与 Top 之间不能重装 |
 | 权重和偏置深度 | `rtl/memory/local_weight_provider.sv`，以及内核覆写 | 2048/128 与 65536/1024 都低于 474368/1617 |
 | 层宽 512 | A18 内核参数，不是引擎里的尾块逻辑 | 引擎默认 1024，生产例化是 64 |
 | 主机装入 26×16 | A13 AXI-Lite 适配器和 A18 内核 | 嵌入索引 2 位，数据 128 位 |
@@ -87,7 +89,7 @@ Toy 的 1174 是本仓库已记录的小模型计算计数（Bottom 322、交互
 - 移位取 6 位，并拒绝大于 `ACC_WIDTH` 的移位。尺度可以后填，不必改字段宽度。
 - 权重结束地址是 `base + in_dim*out_dim`，与 `MAX_WEIGHT_VALUES` 比较。`512*256=131072`，大于默认 65536，也大于内核 2048。
 - 偏置结束地址是 `base + out_dim`。全部层按序摆放时结束于 1617，大于默认 1024，也大于内核 128。
-- 描述符索引宽度是 `$clog2(MAX_LAYERS)=2`。第 5、6、7 层没有槽。
+- 模块默认 `MAX_LAYERS=4` 时索引是 2 位。A18 覆写为 8 后索引是 3 位，槽 0..6 可寻址。详见第 11 节。
 
 主机结果元数据在 A18 内核里把 `core_result_index` 写入 `result_meta_word[9:4]`，只有 6 位。`MAX_OUT_DIM=64` 时刚好。输出维 512 的下标要 9 位，这个打包会截断。Stage A 的最终结果只有 1 个数，但中间调试口如果仍用这 6 位，不能表示 Bottom 或交互下标。
 
@@ -218,11 +220,101 @@ RTL 在 C5 之前只接受合成整数。GLM 导出必须逐层给出：
 
 1. 交互引擎不是“参数还没调大”。配对表、结果个数 18、装入索引 3 位、结果索引 5 位都是结构字面量。
 2. 生产流水线把 Toy 几何写进了状态机：4 个嵌入、8 个 Bottom 结果、18 个交互结果、两块 Top 装入。只增大 `MAX_IN_DIM` 不会改这些比较。
-3. 描述符只有 4 槽，Kaggle 需要 7 个同时驻留的层。
+3. 描述符槽在 A18 上是 8 个，7 层同时驻留不需要把槽扩成 7。当前时序不允许 Bottom 和 Top 之间重装。未覆写的默认 4 槽才装不下。权重深度和交互字面量仍然是 blocker。
 4. 权重和偏置上限在内核上是 2048 和 128，在引擎默认值上是 65536 和 1024。Kaggle 是 474368 和 1617。
 5. A18 把最大层宽覆写为 64。367 和 512 会在描述符检查被拒绝。
 6. 定点尺度和最终权重还没有。训练未完成。Sigmoid 不在 RTL 中，必须留在导出合同里，不能临时改语义。
 7. Stage B 的实际 HBM 可用容量仍未知。它不阻止 Stage A，也不能被写成已经可部署。
+
+## 11. 复核证据
+
+证据等级：`SOURCE_VERIFIED` 是源码原文。`STATIC_DERIVATION` 是由这些原文算出的宽度或容量，没有新的仿真。`DESIGN_PROPOSAL` 是当前源码没有的改法。
+
+复核时生产 RTL 的提交是 `d0dc6208de45f171ed54acbfb126c7c98f86680c`。当时 `git status --short` 为空。下表哈希对应该提交中的文件；本复核不修改它们。
+
+| 文件 | SHA256 |
+|---|---|
+| `rtl/interaction/dlrm_feature_interaction_engine.sv` | `bea4b184f2649ea43d01971eeea5cd23d8a1ed1781b7d52ff047c7b413bd653b` |
+| `rtl/pipeline/dlrm_internal_pipeline_controller.sv` | `3a180664f2a6eb46ffeef5e332d1b1b1072fe4ab8e0b131f76c3e0870711a999` |
+| `rtl/pipeline/dlrm_internal_pipeline_controller_stage2n_a13_v1.sv` | `e61ef7dfee560e3c354cc9d887ed38bc13384a366a5c67d351d4aa433f15f649` |
+| `rtl/pipeline/dlrm_hbm_pipeline_integration_stage2n_a18_v1.sv` | `b1f3f864b227a2a227fc79449363458bc211ca113a2d5a50af32830487addea2` |
+| `rtl/control/mlp_sequence_controller_segmented.sv` | `8aeee1f38e9e611dfb64aa0e7795629122ab78650270801b2476d927926572b8` |
+| `rtl/compute/dense_layer_engine.sv` | `49130fcfaa28736695ff614d9f00df7cbd7272a924d2c96af77806b8e4534ad6` |
+| `rtl/compute/vector_dot_product_core.sv` | `a6a2c320d4d7be95bd8c5e9a7d0e221f8e8b38dc4e228fef47b8c50968454cdd` |
+| `rtl/compute/mac_lane.sv` | `f3b6364e6e8aef5b7c0365c79605cdbca5a9af4beb3c0705adb7600904c13334` |
+| `rtl/memory/local_weight_provider.sv` | `b55841911580f7c5930df615b9064d918e48693d72e550b32658940bb7c2ec64` |
+| `rtl/f37x/dlrm_f37x_rtl_kernel_stage2n_a18_v1.sv` | `613686581de9574d96eeb2763ae415b9391ea2f3c6a1ab307ca38516b065d591` |
+| `tb/tb_dlrm_feature_interaction_engine_v2.sv` | `5e2dd511a46e685371921ac206e90d22bed3c78f696df275c4481a18b2897a91` |
+
+### 11.1 交互固定逻辑（SOURCE_VERIFIED）
+
+模块 `dlrm_feature_interaction_engine`，实例 `u_interaction`，在 `dlrm_internal_pipeline_controller.sv` 第 615–621 行被固定为 `VECTOR_COUNT(5)`、`VECTOR_DIM(8)`。
+
+引擎自身第 22–45 行：
+
+```systemverilog
+parameter integer VECTOR_COUNT = 5,
+parameter integer VECTOR_DIM = 8,
+...
+input  logic [2:0]                       vector_load_index,
+...
+output logic [4:0]                       result_index,
+```
+
+第 56 行 `localparam integer PAIR_COUNT = 10;`。第 101–136 行的 `pair_row` / `pair_column` 只列出 10 对，从 `(1,0)` 到 `(4,3)`。第 210 行 `result_last` 比较 `result_index_reg == 5'd17`。第 323 行 Bottom 发到 `result_index_reg == 5'd7` 就停止。第 341 行点积结果下标是 `5'd8 + pair_index_reg`。第 357 行发完 `PAIR_COUNT-1` 即结束。
+
+因此 5 向量、10 配对、3 位装入索引、5 位结果索引、18 个输出（8 个 Bottom 元素加 10 个点积）都是固定逻辑。只改默认参数不能得到 27、351 或 367。`STATIC_DERIVATION`：367 需要至少 9 位结果索引，351 需要至少 9 位配对索引，27 个向量需要至少 5 位装入索引。
+
+上游是流水线的 `interaction_vector_load_*`。下游是 `interaction_vector[0:17]` 和 Top 的两块装入。改交互模块而不改这两处，生产链仍会按 18 个结果报 `ERROR_INTERACTION_PROTOCOL`。
+
+### 11.2 稠密宽度、容量和尾块（SOURCE_VERIFIED）
+
+`dense_layer_engine` 默认 `MAX_IN_DIM=1024`、`MAX_OUT_DIM=1024`、`MAX_WEIGHT_VALUES=65536`、`MAX_BIAS_VALUES=1024`，见该文件第 4–15 行。尾块掩码在第 204–211 行：`(chunk_index_counter*NUM_PE + mask_lane) < descriptor_in_dim`。13、367、1 可以被这个掩码表达。这不等于生产例化允许这些维度。
+
+A18 适配器 `dlrm_internal_pipeline_axi_lite_adapter_stage2n_a18_v1` 第 674–684 行把参数覆写成 `MAX_LAYERS=8`、`MAX_IN_DIM=64`、`MAX_OUT_DIM=64`、`MAX_WEIGHT_VALUES=2048`、`MAX_BIAS_VALUES=128`。实例 `u_pipeline_adapter` 把它们传给 `dlrm_hbm_pipeline_integration_stage2n_a18_v1`。该模块第 260–277 行的实例 `u_a13_pipeline` 再传给 A13。A13 模块默认 `MAX_LAYERS=4`、`MAX_IN_DIM=1024`，但第 183–186 行把收到的 `MAX_LAYERS` 和 `MAX_IN_DIM` 传给 `u_canonical_pipeline`。流水线第 558–575 行的 `u_segmented_mlp` 继续下传。
+
+`STATIC_DERIVATION`：A18 上 `in_dim=367` 或 `512` 大于 64，分段控制器第 288–290 行给出 `ERROR_BAD_DIMENSION`。`512*256=131072` 大于 2048，也大于引擎默认 65536，第 311–312 行给出 `ERROR_WEIGHT_RANGE`。偏置总数 1617 大于 128，也大于默认 1024。
+
+`mac_lane` 第 17 行 `PRODUCT_WIDTH = INPUT_WIDTH + WEIGHT_WIDTH`，即稠密 INT16×INT8 的 24 位。交互不能借用这条乘积宽度。
+
+### 11.3 描述符槽：8 槽够用，中途不能复用（SOURCE_VERIFIED）
+
+分段控制器默认数组是 `desc_in_dim [0:MAX_LAYERS-1]`，默认 `MAX_LAYERS=4`。A16 与 A18 适配器的默认值是 `MAX_LAYERS=8`，并且这条生产链把 8 传到 `u_segmented_mlp`。主机描述符索引是 32 位寄存器 `desc_index_stage`，提交时切到 `LAYER_INDEX_WIDTH`。`MAX_LAYERS=8` 时该宽度是 3，槽 0..7 可以从主机写到。
+
+7 层是否必须扩槽，不由层数单独决定，而由配置窗决定。流水线第 225–233 行：`config_window_open` 只在 `state == STATE_IDLE` 时为真，描述符写使能是 `descriptor_cfg_valid && config_window_open`。第 264–273 行在 `STATE_START_BOTTOM` 和 `STATE_START_TOP` 使用启动时锁存的两套 base 和 layer count。从 Bottom 结束到 Top 开始，状态经过装入向量、交互和 Top 装入，不是 `STATE_IDLE`。因此主机不能在两段之间改写描述符。
+
+`SOURCE_VERIFIED` 结论：当前一次启动要求 7 个描述符同时驻留。A18 的 8 槽满足这件事，不必把槽从 4 改成 7。未覆写的 4 槽默认例化不满足。`DESIGN_PROPOSAL`：若将来在 Bottom 完成且分段控制器回到 `STATE_IDLE` 时另开配置窗，可以复用 4 槽；那不是当前时序。
+
+### 11.4 权重驻留（SOURCE_VERIFIED）
+
+`local_weight_provider` 第 174–178 行每个 `weight_cfg` 握手写入一个 INT8。流水线第 237–240 行把这个写使能限制在 `config_window_open`。计算过程中第 183–185 行只从已写入的 bank 读出。分段控制器在段开始时检查 `base + in_dim*out_dim <= MAX_WEIGHT_VALUES`，段内层与层之间没有第二扇配置窗。
+
+因此：不是必须在一个周期里写下全部权重；是必须在启动前把即将运行的那一段会访问的地址全部放进存储。当前不能按层换页。`STATIC_DERIVATION`：最大单层是 `512*256=131072`，Bottom 四层合计 155136，Top 三层合计 319232，全部 474368。A18 的 2048 连最大单层都放不下。`DESIGN_PROPOSAL`：层间打开写窗并复用同一块存储，可以把驻留量降到单层。当前源码没有这个窗。
+
+### 11.5 Stage A 连接（SOURCE_VERIFIED）
+
+主机嵌入口在流水线第 66–70 行：`embedding_cfg_index` 为 `[1:0]`，数据为 `8*INPUT_WIDTH`。第 136 行 `embedding_mem[0:3]`。第 407–409 行要求 `embedding_loaded == 4'hF` 才接受启动。
+
+Bottom 输出在第 140 行 `bottom_vector[0:7]`，第 154 行计数器 `[3:0]`，第 431–445 行要求正好 8 个结果，并且 `result_last` 出现在下标 7。第 345–347 行把这 8 个数打包成交互向量 0。
+
+Top 输入在第 141 行 `interaction_vector[0:17]`。第 350–358 行 chunk0 取 `[0:15]`，chunk1 取 `[16]` 和 `[17]`。第 516–523 行只有这两个装入状态。第 483–505 行要求交互结果正好 18 个。
+
+A18 状态字第 1182–1183 行把 Bottom 计数放在 `[11:8]`（4 位），交互计数放在 `[20:16]`（5 位）。即使内部计数被加宽，这两个只读字段也报不出 16 和 367。`result_meta_word[9:4]` 只有 6 位结果下标。这些是接入 Stage A 时要改的主机字段，C1 模块本身不接这条总线。
+
+官方激活位置是 `SOURCE_VERIFIED` 的软件合同，不是 RTL：锁定的 `dlrm_s_pytorch.py` 中 `sigmoid_bot=-1`，非 Sigmoid 层后接 ReLU，所以 Bottom 四层都有 ReLU；`sigmoid_top=ln_top.size-2`，Top 最后一层是 Sigmoid。RTL 只有 ReLU 位，没有 Sigmoid。
+
+### 11.6 630 / 582 检索（NOT_LOCATED）
+
+检索范围是本仓库全部已跟踪文本：`docs/`、`rtl/`、`tb/`、`scripts/`、`host/`，以及 `docs/evidence/` 下的日志和验收记录。模式是独立的 `582`，以及 `1174→630`、`630 cycles`。
+
+`582` 只出现在本审计自己的句子里，没有仿真、综合或板上日志。`630` 出现在 `docs/DECISIONS.md`、`docs/STAGE2N_BRANCH_PRIORITY_V1.md` 和 `docs/STAGE2N_BRANCH_PRIORITY_V2.md`，语境是归约流水的周期账，不是一次仿真或板上测量的结果文件。证据目录里的 `630` 是 XRT 版本哈希和二进制 SHA 的子串，不是周期记录。
+
+```text
+C1_630_LOG = NOT_LOCATED
+C2_582_LOG = NOT_LOCATED
+```
+
+没有找到日志不等于那两次记录无效。本仓库不能把它们当成已定位的测量。
 
 ## 判断
 
@@ -235,6 +327,11 @@ STAGE_A_INTERFACE = REQUIRES_CHANGE
 REAL_KAGGLE_RTL = NOT_YET_VALIDATED
 FPGA_BOARD_RUN = NOT_STARTED
 NEXT_IMPLEMENTATION_STAGE = RTL-C1
+DESCRIPTOR_SLOTS_A18 = 8_FIT_7_LAYERS
+DESCRIPTOR_RELOAD = NOT_SUPPORTED
+WEIGHT_TILED_RELOAD = NOT_SUPPORTED
+C1_630_LOG = NOT_LOCATED
+C2_582_LOG = NOT_LOCATED
 ```
 
 `RTL_SOURCE_AUDIT=PASS` 只表示这次审计已用源码核对完清单，不表示 RTL 已具备 Kaggle 容量。
